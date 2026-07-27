@@ -2,7 +2,7 @@
 layout: default
 title: Contributing to this site
 permalink: /contributing/
-nav_order: 10
+nav_order: 15
 ---
 
 # Contributing to this site

@@ -2,7 +2,7 @@
 layout: default
 title: People
 permalink: /research-team/
-nav_order: 8
+nav_order: 12
 ---
 
 # People

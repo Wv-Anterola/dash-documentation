@@ -7,8 +7,8 @@
 # flagged in `roster_note`.
 
 - id: 2026
-  title: Spring 2026 – Fall 2026
-  short: Spring–Fall 2026
+  title: Spring 2026 to Fall 2026
+  short: Spring/Fall 2026
   current: true
   start: 2026-01
   end: 2026-12
@@ -25,8 +25,8 @@
     - Local model execution
 
 - id: 2025
-  title: Spring 2025 – Fall 2025
-  short: Spring–Fall 2025
+  title: Spring 2025 to Fall 2025
+  short: Spring/Fall 2025
   start: 2025-01
   end: 2025-12
   commits: 1324
@@ -40,8 +40,8 @@
     - Text and diagram documents
 
 - id: 2024
-  title: Spring 2024 – Fall 2024
-  short: Spring–Fall 2024
+  title: Spring 2024 to Fall 2024
+  short: Spring/Fall 2024
   start: 2024-01
   end: 2024-12
   commits: 1792
@@ -55,8 +55,8 @@
     - Animation and presentation trails
 
 - id: 2023
-  title: Spring 2023 – Fall 2023
-  short: Spring–Fall 2023
+  title: Spring 2023 to Fall 2023
+  short: Spring/Fall 2023
   start: 2023-01
   end: 2023-12
   commits: 1594
@@ -70,8 +70,8 @@
     - Course use in CS1951V
 
 - id: 2021-2022
-  title: 2021 – 2022
-  short: 2021–2022
+  title: 2021 to 2022
+  short: 2021-2022
   start: 2021-01
   end: 2022-12
   commits: 2374
@@ -85,8 +85,8 @@
     - Documentation site
 
 - id: 2019-2020
-  title: 2019 – 2020
-  short: 2019–2020
+  title: 2019 to 2020
+  short: 2019-2020
   start: 2018-12
   end: 2020-12
   commits: 8539

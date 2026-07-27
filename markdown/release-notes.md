@@ -2,7 +2,7 @@
 layout: default
 title: Release notes
 permalink: /release-notes/
-nav_order: 9
+nav_order: 14
 ---
 
 # Release notes

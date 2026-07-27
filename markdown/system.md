@@ -2,7 +2,7 @@
 layout: default
 title: How Dash is built
 permalink: /system/
-nav_order: 5
+nav_order: 4
 ---
 
 # How Dash is built

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Properties
-nav_order: 6
+nav_order: 10
 permalink: /properties/
 has_children: true
 ---
