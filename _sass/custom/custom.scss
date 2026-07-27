@@ -268,11 +268,6 @@ $dash-surface: #f7f8fa;
     margin: 0;
     padding: 1rem 1.15rem;
 
-    h3 {
-        font-size: 1rem;
-        margin: 0;
-    }
-
     a {
         text-decoration: none;
     }
@@ -283,6 +278,12 @@ $dash-surface: #f7f8fa;
         line-height: 1.5;
         margin: 0;
     }
+}
+
+.project-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
 }
 
 .project-card__meta {
