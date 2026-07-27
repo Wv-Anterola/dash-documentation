@@ -1,31 +1,53 @@
 ---
 layout: default
 title: Views
-nav_order: 5
+nav_order: 8
 permalink: /views/
 has_children: true
 ---
 
 # Views
 
-Views are the different ways that you can view a collection of documents. Dash supports four views in `novice mode`, and many additional views in `developer mode`. The most essential views that dash supports include:
+A view is how a collection displays the documents it holds. Because the view is
+a property of the collection rather than a different kind of object, switching
+between them converts nothing: the same documents are simply laid out
+differently.
 
-| View       | Description                                                                                                         |
-| :--------- | :------------------------------------------------------------------------------------------------------------------ |
-| Freeform   | Unbounded 2D space in the form of a canvas. This is Dash’s primary view                                             |
-| Schema     | Manipulating documents via key-value pairs and maintaining structured viewing and sorting of data                   |
-| Stacking      | Categorizing documents by specified keys while maintaining a live preview of each document                          |
-| Notetaking | Create multiple columns of documents, allowing you to take notes in one column while having your content in others. |
+Four views are available in novice mode, with the rest in developer mode.
 
-## Changing Views
+## The four in novice mode
 
-Use the dropdown in the top toolbar to change between views. If you don't see the dropdown or see a document-specific toolbar like image or text, click a blank area of the main view to invoke the view dropdown.
+<div class="table-scroll" markdown="1">
 
-![]({{ '/assets/gifs/views/dash-change-view.gif' | relative_url }}){:.img}
+| View | What it is for |
+| :--- | :--- |
+| [Freeform]({{ '/views/freeform/' | relative_url }}) | An unbounded 2D canvas. Dash's primary view. |
+| [Schema]({{ '/views/schema/' | relative_url }}) | A table of key-value pairs, for structured sorting and editing. |
+| [Stacking]({{ '/views/stacking/' | relative_url }}) | Groups documents by a key, keeping a live preview of each. |
+| [Notetaking]({{ '/views/notetaking/' | relative_url }}) | Multiple columns, so you can take notes in one while reading in another. |
 
-<!--
-Dash is a hypermedia system that supports the following documents in the [latest verison of Dash](https://browndash.com/login).
+</div>
 
-<div class="video">
-    <iframe src="https://drive.google.com/file/d/1aepMLRz9_oGsYTG1ZY8n1uJDqL8bX3IX/preview" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
-</div> -->
+## Changing views
+
+Use the dropdown in the top toolbar. If you cannot see it, or you see a
+document-specific toolbar for an image or text instead, click a blank area of
+the main view first.
+
+![Switching a collection between views using the toolbar dropdown.]({{ '/assets/gifs/views/dash-change-view.gif' | relative_url }}){:.img}
+
+## The rest
+
+`CollectionViewType` holds twenty-one entries. Besides the four above and
+docking, which is the workspace itself, there are card, carousel, 3D carousel,
+grid, masonry, multicolumn, multirow, pivot, time, tree, calendar, graph, and
+pile-up.
+
+{: .caveat }
+> Only the four novice-mode views have tutorial pages. The others work but are
+> undocumented, and a carousel page was started in 2021 and never written.
+>
+> Two of the undocumented ones came from student projects and are described on
+> the cohort pages: the [calendar view]({{ '/cohorts/2023/' | relative_url }})
+> from 2023 and the [link graph view]({{ '/cohorts/2026/' | relative_url }})
+> from 2026.
