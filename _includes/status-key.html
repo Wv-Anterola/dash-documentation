@@ -1,0 +1,10 @@
+{%- comment -%}
+The full status vocabulary with definitions. Include it once on any page that
+shows status labels, so a reader who has not seen them before can find out what
+they mean without leaving the page.
+{%- endcomment -%}
+<ul class="status-key">
+  {%- for st in site.data.statuses %}
+  <li>{% include status-badge.html key=st.key %} {{ st.blurb }}</li>
+  {%- endfor %}
+</ul>

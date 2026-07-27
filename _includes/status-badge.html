@@ -1,0 +1,14 @@
+{%- comment -%}
+Renders an implementation-status label.
+
+  {% include status-badge.html key=project.status %}
+
+The visible text carries the meaning, so this reads correctly with colour
+removed or unavailable; the colour is a secondary cue only.
+{%- endcomment -%}
+{%- assign st = site.data.statuses | where: "key", include.key | first -%}
+{%- if st -%}
+<span class="status {{ st.class }}">{{ st.label }}</span>
+{%- else -%}
+<span class="status status--unclear">Status unclear</span>
+{%- endif -%}

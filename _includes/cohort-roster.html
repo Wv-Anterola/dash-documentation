@@ -1,0 +1,18 @@
+{%- comment -%}
+The student roster for one cohort.
+
+  {% include cohort-roster.html cohort_id=page.cohort_id %}
+{%- endcomment -%}
+{%- assign roster = site.data.people.rosters[include.cohort_id] -%}
+{%- if roster -%}
+<ul class="cohort-roster">
+  {%- for person in roster %}
+  <li>{{ person }}</li>
+  {%- endfor %}
+</ul>
+<p class="cohort-roster__note">
+  Drawn from commit authorship in the Dash-Web repository over this period,
+  cross-checked against the group's own team list. If you contributed and are
+  not here, it is an omission rather than a judgement; please open an issue.
+</p>
+{%- endif -%}

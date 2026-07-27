@@ -1,0 +1,101 @@
+# Cohorts, newest first. Adding next year's cohort means adding a block here
+# and creating one stub page under markdown/cohorts/ (see CONTRIBUTING.md).
+#
+# `roster` lists people who show up as commit authors in Dash-Web during the
+# cohort's date range, plus anyone named on the old team page for that period.
+# Where a name could not be recovered, the GitHub handle is given instead and
+# flagged in `roster_note`.
+
+- id: 2026
+  title: Spring 2026 – Fall 2026
+  short: Spring–Fall 2026
+  current: true
+  start: 2026-01
+  end: 2026-12
+  commits: 937
+  summary: >-
+    The largest single-year push since 2020, and the first where most of the
+    work sits on top of the agent rather than beside it. Six student projects
+    landed in `master` this year, and Dash also grew a desktop build that can
+    run models locally instead of calling OpenAI.
+  themes:
+    - Agent tooling and oversight
+    - Generative media inside documents
+    - New document and collection types
+    - Local model execution
+
+- id: 2025
+  title: Spring 2025 – Fall 2025
+  short: Spring–Fall 2025
+  start: 2025-01
+  end: 2025-12
+  commits: 1324
+  summary: >-
+    The year the chatbot turned into an agent with a real tool registry. Work
+    split between extending what the agent could touch (canvas contents, the
+    UI itself, the codebase) and adding document types around it.
+  themes:
+    - Agent tool registry
+    - Symbolic math and 3D
+    - Text and diagram documents
+
+- id: 2024
+  title: Spring 2024 – Fall 2024
+  short: Spring–Fall 2024
+  start: 2024-01
+  end: 2024-12
+  commits: 1792
+  summary: >-
+    Generative AI moved from a novelty attached to text nodes into several
+    parts of the system at once: drawing, data visualisation, presentation
+    transitions, and a first pass at an assistant that could act on documents.
+  themes:
+    - Generative AI across document types
+    - Data visualisation
+    - Animation and presentation trails
+
+- id: 2023
+  title: Spring 2023 – Fall 2023
+  short: Spring–Fall 2023
+  start: 2023-01
+  end: 2023-12
+  commits: 1594
+  summary: >-
+    Dash picked up its first LLM features and several new document types, and
+    the group started using it in CS1951V, which produced the student use-case
+    videos still linked from the About page.
+  themes:
+    - First LLM integrations
+    - New document types
+    - Course use in CS1951V
+
+- id: 2021-2022
+  title: 2021 – 2022
+  short: 2021–2022
+  start: 2021-01
+  end: 2022-12
+  commits: 2374
+  summary: >-
+    Consolidation. Releases 0.4 through 0.8 came out of this period, the
+    documentation site you are reading was created, and a separate component
+    library was split out so the UI stopped being re-invented per feature.
+  themes:
+    - Releases 0.4 to 0.8
+    - Component library
+    - Documentation site
+
+- id: 2019-2020
+  title: 2019 – 2020
+  short: 2019–2020
+  start: 2018-12
+  end: 2020-12
+  commits: 8539
+  summary: >-
+    The founding period. The repository's first commit is December 2018, and
+    the two years after it established nearly everything the system still
+    rests on: the document model, freeform collections, links and annotations,
+    and the collection view types.
+  themes:
+    - Document and field model
+    - Collections and views
+    - Linking and annotation

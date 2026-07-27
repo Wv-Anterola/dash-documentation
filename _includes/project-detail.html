@@ -1,0 +1,66 @@
+{%- comment -%}
+Full write-up for one project.
+
+  {% include project-detail.html project=p %}
+
+Fields other than title/status/problem are optional; each block is skipped when
+its field is absent, so a thin entry renders as a short one rather than a page
+of empty headings.
+{%- endcomment -%}
+{%- assign p = include.project -%}
+<div class="project">
+  <div class="project__head">
+    <h3 id="{{ p.title | slugify }}">{{ p.title }}</h3>
+    {% include status-badge.html key=p.status %}
+  </div>
+
+  {%- if p.people %}
+  <p class="project__byline">{{ p.people | join: ", " }}</p>
+  {%- elsif p.people_unresolved %}
+  <p class="project__byline">Contributor {{ p.people_unresolved }}.</p>
+  {%- endif %}
+
+  <dl>
+    {%- if p.problem %}
+    <dt>Problem</dt>
+    <dd>{{ p.problem | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+
+    {%- if p.approach %}
+    <dt>Approach</dt>
+    <dd>{{ p.approach | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+
+    {%- if p.contribution %}
+    <dt>What was built</dt>
+    <dd>{{ p.contribution | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+
+    {%- if p.relation %}
+    <dt>Relationship to Dash</dt>
+    <dd>{{ p.relation | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+
+    {%- if p.outcome %}
+    <dt>Outcome</dt>
+    <dd>{{ p.outcome | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+
+    {%- if p.evidence %}
+    <dt>Evidence for the status above</dt>
+    <dd>{{ p.evidence | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
+    {%- endif %}
+  </dl>
+
+  <ul class="project__links">
+    {%- if p.tech %}
+    <li>{{ p.tech | join: ", " }}</li>
+    {%- endif %}
+    {%- if p.code %}
+    <li>{{ p.code | markdownify | remove: "<p>" | remove: "</p>" }}</li>
+    {%- endif %}
+    {%- for link in p.links %}
+    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+    {%- endfor %}
+  </ul>
+</div>

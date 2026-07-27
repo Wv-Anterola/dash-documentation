@@ -1,0 +1,13 @@
+{%- comment -%}
+Every project for one cohort, in the order they appear in projects.yml.
+
+  {% include cohort-projects.html cohort_id=page.cohort_id %}
+{%- endcomment -%}
+{%- assign projects = site.data.projects[include.cohort_id] -%}
+{%- if projects -%}
+  {%- for p in projects %}
+{% include project-detail.html project=p %}
+  {%- endfor %}
+{%- else -%}
+<p>No projects are recorded for this cohort yet.</p>
+{%- endif -%}

@@ -1,0 +1,136 @@
+# Cohort rosters, keyed by the cohort ids in cohorts.yml.
+#
+# Names are taken from commit authorship in the Dash-Web repository over each
+# cohort's date range, cross-checked against the team list the site has carried
+# since 2021. Git is the stronger source: the old team page was missing most of
+# the 2019-2020 contributors entirely.
+#
+# `handle` is used where a GitHub account has no name attached to it and we
+# could not match it to a person. Please replace those if you know who they are.
+#
+# `faculty` and `staff` are listed once, at the top level, because they span
+# every cohort rather than belonging to one.
+
+faculty:
+  - name: Andries van Dam
+    role: Principal investigator
+    email: andries_van_dam@brown.edu
+  - name: Bob Zeleznik
+    role: Research director
+  - name: Norm Meyrowitz
+    role: Adviser
+  - name: Joseph LaViola
+    role: Adviser
+  - name: Rosemary Simpson
+    role: Adviser
+
+rosters:
+  2026:
+    - Wilber Sean Anterola
+    - McCormick Breviu
+    - Jacob Elson
+    - Joanne Ding
+    - Eleanor Park
+    - A.J. Shulman
+    - Kartik Shrivastava
+    - Lanyi Stroud
+    - Aura Sukapanpotharam
+    - Thu Vu
+    - Finn Wilkie
+    - Camden Wright
+    - Nathan Robbins
+    - Alicia Yoon
+
+  2025:
+    - Semir Ali
+    - Joanne Ding
+    - Alyssa Feinberg
+    - Aisosa Idahosa
+    - Aarav Kumar
+    - Samuel Kurtis
+    - Eleanor Park
+    - Nathan Robbins
+    - A.J. Shulman
+    - Kartik Shrivastava
+    - Lanyi Stroud
+    - Thu Vu
+    - Zachary Zhang
+    - "GitHub user Skitty1238"
+
+  2024:
+    - Alyssa Feinberg
+    - Aisosa Idahosa
+    - Alina Kim
+    - Geireann Lindfield Roberts
+    - Eric Ma
+    - Eleanor Park
+    - Emily Perelman
+    - Sarah Richman
+    - Nathan Robbins
+    - Jesus Rodriguez
+    - A.J. Shulman
+    - Zaul Tavangar
+    - Zachary Zhang
+    - Sophie Zhang
+
+  2023:
+    - Brynn Chernosky
+    - Michael Foiani
+    - James Hu
+    - Mehek Jethani
+    - Alina Kim
+    - Geireann Lindfield Roberts
+    - Eric Ma
+    - Emily Perelman
+    - Sarah Richman
+    - Jesus Rodriguez
+    - Zaul Tavangar
+    - Sophie Zhang
+
+  2021-2022:
+    - Anika Ahluwalia
+    - Naafiyan Ahmed
+    - Ashley Cai
+    - Brynn Chernosky
+    - Lauren Choi
+    - Michael Foiani
+    - David Grossman
+    - Lionel Han
+    - Mehek Jethani
+    - Victor Kalev
+    - Aubrey Li
+    - Vivian Li
+    - Geireann Lindfield Roberts
+    - Parker Ljung
+    - Udayveer Sodhi
+    - Anh Truong
+    - Jenny Yu
+
+  2019-2020:
+    - Anika Ahluwalia
+    - Mohammad Amoush
+    - Hannah Chow
+    - Philipp Eichmann
+    - Eleanor Eng
+    - Lionel Han
+    - Monika Hedman
+    - Yuna Hiraide
+    - Andrew Kim
+    - Geireann Lindfield Roberts
+    - Andrew Rickert
+    - Tyler Schicke
+    - Udayveer Sodhi
+    - Sam Wilkins
+    - Melissa Zhang
+    - Stanley Yip
+
+# People who appear in the commit log for 2019-2020 under a handle or first
+# name we could not resolve to a full name. Recorded rather than dropped.
+unresolved:
+  - "ab"
+  - "Fawn"
+  - "Jude"
+  - "kimdahey"
+  - "loudonclear"
+  - "madelinegr"
+  - "vellichora"
