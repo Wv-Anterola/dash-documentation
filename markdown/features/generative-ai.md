@@ -6,9 +6,9 @@ permalink: /features/generativeai/
 ---
 
 # Generative AI
-
-![]({{ '/assets/images/gen_ai.png' | relative_url }}){:.img}
 {: .no_toc }
+
+![A Dash canvas with several AI-generated documents on it.]({{ '/assets/images/gen_ai.png' | relative_url }}){:.img}
 
 <details open markdown="block">
   <summary>
@@ -21,102 +21,140 @@ permalink: /features/generativeai/
 
 ## Overview
 
-Dash's integration with the OpenAI API enables features that aid in text and image generation, sorting, and categorizing; document analysis; study tools; and more. These features are accessible through all the most common document types in Dash.
+Dash calls OpenAI models for text and image generation, sorting and
+categorising, document analysis, and study tools, reachable from most document
+types. Since March 2026 the desktop build can also run these against a local
+model through Ollama instead of a remote API.
+
+There are two distinct surfaces, and it is worth knowing which one you are in:
+
+- The **assistant** answers questions about your documents, with citations that
+  navigate back to the source.
+- The **agent** acts on the workspace: filtering, sorting, tagging, linking, and
+  creating documents through a registry of tools.
+
+[How Dash is built]({{ '/system/' | relative_url }}) covers the difference in
+more detail, including why it matters for what you should trust.
+
+{: .caveat }
+> Screen recordings on this page were made between 2024 and 2025. The
+> interactions still work; the interface around them has moved on.
 
 ## Text
 
-You can invoke GPT-4o to respond to a text prompt inside of a text node by opening the context menu (three bars icon) => `Ask GPT-4`. It will type in its response in the text node containing the prompt.
+Open the context menu on a text node (three bars icon) and choose the "Ask GPT"
+entry. The model responds by typing into the text node that holds the prompt.
 
-![]({{ '/assets/gifs/ai/ai-text.gif' | relative_url }}){:.img}
+![Invoking GPT from a text node's context menu; the response is typed into the node.]({{ '/assets/gifs/ai/ai-text.gif' | relative_url }}){:.img}
 
-## AI Assistant
+## AI assistant
 
-(This feature is coming to the live server soon.)
+The assistant analyses and summarises PDFs and CSVs conversationally, augments
+its answers with material from the web, and helps you navigate linked documents.
 
-Dash's native AI assistant will conversationally analyze and summarize PDF documents and CSVs. The assistant will augment its responses with information gathered from the web and help you navigate linked documents to find what you're looking for. 
+Drag it from the Tools tab on the left onto your dashboard to open it. To use it
+on a PDF or CSV, link that document to the assistant and type a prompt.
 
-To open the assistant, drag it from the Tools tab on the left onto your dashboard.
+Citations in its answers resolve back to the chunk of the source they came from
+and navigate you there, which is the part worth using: it is the only way to
+check what it told you.
 
-(Coming soon...)
+To search the web, link an empty collection to the assistant box and prompt it
+to search.
 
-To use the assistant to analyze PDFs and CSVs, link a PDF or CSV document to it and type a prompt.
+![Prompting the assistant to search the web; results are placed into a linked collection.]({{ '/assets/gifs/ai/ai-websearch-1.gif' | relative_url }}){:.img}
 
-(Coming soon...)
+You can then refine the search through conversation.
 
-The assistant can also help you search the web for relevant news articles. To use this feature, link an empty collection to the assistant box and prompt it to search the web. 
-
-![]({{ '/assets/gifs/ai/ai-websearch-1.gif' | relative_url }}){:.img}
-
-You can then iteratively search through conversation with the assistant.
-
-![]({{ '/assets/gifs/ai/ai-websearch-2.gif' | relative_url }}){:.img}
+![Iteratively narrowing web search results by talking to the assistant.]({{ '/assets/gifs/ai/ai-websearch-2.gif' | relative_url }}){:.img}
 
 ## Images
 
 ### Generation
 
-(This feature is coming to the live server soon.)
+Open Smart Draw from the Ink tab at the top of the dashboard. It creates Dash
+ink drawings or canvases from Adobe Firefly.
 
-You can generate an image with the Smart Draw feature by opening it from the Ink tab at the top of the dashboard. Using Smart Draw, you can create fully customizable dash ink drawings or canvases from Adobe Firefly. 
+Generation takes a while.
 
-`Note` Images take some time to generate.
+![Generating an image from a text prompt with Adobe Firefly inside Smart Draw.]({{ '/assets/gifs/ai/ai-firefly-image-1.gif' | relative_url }}){:.img}
 
-![]({{ '/assets/gifs/ai/ai-firefly-image-1.gif' | relative_url }}){:.img}
+You can also give Firefly a reference image drawn in Dash. Select the ink
+drawing you want as a reference, then open the options menu on the right (the
+blue arrow, or the double-arrow at the top right) and set up your generation.
 
-You can also provide Adobe Firefly with a reference image drawn in Dash. To generate an image based on a reference, select the ink drawing you want to use as a reference, then open the options menu on the right (blue arrow to the right or double-arrow on the top right) and customize your generation. 
-
-![]({{ '/assets/gifs/ai/ai-firefly-template-image-1.gif' | relative_url }}){:.img}
-![]({{ '/assets/gifs/ai/ai-firefly-template-image-2.gif' | relative_url }}){:.img}
+![Selecting an ink drawing to use as a generation reference.]({{ '/assets/gifs/ai/ai-firefly-template-image-1.gif' | relative_url }}){:.img}
+![The generated image alongside the ink drawing it was based on.]({{ '/assets/gifs/ai/ai-firefly-template-image-2.gif' | relative_url }}){:.img}
 
 ### Editing
 
-You can edit images within dash to generate new visual content based on existing imagery.
+Edit an existing image to generate new content into part of it.
 
-#### Step 1
+**Open the editor.** From the image context menu, choose Open Image Editor.
 
-From the image context menu, click on Open Image Editor, which will pull up an editor view.
-![]({{ '/assets/gifs/ai/ai-edit-1.gif' | relative_url }}){:.img}
+![Opening the image editor from an image document's context menu.]({{ '/assets/gifs/ai/ai-edit-1.gif' | relative_url }}){:.img}
 
-#### Step 2
+**Erase and prompt.** Use the eraser on the part you want replaced, optionally
+add a prompt, then click `Get Edits`. Variations appear on the right; clicking
+one draws it to the main canvas. You can generate further edits from a result
+the same way.
 
-Using the eraser tool, erase the part of the image you would like to fill with new content and optionally provide a prompt. Then, click `Get Edits` to generate the image edits. Variations will pop up on the right, and clicking them will draw the result to the main canvas. You can generate further edits from the results following the same process.
+Generation is slow, and the model will not always match the prompt. Describing
+the whole image, including the parts you are leaving alone, gives noticeably
+better results than describing only the replacement.
 
-`Note` Images take some time to generate. Additionally, the image model may not always produce a result that aligns with the prompt. To achieve better results, provide as much context about the image in your prompt as possible, including areas of the image you are leaving as is.
-![]({{ '/assets/gifs/ai/ai-edit-2.gif' | relative_url }}){:.img}
+![Erasing a region, prompting, and picking from the generated variations.]({{ '/assets/gifs/ai/ai-edit-2.gif' | relative_url }}){:.img}
 
-#### Step 3
+**Version history.** Closing the editor leaves a tree of the edit history in a
+new collection, which you can drag back onto the main canvas.
 
-Once you close out of the editor, you'll see a tree that represents the edit version history in a new collection. You can drag that collection back into the main canvas.
-![]({{ '/assets/gifs/ai/ai-edit-3.gif' | relative_url }}){:.img}
+![The edit version history rendered as a tree in a new collection.]({{ '/assets/gifs/ai/ai-edit-3.gif' | relative_url }}){:.img}
 
-#### Additional Editor Features
+#### Additional editor features
 
 - You can undo/redo erase strokes and adjust the brush size with the controls on the left
 - You can remove all erase strokes with the reset button at the top
 - For the version history, you can choose to branch directly from the original image rather than creating a new collection by toggling `Create New Collection` off
 
-## CSVs
+## Making documents from a CSV
 
-(This feature is coming to the live server soon.)
+Generate a document per row of a CSV, using a template the model helps you
+build.
 
-You can creature documents from CSV contents with the help of AI. 
+**Open the template creator.** From a CSV document's context menu, click
+`Create Docs` near the top.
 
-#### Step 1
+**Choose your columns.** Select the columns to generate from, then open the
+field options menu (the cog at the top right of "Suggested Templates") to add
+AI-generated fields.
 
-To access this feature, open the context menu of a CSV document and click `Create Docs` near the top. This will open the template creator menu. 
+**Generate templates.** Click generate to get recommended templates for the
+content. The edit button at the bottom right of each one lets you adjust it.
 
-#### Step 2
+![Generating suggested templates from the selected columns of a CSV.]({{ '/assets/gifs/ai/ai-template-csv-1.gif' | relative_url }}){:.img}
 
-Select the columns you want to generate based on in the CSV and navigate to the field options menu (cog icon at the top right of 'Suggested Templates') to add AI-generated fields. 
+**Lay out the results.** Select the rows you want, click a template to select
+it, then use the layout menu (the magnifying glass at the top) to choose how
+the content is displayed. The plus button adds the finished collection to Dash.
 
-#### Step 3
+![Selecting rows, applying a template, and adding the generated collection to the canvas.]({{ '/assets/gifs/ai/ai-template-csv-2.gif' | relative_url }}){:.img}
 
-Click the generate button and get recommended templates for the given content. You can click on the edit button on the bottom right of each template to edit it.
+## Not documented here yet
 
-![]({{ '/assets/gifs/ai/ai-template-csv-1.gif' | relative_url }}){:.img}
+Several AI features shipped after this page was last substantially revised and
+do not have tutorial pages. They are described, with their implementation
+status, on the cohort pages:
 
-#### Step 4
+- The [agent tool registry]({{ '/cohorts/2025/' | relative_url }}) and what the
+  agent can do to your workspace
+- [Video generation]({{ '/cohorts/2026/' | relative_url }}) from canvas content
+- [Policy analysis documents]({{ '/cohorts/2026/' | relative_url }})
+- [Selection-aware text reformatting]({{ '/cohorts/2026/' | relative_url }})
+- Running models locally through the desktop build
 
-Once you're happy with your template, select all rows in the CSV you want to generate for, click on the template to select it, then navigate to the layout menu (magnifying glass icon at the top) and choose how you'd like your content displayed. When you're finished, click the 'plus' button to add the collection to Dash!
-
-![]({{ '/assets/gifs/ai/ai-template-csv-2.gif' | relative_url }}){:.img}
+{: .note }
+> A copy of this page's text is also embedded in the application itself, in
+> `apis/gpt/dashDocumentation.ts`, so the assistant can answer questions about
+> Dash. The two copies have already drifted; the in-app copy still refers to
+> "Ask GPT3" in places. If you edit this page substantially, that file needs the
+> same edit.
