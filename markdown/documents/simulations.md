@@ -7,10 +7,21 @@ nav_order: 1
 ---
 
 # Physics Simulations
-<div class="img-container">
-  <img src="{{ '/assets/images/environment/simulation_doc.png' | relative_url }}" alt="overall environment" style="height:400px;"/>
-</div>
 {: .no_toc }
+
+{: .removed }
+> Physics simulation documents are no longer part of Dash. They were built in
+> spring 2023 by Brynn Chernosky and removed at some point afterwards; there is
+> no simulation document type in the current codebase.
+>
+> This page is kept as a record of what the feature did. Nothing on it describes
+> current behaviour. See the
+> [Spring 2023 to Fall 2023 cohort]({{ '/cohorts/2023/' | relative_url }}) for
+> the project entry.
+
+<div class="img-container">
+  <img src="{{ '/assets/images/environment/simulation_doc.png' | relative_url }}" alt="A physics simulation document in Dash, showing a ramp-and-block setup with editable initial values." class="img"/>
+</div>
 
 <details open markdown="block">
   <summary>
