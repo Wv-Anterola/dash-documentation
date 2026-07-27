@@ -62,27 +62,28 @@ overwhelmingly the ones that fit an existing slot.
 `Documents.ts` registers a factory for each. Adding a type means an enum value,
 a factory, a view component, and a case in `DocumentView.tsx`.
 
-The enum currently runs from the core types (rich text, image, web, PDF,
-collection, video, audio, ink) through to types added by recent cohorts: the
-3D viewer and sketch canvas, the data visualisation box, the video generator,
-the life coach workspace and its events, policy testimony and policy checker,
-journals, tasks, scrapbooks, and the agent itself.
+There are fifty-one entries. They run from the core types (rich text, image,
+web, PDF, collection, video, audio, ink) through to types added by recent
+cohorts: the 3D viewer and sketch canvas, the data visualisation box, the video
+generator, the life coach workspace and its events, policy testimony and policy
+checker, journals, tasks, scrapbooks, and the agent itself.
 
 ### Collection view types
 
-`CollectionViewType` decides how a collection displays what it holds. Freeform,
-stacking, schema, tree, carousel, and docking come from 2019 and 2020. Calendar
-came from 2023. Graph came from 2026. Adding one means an enum value and a view
-component; every existing collection can then be switched into it without
-converting any data.
+`CollectionViewType` decides how a collection displays what it holds. There are
+twenty-one. Freeform, stacking, schema, tree, carousel, and docking come from
+2019 and 2020. Calendar came from 2023. Graph came from 2026. Adding one means
+an enum value and a view component; every existing collection can then be
+switched into it without converting any data.
 
 ### Agent tools
 
 `client/views/nodes/chatbot/agentsystem/Agent.ts` constructs a registry of tools
-the agent can call. A tool is a class with a schema and an execute method, and
-there are around forty of them: searching documents, filtering and sorting and
-tagging them, creating links, reading file contents, running a calculation,
-scraping a page, driving the interface, walking a user through a tutorial.
+the agent can call. A tool is a class with a schema and an execute method.
+Twenty-two are registered at construction: searching documents, filtering and
+sorting and tagging them, creating links, reading file contents, running a
+calculation, scraping a page, driving the interface, generating an image,
+setting a quiz, walking a user through a tutorial.
 
 There is also a `tools/dynamic/` directory, because the agent can generate a new
 tool and have it compiled into the running application.
