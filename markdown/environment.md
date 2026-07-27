@@ -2,7 +2,7 @@
 layout: page
 title: Overall Environment
 permalink: /environment/
-nav_order: 2
+nav_order: 6
 ---
 
 # Overall Environment
@@ -61,13 +61,13 @@ The topbar is the topmost section of the interface. It mainly contains global co
 
 | Icon                                                                | Title                 | Description                                                                                                                                                                |
 | :------------------------------------------------------------------ | :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <img src="{{ '/assets/icons/home.png' | relative_url }}" style="height:25px"/>           | **Home**              | Return to the main dashboard view.                                                                                                                                         |
-| <img src="{{ '/assets/icons/expore.png' | relative_url }}" style="height:25px"/>         | **Explore**           | Enter the explore mode, where clicking on a document will center and zoom it into view, allowing you to browse your documents in a view-only mode.                         |
-| <img src="{{ '/assets/icons/share.png' | relative_url }}" style="height:25px"/>          | **Share**             | Open up the sharing manager to share your dashboard.                                                                                                                       |
-| <img src="{{ '/assets/icons/issue-reporter.png' | relative_url }}" style="height:25px"/> | **Bug Reporter**      | View and report issues with Dash.                                                                                                                                          |
-| <img src="{{ '/assets/icons/documentation.png' | relative_url }}" style="height:25px"/>  | **Documentation**     | Open up the documentation for Dash (this site!)                                                                                                                            |
-| <img src="{{ '/assets/icons/settings.png' | relative_url }}" style="height:25px"/>       | **Settings**          | Manage global settings, including accounts, modes, and appearance.                                                                                                         |
-| <img src="{{ '/assets/icons/server-con.png' | relative_url }}" style="height:25px"/>     | **Server Connection** | If you see a full heart, the server connection is active. Clicking the heart will display active users. If the server connection is lost, the heart will appear as broken. |
+| <img src="{{ '/assets/icons/home.png' | relative_url }}" alt="" style="height:25px"/>           | **Home**              | Return to the main dashboard view.                                                                                                                                         |
+| <img src="{{ '/assets/icons/expore.png' | relative_url }}" alt="" style="height:25px"/>         | **Explore**           | Enter the explore mode, where clicking on a document will center and zoom it into view, allowing you to browse your documents in a view-only mode.                         |
+| <img src="{{ '/assets/icons/share.png' | relative_url }}" alt="" style="height:25px"/>          | **Share**             | Open up the sharing manager to share your dashboard.                                                                                                                       |
+| <img src="{{ '/assets/icons/issue-reporter.png' | relative_url }}" alt="" style="height:25px"/> | **Bug Reporter**      | View and report issues with Dash.                                                                                                                                          |
+| <img src="{{ '/assets/icons/documentation.png' | relative_url }}" alt="" style="height:25px"/>  | **Documentation**     | Open up the documentation for Dash (this site!)                                                                                                                            |
+| <img src="{{ '/assets/icons/settings.png' | relative_url }}" alt="" style="height:25px"/>       | **Settings**          | Manage global settings, including accounts, modes, and appearance.                                                                                                         |
+| <img src="{{ '/assets/icons/server-con.png' | relative_url }}" alt="" style="height:25px"/>     | **Server Connection** | If you see a full heart, the server connection is active. Clicking the heart will display active users. If the server connection is lost, the heart will appear as broken. |
 
 ## Toolbar
 
