@@ -1,3 +1,10 @@
+// Dash colour scheme.
+//
+// The brand blues and accents came from the original 2021 site and are kept.
+// The one change is the link colour: #4476f7 only reaches 4.05:1 against white,
+// which fails WCAG AA for body text, so links use a darker blue and #4476f7 is
+// reserved for larger accent elements where 3:1 is enough.
+
 $white: #ffffff;
 $light-gray: #dfdfdf;
 $medium-gray: #9f9f9f;
@@ -6,35 +13,15 @@ $black: #000000;
 
 $light-blue: #bdddf5;
 $medium-blue: #4476f7;
+$deep-blue: #2a55c4;
 $pink: #e0217d;
 $yellow: #f5d747;
 
-$link-color: $medium-blue;
-
-.img-container {
-    width: 100%;
-    display:flex;
-    gap: 20px;
-    justify-content: center;
-}
-
-.img {
-    height: 400px;
-}
-
-.video {
-    width: 100%;
-    display: flex;
-    flex-direction: center;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-.icon {
-    height: 100px;
-    width: 100px;
-    border-radius: 2px;
-    overflow: hidden;
-}
+$link-color: $deep-blue;
+$btn-primary-color: $deep-blue;
+$body-heading-color: #0b1220;
+$body-text-color: #24292f;
+$nav-child-link-color: #57606a;
+$search-result-preview-color: #57606a;
+$border-color: #d8dce3;
+$code-background-color: #f4f6fa;
