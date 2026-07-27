@@ -21,7 +21,7 @@ Views are the different ways that you can view a collection of documents. Dash s
 
 Use the dropdown in the top toolbar to change between views. If you don't see the dropdown or see a document-specific toolbar like image or text, click a blank area of the main view to invoke the view dropdown.
 
-![](../../assets/gifs/views/dash-change-view.gif){:.img}
+![]({{ '/assets/gifs/views/dash-change-view.gif' | relative_url }}){:.img}
 
 <!--
 Dash is a hypermedia system that supports the following documents in the [latest verison of Dash](https://browndash.com/login).

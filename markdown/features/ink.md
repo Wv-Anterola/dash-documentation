@@ -24,7 +24,7 @@ Dash allows the user to draw various shapes and lines, each represented by an in
 
 The ink tools can be found in the ink toolbar. Single-clicking on one of the tools will bring the user to ink mode only for the duration of that drawing action. Conversely, double-clicking will keep the user in ink mode until the button is clicked again.
 
-![](../../assets/gifs/features/inkdraw.gif){:.img}
+![]({{ '/assets/gifs/features/inkdraw.gif' | relative_url }}){:.img}
 
 ## Formatting Ink
 
@@ -46,19 +46,19 @@ Users can change the colors of the stroke and fill using the palette that appear
 #### Editing Points
 - Clicking on the "Edit points" button in the Transform subpanel or double-clicking the currently selected ink brings up multiple squares outlined in blue along the ink stroke. 
 
-![](../../assets/gifs/features/inkedit0.gif){:.img}
+![]({{ '/assets/gifs/features/inkedit0.gif' | relative_url }}){:.img}
 
 - By dragging these control points and tangent handles, users can alter the Bézier curve. When one handle point is moved, its opposite handle point will rotate the same angle in the opposite direction, resulting in synchronous movement. 
 
-![](../../assets/gifs/features/inkedit1.gif){:.img}
+![]({{ '/assets/gifs/features/inkedit1.gif' | relative_url }}){:.img}
 
 - To break handle tangency and allow independent movement of either handle point, the user can hold the 'Alt' or 'Option' key while dragging. Double-tapping a broken control point will snap the handles back to being parallel and re-enable synchronous movement.
 
-![](../../assets/gifs/features/inkedit2.gif){:.img}
+![]({{ '/assets/gifs/features/inkedit2.gif' | relative_url }}){:.img}
 
 - Control points can be deleted (pressing backspace with the point selected) or added (single clicking on the desired point on the stroke, indicated by the blue circle that appears on hover).
 
-![](../../assets/gifs/features/inkedit3.gif){:.img}
+![]({{ '/assets/gifs/features/inkedit3.gif' | relative_url }}){:.img}
 
 #### Lock Ratio
 Users can click on the lock button to lock the dimension ratio so that they can change the width and the height of the document proportionally.
@@ -71,10 +71,10 @@ Users can change the x coordinate and y coordinate of the ink documents by chang
 
 ## Masks
 
-![](../../assets/gifs/ink/createmask.gif){:.img}
+![]({{ '/assets/gifs/ink/createmask.gif' | relative_url }}){:.img}
 
 The mask tool in the ink toolbar allows you to create a mask. You can either select an existing ink document and then click Mask to convert it to a mask, or select Mask and then draw a new ink document. This will hide everything else on the canvas and show the part that is under the ink doc.
 
 These can be useful for presentations since they can be animated or hidden and revealed to emphasize information.
 
-![](../../assets/gifs/ink/presentationmask.gif){:.img}
+![]({{ '/assets/gifs/ink/presentationmask.gif' | relative_url }}){:.img}

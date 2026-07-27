@@ -8,7 +8,7 @@ nav_order: 2
 
 # PDF Documents
 
-![](../../assets/images/environment/pdf_doc.png){:.img}
+![]({{ '/assets/images/environment/pdf_doc.png' | relative_url }}){:.img}
 {: .no_toc }
 
 <details open markdown="block">
@@ -28,7 +28,7 @@ PDF files created outside of Dash.
 
 Dragged & dropped into Dash from an external source (i.e., your own desktop)
 
-![](../../assets/gifs/environment/pdf.gif){:.img}
+![]({{ '/assets/gifs/environment/pdf.gif' | relative_url }}){:.img}
 
 ## Objects & Actions:
 

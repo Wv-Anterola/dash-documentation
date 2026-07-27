@@ -8,7 +8,7 @@ nav_order: 1
 
 # Physics Simulations
 <div class="img-container">
-  <img src="../../assets/images/environment/simulation_doc.png" alt="overall environment" style="height:400px;"/>
+  <img src="{{ '/assets/images/environment/simulation_doc.png' | relative_url }}" alt="overall environment" style="height:400px;"/>
 </div>
 {: .no_toc }
 

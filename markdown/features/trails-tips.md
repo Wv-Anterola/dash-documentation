@@ -2,7 +2,7 @@
 layout: default
 title: Tips and Tricks
 parent: Trails
-permalink: /features/trails/tips
+permalink: /features/trails/tips/
 nav_order: 3
 ---
 

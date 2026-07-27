@@ -8,7 +8,7 @@ nav_order: 1
 
 # Text Documents
 
-![](../../assets/images/environment/text_doc.png){:.img}
+![]({{ '/assets/images/environment/text_doc.png' | relative_url }}){:.img}
 {: .no_toc }
 
 <details open markdown="block">
@@ -24,7 +24,7 @@ nav_order: 1
 
 ## How to Create:
 
-![](../../assets/images/environment/text_doc2.gif){:.img}
+![]({{ '/assets/images/environment/text_doc2.gif' | relative_url }}){:.img}
 Created by clicking anywhere on the blank canvas in freeform perspective and typing some text
 
 ## Objects & Actions
@@ -41,13 +41,13 @@ Created by clicking anywhere on the blank canvas in freeform perspective and typ
 
 ## Ask GPT3
 
-![](../../assets/images/environment/text_doc3.gif){:.img}
+![]({{ '/assets/images/environment/text_doc3.gif' | relative_url }}){:.img}
 
 - Type your prompt and click Ask GPT3 in the context menu
 
 ## Generate Dall-E Image
 
-![](../../assets/images/environment/text_doc4.gif){:.img}
+![]({{ '/assets/images/environment/text_doc4.gif' | relative_url }}){:.img}
 
 - Type your prompt and click Generate Dall-E Image.
 - Wait for generation at bottom right of screen

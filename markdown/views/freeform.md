@@ -2,14 +2,14 @@
 layout: default
 title: Freeform
 parent: Views
-permalink: /Views/freeform/
+permalink: /views/freeform/
 nav_order: 1
 ---
 
 # Freeform View
 
 <div class="img-container">
-  <img src="../../assets/images/environment/views/freeform_view.gif" alt="overall environment" style="height:400px;"/>
+  <img src="{{ '/assets/images/environment/views/freeform_view.gif' | relative_url }}" alt="overall environment" style="height:400px;"/>
 </div>
 {: .no_toc }
 

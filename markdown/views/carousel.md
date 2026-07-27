@@ -3,7 +3,7 @@ layout: default
 title: Carousel
 parent: Views
 nav_exclude: true
-permalink: /Views/carousel/
+permalink: /views/carousel/
 nav_order: 5
 ---
 

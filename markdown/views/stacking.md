@@ -2,7 +2,7 @@
 layout: default
 title: Stacking
 parent: Views
-permalink: /Views/stacking/
+permalink: /views/stacking/
 nav_order: 3
 ---
 

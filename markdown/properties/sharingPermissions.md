@@ -21,4 +21,4 @@ ONLY AVAILABLE IN DEVELOPER MODE
 </details>
 
 ## Description 
-Sharing & Permissions for a selected document displays the degree to which users (including the owner, guest users, and all individuals and groups that the selected document has been shared with) can modify the document. For more on Sharing & Permissions, view the **[COLLABORATION](/Dash-Documentation/features/collaboration/)** page in the documentation. 
+Sharing & Permissions for a selected document displays the degree to which users (including the owner, guest users, and all individuals and groups that the selected document has been shared with) can modify the document. For more on Sharing & Permissions, view the **[COLLABORATION]({{ '/features/collaboration/' | relative_url }})** page in the documentation. 

@@ -41,7 +41,7 @@ Everything in Dash is a document (including content primitives such as PDFs and 
 1. Begin typing `:` to bring up the document menu, from which you can create a document.
 2. Select the type of document you want to create to make a blank instance of that document.
 
-![](../../assets/gifs/gettingstarted/createnode.gif){:.img}
+![]({{ '/assets/gifs/gettingstarted/createnode.gif' | relative_url }}){:.img}
 
 #### A4. Create an alias of an existing document
 1. An alias, which is also a document itself, is a pointer back to its original document; it is typically a different perspective on the same document. This allows multiple users to have their own perspectives of the same document, or to have the same document appear in multiple collections.
@@ -66,7 +66,7 @@ Click the “+ New” button in the schema and stacking views.
 2. **Access**: right-click on the canvas to invoke the rectangular marquee, then drag to manipulate its size. Alternatively, right-click then press the space key to invoke the lasso marquee tool to freely draw a marquee. Finally, release the right-click to create the marquee
 3. **Objects & actions**: 
 * A marquee to select one or more desired documents
-* A floating toolbar to where users can perform actions on the selected documents including create a collection, summarize, delete, change to text, and pin the selected region to a **[presentation trail](../features/trails.md)**
+* A floating toolbar to where users can perform actions on the selected documents including create a collection, summarize, delete, change to text, and pin the selected region to a **[presentation trail]({{ '/features/trails/' | relative_url }})**
 * A temporary bounding box that enables users to move and resize all selected documents at once (transforming documents)
 
 #### B3. Shift-click selection

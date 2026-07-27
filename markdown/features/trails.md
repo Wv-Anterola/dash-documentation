@@ -31,12 +31,12 @@ With presentation trails you can easily go from authoring mode, to presentation 
 
 There are two ways to open up the Presentation Trails sidebar:
 
-- <img align="left" src="../../assets/icons/trails-upscaled.png" width="100" height="100"/>
+- <img align="left" src="{{ '/assets/icons/trails-upscaled.png' | relative_url }}" width="100" height="100"/>
   **Menu panel:** The trails button in the lefthand menu will open up a list of your existing trails which you can open by double clicking, as well as a "New Trail" button to create a new presentation.
 
 <br/>
 
-- <img align="left" src="../../assets/icons/pin-upscaled.png" width="100" height="100"/>
+- <img align="left" src="{{ '/assets/icons/pin-upscaled.png' | relative_url }}" width="100" height="100"/>
   **Pinning a document:** Using the document decorations ‘Pin to Presentation’ button, you can pin any document to the Active Presentation. If you have not created a presentation yet, this will begin a new one and open the Trails sidebar on the right side of your workspace. If you have a previous presentation (or multiple) you closed, it will pin the document to the most recent presentation and open it up.
 
 ## Objects & Actions
@@ -47,33 +47,33 @@ There are two ways to open up the Presentation Trails sidebar:
 
 To pin any document to the presentation trail simply select a document and use the ‘Pin’ button in the document decorations to add it to the presentation trail. If the user has not yet created a presentation trail, then this button will also create a new presentation trail and add that specific document as the first slide in the trail.
 
-- ![](../../assets/images/trails/regularpin.png)
+- ![]({{ '/assets/images/trails/regularpin.png' | relative_url }})
 
 #### Pin with view:
 
 Pinning with view pins the canvas with the specific pan and zoom you have it set to, allowing you to show a view of multiple documents laid out on a collection. There are two places where you can pin with view:
 
 - **Top menu bar:** this pins the canvas with the pan and zoom of the tab as you are currently viewing it
-  ![](../../assets/gifs/trails/pinwmenuview.gif){:.img}
+  ![]({{ '/assets/gifs/trails/pinmenuview.gif' | relative_url }}){:.img}
 - **Marquee menu:** this option appears when you right click and drag on the canvas to create a marquee selection and pins the canvas with the marquee bounds as the viewport
-  ![](../../assets/gifs/trails/pinmarqueeview.gif){:.img}
+  ![]({{ '/assets/gifs/trails/pinmarqueeview.gif' | relative_url }}){:.img}
 
 #### Other pinning options:
 
 Other ways to pin documents are available when hovering over the pin button in the document decorations. Each of these track different aspects of the document's state, allowing you to pin them, make changes, and then pin them again to display transitions between the document's layout or content. This is different than the default pin, where any changes made to the document after pinning are reflected in the presentation slide.
 
 - **Pin with layout:** this pins the document saving its current layout state: xy position, width, and height
-  ![](../../assets/gifs/trails/pinlayout.gif){:.img}
+  ![]({{ '/assets/gifs/trails/pinlayout.gif' | relative_url }}){:.img}
 - **Pin with content:** this pins the document content saving its content state such as the text of a text document, the pan and zoom of a collection, the scroll position of a PDF, etc.
-  ![](../../assets/gifs/trails/pincontent.gif){:.img}
+  ![]({{ '/assets/gifs/trails/pincontent.gif' | relative_url }}){:.img}
 - **Pin with layout and content:** this saves both layout and content
-  ![](../../assets/gifs/trails/pinlayoutcontent.gif){:.img}
+  ![]({{ '/assets/gifs/trails/pinlayoutcontent.gif' | relative_url }}){:.img}
 
 ### Slides
 
 Slides are used to visually represent the path that the trail would follow. Unlike the conventional Powerpoint "slide", a trails slide is just any pinned item in a presentation, whether it's a document, collection, view, etc. A single node can be pinned multiple times throughout a presentation, potentially with different content or layout aspects that change, but each of these instances is a unique slide.
 
-![](../../assets/images/trails/slide.png){:img}
+![]({{ '/assets/images/trails/slide.png' | relative_url }}){:img}
 
 Selected slides are indicated by the blue outline and the light blue background, on each slide the user can find:
 
@@ -84,7 +84,7 @@ Selected slides are indicated by the blue outline and the light blue background,
 - **Camera:** records video following your mouse movements while presenting the trail
 - **Arrow:** groups slide with the one above it. When presenting, both slides will transition in together and run simultaneously. By default they play in parallel, but clicking the blue arrow line when grouped will switch to series and play one after the other (indicated as the black outline around the arrow)
 
-  ![](../../assets/gifs/trails/arrows-present-together.gif){:.img}
+  ![]({{ '/assets/gifs/trails/arrows-present-together.gif' | relative_url }}){:.img}
 
 - **Eye:** expand/minimize a preview of the slide
 - **Trash:** removes the slide from the presentation (not from the collection or database)
@@ -96,7 +96,7 @@ Slides can be rearranged by dragging and dropping.
 
 Selecting a slide and opening the properties menu (the gray arrow tab in the middle right edge of the screen) or clicking the pencil icon on the slide displays the transitions menu where you can edit many aspects of how the slide is played when in presentation mode. Multiple slides can be selected by holding down shift and clicking more slides. You can choose to apply any changes you make in the properties menu to all the slides in a presentation by clicking "Apply to all".
 
-![](../../assets/images/trails/dash-open-trails-pane.gif)
+![]({{ '/assets/images/trails/dash-open-trails-pane.gif' | relative_url }})
 
 ### Customizing with GPT
 
@@ -104,7 +104,7 @@ At the top of the pane, you can use natural language in order to communicate how
 
 You can also use the record button to speak to the system rather than typing.
 
-![](../../assets/images/trails/dash-slide-customization.gif)
+![]({{ '/assets/images/trails/dash-slide-customization.gif' | relative_url }})
 
 ### Transitions
 
@@ -128,7 +128,7 @@ Specify the type of movement from the following options, as well as the amount o
 
 - You can specify a custom bezier easing function with the timing editor to fine-tune the timing. Drag the circles to modify the control points.
 
-![](../../assets/images/trails/dash-bezier-editor.gif)
+![]({{ '/assets/images/trails/dash-bezier-editor.gif' | relative_url }})
 
 #### Effects
 
@@ -142,13 +142,13 @@ You can also customize the timing by which the effect is played (besides Lightsp
 
 A preview of the animation is displayed below the settings.
 
-![](../../assets/images/trails/dash-transition-customization.gif)
+![]({{ '/assets/images/trails/dash-transition-customization.gif' | relative_url }})
 
 **Get Effect Suggestions**
 
 If you want to explore different effects without manually adjusting the settings, you can preview some suggestions at the top of the effects section. You can customize these effects with a prompt to have GPT generate suggestions as well. Clicking on these preview boxes will apply the displayed effect to the current slide.
 
-![](../../assets/images/trails/dash-generate-animations.gif)
+![]({{ '/assets/images/trails/dash-generate-animations.gif' | relative_url }})
 
 #### Visibility & Duration
 
@@ -163,7 +163,7 @@ Pressing the present button enters presentation mode which begins cycling throug
 
 Clicking the dropdown next to the present button gives you the option to start presenting with the **mini-player** which hides the presentation menu and shows you a small hovering set of controls that obstructs less of your workspace while presenting.
 
-![](../../assets/gifs/trails/miniplayer.gif){:.img}
+![]({{ '/assets/gifs/trails/miniplayer.gif' | relative_url }}){:.img}
 
 ### Views
 
@@ -172,9 +172,9 @@ When outside of presentation mode, the presentation player above the slides is r
 **List:**
 The default view selected, list view is a linear way of presenting the presentation slides. As the name suggests, the slides are in a linear list, being called one after the other from the top to the bottom. Dragging a slide in this view allows the user to change the order of the trail.
 
-![](../../assets/images/trails/preslist.png){:img}
+![]({{ '/assets/images/trails/preslist.png' | relative_url }}){:img}
 
 **Tree:**
 The tree view allows you to represent your slides in a tree-like structure. Slides can be dropped on top of another slide to create a system of nesting. When expanded, the children slides will play from top to bottom like in list view, but the user is also able to hide children slides by clicking to the lift of the title. Doing this will hide the children slides and during presentation, skip these hidden children.
 
-![](../../assets/images/trails/prestree.png){:img}
+![]({{ '/assets/images/trails/prestree.png' | relative_url }}){:img}

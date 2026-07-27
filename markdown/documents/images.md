@@ -8,7 +8,7 @@ nav_order: 1
 
 # Images
 
-![](../../assets/images/environment/image_doc.png){:.img}
+![]({{ '/assets/images/environment/image_doc.png' | relative_url }}){:.img}
 {: .no_toc }
 
 <details open markdown="block">
@@ -40,6 +40,6 @@ Dragged and dropped into Dash from an external source (i.e., internet, own deskt
 - Use Image Editor AI to fill in parts of the image you marked in the Image Editor
 - Use the prompt box to guide the AI on how you want those parts of the image to be filled
 - Click get Edits to generate edits (you will see 2 versions of the edited image + original on right side)
-  ![](../../assets/images/environment/image_doc2.png){:.img}
+  ![]({{ '/assets/images/environment/image_doc2.png' | relative_url }}){:.img}
 - Returning to the dashboard will create a collection of linked images that show the iterations of generated edits
-  ![](../../assets/images/environment/image_doc3.png){:.img}
+  ![]({{ '/assets/images/environment/image_doc3.png' | relative_url }}){:.img}

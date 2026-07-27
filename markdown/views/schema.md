@@ -2,14 +2,14 @@
 layout: default
 title: Schema
 parent: Views
-permalink: /Views/schema/
+permalink: /views/schema/
 nav_order: 2
 ---
 
 # Schema View
 
 <div class="img-container">
-  <img src="../../assets/images/environment/views/schema_view.png" alt="overall environment" style="height:400px;"/>
+  <img src="{{ '/assets/images/environment/views/schema_view.png' | relative_url }}" alt="overall environment" style="height:400px;"/>
 </div>
 {: .no_toc }
 
@@ -40,4 +40,4 @@ Navigating Dash an an “Excel sheet”
 - Edit existing columns (keys) by left-clicking on the small circular button next to the column title, which will invoke a drop-down menu that allows users to changge, filter, or delete the column.
 - Edit existing cells (values) by left-clicking on the desired cell, then typing in the desired value. If the value is a string, put quotation marks around the value.
 - Sort each column in ascending or descending order of its values, by toggling the arrow buttons beside each column title.
-![](../../assets/gifs/views/schema_columns.gif){:.img}
+![]({{ '/assets/gifs/views/schema_columns.gif' | relative_url }}){:.img}

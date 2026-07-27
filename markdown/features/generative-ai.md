@@ -7,7 +7,7 @@ permalink: /features/generativeai/
 
 # Generative AI
 
-![](../../assets/images/gen_ai.png){:.img}
+![]({{ '/assets/images/gen_ai.png' | relative_url }}){:.img}
 {: .no_toc }
 
 <details open markdown="block">
@@ -27,7 +27,7 @@ Dash's integration with the OpenAI API enables features that aid in text and ima
 
 You can invoke GPT-4o to respond to a text prompt inside of a text node by opening the context menu (three bars icon) => `Ask GPT-4`. It will type in its response in the text node containing the prompt.
 
-![](../../assets/gifs/ai/ai-text.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-text.gif' | relative_url }}){:.img}
 
 ## AI Assistant
 
@@ -45,11 +45,11 @@ To use the assistant to analyze PDFs and CSVs, link a PDF or CSV document to it 
 
 The assistant can also help you search the web for relevant news articles. To use this feature, link an empty collection to the assistant box and prompt it to search the web. 
 
-![](../../assets/gifs/ai/ai-websearch-1.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-websearch-1.gif' | relative_url }}){:.img}
 
 You can then iteratively search through conversation with the assistant.
 
-![](../../assets/gifs/ai/ai-websearch-2.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-websearch-2.gif' | relative_url }}){:.img}
 
 ## Images
 
@@ -61,12 +61,12 @@ You can generate an image with the Smart Draw feature by opening it from the Ink
 
 `Note` Images take some time to generate.
 
-![](../../assets/gifs/ai/ai-firefly-image-1.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-firefly-image-1.gif' | relative_url }}){:.img}
 
 You can also provide Adobe Firefly with a reference image drawn in Dash. To generate an image based on a reference, select the ink drawing you want to use as a reference, then open the options menu on the right (blue arrow to the right or double-arrow on the top right) and customize your generation. 
 
-![](../../assets/gifs/ai/ai-firefly-template-image-1.gif){:.img}
-![](../../assets/gifs/ai/ai-firefly-template-image-2.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-firefly-template-image-1.gif' | relative_url }}){:.img}
+![]({{ '/assets/gifs/ai/ai-firefly-template-image-2.gif' | relative_url }}){:.img}
 
 ### Editing
 
@@ -75,19 +75,19 @@ You can edit images within dash to generate new visual content based on existing
 #### Step 1
 
 From the image context menu, click on Open Image Editor, which will pull up an editor view.
-![](../../assets/gifs/ai/ai-edit-1.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-edit-1.gif' | relative_url }}){:.img}
 
 #### Step 2
 
 Using the eraser tool, erase the part of the image you would like to fill with new content and optionally provide a prompt. Then, click `Get Edits` to generate the image edits. Variations will pop up on the right, and clicking them will draw the result to the main canvas. You can generate further edits from the results following the same process.
 
 `Note` Images take some time to generate. Additionally, the image model may not always produce a result that aligns with the prompt. To achieve better results, provide as much context about the image in your prompt as possible, including areas of the image you are leaving as is.
-![](../../assets/gifs/ai/ai-edit-2.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-edit-2.gif' | relative_url }}){:.img}
 
 #### Step 3
 
 Once you close out of the editor, you'll see a tree that represents the edit version history in a new collection. You can drag that collection back into the main canvas.
-![](../../assets/gifs/ai/ai-edit-3.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-edit-3.gif' | relative_url }}){:.img}
 
 #### Additional Editor Features
 
@@ -113,10 +113,10 @@ Select the columns you want to generate based on in the CSV and navigate to the 
 
 Click the generate button and get recommended templates for the given content. You can click on the edit button on the bottom right of each template to edit it.
 
-![](../../assets/gifs/ai/ai-template-csv-1.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-template-csv-1.gif' | relative_url }}){:.img}
 
 #### Step 4
 
 Once you're happy with your template, select all rows in the CSV you want to generate for, click on the template to select it, then navigate to the layout menu (magnifying glass icon at the top) and choose how you'd like your content displayed. When you're finished, click the 'plus' button to add the collection to Dash!
 
-![](../../assets/gifs/ai/ai-template-csv-2.gif){:.img}
+![]({{ '/assets/gifs/ai/ai-template-csv-2.gif' | relative_url }}){:.img}

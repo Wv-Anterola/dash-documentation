@@ -20,7 +20,7 @@ This is a collection of all of the videos included in this documentation. While 
 
 ## Welcome to Dash!
 
-An introduction to the overall environment. To find out more about the overall environment you can go [here](environment.md).
+An introduction to the overall environment. To find out more about the overall environment you can go [here]({{ '/environment/' | relative_url }}).
 
 <div class="video">
 <iframe src="https://drive.google.com/file/d/1hzoaU-VZBnIk1y4aOYQkbuCobunOCMd6/preview" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>

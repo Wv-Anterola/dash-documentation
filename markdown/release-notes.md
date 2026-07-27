@@ -35,7 +35,7 @@ This was the version of Dash that was used in the seminar taught in Fall 2020. N
 
 ## <span style="color:#4476f7">**0.2**</span> - <span style="background:#bdddf5">December 2020</span>
 This was the version of Dash that was used in the seminar taught in Fall 2020. Notable feature changes include:
-- Extended functionality for [Presentation Trails](../features/presTrails)
+- Extended functionality for [Presentation Trails]({{ '/features/trails/' | relative_url }})
 - Sharing and access controls
 
 ## <span style="color:#4476f7">**0.1**</span> - <span style="background:#bdddf5">January 2020</span>

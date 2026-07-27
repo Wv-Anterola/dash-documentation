@@ -2,7 +2,7 @@
 layout: default
 title: Notetaking
 parent: Views
-permalink: /Views/notetaking/
+permalink: /views/notetaking/
 nav_order: 4
 ---
 

@@ -3,13 +3,13 @@ layout: default
 title: Video
 parent: Temporal Media
 grand_parent: Documents
-permalink: /documents/tempMedia/video
+permalink: /documents/tempMedia/video/
 nav_order: 2
 ---
 
 # Videos
 
-![](../../../assets/images/environment/video_doc.png){:.img}
+![]({{ '/assets/images/environment/video_doc.png' | relative_url }}){:.img}
 {: .no_toc }
 
 <details open markdown="block">
@@ -33,4 +33,4 @@ Video documents can be created by navigating to the Import Menu and importing a 
 - You can play, pause, navigate to a specific point in time, or toggle fullscreen view using the video controls in the top right corner.
 - The eye icon at the top right corner toggles the view of the audio timeline. This timeline functions similar to the timeline in an audio document allowing you to place label and region markers, though you cannot trim.
 
-![](../../../assets/gifs/video/timelineview.gif){:.img}
+![]({{ '/assets/gifs/video/timelineview.gif' | relative_url }}){:.img}

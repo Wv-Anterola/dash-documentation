@@ -7,15 +7,15 @@ layout: home
 
 ## Welcome to Dash!
 
-For more infomation on joining dash, go to the [joining dash](/Dash-Documentation/joining-dash) page!
+For more infomation on joining dash, go to the [joining dash]({{ '/joining-dash/' | relative_url }}) page!
 
 **Welcome to dash documentation!** Here we will keep record of version updates and include all of the relevant feature tutorials and updates.
 
-To learn how to use Dash, check out our [Getting Started](/markdown/getting-started.md) page. For an overview of the Dash interface, check out our [Overall Environment](/markdown/environment.md) page.
+To learn how to use Dash, check out our [Getting Started]({{ '/getting-started/' | relative_url }}) page. For an overview of the Dash interface, check out our [Overall Environment]({{ '/environment/' | relative_url }}) page.
 
-You can find the release notes [here](/Dash-Documentation/release-notes). You can also find video documentation [here](/Dash-Documentation/videos).
+You can find the release notes [here]({{ '/release-notes/' | relative_url }}). You can also find video documentation [here]({{ '/videos/' | relative_url }}).
 
-Dash is an **open component-based hypermedia system** that provides what we believe to be a best of breed set of components. While each component can be used in isolation as less full featured versions of an analogous application, Dash allows users to interoperate components and compose their own workflows without losing data or expending effort while switching between tasks. As hypertext allowed users to flexibly move between texts, Dash allows users to flexibly move between tasks. Read more [here...](/Dash-Documentation/about)
+Dash is an **open component-based hypermedia system** that provides what we believe to be a best of breed set of components. While each component can be used in isolation as less full featured versions of an analogous application, Dash allows users to interoperate components and compose their own workflows without losing data or expending effort while switching between tasks. As hypertext allowed users to flexibly move between texts, Dash allows users to flexibly move between tasks. Read more [here...]({{ '/about/' | relative_url }})
 
 You can signup for our **stable release (V0.5)** by clicking on the following button:
 
