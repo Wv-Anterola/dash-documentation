@@ -1,92 +1,158 @@
 ---
-layout: page
+layout: default
 title: About Dash
 permalink: /about/
-nav_order: 1
+nav_order: 2
 ---
 
-# Dash
+# About Dash
+{: .no_toc }
 
-Imagine you are annotating and reading [As We May Think](https://www.theatlantic.com/magazine/archive/1945/07/as-we-may-think/303881/) by Vannevar Bush, which is a PDF, so you have Adobe Acrobat open. In another desktop, you are listening to an interview in which Andy is talking about the importance of linking, a concept that Bush writes about in depth. You also remembered Andy speaking about linking from your last lecture, so you open the recorded Zoom lecture in another tab. All these documents are related, but how can we imagine, visualize and organize those relationships?
+<details open markdown="block">
+  <summary>Table of contents</summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
+## The workflow this is for
+
+Say you are reading Vannevar Bush's [As We May
+Think](https://www.theatlantic.com/magazine/archive/1945/07/as-we-may-think/303881/),
+annotating it in a PDF reader. You are also listening to a recorded interview
+where someone makes an argument about linking that Bush anticipates, and you
+half-remember a lecture that covered the same ground, so that Zoom recording is
+open in a third window.
+
+The three are related. Nothing you are using can hold that relationship. You can
+put a note in the PDF saying "cf. the interview around 12 minutes", and next
+month the note will still be there and the interview will not be findable.
 
 <div class="img-container">
-  <img src="{{ '/assets/images/dash1.png' | relative_url }}" alt="overall environment" style="height:600px; textAlign:center;"/>
+  <img src="{{ '/assets/images/dash1.png' | relative_url }}" alt="A Dash dashboard showing several documents of different types arranged on a freeform canvas with links drawn between them." class="img"/>
 </div>
 
-Dash is a collaborative browser-based web application built to support knowledge workers for workflows like the one described above. As knowledge workers we deal with documents, but more importantly we deal with the concepts that these documents contain, and the complex relationships between them. There are many popular application suites, as well as specialized apps, that are designed specifically for workflows in which users focus on a single document for extended periods of time. Unlike these applications, as a hypermedia system, Dash supports corpuses which includes links, concepts, tags, and multimedia documents. By using the same implementation for websites, PDFs, audio recordings, videos, ink, and rich text, in Dash you can easily create and follow link between any word, region, section, or snippet of any of those documents.
+Dash is an attempt to make that relationship a first-class thing. Because
+websites, PDFs, audio, video, ink, and rich text all use the same underlying
+document implementation, a link can start at a word in one and end at a
+timestamp in another, and the link itself is a document you can describe,
+annotate, and file.
+
+## What Dash actually is
+
+A collaborative, browser-based hypermedia system, with a desktop build as of
+2026.
+
+The pieces that make it different from a note-taking application:
+
+**Collections are documents too.** A collection holds other documents, and how
+it displays them is a property you change rather than a different kind of
+object. The same collection can be a freeform canvas, a spreadsheet-style
+schema table, a calendar, a stack, or a link graph. Nothing is converted when
+you switch.
+
+**Links anchor to regions, not files.** A word, a marquee selection on an image,
+a page of a PDF, an ink stroke, a moment in a recording.
+
+**Metadata travels across types.** Tags and fields work the same way on a video
+as on a text note, so you can filter and sort a mixed corpus.
+
+**Trails are not slideshows.** A trail is a prepared path through a corpus, but
+you can stop anywhere in it and start following links by association instead.
+That is the specific thing Bush described and that presentation software
+deliberately does not do.
 
 <div class="img-container">
-  <img src="{{ '/assets/images/dash2.jpg' | relative_url }}" alt="overall environment" style="height:200px; textAlign:center;"/>
+  <img src="{{ '/assets/images/dash2.jpg' | relative_url }}" alt="Documents in Dash shown across several collection view types." class="img"/>
 </div>
 
-Dash supports spatial and visual layouts of all those documents into what we call collections. Collections have different views that each displays its transcluded documents using a layout reminiscent of popular apps (e.g. Trello, file system viewer, spreadsheet). These views are all composable so that users can define their own specific workflows. Beyond supporting these documents and the ability to view, interact and organize them, Dash also supports metadata across these documents so they can be tagged with any relevant information and organized or sorted accordingly. Furthermore, Dash allows users to build predefined trails. Unlike other presentation apps, (eg. Powerpoint, Prezi) in Dash you can stop the linear trail at any time and continue your exploration by navigating freely and following links by association, allowing users to be trailblazers as imagined by Vannevar Bush.
+## Where the project stands
 
-Dash is built by Andries van Dam’s research group at Brown University in Providence, Rhode Island. It is available online at [browndash.com](https://browndash.com/signup).
+Dash has been developed continuously since December 2018, almost entirely by
+Brown undergraduates working in semester-length cohorts, with Andries van Dam
+and Bob Zeleznik providing continuity across them.
 
-## Dash Architecture
+The direction has shifted over that time. The first two years built the document
+model, collections, and linking. The middle years consolidated and shipped
+releases. Since 2023 the centre of gravity has moved to generative AI and, since
+2025, to agents that can act on the workspace rather than only describe it. The
+2026 cohort added a strand of work on what happens when an agent with write
+access reads content it should not trust.
 
-Interested in learning about how Dash is structured under the hood? Check out [this page](https://hackmd.io/@CS1951V-2023/DashArchitecture) on the architecture of Dash!
+For the full record, see [Cohorts]({{ '/cohorts/' | relative_url }}) and
+[Projects]({{ '/projects/' | relative_url }}).
+
+## Architecture
+
+The [how Dash is built]({{ '/system/' | relative_url }}) page describes the
+current system and the four places you extend it.
+
+There is also a longer [architecture
+write-up](https://hackmd.io/@CS1951V-2023/DashArchitecture) by Jenny Yu and Bob
+Zeleznik from October 2023, which goes deeper on the client-server protocol,
+optimistic updates, and how concurrent edits are merged.
+
+{: .caveat }
+> That document is worth reading for the synchronisation model, but its core
+> vocabulary has drifted. It builds its explanation on "Fobs" and "Facets", and
+> neither term is used in the current codebase in that sense. Read it for the
+> concepts, not for the names.
 
 <div class="img-container">
-  <img src="{{ '/assets/images/dash-doc-representation.png' | relative_url }}" alt="overall environment" style="height:200px; textAlign:center;"/>
+  <img src="{{ '/assets/images/dash-doc-representation.png' | relative_url }}" alt="Diagram of how a Dash document is represented internally." class="img"/>
 </div>
 
-## Use Cases by the Dash Team
+## Use cases built by the group
 
-Below are examples of use cases that the Dash team created within the application:
-
-### Semester Planner
+### Semester planner
 
 <div class="video">
-  <iframe src="https://www.youtube.com/embed/eQSrDkAqky0" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+  <iframe src="https://www.youtube.com/embed/eQSrDkAqky0" title="Dash use case: semester planner" allowfullscreen loading="lazy"></iframe>
 </div>
 
-### Linguistic Documentation
+### Linguistic documentation
 
 <div class="video">
-  <iframe src="https://www.youtube.com/embed/2xL78f_McgQ" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+  <iframe src="https://www.youtube.com/embed/2xL78f_McgQ" title="Dash use case: linguistic documentation" allowfullscreen loading="lazy"></iframe>
 </div>
 
-## Use Cases from CS1951V
+## Use cases from CS1951V
 
-Below are example use cases from [CS1951V](http://cs.brown.edu/courses/csci1951-v/), a hypertext course at Brown where Dash is used.
+Dash is used in [CS1951V](http://cs.brown.edu/courses/csci1951-v/), Brown's
+hypertext and hypermedia course. These are corpora students built for it.
 
 ### Fall 2023
 
-#### Virtual Wellness Retreat
+<div class="video">
+  <iframe src="https://www.youtube.com/embed/jbrBC8QdjLI" title="CS1951V student project: virtual wellness retreat" allowfullscreen loading="lazy"></iframe>
+</div>
+Virtual wellness retreat.
 
 <div class="video">
-  <iframe src="https://www.youtube.com/embed/jbrBC8QdjLI" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+  <iframe src="https://www.youtube.com/embed/Wu2x3dSE8Gw" title="CS1951V student project: a cappella arranging" allowfullscreen loading="lazy"></iframe>
 </div>
-
-#### A Cappella Arranging
+A cappella arranging.
 
 <div class="video">
-  <iframe src="https://www.youtube.com/embed/Wu2x3dSE8Gw" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+  <iframe src="https://www.youtube.com/embed/sCmRkN4hpNg" title="CS1951V student project: tour of Singapore" allowfullscreen loading="lazy"></iframe>
 </div>
-
-#### Tour of Singapore
-
-<div class="video">
-  <iframe src="https://www.youtube.com/embed/sCmRkN4hpNg" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
-</div>
+Tour of Singapore.
 
 ### Fall 2021
 
-#### Domestic Jungle (Plant Corpus) by Mikey Abela
+<div class="video">
+  <iframe src="https://www.youtube.com/embed/qE2A5PKJQe0" title="CS1951V student project: Domestic Jungle plant corpus by Mikey Abela" allowfullscreen loading="lazy"></iframe>
+</div>
+Domestic Jungle, a plant corpus, by Mikey Abela.
 
 <div class="video">
-  <iframe src="https://www.youtube.com/embed/qE2A5PKJQe0" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+  <iframe src="https://youtube.com/embed/sy_YtdTpKSo" title="CS1951V student project: Antoni Gaudi by Adwith Mukherjee" allowfullscreen loading="lazy"></iframe>
 </div>
+Antoni Gaudi, by Adwith Mukherjee.
 
-#### Antoni Gaudi by Adwith Mukherjee
+## Trying it
 
-<div class="video">
-  <iframe src="https://youtube.com/embed/sy_YtdTpKSo" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
-</div>
-
-## How do I use Dash?
-
-Ready to use Dash? Sign up for an account and get started at [browndash.com](https://browndash.com/signup).
-
-To learn how to use Dash, check out our [Getting Started]({{ '/getting-started/' | relative_url }}) page. For an overview of the Dash interface, check out our [Overall Environment]({{ '/environment/' | relative_url }}) page.
+Dash runs at [browndash.com](https://browndash.com/signup). Start with
+[Getting started]({{ '/getting-started/' | relative_url }}), or
+[Overall environment]({{ '/environment/' | relative_url }}) for a tour of the
+interface.

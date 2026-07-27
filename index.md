@@ -1,48 +1,72 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+title: Dash
 nav_exclude: true
-layout: home
+layout: default
 ---
 
-## Welcome to Dash!
+# Dash
 
-For more infomation on joining dash, go to the [joining dash]({{ '/joining-dash/' | relative_url }}) page!
+<p class="lede">
+Dash is a hypermedia system: one workspace where a PDF, a video, a web page, a
+recording, a rich text note, and a collection of any of those are all the same
+kind of object, and a link can start or end anywhere inside any of them. It is
+built by Andries van Dam's research group at Brown University, and has been
+under continuous development since December 2018.
+</p>
 
-**Welcome to dash documentation!** Here we will keep record of version updates and include all of the relevant feature tutorials and updates.
+## The problem it addresses
 
-To learn how to use Dash, check out our [Getting Started]({{ '/getting-started/' | relative_url }}) page. For an overview of the Dash interface, check out our [Overall Environment]({{ '/environment/' | relative_url }}) page.
+Most software is built around one document at a time. That works when the work
+is one document at a time, and stops working the moment the thing you are
+actually thinking about lives across a dozen of them.
 
-You can find the release notes [here]({{ '/release-notes/' | relative_url }}). You can also find video documentation [here]({{ '/videos/' | relative_url }}).
+Vannevar Bush's 1945 description of the memex is still the clearest statement of
+the alternative: what matters is the trail between items, and the ability to
+leave that trail for someone else to follow. Hypertext delivered part of it for
+text. Dash is an attempt at the rest, for every kind of document a researcher
+actually handles, with the relationships between them treated as data rather
+than as something you keep in your head.
 
-Dash is an **open component-based hypermedia system** that provides what we believe to be a best of breed set of components. While each component can be used in isolation as less full featured versions of an analogous application, Dash allows users to interoperate components and compose their own workflows without losing data or expending effort while switching between tasks. As hypertext allowed users to flexibly move between texts, Dash allows users to flexibly move between tasks. Read more [here...]({{ '/about/' | relative_url }})
+Concretely, that means links that anchor to a region of a page, a timestamp in
+an audio recording, or a single ink stroke; collections that can be laid out
+spatially, as a table, on a calendar, or as a link graph without converting
+anything; and metadata that travels with a document across all of it.
 
-You can signup for our **stable release (V0.5)** by clicking on the following button:
+## What is in it now
 
-[browndash.com](https://browndash.com/signup){: .btn }
+Fifty-one document types and twenty-one collection views, plus two AI surfaces:
+a retrieval-augmented chatbot that answers with citations back into your own
+documents, and an agent with twenty-two registered tools that can act on the
+workspace, including one that lets it build itself another. Since March 2026
+there is a desktop build that bundles Ollama, so those features can run against
+a local model rather than a remote API.
 
-<!-- And you can find our **experimental release (V0.5.1)** here, note that there is no guarentee of permanence on this release:
+The [how Dash is built]({{ '/system/' | relative_url }}) page explains the
+structure and the four places you extend it.
 
-[dash-release.com](dash-release.eastus.cloudapp.azure.com:1050/signup){: .btn } -->
+## Current work
 
-<!-- TYPESCRIPT CODE BLOCKS
-```typescript
-const list = [10, 20];
-console.log(list.map(x => (x * x)))
-```
--->
+The [Spring 2026 to Fall 2026 cohort]({{ '/cohorts/2026/' | relative_url }})
+added a link-graph collection view, policy analysis documents, a life-coach
+workspace, scene-based video generation, and a study instrument for measuring
+whether people actually catch an agent that has been prompt-injected into
+editing their documents.
 
-<!-- HOW TO CHANGE COLOR IN MARKDOWN
-<span style="background:aliceblue">some text with a **lightblue** background</span>
+## Where to go next
 
-<span style="color:red">some **red** text</span>
--->
+- [Getting started]({{ '/getting-started/' | relative_url }}) if you want to use Dash.
+- [Cohorts]({{ '/cohorts/' | relative_url }}) for what each group of students built, year by year.
+- [Projects]({{ '/projects/' | relative_url }}) for every project with its implementation status.
+- [How Dash is built]({{ '/system/' | relative_url }}) for the architecture.
+- [Joining Dash]({{ '/joining-dash/' | relative_url }}) if you want to work on it.
 
-<!-- These are a list of shortcuts available. -->
+## Trying it
 
-<!-- _[HTML]: Hyper Text Markup Language
-_[W3C]: World Wide Web Consortium
-_[NPM]: Node Package Manager
-_[IDE]: Integrated Development Environment
-_[MERN]: MongoDB, Express, React, NodeJS
-_[Yarn]: Yet Another Resource Negotiator \*[ACLs]: Access Controls -->
+Dash runs at [browndash.com](https://browndash.com/signup).
+
+{: .caveat }
+> This is a research system under active development by students, not a
+> product. Expect rough edges, and expect the interface in older screenshots
+> and recordings on this site to differ from what you see. Where a
+> documentation page describes something that is no longer in Dash, it is
+> marked as such rather than removed.
