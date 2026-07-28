@@ -9,38 +9,26 @@
  * The rule followed throughout: a component earns a border or a background
  * only when it needs to be distinguished from body text at a glance. Status
  * labels and project references qualify. Table rows do not, so they get rules.
+ *
+ * Theming follows Starlight's own structure: bare `:root` carries the dark
+ * values and `:root[data-theme='light']` overrides them. Do not put themed
+ * values in a bare `:root` block on the assumption that light is the default.
+ * That is what broke this file before: light-mode greys were declared in
+ * `:root`, Starlight's dark theme had nothing to override them with, and body
+ * text in dark mode came out at 2.8:1.
+ *
+ * Starlight's own `--sl-color-white`, `--sl-color-black`, and `--sl-color-gray-*`
+ * are left alone. They are already correct in both themes, and their names are
+ * relative rather than literal: `--sl-color-white` means "furthest from the
+ * page background", which is #fff in dark mode and near-black in light. Setting
+ * it to #ffffff unconditionally made every heading invisible on white.
  */
 
 :root {
-  /* Brand blues from the 2021 site. The link blue is the darker of the two:
-     #4476f7 only reaches 4.05:1 on white, which fails AA for body text. */
-  --dash-blue: #2a55c4;
-  --dash-blue-bright: #4476f7;
-  --dash-blue-light: #bdddf5;
-
-  --sl-color-accent-low: #d8e2fb;
-  --sl-color-accent: var(--dash-blue);
-  --sl-color-accent-high: #1c3d94;
-
-  --sl-color-white: #ffffff;
-  --sl-color-gray-1: #24292f;
-  --sl-color-gray-2: #57606a;
-  --sl-color-gray-3: #8b949e;
-  --sl-color-gray-5: #d8dce3;
-  --sl-color-gray-6: #f2f4f7;
-  --sl-color-gray-7: #f7f8fa;
-
-  --sl-content-width: 48rem;
-  --sl-text-code: 0.9em;
-
-  --dash-rule: #d8dce3;
-  --dash-rule-soft: #e6e9ee;
-  --dash-muted: #57606a;
-}
-
-:root[data-theme='dark'] {
+  /* Dark, matching Starlight's base. Light overrides follow. */
   --dash-blue: #8fb4ff;
   --dash-blue-bright: #a8c5ff;
+  --dash-blue-light: #bdddf5;
 
   --sl-color-accent-low: #16213f;
   --sl-color-accent: #6f9bff;
@@ -49,6 +37,25 @@
   --dash-rule: #33384a;
   --dash-rule-soft: #262b39;
   --dash-muted: #a8aeba;
+
+  /* Not themed. */
+  --sl-content-width: 48rem;
+  --sl-text-code: 0.9em;
+}
+
+:root[data-theme='light'] {
+  /* Brand blues from the 2021 site. The link blue is the darker of the two:
+     #4476f7 only reaches 4.05:1 on white, which fails AA for body text. */
+  --dash-blue: #2a55c4;
+  --dash-blue-bright: #4476f7;
+
+  --sl-color-accent-low: #d8e2fb;
+  --sl-color-accent: #2a55c4;
+  --sl-color-accent-high: #1c3d94;
+
+  --dash-rule: #d8dce3;
+  --dash-rule-soft: #e6e9ee;
+  --dash-muted: #57606a;
 }
 
 /* ------------------------------------------------------------- typography */
@@ -94,19 +101,20 @@
   width: 0.85em;
 }
 
-.status--integrated { color: #1a7f4b; }
-.status--implemented { color: #2a55c4; }
-.status--prototype { color: #8a5300; }
-.status--archived { color: #9a3412; }
-.status--docs-only { color: #6b4ea8; }
-.status--unclear { color: #5c5f66; }
+/* Dark first, to match the theme structure above. */
+.status--integrated { color: #7ddba4; }
+.status--implemented { color: #8fb4ff; }
+.status--prototype { color: #f0c674; }
+.status--archived { color: #f0a878; }
+.status--docs-only { color: #c0a9ec; }
+.status--unclear { color: #a8aeba; }
 
-:root[data-theme='dark'] .status--integrated { color: #7ddba4; }
-:root[data-theme='dark'] .status--implemented { color: #8fb4ff; }
-:root[data-theme='dark'] .status--prototype { color: #f0c674; }
-:root[data-theme='dark'] .status--archived { color: #f0a878; }
-:root[data-theme='dark'] .status--docs-only { color: #c0a9ec; }
-:root[data-theme='dark'] .status--unclear { color: #a8aeba; }
+:root[data-theme='light'] .status--integrated { color: #1a7f4b; }
+:root[data-theme='light'] .status--implemented { color: #2a55c4; }
+:root[data-theme='light'] .status--prototype { color: #8a5300; }
+:root[data-theme='light'] .status--archived { color: #9a3412; }
+:root[data-theme='light'] .status--docs-only { color: #6b4ea8; }
+:root[data-theme='light'] .status--unclear { color: #5c5f66; }
 
 .sl-markdown-content .status-key {
   border-left: 2px solid var(--dash-rule);
@@ -176,6 +184,11 @@
 
 .nowrap {
   white-space: nowrap;
+}
+
+/* Wide tables scroll in their own box rather than pushing the page sideways. */
+.table-scroll {
+  overflow-x: auto;
 }
 
 /* --------------------------------------------------------- project notes */
@@ -288,19 +301,16 @@
   text-transform: uppercase;
 }
 
+/* `--sl-color-black` is the page-background extreme and `--sl-color-white` the
+   text extreme, so this control follows the theme without a second rule. */
 .filter-bar select {
-  background: var(--sl-color-white);
+  background: var(--sl-color-black);
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 4px;
-  color: var(--sl-color-gray-1);
+  color: var(--sl-color-white);
   font-size: 0.9rem;
   min-height: 2.25rem;
   padding: 0.35rem 0.5rem;
-}
-
-:root[data-theme='dark'] .filter-bar select {
-  background: var(--sl-color-gray-6);
-  color: var(--sl-color-white);
 }
 
 .filter-count {
@@ -348,6 +358,14 @@
 }
 
 @media (max-width: 50rem) {
+  /* Starlight does not wrap markdown tables, and several here have four or
+     five columns. Below this width a table scrolls in its own box so the page
+     itself never scrolls sideways. */
+  .sl-markdown-content :is(table, .ref-table, .project-table) {
+    display: block;
+    overflow-x: auto;
+  }
+
   .roster {
     columns: 1;
   }

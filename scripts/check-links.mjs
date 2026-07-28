@@ -8,7 +8,7 @@
  *   node scripts/check-links.mjs [dist-dir]
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative, dirname, resolve, sep } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 
 const DIST = resolve(process.argv[2] ?? 'dist');
 const BASE = '/Dash-Documentation';

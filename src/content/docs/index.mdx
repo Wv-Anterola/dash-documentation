@@ -2,6 +2,11 @@
 title: Dash
 description: A component-based hypermedia system built by Andries van Dam's research group at Brown University, in continuous development since 2018.
 tableOfContents: false
+# Without this the tab reads "Dash | Dash", because Starlight appends the site
+# title to the page title and both are "Dash" on this page alone.
+head:
+  - tag: title
+    content: Dash documentation
 ---
 
 Dash is a hypermedia system: one workspace where a PDF, a video, a web page, a

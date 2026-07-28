@@ -46,6 +46,8 @@ const allAreas = areas();
 
 <p class="filter-count" id="f-count" role="status"></p>
 
+{/* Five columns does not fit a phone. The wrapper scrolls instead of the page. */}
+<div class="table-scroll">
 <table class="project-table" id="project-table">
   <thead>
     <tr>
@@ -83,6 +85,7 @@ const allAreas = areas();
     }
   </tbody>
 </table>
+</div>
 
 <script>
   const table = document.getElementById('project-table') as HTMLTableElement | null;
