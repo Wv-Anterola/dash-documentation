@@ -72,3 +72,25 @@ To create a DataViz box, either import / drag a CSV file into your canvas or cop
 - ### **3-Column Line Charts:** 
   If three numerical columns are selected, the 'line chart' tab will display the second two columns selected (blue and red) over the first one (green).
   ![]({{ '/assets/gifs/dataViz/3colLinechart.gif' | relative_url }}){:.img}
+## Where this came from
+
+The data visualization document type has been extended by a different student
+in almost every cohort since 2022, which makes it a good illustration of how
+work accumulates in Dash: nobody rebuilt it, and each person picked up the type
+the previous one left.
+
+{% include project-note.html title="Data visualisation documents"
+   note="The original CSV-backed document type, from 2022. Everything on this
+   page is built on it." %}
+
+{% include project-note.html title="Interactive chart filtering"
+   note="Added selection-driven filtering on the rendered chart, including
+   multi-selection on pie charts and selections that survive a refresh. Most of
+   the filtering behaviour described above came from this." %}
+
+{% include project-note.html title="Data-visualisation generation pipeline"
+   note="Reworked generation so a single request produces a usable chart. The
+   earlier path produced garbled text and unreliable images." %}
+
+See [collections and views]({{ '/concepts/collections/' | relative_url }}) for
+why a CSV can be a document and a chart can be a view of it.

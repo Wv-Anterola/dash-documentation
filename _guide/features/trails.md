@@ -178,3 +178,21 @@ The default view selected, list view is a linear way of presenting the presentat
 The tree view allows you to represent your slides in a tree-like structure. Slides can be dropped on top of another slide to create a system of nesting. When expanded, the children slides will play from top to bottom like in list view, but the user is also able to hide children slides by clicking to the lift of the title. Doing this will hide the children slides and during presentation, skip these hidden children.
 
 ![]({{ '/assets/images/trails/prestree.png' | relative_url }}){:img}
+
+## How trails have changed
+
+Trails date from the earliest version of Dash and have been reworked several
+times since. Two changes account for most of how they behave now.
+
+{% include project-note.html title="Branching presentation trails"
+   note="Made trails non-linear. A trail can fork, and the dropdown navigation
+   between branches comes from this work. Authoring a branch is still closer to
+   editing a structure than to drawing a path." %}
+
+{% include project-note.html title="Animation remodel for presentation trails"
+   note="Replaced mechanical slide changes with spring physics. Stiffness,
+   damping, and mass are the parameters, which is also what lets the AI
+   customisation path map a phrase like 'settle gently' onto numbers." %}
+
+[Trails as a concept]({{ '/concepts/trails/' | relative_url }}) explains what
+separates a trail from a slideshow, and why that distinction is the point.

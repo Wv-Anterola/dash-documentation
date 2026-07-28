@@ -77,3 +77,11 @@ You can create links with the “linkboard,” which is convenient for creating 
   In order to follow a link on a document, you must click on the title of the destination document in the link menu. Clicking on this and “following” the link will show you the destination document of this link, based on the specified following behavior (following behavior).
 - **Showing Links and Labels:**
   In the link menu, there is an option to visibly show the link. Clicking on this option will show a dotted path between the two documents that are linked. If there is a link label on this link, it will appear on the dotted path. The user can also move the link label around this path and position it where they want.
+
+## Background
+
+The anchor model behind all of this was built in 2019 and has not needed
+fundamental revision since. [Links and anchors]({{ '/concepts/links/' | relative_url }})
+covers why links point at regions rather than files, why a link is itself a
+document, and the two things this design still does not handle: link density
+and link type.

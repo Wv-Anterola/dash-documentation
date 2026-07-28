@@ -142,15 +142,36 @@ the content is displayed. The plus button adds the finished collection to Dash.
 ## Not documented here yet
 
 Several AI features shipped after this page was last substantially revised and
-do not have tutorial pages. They are described, with their implementation
-status, on the cohort pages:
+have no tutorial section of their own. They are real and in `master`; what is
+missing is the walkthrough. Until someone writes one, the project write-ups are
+the most accurate description available.
 
-- The [agent tool registry]({{ '/cohorts/2025/' | relative_url }}) and what the
-  agent can do to your workspace
-- [Video generation]({{ '/cohorts/2026/' | relative_url }}) from canvas content
-- [Policy analysis documents]({{ '/cohorts/2026/' | relative_url }})
-- [Selection-aware text reformatting]({{ '/cohorts/2026/' | relative_url }})
-- Running models locally through the desktop build
+{% include project-note.html title="Agent tool registry and dynamic tool creation"
+   note="The reason there is an agent at all, and the thing to read before
+   letting it loose on documents you care about: several of its tools write to
+   the workspace rather than answering." %}
+
+{% include project-note.html title="Video generator"
+   note="Plans a video as a sequence of scenes drawn from canvas content, with
+   per-scene re-prompting so a bad scene three does not mean regenerating the
+   whole thing." %}
+
+{% include project-note.html title="Policy testimony and policy checker documents"
+   note="Analyses a policy against linked testimony documents and reports back
+   with citations you can filter by source." %}
+
+{% include project-note.html title="Selection-aware text formatting actions"
+   note="Inline reformatting from a text selection. Sends and receives HTML so
+   styling survives, and snaps a partial selection to sentence boundaries first." %}
+
+{% include project-note.html title="Desktop build with local model execution"
+   note="Why these features no longer require an API key: the desktop build
+   bundles Ollama and can run them against a model on your own machine." %}
+
+For the ideas underneath all of this, see
+[agents and tools]({{ '/concepts/agents/' | relative_url }}) for the acting
+surface and [generative media]({{ '/concepts/generative/' | relative_url }}) for
+the producing one.
 
 {: .note }
 > A copy of this page's text is also embedded in the application itself, in

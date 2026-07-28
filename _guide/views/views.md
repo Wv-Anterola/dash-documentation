@@ -43,11 +43,30 @@ docking, which is the workspace itself, there are card, carousel, 3D carousel,
 grid, masonry, multicolumn, multirow, pivot, time, tree, calendar, graph, and
 pile-up.
 
+Two of the newer ones came out of student projects, and both are worth knowing
+about even though neither has a tutorial page yet.
+
+{% include project-note.html title="Graph view for collections"
+   note="Adds a force-directed layout where links are edges, so you can see the
+   shape of a link set instead of only following it one hop at a time. The
+   settings panel exposes the physics constants because the defaults do not
+   suit every graph density." %}
+
+{% include project-note.html title="Calendar collection view and Mapbox documents"
+   note="Where the calendar view came from. Any collection whose documents carry
+   a date can be switched into it." %}
+
 {: .caveat }
-> Only the four novice-mode views have tutorial pages. The others work but are
+> Only the four novice-mode views have tutorial pages. The rest work but are
 > undocumented, and a carousel page was started in 2021 and never written.
->
-> Two of the undocumented ones came from student projects and are described on
-> the cohort pages: the [calendar view]({{ '/cohorts/2023/' | relative_url }})
-> from 2023 and the [link graph view]({{ '/cohorts/2026/' | relative_url }})
-> from 2026.
+
+## Why layout is a property
+
+Switching views converts nothing because a collection is a document and its
+layout is a field on that document, not a different kind of container. That
+decision dates from 2019 and is why the graph view above could be added in 2026
+and immediately work on collections created seven years earlier.
+
+[Collections and views]({{ '/concepts/collections/' | relative_url }}) explains
+the reasoning and its limits, including the performance problem the graph view
+ran into.

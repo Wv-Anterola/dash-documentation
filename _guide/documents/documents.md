@@ -104,3 +104,12 @@ Click the “+ New” button in the schema and stacking views.
 
 
 
+
+## Why everything here is a document
+
+The types on this page differ by which fields they carry, not by being
+different kinds of object. That is why a link can point into any of them and
+why a collection can hold a mix.
+
+[Documents and fields]({{ '/concepts/documents/' | relative_url }}) explains the
+prototype system behind it, and lists the projects that added the newer types.
