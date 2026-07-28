@@ -1,0 +1,38 @@
+---
+title: Spring 2025 to Fall 2025
+description: The year the chatbot became an agent with a real tool registry, plus symbolic mathematics and 3D document types.
+---
+
+import CohortProjects from '../../../../components/CohortProjects.astro';
+import CohortRoster from '../../../../components/CohortRoster.astro';
+
+The year the chatbot turned into an agent with a real tool registry. Work split
+between extending what the agent could touch and adding document types around
+it.
+
+## What this year was about
+
+Dash had an LLM chatbot before 2025. What it did not have was a way for the
+model to do anything. The registry built this year is the difference: a set of
+tools the agent dispatches to, each a small class with a schema, so adding a
+capability means adding a file rather than editing a prompt.
+
+Once that existed, the interesting question became what to put in it. Some
+answers were obvious in hindsight and had simply been impossible before, like
+letting the agent see the documents on the canvas in front of you. One was
+stranger: the agent was given search over Dash's own source, so it could answer
+questions about the system it was running inside, and then a path to generate a
+new tool and have it compiled into the running application.
+
+Alongside that, the group kept adding document types. Symbolic mathematics
+moved into a web worker so evaluating an equation would not freeze the
+interface, and 3D arrived properly for the first time, both as a viewer and as
+a sketching canvas.
+
+## Who was here
+
+<CohortRoster cohort="2025" />
+
+## Projects
+
+<CohortProjects cohort="2025" />

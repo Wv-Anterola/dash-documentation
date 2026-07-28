@@ -1,0 +1,19 @@
+---
+/**
+ * The full status vocabulary with definitions. Include once on any page that
+ * shows status labels so a first-time reader can decode them in place.
+ */
+import { statuses } from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+---
+
+<dl class="status-key">
+  {
+    statuses.map((s) => (
+      <>
+        <dt><StatusBadge status={s.key} /></dt>
+        <dd set:html={s.blurb.replace(/`([^`]+)`/g, '<code>$1</code>')} />
+      </>
+    ))
+  }
+</dl>

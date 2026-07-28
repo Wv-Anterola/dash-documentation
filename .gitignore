@@ -1,15 +1,13 @@
-# Jekyll build output and caches. These were committed by mistake for years;
-# `_site` in particular held a 2021 build that no longer matched the sources.
+# Astro
+dist/
+.astro/
+node_modules/
+
+# Ruby (previous Jekyll stack, removed 2026)
 _site/
 .jekyll-cache/
 .jekyll-metadata
 .sass-cache/
-
-# Local-only config override, applied with:
-#   bundle exec jekyll serve --config _config.yml,_config_local.yml
-_config_local.yml
-
-# Ruby
 .bundle/
 vendor/
 

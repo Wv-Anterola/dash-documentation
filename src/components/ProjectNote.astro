@@ -1,0 +1,39 @@
+---
+/**
+ * An inline reference to one project, for use inside documentation prose.
+ *
+ *   <ProjectNote title="Graph view for collections">
+ *     Why this project matters to the page you are on right now.
+ *   </ProjectNote>
+ *
+ * The slot text is written per call site on purpose. A generic "learn more"
+ * tells the reader nothing, and pasting the project's own summary onto every
+ * page that touches it is how documentation starts repeating itself.
+ *
+ * Metadata comes from src/data/dash.ts, so cohort, contributors, and status
+ * cannot drift out of sync with the cohort pages. An unknown title throws at
+ * build time rather than rendering nothing.
+ */
+import { projectByTitle, cohortOf, projectHref } from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const p = projectByTitle(title);
+const c = cohortOf(p.cohort);
+const href = projectHref(p);
+---
+
+<div class="project-note">
+  <p class="project-note__head">
+    <a href={href}>{p.title}</a>
+    <span class="project-note__meta">
+      {c.short}{p.people ? `, ${p.people.join(' and ')}` : ''}
+    </span>
+    <StatusBadge status={p.status} />
+  </p>
+  <p class="project-note__body"><slot /></p>
+</div>

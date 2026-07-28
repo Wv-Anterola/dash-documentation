@@ -1,0 +1,96 @@
+---
+title: Glossary
+description: Dash's own terminology, with the source location where each idea is implemented.
+---
+
+Terms as the codebase uses them. Where a term has drifted, that is noted.
+
+## Core model
+
+**Document**
+: The single abstraction. A PDF, a collection, a link, a chat message, and a
+trail are all documents differing by type and fields.
+`client/documents/DocumentTypes.ts`.
+
+**Prototype**
+: The document a specific instance inherits defaults from. Fetched with
+`Prototypes.get(DocumentType.X)` and instantiated with `InstanceFromProto`.
+
+**Field**
+: A typed key on a document. Fields are not fixed per type, which is what makes
+tagging and the schema view work across unrelated types.
+
+**Anchor**
+: The endpoint of a link. Can be a whole document, a text selection, a marquee
+region, a PDF page, an ink stroke, or a timestamp.
+
+**Collection**
+: A document that holds other documents. Its layout is a field, not a separate
+kind of object.
+
+**View**
+: How a collection draws its contents. An entry in `CollectionViewType`.
+
+**Dashboard**
+: A user's top-level workspace. Implemented as a docking collection, which is
+why tabs and tiles behave like draggable documents.
+
+**Trail**
+: An ordered path through documents that a reader can leave at any point.
+`DocumentType.PRES` and `DocumentType.PRESSLIDE`.
+
+## AI surfaces
+
+**Chatbot**
+: The retrieval-augmented surface. Chunks documents into a vector store and
+answers with citations that navigate to the source. `nodes/chatbot/`.
+
+**Agent**
+: The acting surface. Runs a ReAct loop and calls tools, several of which write
+to the workspace. `nodes/agent/`.
+
+**Tool**
+: A class with a schema and an execute method, registered in
+`agentsystem/Agent.ts`. Twenty-two are registered at startup.
+
+**Dynamic tool**
+: A tool the agent generates and has compiled into the running application.
+`chatbot/tools/dynamic/`.
+
+**Undo batch**
+: A named group of mutations that revert together, via
+`UndoManager.RunInBatch`. One agent action is one batch.
+
+**Action provenance**
+: A record attaching the source content that caused an agent action. Added by
+the 2026 oversight study, off by default, and on a branch rather than in
+`master`.
+
+## Terms that have drifted
+
+**Fob**
+: Used in the 2023 architecture write-up for the underlying flexible object.
+The term is effectively absent from the current codebase. Read that document
+for its synchronisation model, not for its vocabulary.
+
+**Facet**
+: In the same document, a set of properties enabling behaviour. In current
+source, `facet` appears only in filter code, meaning something narrower.
+
+**Novice mode**
+: A simplified interface shipped in release 0.8. Superseded; there is no
+separate novice mode in `master`.
+
+## Project vocabulary
+
+**Cohort**
+: A group of students working on Dash over a term or year. The unit this site
+organises history around.
+
+**Integrated**
+: Present in the current `master` branch and reachable. See the
+[status taxonomy](/reference/status-taxonomy/).
+
+**Area**
+: Which part of Dash a project touched. Used to group the
+[project index](/research/projects/).

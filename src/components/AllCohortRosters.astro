@@ -1,0 +1,22 @@
+---
+/**
+ * Every cohort roster in one pass, newest first, each under a linked heading.
+ *
+ * A component rather than an inline MDX loop: the heading plus roster is two
+ * elements per cohort, which needs a fragment, and MDX's markdown-flow parser
+ * does not handle multi-line fragments in an expression cleanly.
+ */
+import { cohorts } from '../data/dash';
+import CohortRoster from './CohortRoster.astro';
+---
+
+{
+  cohorts.map((c) => (
+    <section class="cohort-roster-block">
+      <h3 id={`cohort-${c.id}`}>
+        <a href={`/research/cohorts/${c.id}/`}>{c.title}</a>
+      </h3>
+      <CohortRoster cohort={c.id} />
+    </section>
+  ))
+}

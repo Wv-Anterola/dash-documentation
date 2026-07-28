@@ -1,0 +1,58 @@
+---
+title: Dash
+description: A component-based hypermedia system built by Andries van Dam's research group at Brown University, in continuous development since 2018.
+tableOfContents: false
+---
+
+Dash is a hypermedia system: one workspace where a PDF, a video, a web page, a
+recording, a rich text note, and a collection of any of those are all the same
+kind of object, and a link can start or end anywhere inside any of them.
+
+It has been in continuous development since December 2018, almost entirely by
+Brown undergraduates working in semester-length cohorts. This site documents
+what Dash does, how it is built, and what each cohort contributed, with an
+implementation status for every project that can be traced back to the code.
+
+## Start here
+
+If you are new, read [what Dash is](/overview/what-dash-is/) for the problem it
+addresses, then [concepts](/concepts/) for the six ideas that explain most of
+its behaviour.
+
+If you want to judge the technical substance quickly,
+[current state](/overview/current-state/) lists what is actually in the running
+system, and the [project index](/research/projects/) shows all forty recovered
+projects with evidence-backed status labels.
+
+If you are about to work on Dash, [architecture](/architecture/) describes the
+implementation and the four places you extend it.
+
+## How this documentation is organised
+
+**[Concepts](/concepts/)** covers the ideas: documents, collections, links,
+trails, agents, generative media. Each page explains how Dash represents the
+idea, where it falls short, and which projects have exercised it.
+
+**[Using Dash](/getting-started/using-dash/)** is the practical material for
+people using the application.
+
+**[Architecture](/architecture/)** describes the current implementation, its
+extension points, and the projects that added to each.
+
+**[Research and history](/research/projects/)** holds the projects and cohorts.
+
+## A note on how projects appear here
+
+Projects are not confined to a projects page. A project shows up wherever it
+explains something: the graph view appears in the collections concept because
+it demonstrates that adding a view is cheap, and again in the architecture page
+because it exposed a re-render problem in the layout engine.
+
+The [project index](/research/projects/) exists as a map, not as a portfolio.
+
+:::caution
+Dash is a research system under active development by students, not a product.
+Expect rough edges, and expect the interface in older screenshots on this site
+to differ from what you see. Where a page describes something no longer in
+Dash, it is marked rather than deleted.
+:::

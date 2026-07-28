@@ -1,0 +1,40 @@
+---
+title: Concepts
+description: The six ideas that account for most of Dash's behaviour, each with the projects that exercised it.
+---
+
+import { concepts } from '../../../data/dash';
+
+Six ideas account for most of how Dash behaves. If you understand these, the
+rest of the system tends to follow; if you skip them, a lot of Dash looks
+arbitrary.
+
+Each page explains the idea, how Dash represents it in code, where it currently
+falls short, and which student projects have exercised it. The projects are
+there as evidence. A concept that no project has stressed is one we have mostly
+theorised about, and it is worth being able to tell the difference.
+
+<table class="ref-table">
+  <thead>
+    <tr><th scope="col">Concept</th><th scope="col">What it covers</th></tr>
+  </thead>
+  <tbody>
+    {concepts.map((c) => (
+      <tr>
+        <th scope="row"><a href={`/${c.slug}/`}>{c.title}</a></th>
+        <td>{c.summary}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Reading order
+
+The first three build on each other. Documents come first because collections
+and links are both documents. [Trails](/concepts/trails/) depends on links.
+[Agents](/concepts/agents/) and [generative media](/concepts/generative/) are
+recent and can be read on their own.
+
+For how these are put together, see [architecture](/architecture/). For what
+people built while working on them, see the
+[project index](/research/projects/).

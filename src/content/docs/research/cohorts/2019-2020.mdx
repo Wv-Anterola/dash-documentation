@@ -1,0 +1,43 @@
+---
+title: 2019 to 2020
+description: The founding period. The document model, collections, links, and view types that the rest of Dash still rests on.
+---
+
+import CohortProjects from '../../../../components/CohortProjects.astro';
+import CohortRoster from '../../../../components/CohortRoster.astro';
+
+The founding period. The repository's first commit is December 2018, and the
+two years after it established nearly everything the system still rests on.
+
+## What these years were about
+
+Over half of every commit ever made to Dash-Web was made in 2019 and 2020. That
+is where the system came from.
+
+The decisions from this period are the ones nobody has needed to revisit. A
+single document abstraction with typed fields and prototype inheritance, so a
+PDF and a collection and a link are all the same kind of thing. Collections
+that are themselves documents, with the display style as a property rather than
+a separate object. Links that anchor to a region, a selection, or a timestamp
+instead of to a file.
+
+The concrete evidence that these held up is that the files where you register a
+new document type in 2026 are the same files, with the same functions, written
+in 2019. The graph view added this year is one more value in the
+`CollectionViewType` enum first populated then.
+
+## Who was here
+
+<CohortRoster cohort="2019-2020" />
+
+## Projects
+
+<CohortProjects cohort="2019-2020" />
+
+:::caution[The least well-documented period]
+Several prolific 2019 contributors commit only under a first name or a handle
+and we could not resolve them to full names. They are recorded on the
+[people page](/research/people/) rather than dropped. The projects listed here
+are architectural rather than discrete features, because that is genuinely what
+the work was, but it does mean individual credit is coarser than it should be.
+:::

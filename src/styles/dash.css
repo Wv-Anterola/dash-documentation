@@ -1,0 +1,377 @@
+/*
+ * Dash documentation styling.
+ *
+ * This is deliberately small. Starlight's defaults are already a restrained
+ * documentation system, so the job here is to give it Dash's palette and to
+ * style the handful of Dash-specific components: status labels, project
+ * references, case studies, and the project index.
+ *
+ * The rule followed throughout: a component earns a border or a background
+ * only when it needs to be distinguished from body text at a glance. Status
+ * labels and project references qualify. Table rows do not, so they get rules.
+ */
+
+:root {
+  /* Brand blues from the 2021 site. The link blue is the darker of the two:
+     #4476f7 only reaches 4.05:1 on white, which fails AA for body text. */
+  --dash-blue: #2a55c4;
+  --dash-blue-bright: #4476f7;
+  --dash-blue-light: #bdddf5;
+
+  --sl-color-accent-low: #d8e2fb;
+  --sl-color-accent: var(--dash-blue);
+  --sl-color-accent-high: #1c3d94;
+
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #24292f;
+  --sl-color-gray-2: #57606a;
+  --sl-color-gray-3: #8b949e;
+  --sl-color-gray-5: #d8dce3;
+  --sl-color-gray-6: #f2f4f7;
+  --sl-color-gray-7: #f7f8fa;
+
+  --sl-content-width: 48rem;
+  --sl-text-code: 0.9em;
+
+  --dash-rule: #d8dce3;
+  --dash-rule-soft: #e6e9ee;
+  --dash-muted: #57606a;
+}
+
+:root[data-theme='dark'] {
+  --dash-blue: #8fb4ff;
+  --dash-blue-bright: #a8c5ff;
+
+  --sl-color-accent-low: #16213f;
+  --sl-color-accent: #6f9bff;
+  --sl-color-accent-high: #c5d8ff;
+
+  --dash-rule: #33384a;
+  --dash-rule-soft: #262b39;
+  --dash-muted: #a8aeba;
+}
+
+/* ------------------------------------------------------------- typography */
+
+.sl-markdown-content {
+  --sl-text-h2: 1.4rem;
+  --sl-text-h3: 1.15rem;
+}
+
+/* Starlight sets generous top margin on headings after prose. Tighten the
+   step between a heading and its own first paragraph so sections read as
+   units rather than as a stack of separate blocks. */
+.sl-markdown-content :is(h2, h3, h4) + p {
+  margin-top: 0.5rem;
+}
+
+.lede {
+  color: var(--sl-color-gray-2);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------------- status */
+
+.status {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* A short rule in the status colour rather than a pill. The text carries the
+   meaning; colour is a second, redundant cue. */
+.status::before {
+  background: currentColor;
+  content: '';
+  display: inline-block;
+  height: 2px;
+  margin-right: 0.45em;
+  position: relative;
+  top: -0.22em;
+  width: 0.85em;
+}
+
+.status--integrated { color: #1a7f4b; }
+.status--implemented { color: #2a55c4; }
+.status--prototype { color: #8a5300; }
+.status--archived { color: #9a3412; }
+.status--docs-only { color: #6b4ea8; }
+.status--unclear { color: #5c5f66; }
+
+:root[data-theme='dark'] .status--integrated { color: #7ddba4; }
+:root[data-theme='dark'] .status--implemented { color: #8fb4ff; }
+:root[data-theme='dark'] .status--prototype { color: #f0c674; }
+:root[data-theme='dark'] .status--archived { color: #f0a878; }
+:root[data-theme='dark'] .status--docs-only { color: #c0a9ec; }
+:root[data-theme='dark'] .status--unclear { color: #a8aeba; }
+
+.sl-markdown-content .status-key {
+  border-left: 2px solid var(--dash-rule);
+  margin: 1.5rem 0;
+  padding: 0.25rem 0 0.25rem 1.1rem;
+}
+
+.status-key dt {
+  margin-top: 0.7rem;
+}
+
+.status-key dt:first-child {
+  margin-top: 0;
+}
+
+.sl-markdown-content .status-key dd {
+  color: var(--sl-color-gray-2);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0.15rem 0 0;
+}
+
+/* ---------------------------------------------------------------- tables */
+
+.sl-markdown-content :is(.ref-table, .project-table) {
+  border-collapse: collapse;
+  display: table;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.sl-markdown-content :is(.ref-table, .project-table) :is(th, td) {
+  border: 0;
+  border-bottom: 1px solid var(--dash-rule-soft);
+  padding: 0.55rem 0.9rem 0.55rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.sl-markdown-content :is(.ref-table, .project-table) thead th {
+  border-bottom: 1px solid var(--dash-rule);
+  color: var(--dash-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sl-markdown-content :is(.ref-table, .project-table) tbody th {
+  font-weight: 400;
+}
+
+.project-table tr[hidden] {
+  display: none;
+}
+
+.project-table__people {
+  color: var(--dash-muted);
+  display: block;
+  font-size: 0.82rem;
+}
+
+.project-table__concepts {
+  font-size: 0.85rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------- project notes */
+
+.sl-markdown-content .project-note {
+  border-left: 2px solid var(--dash-blue-bright);
+  margin: 1.5rem 0;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+}
+
+.sl-markdown-content .project-note p {
+  margin: 0;
+}
+
+.project-note__head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+  margin-bottom: 0.25rem !important;
+}
+
+.project-note__meta {
+  color: var(--dash-muted);
+  font-size: 0.85rem;
+}
+
+.project-note__body {
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+/* ----------------------------------------------------------- case studies */
+
+.case-study {
+  border-top: 1px solid var(--dash-rule);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+
+.sl-markdown-content .case-study h3 {
+  margin-top: 0;
+}
+
+.case-study__meta {
+  align-items: baseline;
+  color: var(--dash-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  gap: 0.3rem 0.9rem;
+  margin-top: 0.4rem !important;
+}
+
+.sl-markdown-content .case-study dl {
+  margin-top: 1rem;
+}
+
+.sl-markdown-content .case-study dt {
+  color: var(--dash-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-top: 0.85rem;
+  text-transform: uppercase;
+}
+
+.sl-markdown-content .case-study dd {
+  margin: 0.2rem 0 0;
+}
+
+/* --------------------------------------------------------------- rosters */
+
+.sl-markdown-content .roster {
+  columns: 2 190px;
+  column-gap: 2rem;
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+.roster li {
+  break-inside: avoid;
+  font-size: 0.92rem;
+  margin: 0 0 0.3rem;
+}
+
+.roster__note {
+  color: var(--dash-muted);
+  font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------- filters */
+
+.filter-bar {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.filter-bar label {
+  color: var(--dash-muted);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.filter-bar select {
+  background: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 4px;
+  color: var(--sl-color-gray-1);
+  font-size: 0.9rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.5rem;
+}
+
+:root[data-theme='dark'] .filter-bar select {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+}
+
+.filter-count {
+  color: var(--dash-muted);
+  font-size: 0.85rem;
+}
+
+/* ----------------------------------------------------------------- media */
+
+.sl-markdown-content img {
+  border-radius: 4px;
+  height: auto;
+  max-width: 100%;
+}
+
+/* Intrinsic-ratio wrapper so embeds scale instead of overflowing. */
+.video {
+  margin: 1.5rem 0;
+  position: relative;
+  width: 100%;
+}
+
+.video::before {
+  content: '';
+  display: block;
+  padding-top: 60%;
+}
+
+.video iframe {
+  border: 0;
+  border-radius: 4px;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------ interaction */
+
+.sl-markdown-content :is(.project-note, .ref-table, .project-table) a:focus-visible,
+.filter-bar select:focus-visible {
+  outline: 3px solid var(--dash-blue-bright);
+  outline-offset: 2px;
+}
+
+@media (max-width: 50rem) {
+  .roster {
+    columns: 1;
+  }
+
+  .filter-bar {
+    display: block;
+  }
+
+  .filter-bar > div {
+    margin-bottom: 0.85rem;
+  }
+
+  .filter-bar select {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

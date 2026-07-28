@@ -1,0 +1,81 @@
+---
+/**
+ * The full case study for every project in a cohort.
+ *
+ * Sections render only when the underlying field exists, so a project with
+ * thin evidence produces a short entry rather than a page of empty headings.
+ * Each write-up ends with links back to the concepts it exercised, which is
+ * the return direction of ProjectsForConcept.
+ */
+import {
+  projectsInCohort,
+  conceptOf,
+  projectSlug,
+  type CohortId,
+} from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  cohort: CohortId;
+}
+
+const { cohort } = Astro.props;
+const rows = projectsInCohort(cohort);
+
+/** Inline code spans and links written as markdown inside the data file. */
+const md = (s: string) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+---
+
+{
+  rows.map((p) => (
+    <section class="case-study">
+      <h3 id={projectSlug(p.title)}>{p.title}</h3>
+
+      <p class="case-study__meta">
+        <StatusBadge status={p.status} />
+        <span>{p.area}</span>
+        {p.people && <span>{p.people.join(', ')}</span>}
+        {p.peopleUnresolved && <span>Contributor {p.peopleUnresolved}</span>}
+      </p>
+
+      <dl>
+        {p.problem && (<><dt>Problem</dt><dd set:html={md(p.problem)} /></>)}
+        {p.approach && (<><dt>Approach</dt><dd set:html={md(p.approach)} /></>)}
+        {p.contribution && (<><dt>What was built</dt><dd set:html={md(p.contribution)} /></>)}
+        {p.relation && (<><dt>Relationship to Dash</dt><dd set:html={md(p.relation)} /></>)}
+        {p.outcome && (<><dt>Outcome</dt><dd set:html={md(p.outcome)} /></>)}
+        {p.evidence && (<><dt>Evidence for the status</dt><dd set:html={md(p.evidence)} /></>)}
+        {p.concepts.length > 0 && (
+          <>
+            <dt>Background reading</dt>
+            <dd>
+              {p.concepts.map((cid, i) => {
+                const c = conceptOf(cid);
+                return (
+                  <>
+                    {i > 0 && ', '}
+                    <a href={`/${c.slug}/`}>{c.title}</a>
+                  </>
+                );
+              })}
+            </dd>
+          </>
+        )}
+        {(p.tech || p.code) && (
+          <>
+            <dt>Implementation</dt>
+            <dd>
+              {p.tech && <span>{p.tech.join(', ')}</span>}
+              {p.tech && p.code && <span aria-hidden="true"> · </span>}
+              {p.code && <span set:html={md(p.code)} />}
+            </dd>
+          </>
+        )}
+      </dl>
+    </section>
+  ))
+}

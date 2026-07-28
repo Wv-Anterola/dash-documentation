@@ -1,0 +1,57 @@
+---
+title: Spring 2026 to Fall 2026
+description: The current cohort. Agent tooling, generative media inside documents, new document and collection types, and a study of human oversight of injected agents.
+---
+
+import CohortProjects from '../../../../components/CohortProjects.astro';
+import CohortRoster from '../../../../components/CohortRoster.astro';
+import StatusKey from '../../../../components/StatusKey.astro';
+
+The largest single-year push since 2020, and the first where most of the work
+sits on top of the agent rather than beside it. Six student projects landed in
+`master`, and Dash also grew a desktop build that can run models locally
+instead of calling OpenAI.
+
+## What this year was about
+
+Two things changed at once, and they pull in opposite directions.
+
+The first is that the agent stopped being a feature and became a platform. The
+tool registry that landed in 2025 turned out to be the thing everyone wanted to
+build on: this year's work adds tools rather than adding panels. The agent can
+now enumerate what is on your canvas, drive the interface, walk you through a
+tutorial, check a policy against linked testimony, and plan a video scene by
+scene. Nobody had to design a new integration point for any of it.
+
+The second is that we started taking seriously what it means to give a language
+model write access to somebody's documents. Dash's agent edits a persistent,
+shared workspace through tool calls, and it reads content it did not write.
+That is the configuration indirect prompt injection exploits. The oversight
+study below exists because we could not find anyone who had measured whether a
+person actually catches an injected agent's edit after it lands, which is the
+fallback nearly every real deployment still relies on.
+
+Separately, and more quietly, Dash grew a desktop build that bundles Ollama.
+That matters for the same reason: once a workspace tool can run its models
+locally, the question of what leaves your machine has a different answer.
+
+## Who was here
+
+<CohortRoster cohort="2026" />
+
+## Projects
+
+<StatusKey />
+
+<CohortProjects cohort="2026" />
+
+## What we would tell next year's cohort
+
+Merging is the hard part, not building. The projects that reached `master` were
+generally the ones that extended an existing registry: a document type, a
+collection view, or an agent tool. The unmerged branches are not worse work,
+and several are more ambitious. They are further from anything Dash already
+knew how to hold.
+
+[Architecture](/architecture/extension-points/) describes the four slots worth
+aiming at.

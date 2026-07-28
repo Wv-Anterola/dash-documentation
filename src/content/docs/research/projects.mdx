@@ -1,0 +1,99 @@
+---
+title: Project index
+description: All forty recovered Dash projects with cohort, system area, and evidence-backed implementation status.
+---
+
+import ProjectIndex from '../../../components/ProjectIndex.astro';
+import StatusKey from '../../../components/StatusKey.astro';
+import { projects, cohorts, areas } from '../../../data/dash';
+
+Forty projects across six cohorts, with the part of Dash each one touched and
+whether it is in the running system.
+
+This is a map, not a showcase. The full write-up for each project lives on its
+[cohort page](/research/cohorts/), and the ideas behind the work are in
+[concepts](/concepts/). The concepts column below is the fastest way in if you
+care about a topic rather than a year.
+
+## How to read the status column
+
+A project counts as integrated only if it can be pointed at in the current
+`master` branch of Dash-Web: a document type registered in `Documents.ts`, an
+entry in `CollectionViewType`, a tool constructed in the agent registry, or
+code one of those calls.
+
+A merged branch does not qualify on its own, and neither does a demo recording,
+a screenshot, or a finished report. Several projects below have all three and
+are still not in the application. Each write-up records what was checked.
+
+<StatusKey />
+
+## All projects
+
+<ProjectIndex />
+
+## Where the work went
+
+Counted by system area, which is a rough map of what the group has spent seven
+years on.
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th scope="col">Area</th>
+      <th scope="col">Projects</th>
+      <th scope="col">Integrated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {areas().map((a) => {
+      const inArea = projects.filter((p) => p.area === a);
+      const integ = inArea.filter((p) => p.status === 'integrated').length;
+      return (
+        <tr>
+          <th scope="row">{a}</th>
+          <td>{inArea.length}</td>
+          <td>{integ}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+The document model and the agent system dominate, for different reasons.
+Document types are the cheapest thing to add, so that is what a one-semester
+project often becomes. The agent system is recent and concentrated: nearly all
+of it arrived in 2025 and 2026, on top of the tool registry.
+
+## By cohort
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th scope="col">Cohort</th>
+      <th scope="col">Commits</th>
+      <th scope="col">Projects</th>
+      <th scope="col">Integrated</th>
+    </tr>
+  </thead>
+  <tbody>
+    {cohorts.map((c) => {
+      const inCohort = projects.filter((p) => p.cohort === c.id);
+      const integ = inCohort.filter((p) => p.status === 'integrated').length;
+      return (
+        <tr>
+          <th scope="row">
+            <a href={`/research/cohorts/${c.id}/`}>{c.title}</a>
+          </th>
+          <td>{c.commits.toLocaleString('en-US')}</td>
+          <td>{inCohort.length}</td>
+          <td>{integ}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+Commit counts cover the whole repository including merges, so treat them as a
+rough measure of activity. The 2019 to 2020 figure is not a mistake: more than
+half of every commit ever made to Dash-Web was made in those two years.

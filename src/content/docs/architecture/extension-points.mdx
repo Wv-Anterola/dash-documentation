@@ -1,0 +1,108 @@
+---
+title: Extension points
+description: The four places you add to Dash, what each costs, and the projects that used them.
+---
+
+import ProjectNote from '../../../components/ProjectNote.astro';
+import ProjectsForConcept from '../../../components/ProjectsForConcept.astro';
+
+Almost every project in the [index](/research/projects/) extends one of four
+things. If you are planning work, it is worth knowing which one you are aiming
+at, because the projects that reached `master` are overwhelmingly the ones that
+fit an existing slot.
+
+## Document types
+
+`client/documents/DocumentTypes.ts` declares the `DocumentType` enum;
+`Documents.ts` registers a factory for each. Adding a type means an enum value,
+a factory, a view component, and a case in `DocumentView.tsx`.
+
+There are fifty-one entries, running from the core types (rich text, image,
+web, PDF, collection, video, audio, ink) through to types added by recent
+cohorts: the 3D viewer and sketch canvas, the data visualisation box, the video
+generator, the life-coach workspace and its events, policy testimony and policy
+checker, journals, tasks, scrapbooks, and the agent itself.
+
+This is the most-used extension point and the cheapest, which is why ten of the
+forty recorded projects are new document types. It is also where the registry's
+limits show: every addition edits the same two core files, so two cohorts adding
+types in the same term will conflict.
+
+<ProjectNote title="Document and field model">
+  Built the prototype system these factories use. `InstanceFromProto` and
+  `Prototypes.get` have not changed since 2019.
+</ProjectNote>
+
+See [documents and fields](/concepts/documents/) for why the abstraction is
+shaped this way.
+
+## Collection view types
+
+`CollectionViewType` decides how a collection displays what it holds. There are
+twenty-one. Freeform, stacking, schema, tree, carousel, and docking come from
+2019 and 2020; calendar from 2023; graph from 2026. Adding one means an enum
+value and a view component, after which every existing collection can be
+switched into it without converting any data.
+
+Layout engines for freeform collections are separate, under
+`collectionFreeFormLayoutEngines/`, so positions can be computed rather than set
+by hand.
+
+<ProjectNote title="Graph view for collections">
+  The most recent addition here, and the one that exposed the cost of this
+  extension point: a layout engine recomputing against MobX observables
+  re-renders the whole collection every frame. The fix was to scale iterations
+  by node count and stop once movement settles.
+</ProjectNote>
+
+## Agent tools
+
+`chatbot/agentsystem/Agent.ts` constructs a registry of tools the agent can
+call. A tool is a class with a schema and an execute method. Twenty-two are
+registered at construction, and `tools/dynamic/` exists because the agent can
+generate a new tool and have it compiled into the running application.
+
+The tools worth separating out are the ones that mutate rather than read:
+`FilterDocsTool` hides documents, `SortDocsTool` reorders them, `TagDocsTool`
+re-categorises them, and `CreateLinksTool` adds links.
+
+This is the extension point that grew fastest. Most of the 2025 and 2026 agent
+work is entries in this registry rather than new UI.
+
+<ProjectNote title="Agent tool registry and dynamic tool creation">
+  Built the registry itself, plus the dynamic path that compiles a generated
+  tool into the running application. Everything in the 2025 and 2026 cohorts
+  that touches the agent depends on it.
+</ProjectNote>
+
+<ProjectNote title="Canvas awareness and UI control for the agent">
+  A good example of how small an addition becomes once the registry exists: two
+  tool classes, one to enumerate canvas documents and one to drive the
+  interface.
+</ProjectNote>
+
+Every project that has used this extension point:
+
+<ProjectsForConcept concept="agents" />
+
+## Undo batches
+
+Mutations run through `util/UndoManager`, and `UndoManager.RunInBatch` groups a
+set of changes under a name so they revert together. That is what makes an
+agent action individually revertible.
+
+It is also the only place in the system where "what the agent just did" is a
+single addressable thing, which is why it is where provenance had to attach.
+
+<ProjectNote title="Post-hoc oversight of prompt-injected agents">
+  Wrapped the batch mechanism so each agent action carries the source content
+  that caused it. Capture is off by default and the wrapper lives on a branch,
+  so the shipped application still batches without recording origin.
+</ProjectNote>
+
+## Choosing a slot
+
+Look for the slot before you build the thing. A new document type, a new
+collection view, or a new agent tool will merge. A parallel subsystem next to
+one of those generally will not, however good it is. The unmerged branches on
+the cohort pages are mostly the second kind.

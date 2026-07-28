@@ -1,0 +1,67 @@
+---
+title: Implementation status taxonomy
+description: The six status labels used across this site and the evidence each one requires.
+---
+
+import StatusKey from '../../../components/StatusKey.astro';
+import { projects, statuses } from '../../../data/dash';
+
+Every project on this site carries one of six labels. This page defines them
+and records how many projects currently hold each.
+
+## The labels
+
+<StatusKey />
+
+## What "integrated" requires
+
+This is the only label that makes a claim about the running system, so it is
+the one with a rule.
+
+A project counts as integrated only if it can be pointed at in the current
+`master` branch of Dash-Web through at least one of:
+
+- a document type declared in `DocumentTypes.ts` and constructed in `Documents.ts`
+- an entry in `CollectionViewType` that `CollectionView.tsx` switches on
+- a tool constructed in the agent registry in `agentsystem/Agent.ts`
+- source on `master` that one of the above calls
+- a build script or entry point in `package.json`
+
+None of the following is sufficient on its own:
+
+- a merged branch, because branches get merged and later superseded
+- a demo recording or screenshot
+- a completed final report
+- files existing in the repository
+
+Each project records what was actually checked, under "Evidence for the status"
+in its write-up, so the next person can re-check rather than trust the label.
+
+## Current distribution
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th scope="col">Status</th>
+      <th scope="col">Projects</th>
+    </tr>
+  </thead>
+  <tbody>
+    {statuses.map((s) => (
+      <tr>
+        <th scope="row">{s.label}</th>
+        <td>{projects.filter((p) => p.status === s.key).length}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Changing a status
+
+Statuses live in `src/data/dash.ts` on the project record. If you change one,
+change the `evidence` field in the same edit. A status without evidence behind
+it is the thing this taxonomy exists to prevent.
+
+Do not modify the Dash application to make a status label true. If a project
+should be integrated and is not, that is a piece of work, not a documentation
+change.

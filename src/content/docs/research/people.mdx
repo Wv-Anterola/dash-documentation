@@ -1,0 +1,58 @@
+---
+title: People
+description: Faculty, staff, and every student cohort roster, drawn from commit authorship in the Dash-Web repository.
+---
+
+import { faculty, unresolvedContributors } from '../../../data/dash';
+import AllCohortRosters from '../../../components/AllCohortRosters.astro';
+
+## Faculty and staff
+
+These roles span every cohort rather than belonging to one.
+
+<table class="ref-table">
+  <thead>
+    <tr><th scope="col">Name</th><th scope="col">Role</th></tr>
+  </thead>
+  <tbody>
+    {faculty.map((f) => (
+      <tr>
+        <th scope="row">{f.name}</th>
+        <td>{f.role}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+For questions about the project or about joining it, contact Andries van Dam at
+[andries_van_dam@brown.edu](mailto:andries_van_dam@brown.edu).
+
+## Cohorts
+
+Rosters come from commit authorship in Dash-Web over each date range,
+cross-checked against the team list the site carried from 2021. Git is the
+stronger source: the earlier team page omitted most of the 2019 and 2020
+contributors, which is where more than half of all work on Dash happened.
+
+<AllCohortRosters />
+
+## Names we could not recover
+
+These accounts appear in the 2019 and 2020 commit history under a handle or a
+first name only. They contributed, in some cases substantially, and we could
+not work out who they are.
+
+<ul class="roster">
+  {unresolvedContributors.map((u) => <li>{u}</li>)}
+</ul>
+
+One more, recorded in the 2025 and 2026 history under the GitHub handle
+`Skitty1238`, wrote the selection-aware text formatting work that is in
+`master` today. If any of these are you, or you know who they are, please open
+an issue on the documentation repository.
+
+## Keeping this current
+
+Rosters live in `src/data/dash.ts`, so adding next year's cohort is one edit in
+one file. The [documentation guide](/contributing/documentation/) explains the
+process.

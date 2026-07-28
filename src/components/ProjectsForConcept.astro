@@ -1,0 +1,41 @@
+---
+/**
+ * Every project tagged with a concept, oldest first.
+ *
+ * A table rather than cards: on a concept page these are evidence that the
+ * idea was exercised over time, and the reader wants to compare status and
+ * date down a column.
+ */
+import { projectsForConcept, cohortOf, projectHref, type ConceptId } from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  concept: ConceptId;
+}
+
+const { concept } = Astro.props;
+const rows = projectsForConcept(concept);
+---
+
+{
+  rows.length > 0 && (
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th scope="col">Project</th>
+          <th scope="col">Cohort</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((p) => (
+          <tr>
+            <th scope="row"><a href={projectHref(p)}>{p.title}</a></th>
+            <td class="nowrap">{cohortOf(p.cohort).short}</td>
+            <td><StatusBadge status={p.status} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}

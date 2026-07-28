@@ -1,0 +1,19 @@
+---
+/**
+ * An implementation-status label.
+ *
+ * The visible text carries the meaning, so this reads correctly with colour
+ * removed; the colour is a secondary cue. A short rule rather than a pill,
+ * because forty pills in a table is noise.
+ */
+import { statusOf, type StatusKey } from '../data/dash';
+
+interface Props {
+  status: StatusKey;
+}
+
+const { status } = Astro.props;
+const s = statusOf(status);
+---
+
+<span class:list={['status', `status--${status}`]}>{s.label}</span>

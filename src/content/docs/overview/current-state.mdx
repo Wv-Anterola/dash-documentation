@@ -1,0 +1,91 @@
+---
+title: What Dash currently supports
+description: The capabilities present in the current master branch, the boundaries of the implementation, and what the active cohort is working on.
+---
+
+import ProjectNote from '../../../components/ProjectNote.astro';
+import StatusKey from '../../../components/StatusKey.astro';
+
+This page is the honest inventory. Everything listed as present was checked
+against the current `master` branch of Dash-Web rather than inferred from a
+merged branch or a demo recording.
+
+## Counts
+
+Fifty-one document types, twenty-one collection views, and twenty-two agent
+tools registered at startup. Those numbers come from three enums and one
+constructor:
+
+- `DocumentType` in `client/documents/DocumentTypes.ts`
+- `CollectionViewType` in the same file
+- the tool registry in `chatbot/agentsystem/Agent.ts`
+
+## What works today
+
+**Documents.** Rich text, images, web pages, PDFs, video, audio, recordings,
+ink, and collections, all sharing one document implementation. Newer types
+include 3D model viewing and sketching, data visualisation from CSVs, video
+generation, policy analysis, life-coach workspaces, scrapbooks, journals,
+tasks, and equations with a symbolic solver.
+
+**Collections.** Freeform canvas, schema table, stacking, notetaking, tree,
+carousel, grid, masonry, pivot, calendar, and a link graph. Switching between
+them converts nothing.
+
+**Linking.** Links anchor to regions, selections, PDF pages, ink strokes, and
+timestamps. A link is itself a document, so it carries its own description.
+
+**Trails.** Prepared paths through a corpus that you can leave at any point,
+with spring-based transitions and support for branching.
+
+**AI.** Two surfaces. A retrieval-augmented chatbot that answers with citations
+resolving back to source documents, and an agent with twenty-two tools that can
+filter, sort, tag, link, and create documents.
+
+**Desktop.** Electron builds for macOS and Windows that bundle Ollama, so the
+AI features can run against a local model instead of a remote API.
+
+## Where the implementation stops
+
+These are limits worth knowing before you plan work around them.
+
+Document types cannot be defined outside the core enum, so every new type edits
+the same two files and two cohorts adding types in one term will conflict.
+
+Collection views do not compose. A calendar of stacks is not expressible.
+
+Links have no type or strength, so a citation and a passing association are
+indistinguishable except by a description someone remembered to write.
+
+The agent has no permission model. A tool that can write can write to anything
+the user can, and the agent decides when to call it.
+
+Generation quality is not evaluated anywhere in the codebase.
+
+## What the current cohort is doing
+
+The [Spring 2026 to Fall 2026 cohort](/research/cohorts/2026/) added the link
+graph view, policy analysis documents, a life-coach workspace, and scene-based
+video generation, all of which are in `master`. It also produced work that is
+deliberately not in `master`:
+
+<ProjectNote title="Post-hoc oversight of prompt-injected agents">
+  A study instrument rather than a feature. It measures whether a person
+  reviewing an agent's edits actually catches one that came from a prompt
+  injection. The provenance capture it adds is off by default.
+</ProjectNote>
+
+<ProjectNote title="Sketch-to-CAD drawing in 3D">
+  Working on a branch: draw a shape on a plane in the 3D scene, recognise it,
+  extrude it, export STL. Curved extrusion was still in progress in July 2026.
+</ProjectNote>
+
+## Reading status labels
+
+Every project on this site carries one of six labels. The distinction that
+matters is between *integrated* and everything else.
+
+<StatusKey />
+
+The [status taxonomy](/reference/status-taxonomy/) explains what evidence each
+label requires.

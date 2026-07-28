@@ -1,0 +1,23 @@
+---
+/**
+ * The student roster for one cohort, drawn from commit authorship.
+ */
+import { cohortOf, type CohortId } from '../data/dash';
+
+interface Props {
+  cohort: CohortId;
+}
+
+const { cohort } = Astro.props;
+const c = cohortOf(cohort);
+---
+
+<ul class="roster">
+  {c.roster.map((person) => <li>{person}</li>)}
+</ul>
+
+<p class="roster__note">
+  Taken from commit authorship in the Dash-Web repository over this period and
+  cross-checked against the group's own team list. If you contributed and are
+  not here, it is an omission rather than a judgement.
+</p>

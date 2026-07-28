@@ -1,0 +1,66 @@
+---
+title: Cohorts
+description: How Dash developed, organised by the student groups that built it.
+---
+
+import { cohorts, projects } from '../../../data/dash';
+
+Dash is worked on by students, mostly for a semester or two at a time, through
+independent study. That is the unit the project actually moves in, so it is the
+unit this history is organised around.
+
+Each cohort page lists who was there and what they built, with a status for
+every project checked against the current `master` branch rather than inferred
+from whether a branch exists. Plenty of good work in this project never got
+merged, and pretending otherwise would make the rest untrustworthy.
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th scope="col">Cohort</th>
+      <th scope="col">Commits</th>
+      <th scope="col">Projects</th>
+      <th scope="col">Focus</th>
+    </tr>
+  </thead>
+  <tbody>
+    {cohorts.map((c) => (
+      <tr>
+        <th scope="row">
+          <a href={`/research/cohorts/${c.id}/`}>{c.title}</a>
+          {c.current && <span class="project-table__people">Current cohort</span>}
+        </th>
+        <td class="nowrap">{c.commits.toLocaleString('en-US')}</td>
+        <td>{projects.filter((p) => p.cohort === c.id).length}</td>
+        <td>{c.summary}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## What counts as a cohort here
+
+The boundaries are approximate. People overlap terms, some stay for years, and
+a few of the strongest contributors are staff rather than students and appear
+across every period.
+
+For the two earliest periods we grouped two calendar years together. The record
+from before the documentation site existed is thinner, and splitting it further
+would imply a precision we do not have.
+
+## The shape of the history
+
+Three phases, roughly.
+
+**2019 to 2020** built the system. The document model, collections, links, and
+the view types all date from here, and none has needed fundamental revision.
+More than half of all commits ever made to Dash-Web were made in these two
+years.
+
+**2021 to 2023** consolidated. Releases 0.4 through 0.8 shipped, the component
+library was split out, this documentation site was created, and Dash started
+being used in CS1951V.
+
+**2024 to 2026** is the AI period. Generative features spread across document
+types in 2024, the agent tool registry arrived in 2025, and by 2026 most new
+work extends the agent rather than sitting beside it.

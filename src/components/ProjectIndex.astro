@@ -1,0 +1,113 @@
+---
+/**
+ * The project index: a dense table, filterable by cohort, area, and status.
+ *
+ * Progressive enhancement. The full table renders without JavaScript, which is
+ * the useful default; the script only hides rows already in the page.
+ */
+import {
+  projects,
+  cohorts,
+  statuses,
+  areas,
+  cohortOf,
+  conceptOf,
+  projectHref,
+} from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+
+const allAreas = areas();
+---
+
+<div class="filter-bar">
+  <div>
+    <label for="f-cohort">Cohort</label>
+    <select id="f-cohort">
+      <option value="">Any</option>
+      {cohorts.map((c) => <option value={c.id}>{c.title}</option>)}
+    </select>
+  </div>
+  <div>
+    <label for="f-area">System area</label>
+    <select id="f-area">
+      <option value="">Any</option>
+      {allAreas.map((a) => <option value={a}>{a}</option>)}
+    </select>
+  </div>
+  <div>
+    <label for="f-status">Status</label>
+    <select id="f-status">
+      <option value="">Any</option>
+      {statuses.map((s) => <option value={s.key}>{s.label}</option>)}
+    </select>
+  </div>
+</div>
+
+<p class="filter-count" id="f-count" role="status"></p>
+
+<table class="project-table" id="project-table">
+  <thead>
+    <tr>
+      <th scope="col">Project</th>
+      <th scope="col">Cohort</th>
+      <th scope="col">Area</th>
+      <th scope="col">Status</th>
+      <th scope="col">Concepts</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      projects.map((p) => (
+        <tr data-cohort={p.cohort} data-area={p.area} data-status={p.status}>
+          <th scope="row">
+            <a href={projectHref(p)}>{p.title}</a>
+            {p.people && <span class="project-table__people">{p.people.join(', ')}</span>}
+          </th>
+          <td class="nowrap">{cohortOf(p.cohort).short}</td>
+          <td>{p.area}</td>
+          <td><StatusBadge status={p.status} /></td>
+          <td class="project-table__concepts">
+            {p.concepts.map((cid, i) => {
+              const c = conceptOf(cid);
+              return (
+                <>
+                  {i > 0 && ', '}
+                  <a href={`/${c.slug}/`}>{c.title}</a>
+                </>
+              );
+            })}
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<script>
+  const table = document.getElementById('project-table') as HTMLTableElement | null;
+  const count = document.getElementById('f-count');
+  const selects = ['f-cohort', 'f-area', 'f-status'].map(
+    (id) => document.getElementById(id) as HTMLSelectElement | null
+  );
+
+  if (table && count && selects.every(Boolean)) {
+    const rows = Array.from(table.tBodies[0].rows);
+    const keys = ['cohort', 'area', 'status'] as const;
+
+    const apply = () => {
+      let shown = 0;
+      for (const row of rows) {
+        const ok = selects.every((sel, i) => !sel!.value || row.dataset[keys[i]] === sel!.value);
+        row.hidden = !ok;
+        if (ok) shown++;
+      }
+      count.textContent =
+        shown === rows.length
+          ? `Showing all ${rows.length} projects.`
+          : `Showing ${shown} of ${rows.length} projects.`;
+    };
+
+    for (const sel of selects) sel!.addEventListener('change', apply);
+    apply();
+  }
+</script>
