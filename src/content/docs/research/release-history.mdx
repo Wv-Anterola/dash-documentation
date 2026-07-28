@@ -25,9 +25,10 @@ reached `master` and which did not.
 
 The changes since 0.8 that most affect how Dash is used:
 
-**A desktop application, March 2026.** Electron builds for macOS and Windows
-that bundle Ollama, so the AI features can run against a model on your own
-machine instead of a remote API.
+**A desktop application, March 2026.** Electron builds for macOS and Windows,
+with an agent service that talks to a local Ollama instance, so the AI features
+can run against a model on your own machine instead of a remote API. Ollama is
+installed separately rather than shipped in the build.
 
 **An agent that acts, from 2025.** The chatbot answers questions about your
 documents. The agent, built on a tool registry, filters, sorts, tags, links,

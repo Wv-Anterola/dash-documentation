@@ -31,9 +31,11 @@ study below exists because we could not find anyone who had measured whether a
 person actually catches an injected agent's edit after it lands, which is the
 fallback nearly every real deployment still relies on.
 
-Separately, and more quietly, Dash grew a desktop build that bundles Ollama.
-That matters for the same reason: once a workspace tool can run its models
-locally, the question of what leaves your machine has a different answer.
+Separately, and more quietly, Dash grew a desktop build and an agent service
+that talks to a local Ollama instance. That matters for the same reason: once a
+workspace tool can run its models locally, the question of what leaves your
+machine has a different answer. The packaging and the local-model client are
+both in `master`; the step that would ship Ollama inside the installer is not.
 
 ## Who was here
 

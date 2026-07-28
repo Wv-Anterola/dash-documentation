@@ -16,8 +16,10 @@ page actually touched.
 
 TypeScript throughout, React and MobX on the client, Express and MongoDB on the
 server, webpack for bundling. Since March 2026 there is also an Electron build
-that packages the whole thing as a desktop application and bundles Ollama, so
-the AI features can run against a local model instead of a remote API.
+that packages the whole thing as a desktop application, and an agent service
+that talks to a local Ollama instance, so the AI features can run against a
+model on your own machine instead of a remote API. Ollama itself is not shipped
+inside the installer; that step is on a branch.
 
 The repository is a monorepo. The web application lives at the root; the shared
 component library is a workspace under `packages/components` with its own
