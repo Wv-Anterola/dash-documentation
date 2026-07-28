@@ -1,14 +1,20 @@
-// Components added for the research-group side of the site: cohort pages,
-// project cards, implementation-status labels, and people lists.
+// Components for the documentation: reference tables, implementation-status
+// labels, inline project notes, cohort rosters, and sequential page navigation.
 //
-// It also repairs two responsiveness problems inherited from the 2021 site:
-// `.img` forced every screenshot to a literal 400px height, and video embeds
-// used hard-coded 640x400 iframes that overflowed narrow screens.
+// The rule followed here is that a component earns a border or a background
+// only when it needs to be distinguished from body text at a glance. Project
+// references and status labels qualify. Rows in a table do not, so they get
+// rules rather than boxes.
+//
+// This file also repairs two responsiveness problems inherited from the 2021
+// site: `.img` forced every screenshot to a literal 400px height, and video
+// embeds used hard-coded 640x400 iframes that overflowed narrow screens.
 
 $dash-deep-blue: #2a55c4;
 $dash-medium-blue: #4476f7;
 $dash-muted: #57606a;
 $dash-rule: #d8dce3;
+$dash-rule-soft: #e6e9ee;
 $dash-surface: #f7f8fa;
 
 /* ---------------------------------------------------------------- media --- */
@@ -46,7 +52,7 @@ $dash-surface: #f7f8fa;
 
     iframe {
         border: 0;
-        border-radius: 6px;
+        border-radius: 4px;
         height: 100%;
         left: 0;
         position: absolute;
@@ -62,18 +68,33 @@ $dash-surface: #f7f8fa;
     overflow-x: auto;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 /* --------------------------------------------------------------- status --- */
 
 .status {
-    border: 1px solid currentColor;
-    border-radius: 999px;
     display: inline-block;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     line-height: 1.35;
-    padding: 0.15em 0.6em;
     white-space: nowrap;
+}
+
+// A short rule in the status colour, rather than a pill. Forty pills in a
+// table is noise; the text already carries the meaning and colour is only a
+// secondary cue.
+.status::before {
+    background: currentColor;
+    content: '';
+    display: inline-block;
+    height: 2px;
+    margin-right: 0.45em;
+    position: relative;
+    top: -0.22em;
+    width: 0.85em;
 }
 
 .status--integrated {
@@ -96,14 +117,16 @@ $dash-surface: #f7f8fa;
 }
 
 .status-key {
-    border: 1px solid $dash-rule;
-    border-radius: 8px;
+    border-left: 2px solid $dash-rule;
     list-style: none;
     margin: 1.5rem 0;
-    padding: 1rem 1.25rem;
+    padding: 0.25rem 0 0.25rem 1.1rem;
 
     li {
-        margin: 0 0 0.6rem;
+        color: #24292f;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        margin: 0 0 0.7rem;
 
         &:last-child {
             margin-bottom: 0;
@@ -111,57 +134,129 @@ $dash-surface: #f7f8fa;
     }
 
     .status {
-        margin-right: 0.5rem;
+        margin-right: 0.4rem;
     }
+}
+
+/* --------------------------------------------------------------- tables --- */
+
+.ref-table,
+.project-table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    width: 100%;
+
+    th,
+    td {
+        border-bottom: 1px solid $dash-rule-soft;
+        padding: 0.55rem 0.9rem 0.55rem 0;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    thead th {
+        border-bottom: 1px solid $dash-rule;
+        color: $dash-muted;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    tbody th {
+        font-weight: 400;
+    }
+
+    tr[hidden] {
+        display: none;
+    }
+}
+
+.project-table__people {
+    color: $dash-muted;
+    display: block;
+    font-size: 0.82rem;
+}
+
+.project-table__concepts {
+    font-size: 0.85rem;
+}
+
+/* --------------------------------------------------- inline project note --- */
+
+// Used inside documentation prose to point at the project that produced or
+// tested whatever the surrounding paragraph describes.
+.project-note {
+    border-left: 2px solid $dash-medium-blue;
+    margin: 1.5rem 0;
+    padding: 0.1rem 0 0.1rem 1.1rem;
+
+    p {
+        margin: 0;
+    }
+}
+
+.project-note__head {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.6rem;
+    margin-bottom: 0.25rem !important;
+}
+
+.project-note__meta {
+    color: $dash-muted;
+    font-size: 0.85rem;
+}
+
+.project-note__body {
+    color: #24292f;
+    font-size: 0.92rem;
+    line-height: 1.55;
 }
 
 /* --------------------------------------------------------------- cohorts --- */
 
 .cohort-list {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    border-top: 1px solid $dash-rule-soft;
     list-style: none;
     margin: 1.5rem 0 2.5rem;
     padding: 0;
 }
 
 .cohort-card {
-    border: 1px solid $dash-rule;
-    border-left: 3px solid $dash-medium-blue;
-    border-radius: 8px;
+    border-bottom: 1px solid $dash-rule-soft;
     margin: 0;
-    padding: 1rem 1.15rem;
+    padding: 1rem 0;
 
     a {
         text-decoration: none;
     }
 
     p {
-        color: $dash-muted;
-        font-size: 0.86rem;
-        line-height: 1.5;
-        margin: 0.4rem 0 0;
+        color: #24292f;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        margin: 0.35rem 0 0;
+        max-width: 70ch;
     }
 }
 
-.cohort-card--current {
-    background: $dash-surface;
-    border-left-color: $dash-deep-blue;
-    border-left-width: 5px;
+.cohort-card--current .cohort-card__title a {
+    font-weight: 700;
 }
 
 .cohort-card__title {
-    font-size: 1.02rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.35;
-    margin-bottom: 0.2rem;
 }
 
 .cohort-card__meta {
     color: $dash-muted;
     display: block;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
 }
 
@@ -169,12 +264,13 @@ $dash-surface: #f7f8fa;
     columns: 2 190px;
     column-gap: 2rem;
     list-style: none;
-    margin: 1rem 0 2rem;
+    margin: 1rem 0 1.5rem;
     padding: 0;
 
     li {
         break-inside: avoid;
-        margin: 0 0 0.35rem;
+        font-size: 0.92rem;
+        margin: 0 0 0.3rem;
         padding: 0;
     }
 }
@@ -182,6 +278,7 @@ $dash-surface: #f7f8fa;
 .cohort-roster__note {
     color: $dash-muted;
     font-size: 0.85rem;
+    max-width: 70ch;
 }
 
 /* -------------------------------------------------------------- projects --- */
@@ -214,6 +311,7 @@ $dash-surface: #f7f8fa;
 
     dd {
         margin: 0.2rem 0 0;
+        max-width: 76ch;
     }
 }
 
@@ -232,7 +330,8 @@ $dash-surface: #f7f8fa;
 }
 
 .project__links {
-    font-size: 0.86rem;
+    color: $dash-muted;
+    font-size: 0.85rem;
     list-style: none;
     margin: 0.9rem 0 0;
     padding: 0;
@@ -242,7 +341,6 @@ $dash-surface: #f7f8fa;
         margin: 0;
 
         &::after {
-            color: $dash-rule;
             content: ' · ';
         }
 
@@ -252,67 +350,19 @@ $dash-surface: #f7f8fa;
     }
 }
 
-.project-grid {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    list-style: none;
-    margin: 1.5rem 0;
-    padding: 0;
-}
-
-.project-card {
-    border: 1px solid $dash-rule;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 0;
-    padding: 1rem 1.15rem;
-
-    a {
-        text-decoration: none;
-    }
-
-    p {
-        color: #24292f;
-        font-size: 0.87rem;
-        line-height: 1.5;
-        margin: 0;
-    }
-}
-
-.project-card__title {
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.35;
-}
-
-.project-card__meta {
-    align-items: center;
-    color: $dash-muted;
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0.78rem;
-    gap: 0.5rem;
-    margin-top: auto;
-    padding-top: 0.4rem;
-}
-
 /* --------------------------------------------------------------- filters --- */
 
 .filter-bar {
     align-items: flex-end;
-    border-bottom: 1px solid $dash-rule;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    margin: 1.5rem 0 0.5rem;
-    padding-bottom: 1rem;
+    margin: 1.5rem 0 0.75rem;
 
     label {
+        color: $dash-muted;
         display: block;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.03em;
         margin-bottom: 0.25rem;
@@ -322,7 +372,7 @@ $dash-surface: #f7f8fa;
     select {
         background: #fff;
         border: 1px solid #b6bcc6;
-        border-radius: 6px;
+        border-radius: 4px;
         font-size: 0.9rem;
         min-height: 2.25rem;
         padding: 0.35rem 0.5rem;
@@ -332,45 +382,83 @@ $dash-surface: #f7f8fa;
 .filter-status {
     color: $dash-muted;
     font-size: 0.85rem;
-    margin: 0.75rem 0 0;
+    margin: 0 0 0.5rem;
 }
 
-.is-hidden {
-    display: none !important;
+/* ------------------------------------------------------- page sequencing --- */
+
+.page-nav {
+    border-top: 1px solid $dash-rule;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+}
+
+.page-nav__item {
+    max-width: 46%;
+
+    a {
+        font-weight: 600;
+        text-decoration: none;
+    }
+}
+
+.page-nav__item--next {
+    margin-left: auto;
+    text-align: right;
+}
+
+.page-nav__label {
+    color: $dash-muted;
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 /* ----------------------------------------------------------------- misc --- */
 
-// Keep the theme's focus ring visible on our own interactive elements.
-.project-card a:focus-visible,
-.cohort-card a:focus-visible,
-.filter-bar select:focus-visible {
-    outline: 3px solid $dash-medium-blue;
-    outline-offset: 2px;
-}
-
 .lede {
-    font-size: 1.08rem;
+    font-size: 1.05rem;
     line-height: 1.6;
-    max-width: 62ch;
+    max-width: 68ch;
 }
 
-.people-table {
-    font-size: 0.92rem;
+.main-content {
+    p,
+    li {
+        max-width: 78ch;
+    }
 
-    td,
-    th {
-        vertical-align: top;
+    // Table cells and our own components manage their own measure.
+    td p,
+    .project-note p,
+    .cohort-card p {
+        max-width: none;
     }
 }
 
 .portrait {
-    border-radius: 6px;
+    border-radius: 4px;
     display: block;
     height: auto;
     margin-bottom: 0.4rem;
     max-width: 150px;
     width: 100%;
+}
+
+// Keep a visible focus ring on our own interactive elements.
+.project-note a:focus-visible,
+.cohort-card a:focus-visible,
+.page-nav a:focus-visible,
+.ref-table a:focus-visible,
+.project-table a:focus-visible,
+.filter-bar select:focus-visible {
+    outline: 3px solid $dash-medium-blue;
+    outline-offset: 2px;
 }
 
 @media (max-width: 600px) {
@@ -388,5 +476,27 @@ $dash-surface: #f7f8fa;
         select {
             width: 100%;
         }
+    }
+
+    .page-nav__item {
+        max-width: 100%;
+    }
+}
+
+// Respect a reduced-motion preference. The theme animates the mobile nav
+// expander and smooth-scrolls to anchors; neither should move for someone who
+// has asked it not to.
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
     }
 }

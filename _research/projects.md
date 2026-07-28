@@ -1,16 +1,18 @@
 ---
 layout: default
-title: Projects
+title: Project index
 permalink: /projects/
 nav_order: 1
+description: Every recovered Dash project with its cohort, system area, and evidence-backed implementation status.
 ---
 
-# Projects
+# Project index
 {: .no_toc }
 
-Every project we could tie to evidence, across all cohorts, with its
-implementation status. Follow a project title to the full write-up on its
-cohort page.
+Forty projects across six cohorts, with the part of Dash each one touched and
+whether it is in the running system. This page is the index; the write-ups live
+on the [cohort pages]({{ '/cohorts/' | relative_url }}), and the ideas behind
+the work are in [Concepts]({{ '/concepts/' | relative_url }}).
 
 <details open markdown="block">
   <summary>Table of contents</summary>
@@ -19,7 +21,18 @@ cohort page.
 {:toc}
 </details>
 
-## Status vocabulary
+## How to read the status column
+
+The distinction that carries weight is between *integrated* and everything
+else. A project counts as integrated only if it can be pointed at in the
+current `master` branch of Dash-Web: a document type registered in
+`Documents.ts`, an entry in `CollectionViewType`, a tool constructed in the
+agent registry, or code one of those calls.
+
+A merged branch does not qualify on its own, and neither does a demo recording,
+a screenshot, or a finished report. Several projects below have all three and
+are still not in the application. Each write-up records what was checked, under
+"Evidence for the status above".
 
 {% include status-key.html %}
 
@@ -29,16 +42,32 @@ cohort page.
   <div>
     <label for="filter-cohort">Cohort</label>
     <select id="filter-cohort">
-      <option value="">All cohorts</option>
+      <option value="">Any</option>
       {%- for c in site.data.cohorts %}
       <option value="{{ c.id }}">{{ c.title }}</option>
       {%- endfor %}
     </select>
   </div>
   <div>
+    <label for="filter-area">System area</label>
+    <select id="filter-area">
+      <option value="">Any</option>
+      {%- assign areas = "" | split: "" -%}
+      {%- for c in site.data.cohorts -%}
+        {%- for p in site.data.projects[c.id] -%}
+          {%- assign areas = areas | push: p.area -%}
+        {%- endfor -%}
+      {%- endfor -%}
+      {%- assign areas = areas | uniq | sort -%}
+      {%- for a in areas %}
+      <option value="{{ a }}">{{ a }}</option>
+      {%- endfor %}
+    </select>
+  </div>
+  <div>
     <label for="filter-status">Status</label>
     <select id="filter-status">
-      <option value="">All statuses</option>
+      <option value="">Any</option>
       {%- for st in site.data.statuses %}
       <option value="{{ st.key }}">{{ st.label }}</option>
       {%- endfor %}
@@ -48,75 +77,100 @@ cohort page.
 
 <p class="filter-status" id="filter-count" role="status"></p>
 
-<ul class="project-grid" id="project-grid">
+<div class="table-scroll">
+<table class="project-table" id="project-table">
+  <thead>
+    <tr>
+      <th scope="col">Project</th>
+      <th scope="col">Cohort</th>
+      <th scope="col">Area</th>
+      <th scope="col">Status</th>
+      <th scope="col">Concepts</th>
+    </tr>
+  </thead>
+  <tbody>
   {%- for c in site.data.cohorts -%}
-    {%- for p in site.data.projects[c.id] %}
-  {%- assign anchor = p.title | slugify -%}
-  {%- capture href %}/cohorts/{{ c.id }}/#{{ anchor }}{% endcapture -%}
-  <li class="project-card" data-cohort="{{ c.id }}" data-status="{{ p.status }}">
-    {%- comment -%}
-      Card titles are divs rather than headings on purpose. The theme's
-      heading-anchor pass rewrites every h1-h6 in page content, which on a
-      forty-card grid produced forty anchor links all pointing at the enclosing
-      section. The list gives the structure; each card has exactly one link.
-    {%- endcomment -%}
-    <div class="project-card__title"><a href="{{ href | relative_url }}">{{ p.title }}</a></div>
-    <p>{{ p.problem | strip_html | truncate: 180 }}</p>
-    <div class="project-card__meta">
-      {% include status-badge.html key=p.status %}
-      <span>{{ c.short }}</span>
-      {%- if p.people %}<span>{{ p.people | join: ", " }}</span>{%- endif %}
-    </div>
-  </li>
+    {%- for p in site.data.projects[c.id] -%}
+      {%- assign anchor = p.title | slugify -%}
+      {%- capture href %}/cohorts/{{ c.id }}/#{{ anchor }}{% endcapture %}
+    <tr data-cohort="{{ c.id }}" data-status="{{ p.status }}" data-area="{{ p.area }}">
+      <th scope="row">
+        <a href="{{ href | relative_url }}">{{ p.title }}</a>
+        {%- if p.people %}<span class="project-table__people">{{ p.people | join: ", " }}</span>{%- endif %}
+      </th>
+      <td class="nowrap">{{ c.short }}</td>
+      <td>{{ p.area }}</td>
+      <td>{% include status-badge.html key=p.status %}</td>
+      <td class="project-table__concepts">{% include concept-links.html concepts=p.concepts %}</td>
+    </tr>
     {%- endfor -%}
   {%- endfor %}
-</ul>
+  </tbody>
+</table>
+</div>
 
 <script>
-    // Progressive enhancement: without JavaScript every project is listed, which
-    // is the useful default. The filters only ever hide cards that are already
-    // in the page, so nothing depends on this running.
+    // Progressive enhancement. Without JavaScript the full table renders, which
+    // is the useful default; the filters only hide rows already in the page.
     (function () {
-        const grid = document.getElementById('project-grid');
-        const cohortSelect = document.getElementById('filter-cohort');
-        const statusSelect = document.getElementById('filter-status');
+        const table = document.getElementById('project-table');
         const count = document.getElementById('filter-count');
-        if (!grid || !cohortSelect || !statusSelect || !count) return;
+        const selects = ['filter-cohort', 'filter-area', 'filter-status'].map(id => document.getElementById(id));
+        if (!table || !count || selects.some(s => !s)) return;
 
-        const cards = Array.from(grid.querySelectorAll('.project-card'));
+        const rows = Array.from(table.tBodies[0].rows);
+        const keys = ['cohort', 'area', 'status'];
 
         function apply() {
-            const cohort = cohortSelect.value;
-            const status = statusSelect.value;
             let shown = 0;
-            cards.forEach(card => {
-                const ok =
-                    (!cohort || card.dataset.cohort === cohort) &&
-                    (!status || card.dataset.status === status);
-                card.classList.toggle('is-hidden', !ok);
+            rows.forEach(row => {
+                const ok = selects.every((sel, i) => !sel.value || row.dataset[keys[i]] === sel.value);
+                row.hidden = !ok;
                 if (ok) shown++;
             });
-            count.textContent =
-                shown === cards.length
-                    ? `Showing all ${cards.length} projects.`
-                    : `Showing ${shown} of ${cards.length} projects.`;
+            count.textContent = shown === rows.length
+                ? `Showing all ${rows.length} projects.`
+                : `Showing ${shown} of ${rows.length} projects.`;
         }
 
-        cohortSelect.addEventListener('change', apply);
-        statusSelect.addEventListener('change', apply);
+        selects.forEach(s => s.addEventListener('change', apply));
         apply();
     })();
 </script>
 
-## How to read the statuses
+## Where the work went
 
-The distinction that matters most is between *integrated* and everything else.
-A project is integrated only if we could point at it in the current `master`
-branch: a document type registered in `Documents.ts`, an entry in
-`CollectionViewType`, a tool constructed in the agent's registry, or code one of
-those calls. Each project's write-up records exactly what we checked, under
-"Evidence for the status above".
+Counted by system area, which is a rough map of what the group has spent seven
+years on.
 
-A merged branch on its own does not qualify, and neither does a demo recording
-or a screenshot. Several projects here have both and are still not in the
-application.
+<div class="table-scroll" markdown="1">
+
+| Area | Projects | Integrated |
+| :--- | ---: | ---: |
+{%- assign all_areas = "" | split: "" -%}
+{%- for c in site.data.cohorts -%}
+  {%- for p in site.data.projects[c.id] -%}
+    {%- assign all_areas = all_areas | push: p.area -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- assign uniq_areas = all_areas | uniq | sort -%}
+{%- for a in uniq_areas -%}
+  {%- assign total = 0 -%}
+  {%- assign integ = 0 -%}
+  {%- for c in site.data.cohorts -%}
+    {%- for p in site.data.projects[c.id] -%}
+      {%- if p.area == a -%}
+        {%- assign total = total | plus: 1 -%}
+        {%- if p.status == "integrated" %}{% assign integ = integ | plus: 1 %}{% endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor %}
+| {{ a }} | {{ total }} | {{ integ }} |
+{%- endfor %}
+
+</div>
+
+The document model and the agent system dominate, for different reasons.
+Document types are the cheapest thing to add, so that is what a one-semester
+project often becomes. The agent system is recent and concentrated: nearly all
+of it arrived in 2025 and 2026, on top of the tool registry.
