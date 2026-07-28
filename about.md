@@ -80,11 +80,11 @@ releases. Since 2023 the centre of gravity has moved to generative AI and, since
 access reads content it should not trust.
 
 For the full record, see [Cohorts]({{ '/cohorts/' | relative_url }}) and
-[Projects]({{ '/projects/' | relative_url }}).
+[Project index]({{ '/projects/' | relative_url }}).
 
 ## Architecture
 
-The [how Dash is built]({{ '/system/' | relative_url }}) page describes the
+The [Architecture]({{ '/system/' | relative_url }}) page describes the
 current system and the four places you extend it.
 
 There is also a longer [architecture

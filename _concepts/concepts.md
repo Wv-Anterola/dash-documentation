@@ -38,4 +38,4 @@ can be read on their own.
 
 For how these are actually put together, see
 [architecture]({{ '/system/' | relative_url }}). For what people built while
-working on them, see [projects]({{ '/projects/' | relative_url }}).
+working on them, see [the project index]({{ '/projects/' | relative_url }}).

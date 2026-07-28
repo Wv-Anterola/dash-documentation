@@ -11,7 +11,7 @@ description: The current Dash implementation, its four extension points, and the
 
 This page describes the structure of the current system and the small number of
 places you extend it. It is aimed at someone about to work on Dash, or someone
-trying to judge what a project on the [Projects]({{ '/projects/' | relative_url }})
+trying to judge what a project on the [Project index]({{ '/projects/' | relative_url }})
 page actually touched.
 
 <details open markdown="block">
@@ -52,7 +52,7 @@ an agent tool, all without special cases.
 
 ## The four extension points
 
-Almost every project in the [Projects]({{ '/projects/' | relative_url }}) list
+Almost every project in the [Project index]({{ '/projects/' | relative_url }}) list
 extends one of four things. If you are planning work, it is worth knowing which
 one you are aiming at, because the projects that reached `master` are
 overwhelmingly the ones that fit an existing slot.

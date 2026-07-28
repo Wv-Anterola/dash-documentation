@@ -33,7 +33,7 @@ There are two distinct surfaces, and it is worth knowing which one you are in:
 - The **agent** acts on the workspace: filtering, sorting, tagging, linking, and
   creating documents through a registry of tools.
 
-[How Dash is built]({{ '/system/' | relative_url }}) covers the difference in
+[Architecture]({{ '/system/' | relative_url }}) covers the difference in
 more detail, including why it matters for what you should trust.
 
 {: .caveat }

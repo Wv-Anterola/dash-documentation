@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Contributing to this site
+title: Documentation guide
 permalink: /contributing/
 nav_order: 2
 ---
 
-# Contributing to this site
+# Documentation guide
 {: .no_toc }
 
 How to run this site locally and how to add your cohort's work to it. Written so
@@ -93,7 +93,7 @@ Use real names. If a GitHub account has no name attached and you cannot work out
 whose it is, put the handle in and note it, the way `Skitty1238` is handled in
 the 2025 roster. Do not guess.
 
-**3. Create `markdown/cohorts/2027.md`.** Copy an existing one; the whole file
+**3. Create `_research/cohorts/2027.md`.** Copy an existing one; the whole file
 is front matter plus a few includes:
 
 ```markdown
@@ -127,6 +127,27 @@ Bump `nav_order` on the older cohort pages so the newest stays first.
 Nothing else needs touching. The cohort index, the projects index and its
 filters, and the People page all read from the data files.
 
+## Where content lives
+
+Each top-level directory is a Jekyll collection and becomes one heading in the
+sidebar. Which directory a page sits in decides only where it appears in the
+navigation: every page carries an explicit `permalink`, so moving a page
+between collections does not change its URL.
+
+<div class="table-scroll" markdown="1">
+
+| Directory | Sidebar heading | Holds |
+| :--- | :--- | :--- |
+| `_concepts/` | Concepts | The six core ideas, each citing the projects that exercised it |
+| `_guide/` | Using Dash | Task-oriented documentation for people using Dash |
+| `_system/` | System and architecture | The current implementation and its extension points |
+| `_research/` | Research and history | Project index, cohorts, people, release notes |
+| `_contribute/` | Contributing | Joining the project, and this page |
+
+</div>
+
+`index.md` and `about.md` stay at the root as ungrouped top-level pages.
+
 ## Adding a project
 
 Add an entry under your cohort's id in `_data/projects.yml`. Only `title`,
@@ -154,7 +175,43 @@ so a short entry renders as a short entry rather than a page of empty headings.
     code: "`DocumentType.YOURS`; branch `your-branch`"
     evidence: >-
       What you checked to justify the status above.
+    area: Document model
+    concepts: [documents]
 ```
+
+`area` and `concepts` are what stop your project from being stranded on one
+page.
+
+`area` groups the project in the index and in the summary table at the bottom
+of it. Reuse an existing value if one fits; the current set is Document model,
+Collections and views, Linking, Trails, Agent system, Generative media, 3D,
+Interface, and Infrastructure.
+
+`concepts` lists ids from `_data/concepts.yml`. Each id you add puts your
+project into the evidence table on that concept page, and puts a link back to
+the concept in your own write-up. This is the mechanism that keeps the
+documentation and the project record pointing at each other, so it is worth a
+minute's thought rather than leaving it blank.
+
+## Citing a project from a documentation page
+
+When a feature exists because of a specific project, say so where the feature
+is documented:
+
+```liquid
+{% raw %}{% include project-note.html title="Graph view for collections"
+   note="Why this project matters to the page you are on right now." %}{% endraw %}
+```
+
+The include looks the project up by title in `_data/projects.yml` and renders
+its cohort, contributors, and current status, so that metadata cannot drift out
+of sync with the cohort pages.
+
+Write the `note` fresh for each place you use it. Do not paste the project's own
+summary in: the reader can follow the link for that, and what they need here is
+the one sentence explaining why it is relevant to this page. A build with a
+mistyped title emits an HTML comment rather than failing, so check the rendered
+page.
 
 ## Choosing a status honestly
 
@@ -181,8 +238,8 @@ reading it will go and check, because eventually somebody will.
 
 ## Editing feature documentation
 
-Feature pages live under `markdown/features/`, `markdown/documents/`,
-`markdown/views/`, and `markdown/properties/`.
+Feature pages live under `_guide/`, in `features/`, `documents/`, `views/`,
+and `properties/`.
 
 Two conventions worth keeping:
 

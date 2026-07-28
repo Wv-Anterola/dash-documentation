@@ -84,4 +84,4 @@ which is where more than half of all work on Dash happened, and it gave no
 indication of when anyone was here or what they did.
 
 Rosters now come from `_data/people.yml`, so adding next year's cohort is one
-edit in one file. See [Contributing]({{ '/contributing/' | relative_url }}).
+edit in one file. See the [documentation guide]({{ '/contributing/' | relative_url }}).

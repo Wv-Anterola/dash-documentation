@@ -20,7 +20,7 @@ search, animation, scripting, collaboration, and generative AI.
 > graph collection view, and the desktop build with local models.
 >
 > Those are described, with their implementation status and who built them, on
-> the [Projects]({{ '/projects/' | relative_url }}) and
+> the [Project index]({{ '/projects/' | relative_url }}) and
 > [Cohorts]({{ '/cohorts/' | relative_url }}) pages.
 >
 > If you work on Dash and want to close one of these gaps,

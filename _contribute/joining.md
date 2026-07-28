@@ -24,13 +24,13 @@ experience from a course project and is most of the point.
 
 The usual shape of a project: you pick something, build it on your own branch,
 and if it fits one of the system's extension points it gets merged. The
-[how Dash is built]({{ '/system/' | relative_url }}) page describes those
+[Architecture]({{ '/system/' | relative_url }}) page describes those
 extension points, and it is worth reading before proposing anything, because the
 difference between a project that merges and one that does not is usually
 whether it fits a slot that already exists.
 
 Being straight about the rest: a good deal of student work here never reaches
-`master`. The [Projects]({{ '/projects/' | relative_url }}) page labels every
+`master`. The [Project index]({{ '/projects/' | relative_url }}) page labels every
 project with its actual status rather than implying everything shipped, and some
 of the most interesting work listed there sits on unmerged branches.
 
