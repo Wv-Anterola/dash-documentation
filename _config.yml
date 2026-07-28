@@ -1,8 +1,10 @@
 title: Dash
+# jekyll-seo-tag puts `tagline` after the title in <title>; without it, it uses
+# the whole description, which made every page title a paragraph long.
+tagline: Hypermedia research at Brown University
 description: >-
-  Dash is a component-based hypermedia system built by Andries van Dam's
-  research group at Brown University. This site documents how Dash works and
-  what each student cohort has contributed to it.
+  Documentation and project history for Dash, a component-based hypermedia
+  system built by Andries van Dam's research group at Brown University.
 
 # GitHub Pages builds this site with remote_theme. The just-the-docs project
 # moved out of pmarsceill's account years ago; the old path still redirects,
