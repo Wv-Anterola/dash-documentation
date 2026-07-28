@@ -25,11 +25,16 @@ pretending otherwise would make the rest untrustworthy.
 <ul class="cohort-list">
   {%- for c in site.data.cohorts %}
   <li class="cohort-card{% if c.current %} cohort-card--current{% endif %}">
-    <h3><a href="{{ '/cohorts/' | append: c.id | append: '/' | relative_url }}">{{ c.title }}</a></h3>
+    {%- comment -%}
+      A div, not a heading: the theme's heading-anchor pass rewrites every
+      h1-h6 in page content and would give each card an anchor link pointing at
+      the enclosing section instead of at itself. The list supplies structure.
+    {%- endcomment -%}
+    <div class="cohort-card__title"><a href="{{ '/cohorts/' | append: c.id | append: '/' | relative_url }}">{{ c.title }}</a></div>
     <span class="cohort-card__meta">
       {%- assign n = site.data.projects[c.id] | size -%}
-      {{ c.commits }} commits · {{ n }} project{% if n != 1 %}s{% endif %} recorded
-      {%- if c.current %} · current{% endif %}
+      {{ c.commits }} commits, {{ n }} project{% if n != 1 %}s{% endif %} recorded
+      {%- if c.current %}, current cohort{% endif %}
     </span>
     <p>{{ c.summary }}</p>
   </li>

@@ -133,11 +133,6 @@ $dash-surface: #f7f8fa;
     margin: 0;
     padding: 1rem 1.15rem;
 
-    h3 {
-        font-size: 1.02rem;
-        margin: 0 0 0.2rem;
-    }
-
     a {
         text-decoration: none;
     }
@@ -154,6 +149,13 @@ $dash-surface: #f7f8fa;
     background: $dash-surface;
     border-left-color: $dash-deep-blue;
     border-left-width: 5px;
+}
+
+.cohort-card__title {
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 0.2rem;
 }
 
 .cohort-card__meta {
