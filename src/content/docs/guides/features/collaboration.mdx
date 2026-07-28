@@ -1,5 +1,6 @@
 ---
 title: Collaboration
+description: 'Sharing dashboards and documents, the four access levels, guest access, and creating groups.'
 ---
 
 *[HTML]: Hyper Text Markup Language
@@ -31,3 +32,15 @@ Guest users are never able to make changes to shared documents: any edits made o
 When a parent document with nested child documents is shared at a permission level more restrictive than the permission levels of its children, the children automatically adopt the more restrictive permission. However, in order for nested child documents to adopt parent permissions that are less restrictive than their current permission, the ‘Upgrade Nested‘ checkbox must be selected.
 - **Layout:**
 Layout permissions refer to the ability to move and resize documents. A document’s layout permissions are initially simply the permissions of the document that the selected document is nested inside of - until they are explicitly set otherwise.
+
+## Related
+
+- [Sharing and permissions](/guides/properties/sharingpermissions/) for the same
+  access levels seen from the properties panel.
+- [The 0.8 sharing and dashboard release](/research/cohorts/2021-2022/#novice-mode-and-homepage)
+  for the work this permission model shipped with, and what has since been
+  superseded.
+
+The agent is outside this model. It has no permissions of its own and acts with
+whatever access the user has; see
+[agents and tools](/concepts/agents/).

@@ -1,5 +1,6 @@
 ---
 title: Trails
+description: 'Presentation trails: pinning slides, grouping them, customising transitions, and presenting.'
 ---
 
 import ProjectNote from '../../../../components/ProjectNote.astro';
@@ -29,31 +30,31 @@ There are two ways to open up the Presentation Trails sidebar:
 
 ### Adding documents to a trail
 
-#### Regular pin:
+#### Regular pin
 
 To pin any document to the presentation trail simply select a document and use the ‘Pin’ button in the document decorations to add it to the presentation trail. If the user has not yet created a presentation trail, then this button will also create a new presentation trail and add that specific document as the first slide in the trail.
 
-- ![](/assets/images/trails/regularpin.png)
+- ![Screenshot: a document pinned to a presentation trail with the standard pin.](/assets/images/trails/regularpin.png)
 
-#### Pin with view:
+#### Pin with view
 
 Pinning with view pins the canvas with the specific pan and zoom you have it set to, allowing you to show a view of multiple documents laid out on a collection. There are two places where you can pin with view:
 
 - **Top menu bar:** this pins the canvas with the pan and zoom of the tab as you are currently viewing it
-  ![](/assets/gifs/trails/pinmenuview.gif)
+  ![Screen recording: pinning the canvas from the top menu bar, capturing its current pan and zoom.](/assets/gifs/trails/pinmenuview.gif)
 - **Marquee menu:** this option appears when you right click and drag on the canvas to create a marquee selection and pins the canvas with the marquee bounds as the viewport
-  ![](/assets/gifs/trails/pinmarqueeview.gif)
+  ![Screen recording: pinning a marquee selection so its bounds become the slide viewport.](/assets/gifs/trails/pinmarqueeview.gif)
 
-#### Other pinning options:
+#### Other pinning options
 
 Other ways to pin documents are available when hovering over the pin button in the document decorations. Each of these track different aspects of the document's state, allowing you to pin them, make changes, and then pin them again to display transitions between the document's layout or content. This is different than the default pin, where any changes made to the document after pinning are reflected in the presentation slide.
 
 - **Pin with layout:** this pins the document saving its current layout state: xy position, width, and height
-  ![](/assets/gifs/trails/pinlayout.gif)
+  ![Screen recording: pinning a document with layout, saving its position, width, and height.](/assets/gifs/trails/pinlayout.gif)
 - **Pin with content:** this pins the document content saving its content state such as the text of a text document, the pan and zoom of a collection, the scroll position of a PDF, etc.
-  ![](/assets/gifs/trails/pincontent.gif)
+  ![Screen recording: pinning a document with content, saving its text, scroll position, or pan and zoom.](/assets/gifs/trails/pincontent.gif)
 - **Pin with layout and content:** this saves both layout and content
-  ![](/assets/gifs/trails/pinlayoutcontent.gif)
+  ![Screen recording: pinning a document with both layout and content saved.](/assets/gifs/trails/pinlayoutcontent.gif)
 
 ### Slides
 
@@ -70,7 +71,7 @@ Selected slides are indicated by the blue outline and the light blue background,
 - **Camera:** records video following your mouse movements while presenting the trail
 - **Arrow:** groups slide with the one above it. When presenting, both slides will transition in together and run simultaneously. By default they play in parallel, but clicking the blue arrow line when grouped will switch to series and play one after the other (indicated as the black outline around the arrow)
 
-  ![](/assets/gifs/trails/arrows-present-together.gif)
+  ![Screen recording: grouping two slides with the arrow control so they transition in together.](/assets/gifs/trails/arrows-present-together.gif)
 
 - **Eye:** expand/minimize a preview of the slide
 - **Trash:** removes the slide from the presentation (not from the collection or database)

@@ -1,5 +1,6 @@
 ---
 title: Data Visualization
+description: 'Data visualisation documents backed by a CSV field: building charts, filtering them interactively, and generating one from a prompt.'
 ---
 
 import ProjectNote from '../../../../components/ProjectNote.astro';
@@ -8,57 +9,57 @@ import ProjectNote from '../../../../components/ProjectNote.astro';
 ![A data visualisation document rendering a chart from a CSV](/assets/images/environment/dataViz_doc.png)
 
 
-## Description: 
+## What it is
 Data visualized in a table, line chart, histogram, or pie chart.
 
-## Access: 
+## Creating one
 To create a DataViz box, either import / drag a CSV file into your canvas or copy a data table and use the command 'ctrl + p' to bring the data table to your canvas. See below for how to turn a schema table into a DataViz box.
 
-## Objects & Actions: 
+## What you can do
 
 - ### **Basic Graphs:** 
   A data set composed of string, numbers, prices, or percents can be viewed as a table, line chart, histogram, or pie chart that can be customized by its title and colors. To create a visualization, click the title of the column you want to visualize and then select the graph type. When viewing the data set as a table view, clicking on a row selects the row for filtering, and clicking on a row while holding 'Command/Windows' highlights the row visually.
-  ![](/assets/gifs/dataViz/simple_dataViz.gif)
+  ![Screen recording: clicking a column heading in a CSV and choosing a chart type to visualise it.](/assets/gifs/dataViz/simple_dataViz.gif)
 
 - ### **2D Graphs:** 
   The first column selected will turn green and be the x-axis, and the second column selected will turn red and be the y-axis.
-  ![](/assets/gifs/dataViz/2D_graph.gif)
+  ![Screen recording: selecting two columns, the first turning green as the x-axis and the second red as the y-axis.](/assets/gifs/dataViz/2D_graph.gif)
 
 - ### **Filtering:** 
   To filter the data, drag off a column of data. To select data to display on the filtered doc,
 
   a: click rows from the original DataViz box,
-  ![](/assets/gifs/dataViz/filteringA.gif)
+  ![Screen recording: filtering a visualisation by clicking rows in the original data table.](/assets/gifs/dataViz/filteringA.gif)
 
   b: filter a table choosing a value or range of values in a column, or 
-  ![](/assets/gifs/dataViz/filteringB.gif)
+  ![Screen recording: filtering a table by choosing a value or a range of values in one column.](/assets/gifs/dataViz/filteringB.gif)
 
   c: click on data in a line chart, histogram, or pie chart while the 'Select data to filter' toggle is on.
-  ![](/assets/gifs/dataViz/filteringC.gif)
+  ![Screen recording: filtering by clicking data points directly in a chart with select-to-filter enabled.](/assets/gifs/dataViz/filteringC.gif)
 
 - ### **Artificial Intelligence**
   Clicking the context menu's 'Analyze with AI' button will use aritificial intelligence to analyze the dataset. Initially, a general analysis will pop up, and from here, you can
 
   a: click 'Transfer to Text' to save this analysis as an annotation on the DataViz doc,
-  ![](/assets/gifs/dataViz/aiText.gif)
+  ![Screen recording: transferring a generated analysis to text, saving it as an annotation on the data visualisation.](/assets/gifs/dataViz/aiText.gif)
 
   b: click 'Visualize' to create a line chart visualization of a correlation found in the dataset, and
-  ![](/assets/gifs/dataViz/aiVisualize.gif)
+  ![Screen recording: generating a line chart of a correlation found in the dataset.](/assets/gifs/dataViz/aiVisualize.gif)
 
   c: click 'Chat with AI' to ask the artificial intelligence specific questions about your dataset,
-  ![](/assets/gifs/dataViz/aiChat.gif)
+  ![Screen recording: asking questions about a dataset in the chat panel beside it.](/assets/gifs/dataViz/aiChat.gif)
 
 - ### **Schema Tables as Data Visualization:** 
   When in Schema view, click the 'DataViz' button on the top bar. This will create a DataViz doc that represents the schema table - then, when back in Freeform view, this can be dropped onto the canvas. When the 'Display Live Updates to Canvas' toggle is selected, this DataViz doc will change as docs are added to and deleted from the canvas, and otherwise, it will represent the static schema table that it was created from.
-  ![](/assets/gifs/dataViz/fromSchema_dataViz.gif)
+  ![Screen recording: creating a data visualisation from a schema table and dropping it onto the canvas.](/assets/gifs/dataViz/fromSchema_dataViz.gif)
 
 - ### **Setting a Title Column:** 
   Click 'Select Title Column' and then select any column's title to set that column as the data's title column. This means that no matter which columns are being displayed in a graph, the title column will also be available. Alternatively, selecting a column's title while holding 'shift' will set / remove that column as the data's title.
-  ![](/assets/gifs/dataViz/titleCol.gif)
+  ![Screen recording: setting a column as the title column so it stays available in every chart.](/assets/gifs/dataViz/titleCol.gif)
 
 - ### **3-Column Line Charts:** 
   If three numerical columns are selected, the 'line chart' tab will display the second two columns selected (blue and red) over the first one (green).
-  ![](/assets/gifs/dataViz/3colLinechart.gif)
+  ![Screen recording: a line chart plotting two selected columns against a third.](/assets/gifs/dataViz/3colLinechart.gif)
 ## Where this came from
 
 The data visualization document type has been extended by a different student
