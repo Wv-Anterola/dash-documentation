@@ -1,0 +1,95 @@
+---
+layout: default
+title: Collections and views
+parent: Concepts
+permalink: /concepts/collections/
+nav_order: 2
+concept_id: collections
+description: Why a collection is a document and its layout is a property rather than a separate object.
+---
+
+# Collections and views
+{: .no_toc }
+
+<details open markdown="block">
+  <summary>Table of contents</summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
+## The idea
+
+A collection is a document that holds other documents. How it draws them is a
+property of the collection, not a different kind of thing.
+
+Switching a collection from a freeform canvas to a table to a calendar to a
+link graph changes one field. No data is converted, nothing is exported and
+re-imported, and the documents inside are unaffected.
+
+## Why it matters
+
+The alternative, which most software picks, is to make the layout the identity
+of the container: a whiteboard app, a spreadsheet, a calendar. Then moving
+between them is an export.
+
+Dash separates them because the reason you want a spreadsheet view is rarely
+that your material is tabular. It is that you have a question this week that a
+table answers, and next week the question will be spatial.
+
+The practical test of whether this holds up is what it costs to add a view.
+When the 2026 cohort added the graph view, they added an enum value and a
+component, and every collection that already existed could be switched into it
+immediately, including ones created in 2019.
+
+## How Dash represents it
+
+`CollectionViewType` is an enum with twenty-one entries.
+`CollectionView.tsx` switches on it to pick a component. Freeform, stacking,
+schema, tree, carousel, masonry, and docking date from 2019 and 2020; calendar
+arrived in 2023, graph in 2026.
+
+Docking is the odd one: the workspace itself is a docking collection, which is
+why tabs and tiles behave like documents you can drag.
+
+Layout engines for freeform collections live separately under
+`collectionFreeFormLayoutEngines/`, because a freeform collection can have its
+positions computed rather than set by hand. The graph view's force-directed
+engine is one of these.
+
+## Current limitations
+
+Views do not compose. You cannot have a calendar of stacks, or a graph whose
+nodes are laid out on a map, even though both are reasonable things to want.
+
+Performance is the other constraint, and it is the one the graph view ran into
+directly. A layout engine that recomputes on every frame against MobX
+observables will re-render the whole collection continuously. The graph engine
+scales its iteration count by node count and stops early once movement settles,
+which is a workaround for the absence of a general answer.
+
+## Projects that exercised this
+
+{% include projects-for-concept.html id="collections" %}
+
+{% include project-note.html title="Graph view for collections"
+   note="The clearest recent demonstration that adding a view is cheap. It also
+   surfaced the MobX re-render problem described above, and the settle-detection
+   fix is the only reason the view is usable on a dense canvas." %}
+
+{% include project-note.html title="Data visualisation documents"
+   note="A four-year thread rather than a single project. The CSV-backed
+   document type from 2022 has been extended by a different student in 2024 and
+   again in 2026, which makes it the best available evidence that the type
+   system tolerates being built on by people who never met." %}
+
+## Related documentation
+
+- [Views]({{ '/views/' | relative_url }}) for the four views available in
+  novice mode and how to switch between them.
+- [Data visualization]({{ '/documents/dataViz/' | relative_url }}) for the
+  CSV-backed document type.
+- [Filters]({{ '/properties/filters/' | relative_url }}) for narrowing what a
+  collection shows.
+- [Documents and fields]({{ '/concepts/documents/' | relative_url }}) if you
+  have not read it, since a collection is a document.
