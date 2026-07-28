@@ -1,0 +1,142 @@
+---
+title: Development
+description: The Dash-Web repository layout, where each subsystem lives, how the client and server fit together, and what the test and build commands actually cover.
+---
+
+This page is for orientation in the codebase. It assumes you have a checkout
+running; if not, start with
+[running Dash locally](/getting-started/running-dash/).
+
+Paths below were checked against `origin/master` in
+[brown-dash/Dash-Web](https://github.com/brown-dash/Dash-Web) rather than a
+feature branch, because branches differ substantially from each other and from
+what ships.
+
+## Repository layout
+
+Dash-Web is a monorepo. The web application is at the root; the shared
+component library is an npm workspace.
+
+```text
+src/
+  client/
+    documents/      Documents.ts and DocumentTypes.ts: the type registry
+    views/
+      collections/  collection view types and layout engines
+      nodes/        one directory per document type
+      linking/      link menus, popups, anchor handling
+      animationtimeline/  trail and animation timing
+      smartdraw/    generative drawing surface
+      search/       the search flyout
+      pdf/          PDF rendering and annotation
+      topbar/       global controls
+    apis/           clients for external services
+    util/           UndoManager and shared helpers
+    DocServer.ts    client side of the document protocol
+  server/
+    index.ts        Express entry point
+    database.ts     MongoDB access
+    RouteManager.ts route registration
+    ApiManagers/    grouped route handlers
+    authentication/ accounts and sessions
+    chunker/        document chunking for the vector store
+    public/files/   uploaded files, not in version control
+  fields/           the field type system
+  workers/          sympy and jimp web workers
+packages/components the shared UI library, with its own Storybook
+test/               mocha unit tests
+scripts/            build helpers
+electron-main.mjs   desktop entry point
+webpack.config.mjs  client bundle configuration
+```
+
+The two files you will edit most often when adding anything are
+`client/documents/DocumentTypes.ts`, which declares the `DocumentType` and
+`CollectionViewType` enums, and `client/documents/Documents.ts`, which holds a
+factory per type. [Architecture](/architecture/) explains why those two files
+are the bottleneck and what the alternatives would cost.
+
+## How a document reaches the screen
+
+Worth tracing once, because most debugging ends up somewhere on this path.
+
+1. A factory in `Documents.ts` calls `InstanceFromProto` with a prototype from
+   `Prototypes.get(DocumentType.SOMETHING)`.
+2. The resulting document is a set of typed fields from `src/fields/`.
+3. `DocServer.ts` syncs those fields with the server, which persists them to
+   MongoDB through `database.ts`.
+4. `DocumentView.tsx` switches on the document's type and renders the matching
+   component from `views/nodes/`.
+5. MobX observability on the fields is what re-renders the view when anything
+   changes.
+
+Step 5 is the one that surprises people. Fields are observable, so a
+computation that reads many of them re-runs when any of them changes. The 2026
+graph view hit this hard enough to need a layout engine that stops early;
+[collections and views](/concepts/collections/) records what that cost.
+
+## Tests
+
+There are two suites, and neither is comprehensive.
+
+`npm test` runs mocha over `test/`. On `master` that is a single file,
+`test/test.ts`, so passing it means very little about the health of the
+application.
+
+Playwright end-to-end tests exist, but not on `master`. The
+`playwright.config.ts` file and the `e2e/` directory live on the branch for the
+[2026 agent oversight study](/research/cohorts/2026/#post-hoc-oversight-of-prompt-injected-agents),
+which added an injection harness as `e2e/phase0.spec.ts`. If you want end-to-end
+coverage on `master`, it does not yet exist and adding it would be a
+contribution in its own right.
+
+`npm run tsc` type-checks without emitting. It is the fastest way to find out
+whether a change compiles, and worth running before a build.
+
+`npm run lint:css` runs stylelint over CSS and SCSS.
+
+## Builds
+
+`npm run build` is the production webpack build. It needs an enlarged Node heap
+and the script sets one; running webpack directly will usually run out of
+memory.
+
+`npm run build-workers` bundles the SymPy worker with esbuild. `npm start`
+runs it first, so you rarely call it yourself, but a stale worker bundle is a
+plausible cause if equation solving breaks after a dependency change.
+
+The desktop builds (`build:mac`, `build:windows`) run the worker build, the
+client build, and a server build, then hand off to electron-builder. The macOS
+disk image step was still unreliable as of the June 2026 demo.
+
+## Debugging
+
+`npm run fast` and `npm run debug` both start the server with the Node
+inspector attached and a larger heap; `debug` also enables source maps, which
+is what you want when a stack trace points into bundled output.
+
+Two things account for a large share of confusing behaviour:
+
+**MobX re-render loops.** If the interface is slow rather than wrong, suspect a
+computation reading observables it does not need. The React DevTools profiler
+finds these faster than reading the code does.
+
+**Undo batches.** Mutations run through `util/UndoManager`, and
+`UndoManager.RunInBatch` groups changes so they revert together. A change that
+undoes in the wrong number of steps is almost always a batching problem rather
+than a logic problem.
+
+## Working on this site
+
+The documentation is a separate repository and a separate toolchain.
+[Working on this documentation](/contributing/documentation/) covers running it,
+adding a page, and adding a cohort or project.
+
+## Where to go next
+
+- [Architecture](/architecture/) for the four extension points and which one
+  your work should aim at.
+- [Concepts](/concepts/) for why the document and collection models are shaped
+  the way they are.
+- [Contributing to Dash](/contributing/joining/) for how projects get chosen and
+  what tends to reach `master`.

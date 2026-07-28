@@ -109,8 +109,9 @@ export default defineConfig({
         {
           label: 'Getting started',
           items: [
-            { slug: 'getting-started/using-dash' },
             { slug: 'getting-started/environment' },
+            { slug: 'getting-started/using-dash' },
+            { slug: 'getting-started/running-dash' },
           ],
         },
         {
@@ -152,6 +153,10 @@ export default defineConfig({
             { slug: 'research/people' },
             { slug: 'research/release-history' },
           ],
+        },
+        {
+          label: 'Development',
+          items: [{ slug: 'development' }],
         },
         {
           label: 'Contributing',

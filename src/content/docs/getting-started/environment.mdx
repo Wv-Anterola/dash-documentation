@@ -1,157 +1,161 @@
 ---
-title: Overall Environment
+title: The Dash workspace
+description: 'The regions of the Dash interface: the home menu, the sidebar flyouts, the top bar, the context toolbar, and the dashboard, tile, and tab system.'
 ---
 
-## Welcome to Dash!
+This page names the parts of the interface. It is worth reading once before
+[your first session](/getting-started/using-dash/), because the rest of the
+documentation assumes the vocabulary.
 
-{/* <div class="video">
-<iframe title="Welcome to Dash!" src="https://drive.google.com/file/d/1hzoaU-VZBnIk1y4aOYQkbuCobunOCMd6/preview" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
-</div> */}
+Sign up at [browndash.com](https://browndash.com/signup) if you have not
+already.
 
-If you haven't already, sign up for an account and get started at [browndash.com](https://browndash.com/signup).
+## The home menu
 
-When you first open Dash, you will see a home menu for managing your dashboards. From here you can view, delete, and share your dashboards or view dashboards shared with you by others in the "Shared Dashboards" menu. Selecting the "+ New Dashboard" button or the empty dashboard with the + will create a new empty dashboard.
+Dash opens on a home menu for managing dashboards. You can view, delete, and
+share your own dashboards here, and open ones other people have shared with you
+under "Shared Dashboards". The "+ New Dashboard" button, or the empty dashboard
+tile marked with a plus, creates a new one.
 
-![The home menu, listing dashboards and recently closed documents](/assets/images/environment/homemenu.png)
+![Screenshot: the Dash home menu listing existing dashboards and recently closed documents.](/assets/images/environment/homemenu.png)
 
-The first view in a new dashboard is an empty pannable freeform canvas, one of many views that Dash supports. The freeform view is a pannable and zoomable freeform unbounded 2D canvas where the majority of Dash's workflow takes place. It is surround by toolbars and panels which we will go over below.
+A new dashboard opens on an empty freeform canvas: a pannable, zoomable,
+unbounded 2D surface where most work happens. It is surrounded by the panels
+described below.
 
-![Screenshot: The Dash interface with its regions labelled: sidebar, top bar, canvas, and document decorations.](/assets/images/environment/dash-labeled-interface.png)
+![Screenshot: the Dash interface with its regions labelled: sidebar, top bar, canvas, and document decorations.](/assets/images/environment/dash-labeled-interface.png)
 
-## Menu Panel
+Freeform is only the default. A collection stores its layout as a property, so
+the same contents can be shown as a table, a calendar, or a link graph without
+converting anything; see [collections and views](/concepts/collections/).
 
-Each icon has an associated flyout panel with additional functionality. Flyouts can be toggled open by clicking on corresponding icons.
+## The sidebar
 
-![Screen recording: Opening the sidebar flyout panel.](/assets/gifs/environment/dash-flyout.gif)
+The sidebar is pinned to the left. Each icon opens a flyout panel, toggled by
+clicking the icon or the grey drag handle.
 
-### Access
+![Screen recording: opening and closing a sidebar flyout panel.](/assets/gifs/environment/dash-flyout.gif)
 
-Permanently pinned on the left. Flyouts can be toggled open & closed by clicking on the specific icon, or by clicking on the grey drag handle.
+| Icon | Panel | What it does |
+| :--- | :---- | :----------- |
+| ![](/assets/icons/search.png) | **Search** | Finds documents in the current dashboard by metadata. The dropdown filters by document type. Ctrl+F toggles it. |
+| ![](/assets/icons/files.png) | **Files** | A file manager where you can group documents into folders independently of the dashboard. Also holds [recently closed](/getting-started/using-dash/#edit-and-arrange) documents. |
+| ![](/assets/icons/tools.png) | **Tools** | An alternative route for creating certain document types, including maps, audio, and notes. |
+| ![](/assets/icons/imports.png) | **Imports** | Where imported documents land. |
+| ![](/assets/icons/shared.png) | **Shared** | Documents and dashboards other users have shared with you. To share something, right-click it and select `Share`. |
+| ![](/assets/icons/trails.png) | **Trails** | Every presentation trail you have created. |
 
-| Icon                                     | Title       | Description                                                                                                                                                                                                                                    |
-| :--------------------------------------- | :---------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![](/assets/icons/search.png)  | **Search**  | Search for any documents within the currently selected Dashboard. The dropdown panel can be used to filter the search results by the type of document. In addition to clicking the search icon, Ctrl+F also toggles this flyout open & closed. |
-| ![](/assets/icons/files.png)   | **Files**   | This is your file manager where you can create folders to keep track of documents independently of your dashboard. You can also view [recently closed](/getting-started/using-dash/#transforming-documents) documents.                                   |
-| ![](/assets/icons/tools.png)   | **Tools**   | Tools provides an alternative way to create certain types of documents, including maps, audio, and notes.                                                                                                                                      |
-| ![](/assets/icons/imports.png) | **Imports** | This is where documents that are imported into Dash will go.                                                                                                                                                                                   |
-| ![](/assets/icons/shared.png)  | **Shared**  | This is where documents of dashboards that other users have shared with you will appear. To share a document or dashboard right click and select `Share`.                                                                                      |
-| ![](/assets/icons/trails.png)  | **Trails**  | All of the trails that you have created will appear here.                                                                                                                                                                                      |
+Search matches metadata rather than the text inside documents. That boundary is
+recorded on [search](/guides/features/search/), along with the project that
+tried to move it.
 
-## Topbar
+## The top bar
 
-The topbar is the topmost section of the interface. It mainly contains global controls.
+The top bar holds global controls.
 
-| Icon                                                                | Title                 | Description                                                                                                                                                                |
-| :------------------------------------------------------------------ | :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![](/assets/icons/home.png)           | **Home**              | Return to the main dashboard view.                                                                                                                                         |
-| ![](/assets/icons/expore.png)         | **Explore**           | Enter the explore mode, where clicking on a document will center and zoom it into view, allowing you to browse your documents in a view-only mode.                         |
-| ![](/assets/icons/share.png)          | **Share**             | Open up the sharing manager to share your dashboard.                                                                                                                       |
-| ![](/assets/icons/issue-reporter.png) | **Bug Reporter**      | View and report issues with Dash.                                                                                                                                          |
-| ![](/assets/icons/documentation.png)  | **Documentation**     | Open up the documentation for Dash (this site!)                                                                                                                            |
-| ![](/assets/icons/settings.png)       | **Settings**          | Manage global settings, including accounts, modes, and appearance.                                                                                                         |
-| ![](/assets/icons/server-con.png)     | **Server Connection** | If you see a full heart, the server connection is active. Clicking the heart will display active users. If the server connection is lost, the heart will appear as broken. |
+| Icon | Control | What it does |
+| :--- | :------ | :----------- |
+| ![](/assets/icons/home.png) | **Home** | Return to the main dashboard view. |
+| ![](/assets/icons/expore.png) | **Explore** | Enter explore mode, where clicking a document centres and zooms it, for browsing read-only. |
+| ![](/assets/icons/share.png) | **Share** | Open the sharing manager for the dashboard. |
+| ![](/assets/icons/issue-reporter.png) | **Bug reporter** | View and report issues with Dash. |
+| ![](/assets/icons/documentation.png) | **Documentation** | Open this site. |
+| ![](/assets/icons/settings.png) | **Settings** | Global settings: accounts, modes, and appearance. |
+| ![](/assets/icons/server-con.png) | **Server connection** | A full heart means the connection is live, and clicking it lists active users. A broken heart means the connection dropped. |
 
-## Toolbar
+## The context toolbar
 
-The toolbar is context specific; if the freeform is selected, you'll see controls related to the overall view, and if a document is selected, you'll see controls related to that document type.
+The toolbar changes with what is selected. With the canvas selected it shows
+view-level controls; with a document selected it shows controls for that
+document type.
 
-![Screenshot: freeform toolbar in Dash.](/assets/images/environment/dash-freeform-toolbar.png)
+![Screenshot: the freeform toolbar, showing canvas-level controls.](/assets/images/environment/dash-freeform-toolbar.png)
 
-![Screenshot: text toolbar in Dash.](/assets/images/environment/dash-text-toolbar.png)
+![Screenshot: the text toolbar, showing formatting controls for a selected text document.](/assets/images/environment/dash-text-toolbar.png)
 
-{/*
+## Dashboards, tiles, and tabs
 
-#### Dashboards
-A flyout panel that contains a list of the user’s active dashboards and documents. The user can right-click on the topmost “Dashboard” to invoke the right-click menu, then selecting “Create Dashboard”, in order to create a new dashboard. Each dashboard contains the collections that are within that workspace and the user can choose to expand those collections to view a list of all the items in that collection. The “On-screen Tab” section contains all your currently-opened tabs. Tabs you have closed will be moved to the “Off-screen Tab” section.
-#### Search
-A sidebar panel for searching across your documents. See
-[search](/guides/features/search/) for what it matches.
+These three words are used precisely throughout the documentation, and they
+nest: a dashboard holds tiles, a tile holds tabs, a tab holds a document.
 
-#### File Manager
-A sidebar panel listing uploaded files. This panel has never been documented in
-detail, and the section here was empty from 2021 until 2026.
+### Dashboards
 
-#### Recently Closed
-A sidebar panel that contains all the documents that the user has recently closed or deleted.
+A dashboard is a particular layout of tiles and tabs. You can keep several, one
+per workflow: a photo album in one, class notes in another. Documents can be
+linked and moved between dashboards, but dashboards are meant to work
+separately.
 
-#### Uploads
-A sidebar panel that allows users to import existing files from their local machines, and view files they already have imported.
+Create, share, and delete them from the home menu.
 
-#### Sharing
-Sharing
+![Screen recording: creating, renaming, and deleting dashboards from the home menu.](/assets/gifs/environment/dash-managing.gif)
 
-#### Trails
+### Tabs
 
-*/}
+A tab works like a browser tab and can hold any Dash document.
 
-## Dashboards, Tiles & Tabs
+Create one with the plus at the top right of a [tile](#tiles); close one with
+the x on the tab itself.
 
-{/* <iframe src="https://drive.google.com/file/d/1-LDsG36vURzBNGueNkX7xZVpY4Wflf5v/preview" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe> */}
+![Screen recording: creating and deleting tabs in a tile.](/assets/gifs/environment/dash-create-delete-tab.gif)
 
-### What is a Dashboard?
+To open a document in its own tab, drag the document's title bar onto the tab
+manager and release. Clicking the darkened region that appears puts the new tab
+in the current tile.
 
-A particular layout of tabs is called a dashboard. A dashboard can consist of one or more tabs. A user can have multiple dashboards to support different workflows. For example, one to collect a photo album, and another to take notes during class. Although documents can be linked and moved between dashboards, they are primarily designed to operate seperately.
+![Screen recording: dragging a document's title bar onto the tab manager to open it in a new tab.](/assets/gifs/environment/dash-drag-tab.gif)
 
-#### Managing Dashboards
+To put it in a new tile instead, move the cursor to the part of the canvas where
+you want the tile and click there rather than on the tab manager.
 
-The home menu allows you to view and manage your dashboards. From here you can create new dashboards, share existing ones, and delete dashboards.
+![Screen recording: dragging a document tab out to create a new tile beside the existing one.](/assets/gifs/environment/dash-drag-tab-tile.gif)
 
-![Screen recording: Managing dashboards from the sidebar.](/assets/gifs/environment/dash-managing.gif)
+To merge a tab back, drag the document icon on the tab header into the target
+tab.
 
-{/* ![new dashboard](/assets/gifs/environment/new-dashboard.gif) */}
+![Screen recording: dragging a tab back into another tab to merge them.](/assets/gifs/environment/dash-drag-tab-back.gif)
 
-### What is a tab?
+### Tiles
 
-We display dash documents in the window manager with tabs. This is similar to a browser tab. A tab can contain any document in dash.
+A tile is a pane that holds one or more tabs, the way a browser window holds
+tabs.
 
-#### Creating/Deleting Tabs
+Create one by dragging the header of an existing tab to the part of the canvas
+where you want it.
 
-You can create a tab by clicking on the plus at the top right of a [tile](/getting-started/environment/#what-is-a-tile). You can delete a tab by clicking on the x icon of each tab.
+![Screen recording: dragging a tab header onto the canvas to create a new tile.](/assets/gifs/environment/dash-drag-tab-create-tile.gif)
 
-![Screen recording: create delete tab in Dash.](/assets/gifs/environment/dash-create-delete-tab.gif)
+Close one with the x at its top right.
 
-To open a document in a new tab, drag the document title bar to the tabs manager, and release.
+![Screen recording: closing a tile with the x control at its top right.](/assets/gifs/environment/dash-close-tile.gif)
 
-From there, if you click on the darkened tabs manager region indicating the potential new tab, you'll create a new tab in the current [tile](/getting-started/environment/#what-is-a-tile).
+## Undo and redo
 
-![Screen recording: drag tab in Dash.](/assets/gifs/environment/dash-drag-tab.gif)
+The arrows in the bottom left of the canvas undo and redo actions. Clicking the
+stack lists past actions, and clicking one of those returns to it.
 
-If you want to place the new document tab in a new [tile](/getting-started/environment/#what-is-a-tile), rather than clicking on the tabs manager, you can instead move your cursor to the region of the freeform where you want to create a new tile, then click.
+![Screenshot: the undo and redo controls in the bottom left of the canvas.](/assets/images/environment/undo-redo.png)
 
-![Screen recording: drag tab tile in Dash.](/assets/gifs/environment/dash-drag-tab-tile.gif)
+![Screen recording: undoing and redoing actions from the undo stack.](/assets/gifs/environment/undo-redo.gif)
 
-To drag a document tab back into another tab, drag the document icon on the tab header back into the main tab.
+The controls turn yellow while an action is in flight. If they stay yellow,
+refresh the browser.
 
-![Screen recording: drag tab back in Dash.](/assets/gifs/environment/dash-drag-tab-back.gif)
+This is more load-bearing than it looks. Every mutation in Dash runs through a
+single undo manager, and grouping changes into a named batch is what makes one
+agent action revertible as a unit. [Architecture](/architecture/#undo-batches)
+explains why that is also where action provenance had to attach.
 
-### What is a tile?
+## Reporting bugs
 
-Tiles can contain multiple tabs, you can drag and drop a tab into a tile such that you have multiple tabs in the same way that a browser like Chrome has multiple tabs.
+Dash is a research system under active development, so bugs are expected and
+reports are useful. Click the bug icon in the top bar to see open issues and
+file a new one. Feature suggestions go in the same place.
 
-#### Creating a Tile
+![Screen recording: filing a bug report from the top bar bug reporter.](/assets/gifs/environment/dash-report.gif)
 
-To create a new tile with tabs, drag the header of an existing tab to the section of the freeform where you want to create a new tile.
+## Where to go next
 
-![Screen recording: drag tab create tile in Dash.](/assets/gifs/environment/dash-drag-tab-create-tile.gif)
-
-#### Closing a Tile
-
-To close a tab, click the x icon at the top-right of a tile.
-
-![Screen recording: close tile in Dash.](/assets/gifs/environment/dash-close-tile.gif)
-
-## Undo / Redo
-
-The undo / redo arrows in the bottom left corner of the canvas allow for undoing and redoing actions. Clicking on the stack will show
-past actions, and clicking on one of these lines brings back the action. 
-
-![The home menu, listing dashboards and recently closed documents](/assets/images/environment/undo-redo.png)
-![Screen recording: undo redo in Dash.](/assets/gifs/environment/undo-redo.gif)
-
-## Reporting Bugs
-
-Dash is constantly developing and trying out new features and interfaces. Bugs and issues exist, and we need your help to catch them! To report issues and bugs, please click on the bug icon in the **topbar**, where you can view open issues, and report any issues that you find. Feel free to also suggest new features here!
-
-![Screen recording: Filing a bug report from the sidebar.](/assets/gifs/environment/dash-report.gif)
-
-Not sure where to go from here? Check out our **[Getting Started](/getting-started/using-dash/)** page!
+- [Your first session](/getting-started/using-dash/) for the actual walkthrough:
+  creating documents, linking them, annotating, and presenting.
+- [Running Dash locally](/getting-started/running-dash/) if you need a source
+  checkout rather than the hosted application.

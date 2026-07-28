@@ -1,0 +1,160 @@
+---
+title: Running Dash locally
+description: Prerequisites, MongoDB setup, and the commands that start the Dash server, the component library, and the desktop build from a source checkout.
+---
+
+You need a local checkout to work on Dash. If you only want to use the
+application, [browndash.com](https://browndash.com/signup) is the hosted
+version and this page is not for you.
+
+Everything below is taken from the `README.md` and `package.json` in
+[brown-dash/Dash-Web](https://github.com/brown-dash/Dash-Web). Where the two
+disagree with what actually happens on a fresh machine, the repository is the
+thing to fix, and a documentation change would only hide the problem.
+
+## Prerequisites
+
+**Node and npm.** The repository recommends installing
+[nvm](https://github.com/nvm-sh/nvm) and using it to manage the Node version
+rather than installing Node directly. `.nvmrc` on `master` pins Node 20, so
+`nvm use` in the checkout picks the right one. The `engines` field in
+`package.json` still says `>=12`; it has not been updated in years and `.nvmrc`
+is the version to trust.
+
+**MongoDB.** Dash stores documents in MongoDB and expects a `mongod` you can
+run yourself. The README links the 4.2.3 community builds for macOS and
+Windows.
+
+**Git.** Dash-Web is a monorepo: the web application is at the root and the
+shared component library is a workspace under `packages/components`.
+
+## Setting up MongoDB
+
+On macOS, copy the binaries somewhere on your path and create the data
+directory:
+
+```bash
+sudo cp /path/to/mongodb/bin/* /usr/local/bin/
+mkdir -p ~/data/db
+```
+
+On Windows, run the installer and make sure "Add to Path" is selected.
+
+## Setting up the project
+
+```bash
+git clone https://github.com/brown-dash/Dash-Web.git
+cd Dash-Web
+mkdir -p src/server/public/files
+npm install
+```
+
+The `src/server/public/files` directory is where uploaded files land. It is not
+in version control, and the server will not start correctly without it.
+
+### API keys
+
+Dash's AI features call external services, and the server reads their
+credentials from a `.env` file at the repository root. `.env.defaults` records
+the shape:
+
+```bash
+OPENAI_API_KEY=sk-xxxxx
+```
+
+Other integrations read their own variables, including Adobe Firefly, Google
+Maps, Google search, Dropbox, and Desmos. Grep the server source for
+`process.env.` to see the current set; the names are in the code, the values
+are not, and they should never be committed.
+
+You do not need any of them to run Dash. Features that call a service you have
+not configured will fail at the point of use rather than at startup.
+
+The desktop build takes a different route: the agent can talk to a local
+[Ollama](https://ollama.com) instance instead of a hosted API, so no key is
+involved. You install Ollama yourself; the step that would bundle it into the
+installer is on a branch rather than in `master`.
+[The 2026 cohort page](/research/cohorts/2026/#desktop-build-with-local-model-execution)
+records what is where.
+
+## Running it
+
+Start MongoDB in its own terminal:
+
+```bash
+mongod
+```
+
+If that fails, point it at the data directory explicitly:
+
+```bash
+mongod --dbpath=/path/to/data/db
+```
+
+Then start the application:
+
+```bash
+npm start
+```
+
+Visit `http://localhost:1050/home`.
+
+`npm start` builds the web workers first, then runs the Express server through
+`tsx` with an enlarged Node heap. The heap flag is not optional: the build does
+not fit in the default limit.
+
+### The component library
+
+The shared components have their own Storybook:
+
+```bash
+npm run storybook
+```
+
+Visit `http://localhost:6006/`.
+
+The library was extracted as a separate package in 2023 and later folded back in
+as a workspace; [component library extraction](/research/cohorts/2023/#component-library-extraction)
+records why, and later projects cite replacing hand-rolled controls with it.
+
+## Other commands
+
+| Command | What it does |
+| :------ | :----------- |
+| `npm start` | Build workers, then run the server |
+| `npm run fast` | Same, with a larger heap and the inspector attached |
+| `npm run debug` | Same as `fast`, with source maps enabled |
+| `npm run build` | Production webpack build |
+| `npm test` | Mocha unit tests under `test/` |
+| `npm run test:e2e` | Playwright end-to-end tests |
+| `npm run tsc` | Type-check only |
+| `npm run lint:css` | Stylelint over CSS and SCSS |
+| `npm run build:mac` | Signed macOS desktop build |
+| `npm run build:windows` | Windows desktop build |
+
+[Development](/development/) covers the repository layout, the test suites, and
+what the desktop build actually does.
+
+## Common problems
+
+**`mongod` is not found.** The binaries were not copied onto your path. On
+macOS, repeat the copy step; on Windows, reinstall with "Add to Path" selected.
+
+**The server starts but uploads fail.** `src/server/public/files` is missing.
+Create it and restart.
+
+**The build runs out of memory.** Use `npm start` or `npm run fast` rather than
+invoking the server directly. Both set `--max_old_space_size`, and the default
+Node heap is not large enough.
+
+**An AI feature returns an error immediately.** The corresponding key is not in
+`.env`. Check which variable the feature reads before assuming the feature is
+broken.
+
+## Where to go next
+
+- [Development](/development/) for the repository layout and the test suites.
+- [Architecture](/architecture/) for how the system is put together and the four
+  places you extend it.
+- [Contributing to Dash](/contributing/joining/) for how projects are chosen and
+  what tends to get merged.
