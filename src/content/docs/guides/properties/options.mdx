@@ -3,90 +3,118 @@ title: Options
 description: 'The properties section controlling how the selection displays: title, caption, lock, fit width, grid, snap lines, clusters, and panning.'
 ---
 
-## What it is
-Options displays buttons that adjust the view and characteristics of the currently selected document or perspective. The number of options depends on the type of document or perspective you have currently selected and your current mode (novice or developer).
+Options holds the toggles that change how the selected document or view
+displays. Which ones appear depends on what is selected and whether you are in
+novice or developer mode.
 
-### Title
-This button allows you to view the title of the selected document or dashboard. You can edit the title by selecting the document and the text area above the document, or you can click on the editable Title box in the Properties Menu.
+Each entry below is a single control that cycles between the named settings.
 
-`SHOW TITLE` - The title will appear at the top of the selected item. <br />
-`HOVER TITLE`- The title of the document will only appear once you hover over anywhere on the selected document. <br />
-`HIDE TITLE` - The title of the document will not appear, but the title name will not be lost. <br />
+## Title
 
-### Caption
-This button displays the currently selected document’s caption. A user adds the caption to give more context to the current document. You can view the caption by hovering over the document.
+Controls whether the selected document or dashboard shows its title. You can
+edit the title from the text area above the document, or from the Title box in
+the properties panel.
 
-`SHOW CAPTION` - Allows you to edit and view the caption upon hovering over the bottom of the document. <br /> 
-`HIDE CAPTION` - Hides the caption from the user. Caption contents will not be lost. <br />
+- `SHOW TITLE` puts the title at the top of the item.
+- `HOVER TITLE` shows it only while you hover the document.
+- `HIDE TITLE` hides it. The title itself is kept.
 
-### Lock
-This button enables a document to remain in place upon hovering over the document and attempting to move it around the freeform canvas.
+## Caption
 
-`LOCK` – Allows a document to remain in place when you hover over it and try to move the document around the canvas. Once you double-click on the document and have it selected, you can move the document around the canvas. In order to move the document, you must hover and click the editable text space above the document. <br />
-`UNLOCK` – Allows a document to be moved around the freeform canvas upon hovering over the document. <br />
+A caption gives a document more context, and appears when you hover it.
 
-### Fit Width
-This button determines if the currently selected document will fit the entire screen. This button is particularly useful when viewing documents at their natural size from Notetaking and Stacking perspectives. 
+- `SHOW CAPTION` lets you read and edit the caption by hovering the bottom of
+  the document.
+- `HIDE CAPTION` hides it. The text is kept.
 
-`RESTRICT WIDTH` – The currently selected document will take its natural size and leave extra space around the edges. <br />
-`FIT WIDTH` –The currently selected document’s dimension will cover the entire width of the given space. <br />
+## Lock
 
-### Active
-This button allows you to toggle the functionality of the mouse when hovering over a document. 
+Keeps a document in place when you hover and drag it, which is what you want for
+anything you have deliberately positioned.
 
-`ACTIVE INTERACTION` – Allows you to interact with the contents of a document when hovering over the document. With this button, you will not have to click on the document to interact with the contents. <br />
-`INACTIVE INTERACTION` – Ensures you click on the document before interacting with the contents of a document. Upon hovering over the document, you can drag the document around the canvas. <br />
+- `LOCK` holds the document still on hover and drag. To move it, double-click to
+  select it, then drag the editable text space above it.
+- `UNLOCK` lets it be dragged on hover as usual.
 
-### View All
-This button allows you to toggle between viewing all documents on the canvas at once and your previous view of the documents. 
+## Fit width
 
-`VIEW ALL` – Allows you to view all documents on the canvas at one time. Upon selection, you will not be able to move around the canvas. <br />
-`PREVIOUS VIEW` –  Takes you back to your previous view of the documents in the canvas. <br />
+Decides whether the document fills the width available to it. Most useful in
+[notetaking](/guides/views/notetaking/) and
+[stacking](/guides/views/stacking/) views, where documents are shown at their
+natural size.
 
+- `RESTRICT WIDTH` keeps the document's natural size and leaves space around it.
+- `FIT WIDTH` stretches it across the full width of its space.
 
-### Grid
-This button allows you to view or hide the grid in the freeform canvas view. 
+## Active
 
-`HIDE GRID` – Removes the grid from the Canvas View. <br />
-`VIEW GRID` – Creates a grid in the Canvas View. <br />
+Decides what hovering a document does.
 
-### Snap Lines
-This button allows you to view Snap Lines. These lines help you locate dimensions and align the selected document with others. We recommend hiding the grid view to understand the given Snap Lines better.
+- `ACTIVE INTERACTION` lets you interact with the document's contents on hover,
+  without clicking into it first.
+- `INACTIVE INTERACTION` requires a click before the contents respond, so
+  hovering and dragging moves the document instead.
 
-`SHOW SNAP LINES` – Allows you to view Snap Lines to guide alignment between documents. <br />
-`HIDE SNAP LINES` – Removes snap lines from the Canvas View. <br />
+## View all
 
-### Clusters
-This button gives a background highlight to a document depending on its proximity to other documents. 
+- `VIEW ALL` fits every document on the canvas into view at once. You cannot pan
+  while it is on.
+- `PREVIOUS VIEW` returns to where you were.
 
-`HIGHLIGHT CLUSTERS` – Displays a highlighted background for documents. The color of the highlight depends on the proximity to other documents. This color will change if the document is moved around the canvas. <br />
-`DISABLE CLUSTERS` – Removes background highlights of a document. <br />
+## Grid
 
-### Panning
-This button affects the ability to pan around the Freeform canvas. 
+- `VIEW GRID` shows a grid on the freeform canvas.
+- `HIDE GRID` removes it.
 
-`DISABLE PANNING` – Disables you from moving around the Freeform Canvas. <br />
-`ENABLE PANNING` – Allows you to move freely around the Freeform Canvas. <br />
+## Snap lines
 
-### Highlighter Mask
-This button creates a highlight mask for an ink stroke
+Snap lines help you align a document against the others around it. They are
+easier to read with the grid hidden.
 
-`HIGHLIGHTER MASK` – Creates a highlighter mask for an ink stroke. This highlights the ink stroke when you hover over the ink. <br />
-`PLAIN INK` – Displays the ink stroke as previously created in the Freeform Canvas. <br />
+- `SHOW SNAP LINES` displays alignment guides.
+- `HIDE SNAP LINES` removes them.
 
-### Background image
-This button hides an image. The document will remain on the Canvas.
+## Clusters
 
-`HIDE BACKGROUND IMAGE` – Allows you to hide the background image while keeping the dimensions of the document intact. <br />
-`SHOW BACKGROUND IMAGE` – Shows the background image as previously viewed. <br />
+- `HIGHLIGHT CLUSTERS` gives each document a background tint based on how close
+  it is to others, so spatial groupings become visible. The colour changes as
+  you move documents.
+- `DISABLE CLUSTERS` removes the tint.
 
-## DEVELOPER MODE
+Clustering is a freeform-canvas idea: it reads meaning from where you put
+things. The 2026 graph view takes the opposite approach and lays documents out
+from their links instead; see
+[collections and views](/concepts/collections/).
 
-### UI Controls
-This button turns off user interface controls. This button is particularly useful when working with Notetaking or Stacking Views.
+## Panning
 
-`DISABLE UI CONTROLS` – Disables user interface additional features. For example, when in Notetaking Perspective, the button to add additional notes will be removed. <br />
-`ENABLE UI CONTROLS` – Enables user interface features. <br />
+- `ENABLE PANNING` lets you move around the freeform canvas.
+- `DISABLE PANNING` fixes it in place.
+
+## Highlighter mask
+
+- `HIGHLIGHTER MASK` makes an ink stroke highlight when you hover it.
+- `PLAIN INK` shows the stroke as drawn.
+
+See [ink](/guides/features/ink/) for drawing and formatting strokes.
+
+## Background image
+
+- `HIDE BACKGROUND IMAGE` hides the image while keeping the document's
+  dimensions.
+- `SHOW BACKGROUND IMAGE` restores it.
+
+## UI controls
+
+:::note[Developer mode]
+This option appears only in developer mode.
+:::
+
+Turns off a view's own interface controls. In notetaking view, for example,
+disabling them removes the button for adding a note.
+
+- `DISABLE UI CONTROLS` hides the view's controls.
+- `ENABLE UI CONTROLS` restores them.
 
 ## Related
 
