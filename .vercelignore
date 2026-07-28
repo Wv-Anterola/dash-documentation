@@ -1,0 +1,8 @@
+# Vercel installs dependencies and runs the build itself, so neither the
+# installed modules nor a local build output needs uploading.
+node_modules/
+dist/
+.astro/
+
+# Agent worktrees.
+.claude/

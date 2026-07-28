@@ -17,3 +17,9 @@ Thumbs.db
 
 # Agent worktrees
 .claude/
+
+# Vercel
+.vercel
+
+.vercel
+.env*
