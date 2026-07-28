@@ -1,26 +1,54 @@
 ---
-title: Schema
+title: Schema view
+description: The table view over a collection, where each document is a row and each column is a document field, with sorting, in-line nesting, and user-defined keys.
 ---
 
-![The Dash interface showing the sidebar, top bar, and a freeform canvas](/assets/images/environment/views/schema_view.png)
+![Screenshot: a Dash collection displayed as a schema table, with documents as rows and fields as columns.](/assets/images/environment/views/schema_view.png)
 
+A table over a collection. Each document is a row; each column shows the value
+stored under one key for that document. Nested collections expand in place.
 
-## Description:
+Title, type, author, date last modified, and text are shown by default, and you
+can add columns for any other key.
 
-Displays each document as a row, where each column displays the contents (values) stored with the specific key for that document. Nested collections can be expanded in-line. The title, type, author, date last modified, and text columns are displayed by default, and users can manually add more columns with existing keys or user-defined keys.
+## What it suits
 
-## Good for:
+- Working with documents through their fields rather than their contents
+- Sorting and comparing a set of documents on one value
+- Reviewing search results in a structure you can scan
+- Treating a collection as a spreadsheet
 
-Manipulating documents via key-value pairs and maintaining structured viewing and sorting of data
-Working with search
-Navigating Dash an an “Excel sheet”
+## Adding and editing columns
 
-## Objects & actions:
+A column title is a key, and each cell under it is that document's value for
+that key.
 
-- Open a live preview of the selected document on the side in a new tab, by toggling the “show preview” button in the leftmost column
-- Add new columns by clicking on the “+” button in the top left corner. The column title itself is a key and each cell is a value. Keys can include existing keys intrinsic to the document, or new user-defined keys. These can also have different types including string (text), number, checkbox, and documents.
-  - Adding a column with an existing key is a viewing operation, while adding a column with a new key is an edit operation that adds more information to the document.
-- Edit existing columns (keys) by left-clicking on the small circular button next to the column title, which will invoke a drop-down menu that allows users to changge, filter, or delete the column.
-- Edit existing cells (values) by left-clicking on the desired cell, then typing in the desired value. If the value is a string, put quotation marks around the value.
-- Sort each column in ascending or descending order of its values, by toggling the arrow buttons beside each column title.
-![Screen recording: schema columns in Dash.](/assets/gifs/views/schema_columns.gif)
+Click **+** in the top left to add one. You can add a column for a key the
+documents already carry, or invent a new key. The difference matters: adding a
+column for an existing key is a viewing operation, while adding one for a new
+key writes new fields onto the documents.
+
+Columns can hold strings, numbers, checkboxes, or documents.
+
+To change a column, click the small circular button beside its title. The
+dropdown there lets you change, filter, or delete it.
+
+To change a cell, click it and type. String values need quotation marks.
+
+To sort, use the arrows beside a column title.
+
+![Screen recording: adding, sorting, and editing columns in a Dash schema view.](/assets/gifs/views/schema_columns.gif)
+
+## Previewing a document
+
+The leftmost column has a "show preview" toggle, which opens a live preview of
+the selected row's document in a side tab. It is the fastest way to work through
+a table without losing the table.
+
+## Related
+
+Columns are document fields, so what you can put in one is governed by the field
+system described in [documents and fields](/concepts/documents/).
+
+[Fields and tags](/guides/properties/fieldsandtags/) covers the same fields from
+the properties panel, one document at a time.

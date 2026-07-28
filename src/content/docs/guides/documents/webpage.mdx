@@ -1,27 +1,49 @@
 ---
-title: Webpages
+title: Web pages
+description: Embedded web page documents, how to bring one in, web clippings, and the JavaScript-heavy sites where embedding does not work.
 ---
 
-![Screenshot: webpage doc in Dash.](/assets/images/environment/webpage_doc.png)
+![Screenshot: an embedded web page document open on a Dash canvas.](/assets/images/environment/webpage_doc.png)
 
+Web pages embedded directly in Dash, rather than links out to a browser.
 
-## Description:
+## Creating one
 
-You can include embedded HTML webpages in Dash.
+Drag the lock icon beside a page's URL from your browser onto the tab running
+Dash.
 
-## How to Create
+Alternatively, create an empty web page document from the colon menu. It opens a
+Bing search, and you can type a URL into the horizontal toolbar.
 
-Dragged and dropped into Dash from an external tab (Navigate to the page you want to embed and drag the lock icon next to the page url to the tab running Dash). Alternatively, an empty webpage using the colon menu will open a Bing search (https://www.bing.com). Users can then enter a specific URL in the horizontal toolbar.
+![Screen recording: dragging a web page into Dash to embed it.](/assets/gifs/webpage/dash-website-embed.gif)
 
-![Screen recording: website embed in Dash.](/assets/gifs/webpage/dash-website-embed.gif)
+## What you can do
 
-## Objects & Actions
+- Embed marquee selections, annotations, and ink on the overlay.
+- Highlight and annotate text with the same annotation sidebar used for PDFs and
+  text documents.
+- Pan and scroll the page.
+- Follow the page's own hyperlinks by clicking them; the target opens in the
+  same document frame.
 
-- Embed marquee selections, annotations, and ink (overlay pane)
-- Annotate and highlight text in a webpage using the same annotation sidebar as described for PDF and Text documents
-- Pan, and scroll through the webpage
-- Visit any embedded hyperlinks on the webpage by left-clicking on them, which will open up the target of the link in the same document frame
+Because a highlight is a link anchor, you can link from a passage on an embedded
+page to a note elsewhere on the canvas, and the link survives the page being
+closed. See [links and anchors](/concepts/links/).
 
-Note: This works well for Wikipedia pages and other webpages that are not JavaScript heavy. For other JavaScript heavy webpages, you might not be able to visit the embedded hyperlinks because of permission issues.
+## Where embedding fails
 
-- Create web clippings: because of security concerns, users cannot drag in a full version of certain websites. This issue can be solved by dragging in a clipping of the website, which users can then treat as any other full websites in Dash. To do so, select the desired portion of the website, then bring it into Dash as with any other external documents.
+Embedding works well for Wikipedia and similar pages. JavaScript-heavy sites
+often break: the page may render but its internal links will not follow,
+because of browser permission restrictions Dash cannot work around.
+
+Some sites cannot be dragged in at all, for the same security reasons.
+
+**Web clippings** are the fallback. Select the part of the page you want and
+drag that into Dash instead. A clipping behaves like any other document, so you
+keep the annotation and linking behaviour even where full embedding is blocked.
+
+## Related
+
+- [Annotation and markup](/guides/features/markup/) for the annotation routes.
+- [Documents and fields](/concepts/documents/) for why an embedded page is the
+  same kind of object as a PDF or a collection.

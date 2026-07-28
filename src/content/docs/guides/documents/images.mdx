@@ -1,30 +1,56 @@
 ---
 title: Images
+description: Image documents, the background-image mode, rotation and zoom, and the AI image editor that fills a marked region from a prompt.
 ---
 
-![Screenshot: image doc in Dash.](/assets/images/environment/image_doc.png)
+import ProjectNote from '../../../../components/ProjectNote.astro';
 
+![Screenshot: an image document open on a Dash canvas.](/assets/images/environment/image_doc.png)
 
-## Description:
+Images brought in from outside Dash.
 
-Digital images created outside of Dash
+## Creating one
 
-## How to Create:
+Drag an image in from the web or from your desktop.
 
-Dragged and dropped into Dash from an external source (i.e., internet, own desktop, etc)
+## What you can do
 
-## Objects & Actions:
+- Embed marquee selections, annotations, and ink on top of the image. The
+  overlay behaves like a collection, so anything you place there is a document
+  in its own right.
+- **Make it a background.** "Make Background" in the right-click menu locks the
+  image into the canvas: it can no longer be selected, and a red lock icon
+  appears at its top right. Clicking that icon turns it back into an ordinary
+  image.
+- **Rotate** it 90 degrees clockwise from the right-click menu.
+- **Zoom** with the scroll wheel.
 
-- Embed marquee selections, annotations, and ink (overlay pane), acts like collection
-- Make background: an image can be converted into a background image by selecting “Make Background” in the image’s right-click menu. A background image is indicated by the red lock icon at the top right corner of the image. It cannot be selected, which means it essentially becomes part of the canvas. left-clicking on the red lock icon converts the image back into a normal image.
-- Rotate: users can rotate the image 90 degrees clockwise by selecting “Rotate Clockwise 90” in the right-click menu.
-- Zoom into image using scroll
+## The image editor
 
-## Image Editor:
+The image editor fills a region you mark, guided by a prompt.
 
-- Use Image Editor AI to fill in parts of the image you marked in the Image Editor
-- Use the prompt box to guide the AI on how you want those parts of the image to be filled
-- Click get Edits to generate edits (you will see 2 versions of the edited image + original on right side)
-  ![](/assets/images/environment/image_doc2.png)
-- Returning to the dashboard will create a collection of linked images that show the iterations of generated edits
-  ![](/assets/images/environment/image_doc3.png)
+1. Mark the parts of the image you want replaced.
+2. Describe what should go there in the prompt box.
+3. Click "Get edits". Two generated versions appear alongside the original.
+
+![Screenshot: the Dash image editor showing two generated variants beside the original image.](/assets/images/environment/image_doc2.png)
+
+Returning to the dashboard leaves behind a collection of linked images
+recording the iterations, so the versions stay connected rather than
+overwriting each other.
+
+![Screenshot: a collection of linked image versions produced by successive edits.](/assets/images/environment/image_doc3.png)
+
+<ProjectNote title="Smart Draw and generative drawing">
+  Where the image editor came from, alongside a drawing surface that hands a sketch to an image model. Both are in `master`; the Bézier generation branch is not.
+</ProjectNote>
+
+## Related
+
+- [Generative AI](/guides/features/generative-ai/) for the other generation
+  surfaces and what they share.
+- [Generative media](/concepts/generative/) for how Dash treats generated
+  content as documents rather than exports, and what it still does not do:
+  generation quality is not evaluated anywhere in the codebase.
+- [Ink](/guides/features/ink/) for drawing on an image rather than generating
+  into it.

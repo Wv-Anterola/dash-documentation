@@ -1,8 +1,24 @@
 ---
-title: Fields & Tags
+title: Fields and tags
+description: The properties section showing a document's authorship and timestamps, and where you add your own key-value fields and tags.
 ---
 
-## Description
-Fields & Tags displays details of the current dashboard. This section states the author, creation date, and last modified date. Additionally, you can create a key: value field or Tag. 
+Shows the selected document's own metadata: author, creation date, and date last
+modified. It is also where you add fields of your own, as a key-value pair or a
+tag.
 
-There are more available fields in `Developer Mode`.
+Developer mode exposes further fields on the same document.
+
+## Why this matters more than it looks
+
+A field you add here is a real field on the document, not a note about it. That
+means it becomes available everywhere fields are used:
+
+- as a column in [schema view](/guides/views/schema/)
+- as a grouping key in [stacking view](/guides/views/stacking/)
+- as a filter in [filters](/guides/properties/filters/)
+- to the agent, which can sort and tag documents through its tools
+
+This is the same field system that document types are built on.
+[Documents and fields](/concepts/documents/) explains why one representation
+covers a PDF, a collection, and a link alike.

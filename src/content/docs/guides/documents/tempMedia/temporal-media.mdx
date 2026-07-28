@@ -1,5 +1,39 @@
 ---
-title: Temporal Media
+title: Temporal media
+description: How Dash treats audio and video, and why a link can point at a moment in a recording rather than at the file.
 ---
 
-In Dash, we support audio and video, as well as annotation and markup of both audio and video documents. For the most part we handle these two documents types in the same way.
+Dash supports [audio](/guides/documents/tempmedia/audio/) and
+[video](/guides/documents/tempmedia/video/), and annotation and markup of both.
+The two types are handled the same way wherever it is possible to do so.
+
+## Why they get their own section
+
+Everything else in Dash is addressed by position: a region of an image, a
+passage of text, a page of a PDF. Time-based media adds another axis, and Dash
+treats it as a first-class one.
+
+Both types carry a timeline you can drag across to select a range. That range
+is a valid link anchor, so a link can point at fifteen seconds of a recording,
+and following it plays that stretch rather than opening the file at the start.
+
+This falls directly out of the link model: an anchor is a selection rather than
+a document, so a temporal selection needs no special case.
+[Links and anchors](/concepts/links/) explains the model and where it is still
+thin.
+
+## What differs between them
+
+Audio documents can be recorded inside Dash and trimmed. Video documents are
+imported and cannot be trimmed, though they carry the same timeline for
+placing labels and region markers.
+
+Audio also supports dictation, which transcribes speech to text.
+
+## Related
+
+- [Audio](/guides/documents/tempmedia/audio/) for recording, trimming, and
+  dictation.
+- [Video](/guides/documents/tempmedia/video/) for playback and the timeline.
+- [Annotation and markup](/guides/features/markup/) for the annotation routes
+  these documents share with images, PDFs, and web pages.

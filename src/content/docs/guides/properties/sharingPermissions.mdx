@@ -1,10 +1,28 @@
 ---
-title: Sharing & Permissions
+title: Sharing and permissions
+description: The developer-mode properties section showing who can do what with the selected document.
 ---
 
-ONLY AVAILABLE IN DEVELOPER MODE
+:::note[Developer mode]
+This section of the properties panel appears only in developer mode.
+:::
 
+Shows the access level every party has on the selected document: the owner,
+guest users, and each individual and group it has been shared with.
 
+Access runs at four levels, and a document can be shared with individuals, with
+groups, or both.
 
-## Description 
-Sharing & Permissions for a selected document displays the degree to which users (including the owner, guest users, and all individuals and groups that the selected document has been shared with) can modify the document. For more on Sharing & Permissions, view the **[COLLABORATION](/guides/features/collaboration/)** page in the documentation.
+[Collaboration](/guides/features/collaboration/) documents what each level
+permits and how groups are created.
+
+## A limitation worth knowing
+
+These permissions govern people. They do not govern the agent, which has no
+permission model of its own: a tool that can write can write to anything the
+user can, and the agent decides when to call it.
+
+That gap is described in
+[what Dash currently supports](/overview/current-state/#where-the-implementation-stops),
+and it is what the 2026 oversight study set out to measure; see
+[agents and tools](/concepts/agents/).

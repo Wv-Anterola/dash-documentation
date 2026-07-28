@@ -1,28 +1,53 @@
 ---
 title: PDFs
+description: PDF documents, in-document search, the annotation margin, linking into a page, and AI summarisation of a selection.
 ---
 
-![Screenshot: PDF doc in Dash.](/assets/images/environment/pdf_doc.png)
+![Screenshot: a PDF document open on a Dash canvas.](/assets/images/environment/pdf_doc.png)
 
+PDF files brought in from outside Dash.
 
-## Description
+## Creating one
 
-PDF files created outside of Dash.
+Drag a PDF in from your desktop or another application.
 
-## How to Create
+![Screen recording: opening and scrolling a PDF document in Dash.](/assets/gifs/environment/pdf.gif)
 
-Dragged & dropped into Dash from an external source (i.e., your own desktop)
+## Reading and navigating
 
-![Screen recording: Opening and scrolling a PDF document.](/assets/gifs/environment/pdf.gif)
+Scroll through the document, read the current page number, or type a page number
+to jump to it.
 
-## Objects & Actions:
+To search inside the PDF, click the search icon at the bottom right and type a
+query. The first match is highlighted in orange and the rest in yellow; the up
+and down arrows step through them, and the current match stays orange.
 
-- Embed highlights, marquee selections, annotations, and ink (overlay pane)
-- Scroll through PDF, view current page number, and navigate to desired page numbers by custom input
-- Search for specific words or phrases within the PDF: click on the search icon at the bottom right to invoke the search input box. Then, type in the query. By default, the first result will be highlighted in orange while all other search results will be highlighted in yellow. Users can use the up & down arrows to step through each result, with the current result having an orange highlight.
-- Add a margin that allows for a convenient place to place documents such as annotations (in the form of a text document):
+This in-document search is separate from the
+[search flyout](/guides/features/search/), which matches document metadata
+across the dashboard rather than text inside a file.
 
-  - Click on the `Comment` icon to toggle the annotation sidebar open and closed.
-  - To resize the margin, drag on the `Comment` icon.
+## Annotating
 
-- Select a piece of text and click on the `Summarize with AI` icon that appears in the menu to generate text summarizations.
+- Embed highlights, marquee selections, annotations, and ink on the overlay.
+- Click the **Comment** icon to open the annotation margin, which is a place to
+  put annotation documents beside the page rather than on top of it. Drag the
+  icon to resize the margin.
+
+A highlight or a marquee here is a link anchor, so a link can point at a passage
+on page forty rather than at the file. That is the behaviour
+[links and anchors](/concepts/links/) exists to explain, and PDFs are where most
+people meet it first.
+
+## Summarising a selection
+
+Select text and click **Summarize with AI** in the menu that appears.
+
+The summary is generated into a document, so it can be linked and annotated like
+anything else; see [generative media](/concepts/generative/).
+
+## Related
+
+- [Annotation and markup](/guides/features/markup/) for the annotation routes in
+  full.
+- [Your first session](/getting-started/using-dash/#annotate-part-of-a-document)
+  for a worked example of annotating a PDF and keeping the link back.

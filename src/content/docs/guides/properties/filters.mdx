@@ -1,20 +1,41 @@
 ---
 title: Filters
+description: The developer-mode properties section that narrows a view to documents matching chosen field values.
 ---
 
-ONLY AVAILABLE IN DEVELOPER MODE
+:::note[Developer mode]
+This section of the properties panel appears only in developer mode.
+:::
 
+Filtering narrows what a view shows, based on the documents' own fields. It
+hides documents rather than removing them: clearing the filter brings everything
+back.
 
+## Creating a filter
 
-## Description 
-Filtering allows you to narrow your view of documents based on metadata fields.
+Choose a field from the dropdown. The values that field takes across the
+collection appear below it as checkboxes.
 
-## How to Create a Filter:
-You begin by selecting the dropdown menu and which metadata fields you want to filter. After selecting a field, the filter options for that metadata will appear with checkboxes below the dropdown menu. 
+Ticking a value keeps the documents that carry it. Documents that do not are
+hidden until you remove the filter.
 
-By clicking the checkbox, the documents on the canvas will remain if they are included in that category. If the document is not included, you will only be able to view the document after removing the filter. 
+## Collapsing and removing
 
-There are two buttons on the right-hand side of the metadata header: a square allowing you to collapse the options within the metadata header and a circle to remove the filter. 
+Two controls sit to the right of each field heading.
 
-**Collapse**: This will hide the filtering options for the specific metadata header. If you are currently filtering on any of these options, the filter will remain and be displayed in bold below the header.
-**Remove**: This will stop showing the metadata filter below the dropdown menu. If any filters from this metadata are currently selected, they will be removed.
+**Collapse**, the square, hides that field's options. Any filter you already set
+stays active, and is shown in bold under the heading so a collapsed filter is
+not an invisible one.
+
+**Remove**, the circle, takes the field out of the panel and clears any of its
+values you had selected.
+
+## Related
+
+Filters read the same fields you see in
+[fields and tags](/guides/properties/fieldsandtags/) and as columns in
+[schema view](/guides/views/schema/).
+
+For finding a document rather than narrowing a view, use
+[search](/guides/features/search/), which matches metadata across the whole
+dashboard.

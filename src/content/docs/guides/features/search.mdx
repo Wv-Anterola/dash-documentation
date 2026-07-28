@@ -1,15 +1,44 @@
 ---
 title: Search
+description: The search flyout, what it matches, and the boundary between metadata search and searching document contents.
 ---
 
-![Screen recording: andy search in Dash.](/assets/gifs/features/andy_search.gif)
+import ProjectNote from '../../../../components/ProjectNote.astro';
 
-## Description: 
-The search flyout allows the user to find specific documents in their dashboard by inputting metadata querries. Each search result displays the corresponding document's title, type, and matching metadata fields. 
+![Screen recording: searching for a document by name in the Dash search flyout.](/assets/gifs/features/andy_search.gif)
 
-## Actions:
-- Click the search icon or press Ctrl+F to toggle the search flyout open & closed.
-- Input a query into the search box to search for documents with any metadata macthing that query.
-- Use the dropdown menu to filter the search results by the type of document.
-- Hover over a search result to display a tooltip with the corresponding document's full title.
-- Click on a search result to select it and zoom in on it in the freeform canvas.
+The search flyout finds documents in the current dashboard by their metadata.
+Each result shows the document's title, type, and the fields that matched.
+
+## Using it
+
+- Click the search icon, or press Ctrl+F, to open and close the flyout.
+- Type a query to match documents whose metadata contains it.
+- Use the dropdown to restrict results to one document type.
+- Hover a result to see the document's full title.
+- Click a result to select it and zoom to it on the canvas.
+
+## What it does not match
+
+Search reads metadata: titles, types, fields, tags. It does not read the text
+inside a PDF, a web page, or a rich text document.
+
+That boundary is worth knowing, because it is not how most people expect search
+to behave, and it is the reason a document you know exists can be hard to find
+by the phrase you remember from inside it.
+
+Two things partly close the gap. Within a single PDF, the document's own search
+control finds text on the page; see [PDFs](/guides/documents/pdf/). And the
+chatbot retrieves over chunked document contents, so asking it is closer to
+full-text search than the flyout is; see
+[agents and tools](/concepts/agents/).
+
+<ProjectNote title="Search over document content">
+  The attempt to extend search to document contents, along with an experiment in having a model group documents into collections. None of the branches were merged and the work stopped in December 2024, so the boundary described above is still where it was.
+</ProjectNote>
+
+## Related
+
+[Filters](/guides/properties/filters/) narrows a view to documents matching
+field values, which is the better tool when you want to see a subset rather than
+find one document.

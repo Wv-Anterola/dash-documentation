@@ -1,16 +1,38 @@
 ---
-title: Freeform
+title: Freeform view
+description: The unbounded 2D canvas that is Dash's default collection view, what it suits, and the founding work it comes from.
 ---
 
-![The Dash interface showing the sidebar, top bar, and a freeform canvas](/assets/images/environment/views/freeform_view.gif)
+import ProjectNote from '../../../../components/ProjectNote.astro';
 
+![Screenshot: a freeform Dash canvas with documents arranged spatially, surrounded by the sidebar and top bar.](/assets/images/environment/views/freeform_view.gif)
 
-## Description:
+An unbounded, pannable, zoomable 2D canvas. This is the default view for a
+collection and the one most Dash work happens in.
 
-Unbounded 2D space in the form of a canvas. This is Dash's primary view.
+## What it suits
 
-## Good for:
+- Arranging documents spatially, in whatever grouping makes sense to you rather
+  than one the system imposes
+- Seeing relationships between documents: clusters of related material, nesting,
+  and link lines
+- Looking at documents in their own layout, at their own size, rather than as
+  rows in a table
 
-- User-driven spatial organization and document layouts
-- Visualizing document relationships, e.g., neighborhoods/clusters of related materials, nesting, and linking
-- “Raw” document views to get a sense of individual layouts
+## What it does not suit
+
+Anything you need sorted or aggregated. A freeform canvas has no ordering, so
+finding a specific document among a hundred means either remembering where you
+put it or using [search](/guides/features/search/). Switch the same collection
+to [schema view](/guides/views/schema/) when you need a sortable table; nothing
+is converted and nothing is lost.
+
+## Where it came from
+
+<ProjectNote title="Collections and view types">
+  Freeform is the original view, and the decision that layout is a property of the collection rather than a different kind of container is what lets you switch a seven-year-old freeform collection into the 2026 graph view without a migration.
+</ProjectNote>
+
+[Collections and views](/concepts/collections/) explains that decision and the
+limits it still imposes, including the fact that views do not compose: a
+calendar of stacks is not expressible.

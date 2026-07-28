@@ -1,16 +1,39 @@
 ---
-title: Properties
+title: The properties panel
+description: The right-hand panel showing the selected document's contexts, links, display options, and fields, and which sections require developer mode.
 ---
 
-The Properties Menu allows you to look at the characteristics of a document or current View. At the top of the Properties Menu you can find the name of the current document as well as the document type. Below, you will find collapsable sections. There are four sections of the Properties Menu in `novice mode`, and four additional sections in `developer mode`. These four main sections are broken down into:
+The properties panel shows the characteristics of whatever is selected: a
+document, or the current view if nothing is selected. Its top line gives the
+name and the document type; below that are collapsible sections.
 
+## Opening it
 
-| Section     | Description |
-|:-------------|:------------------|
-| Other Contexts | Shows other existing contexts of the currently selected document |
-| Linked To | Displays any existing documents linked to the currently selected document |
-| Options | Contains features to adjust the view and characteristics of the currently selected document or perspective |
-| Fields & Tags | Shares information about the current Dashboard | 
+Click the left-facing caret on the right edge of the screen, or the double
+left-facing carets in the top right, below the heart icon.
 
-## How to Access the Properties Menu
-You can access the Properties Menu by clicking the left-facing caret on the right side of the screen. You can also open the Properties Menu by selecting the double left-facing carets in the top right corner, right below the heart icon.
+## The sections
+
+Four sections are available in novice mode.
+
+| Section | What it shows |
+| :------ | :------------ |
+| [Other contexts](/guides/properties/othercontexts/) | Other places the selected document also appears |
+| [Linked to](/guides/properties/linkedto/) | Documents linked to the selected one |
+| [Options](/guides/properties/options/) | Display and behaviour settings for the selection |
+| [Fields and tags](/guides/properties/fieldsandtags/) | The document's own key-value fields |
+
+Developer mode adds four more, including
+[layout](/guides/properties/layout/),
+[filters](/guides/properties/filters/), and
+[sharing and permissions](/guides/properties/sharingpermissions/).
+
+## Why fields are editable here
+
+A Dash document is a set of typed key-value fields, and the panel is a direct
+view onto them. That is why adding a field here and adding a column in
+[schema view](/guides/views/schema/) do the same thing: both write a field onto
+the document.
+
+[Documents and fields](/concepts/documents/) explains the model underneath, and
+why collections and links are documents with fields too.

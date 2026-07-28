@@ -1,20 +1,35 @@
 ---
 title: Video
+description: 'Video documents: import, playback, the timeline, and embedding annotations and ink over a video.'
 ---
 
-![Screenshot: video doc in Dash.](/assets/images/environment/video_doc.png)
+![Screenshot: a video document open on a Dash canvas with playback controls.](/assets/images/environment/video_doc.png)
 
+Video documents play back imported video clips.
 
-Video documents allow users to play back video clips.
+## Creating one
 
-## Creating Video Documents
+Import a video file through the import menu, or drag one in from outside Dash.
 
-Video documents can be created by navigating to the Import Menu and importing a video file from outside of Dash or by dragging and dropping a file in from an external source.
+## What you can do
 
-## Actions
+- Play, pause, scrub to a point, and toggle fullscreen with the controls at the
+  top right.
+- Embed annotations and ink over the video by typing or drawing on it, or by
+  dragging a document onto it.
+- Toggle the timeline with the eye icon at the top right. It works like the
+  [audio](/guides/documents/tempmedia/audio/) timeline for placing labels and
+  region markers, but video cannot be trimmed.
 
-- Annotations and ink can be embedded in the overlay pane by typing or drawing directly on top of the video or dragging a document onto the video.
-- You can play, pause, navigate to a specific point in time, or toggle fullscreen view using the video controls in the top right corner.
-- The eye icon at the top right corner toggles the view of the audio timeline. This timeline functions similar to the timeline in an audio document allowing you to place label and region markers, though you cannot trim.
+![Screen recording: scrubbing a video document along its timeline.](/assets/gifs/video/timelineview.gif)
 
-![Screen recording: Scrubbing a video document on its timeline.](/assets/gifs/video/timelineview.gif)
+A region on that timeline can anchor a link, so following the link plays that
+stretch of video. See [temporal media](/guides/documents/tempmedia/temporal-media/)
+for why time is treated as an addressable axis.
+
+## Not the same as generated video
+
+This page is about playing video you already have. Dash also has a separate
+document type that plans and generates a video scene by scene, added in 2026;
+that one is covered under
+[generative AI](/guides/features/generative-ai/).

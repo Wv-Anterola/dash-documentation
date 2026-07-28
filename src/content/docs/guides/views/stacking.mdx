@@ -1,21 +1,38 @@
 ---
-title: Stacking
+title: Stacking view
+description: The scrollable-stack view over a collection, and how grouping by a key turns one stack into a column per value.
 ---
 
-## Description:
+One or more scrollable stacks of documents, each showing a live preview rather
+than only a title.
 
-Displays a set of documents in one or more scrollable stacks. By default, all documents are placed in a single stack. If a key is specified, multiple stacks will show up side-by-side, each containing documents sharing the same value for that key. Additionally, each value is displayed as an editable text field with a colored background at the top of the stack.
+By default every document sits in a single stack. Naming a key splits that into
+several stacks side by side, one per distinct value, with the value shown as an
+editable heading above each.
 
-## Good for:
+## What it suits
 
-Categorizing documents by specified keys while maintaining a live preview of each document
-Navigating Dash as a “Trello Board”
+- Grouping documents by a field while still seeing what each one contains
+- Working through a list top to bottom
+- Running a collection as a board, where each stack is a status
 
-## Objects & actions:
+## Grouping by a key
 
-- Categorizing documents by a specified key: when a key is specified via typing in the “Group by” input box besides the perspectives pulldown, the default single stack transforms and displays multiple stacks side-by-side, each containing documents sharing the same value for that key.
-- Updating the value of a specified key
-  - For a single document: click and drag the desired document, then drop it into the target stack to update its value
-  - For a stack: click on the title (value) at the top of the stack to edit or delete the value
-- Reposition documents within a stack: click and drag the desired document, then drop it into the target location within the stack to reposition it vertically. This will not affect its metadata.
-- Navigating Dash as a “Trello Board” - when combined with a document view showing only a document’s title, this essentially becomes a Trello board
+Type a key into the "Group by" box beside the view dropdown. The single stack
+becomes one stack per value.
+
+To change a document's value, drag it into a different stack. To rename or
+remove a value, click the heading at the top of its stack.
+
+Dragging a document within a stack changes only its position. It does not touch
+the document's fields.
+
+## Related
+
+Grouping reads document fields, so which keys are available depends on what the
+documents carry; see [documents and fields](/concepts/documents/).
+
+[Schema view](/guides/views/schema/) shows the same fields as a sortable table
+when you want to compare values rather than read contents.
+[Notetaking view](/guides/views/notetaking/) is the multi-column version of this
+one, aimed at reading and writing side by side.
