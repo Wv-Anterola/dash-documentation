@@ -11,7 +11,10 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 
 const DIST = resolve(process.argv[2] ?? 'dist');
-const BASE = '/Dash-Documentation';
+// Empty when the site is served from a domain root, as it is on Vercel. Set
+// DOCS_BASE to match astro.config.mjs when building for a subpath such as
+// GitHub Pages. The trailing slash is stripped so the comparisons below line up.
+const BASE = (process.env.DOCS_BASE ?? '').replace(/\/$/, '');
 
 /** Every file in the build, as site-root paths. */
 function walk(dir, out = []) {

@@ -16,7 +16,19 @@ npm install
 npm run dev
 ```
 
-That serves the site at `http://localhost:4321/Dash-Documentation/`.
+That serves the site at `http://localhost:4321/`.
+
+The build targets a domain root by default. To build for a subpath instead, set
+`DOCS_BASE` and `DOCS_SITE`:
+
+```bash
+DOCS_BASE=/Dash-Documentation DOCS_SITE=https://brown-dash.github.io npm run build
+DOCS_BASE=/Dash-Documentation npm run links
+```
+
+Pages always link with site-root paths like `/concepts/documents/`. Starlight
+rewrites the links it generates and `src/plugins/rehype-base-urls.mjs` rewrites
+the ones you write by hand, so you never spell the prefix out yourself.
 
 ```bash
 npm run build     # production build into dist/

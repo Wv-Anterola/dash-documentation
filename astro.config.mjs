@@ -3,11 +3,17 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { rehypeBaseUrls } from './src/plugins/rehype-base-urls.mjs';
 
-// The site is served from a project path on GitHub Pages, so `base` is set.
-// Starlight rewrites internal links for it, which is why pages link with
-// site-root paths like `/concepts/documents/` and not with the base prefix.
-const site = 'https://brown-dash.github.io';
-const base = '/Dash-Documentation';
+// Where the site is served from. Vercel serves it at a domain root, so `base`
+// is empty by default. The original GitHub Pages deployment lives under a
+// project path, which is what DOCS_BASE is for:
+//
+//   DOCS_BASE=/Dash-Documentation DOCS_SITE=https://brown-dash.github.io npm run build
+//
+// Pages always link with site-root paths like `/concepts/documents/`. Starlight
+// rewrites the links it generates, and src/plugins/rehype-base-urls.mjs handles
+// the ones authors write by hand, so neither needs the prefix spelled out.
+const site = process.env.DOCS_SITE ?? 'https://dash-documentation.vercel.app';
+const base = process.env.DOCS_BASE ?? '/';
 
 export default defineConfig({
   site,
@@ -88,7 +94,7 @@ export default defineConfig({
         { icon: 'github', label: 'GitHub', href: 'https://github.com/brown-dash' },
       ],
       editLink: {
-        baseUrl: 'https://github.com/brown-dash/Dash-Documentation/edit/main/',
+        baseUrl: 'https://github.com/Wv-Anterola/dash-documentation/edit/main/',
       },
       lastUpdated: true,
       customCss: ['./src/styles/dash.css'],
