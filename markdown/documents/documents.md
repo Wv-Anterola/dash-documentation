@@ -54,7 +54,10 @@ Click the “+ New” button in the schema and stacking views.
 
 
 ## Selecting Documents
-<iframe src="https://drive.google.com/file/d/1P0oC6gUnRs79GWN3buydguY3kmRsZP9A/preview" width="640" height="480" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+
+<div class="video">
+<iframe src="https://drive.google.com/file/d/1P0oC6gUnRs79GWN3buydguY3kmRsZP9A/preview" title="Selecting documents in Dash" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+</div>
 
 ### B1. Single Selection
 1. **Description**: selecting a single document to directly edit its contents

@@ -21,7 +21,7 @@ nav_order: 6
 ## Welcome to Dash!
 
 <!-- <div class="video">
-<iframe src="https://drive.google.com/file/d/1hzoaU-VZBnIk1y4aOYQkbuCobunOCMd6/preview" width="640" height="400" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
+<iframe title="Welcome to Dash!" src="https://drive.google.com/file/d/1hzoaU-VZBnIk1y4aOYQkbuCobunOCMd6/preview" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
 </div> -->
 
 If you haven't already, sign up for an account and get started at [browndash.com](https://browndash.com/signup).
