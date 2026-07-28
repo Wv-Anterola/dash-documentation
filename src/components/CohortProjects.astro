@@ -10,6 +10,7 @@
 import {
   projectsInCohort,
   conceptOf,
+  conceptHref,
   projectSlug,
   type CohortId,
 } from '../data/dash';
@@ -58,7 +59,7 @@ const md = (s: string) =>
                 return (
                   <>
                     {i > 0 && ', '}
-                    <a href={`/${c.slug}/`}>{c.title}</a>
+                    <a href={conceptHref(c)}>{c.title}</a>
                   </>
                 );
               })}

@@ -2,15 +2,11 @@
 title: Getting Started
 ---
 
-# Getting Started
-
-
-
 ## Before you start
 
 If you haven't already, sign up for an account and get started at [browndash.com](https://browndash.com/signup).
 
-For an overview of the Dash interface, check out the **[Overall Environment page](/environment/)**, which will introduce you to how to navigate and organize your Dashboards.
+For an overview of the Dash interface, check out the **[Overall Environment page](/getting-started/environment/)**, which will introduce you to how to navigate and organize your Dashboards.
 
 ## Creating Documents
 
@@ -30,7 +26,7 @@ There are multiple ways that you can create documents in Dash. The essential way
   ![colon menu](/assets/gifs/environment/colon-stack.gif)
 </div> */}
 
-## **[Documents](/documents/)**
+## **[Documents](/guides/documents/documents/)**
 
 Everything in Dash is considered a document. Documents store data as arbitrary key-value pairs.
 
@@ -38,22 +34,22 @@ Everything in Dash is considered a document. Documents store data as arbitrary k
 
 Dash supports several document types, each with unique capabilities. The primary types are as follows:
 
-- **[Text](/documents/text/)**: rich (RTF) text documents that support various text and hypertext features
-- **[Webpages](/documents/webpage/)**: HTML webpages from external sites
-- **[PDFs](/documents/pdf/)**: PDF files created outside of Dash
-- **[Temporal Media](/documents/tempMedia/)**: audio and video files
-- **[Ink](/features/ink/)**: ink strokes drawn with the pen or polygon tool
-- **[Images](/documents/images/)**: digital images from external sources
+- **[Text](/guides/documents/text/)**: rich (RTF) text documents that support various text and hypertext features
+- **[Webpages](/guides/documents/webpage/)**: HTML webpages from external sites
+- **[PDFs](/guides/documents/pdf/)**: PDF files created outside of Dash
+- **[Temporal Media](/guides/documents/tempmedia/temporal-media/)**: audio and video files
+- **[Ink](/guides/features/ink/)**: ink strokes drawn with the pen or polygon tool
+- **[Images](/guides/documents/images/)**: digital images from external sources
 
 #### Nested collections
 
 You can also created nested collections in Dash. The easiest way is through the colon menu (type : anywhere to bring it up). You can add any document to the new collection as you would to the main freeform, and zoom and pan as well.
 
-![](/assets/gifs/gettingstarted/dash-nested-collection.gif)
+![Screen recording: nested collection in Dash.](/assets/gifs/gettingstarted/dash-nested-collection.gif)
 
 You can also create a collection through right clicking and dragging on the documents you want to group into a new collection (marquee selection).
 
-![](/assets/gifs/gettingstarted/dash-create-collection-marquee.gif)
+![Screen recording: create collection marquee selection in Dash.](/assets/gifs/gettingstarted/dash-create-collection-marquee.gif)
 
 ### Selecting Documents
 
@@ -63,15 +59,15 @@ You can select multiple documents via marquee or shift-click.
 
 To use the marquee tool, right-click on the canvas to invoke the marquee; then, drag the bounding area to include your desired documents.
 
-![](/assets/gifs/gettingstarted/dash-marquee.gif)
+![Screen recording: marquee selection in Dash.](/assets/gifs/gettingstarted/dash-marquee.gif)
 
 To use shift-click, hold down the shift key while left-clicking on multiple documents.
 
-![](/assets/gifs/gettingstarted/dash-shift-click.gif)
+![Screen recording: shift click in Dash.](/assets/gifs/gettingstarted/dash-shift-click.gif)
 
 To select text in PDFs and webpages (not text documents), click and drag to highlight the desired text.
 
-![](/assets/gifs/gettingstarted/dash-highlight-select.gif)
+![Screen recording: highlight select in Dash.](/assets/gifs/gettingstarted/dash-highlight-select.gif)
 
 ### Editing Documents
 
@@ -91,7 +87,7 @@ The following editing functions are universal to all document types:
 
 All documents also have a context-sensitive toolbar. The toolbar contents vary depending on the document type.
 
-![](/assets/images/getting-started/context-toolbar.png)
+![Screenshot: context toolbar in Dash.](/assets/images/getting-started/context-toolbar.png)
 
 ### Transforming Documents
 
@@ -115,15 +111,15 @@ There are three main ways to transform a document: move, resize, and close.
 
 In addition to viewing your documents in the freeform, you can also open documents in an overlay view called **Lightbox View**. To open this view, either **double-click** a document, or click on the green icon at the top-right of the document chrome.
 
-![](/assets/gifs/gettingstarted/dash-lightbox.gif)
+![Screen recording: Opening a document in the full-screen lightbox view.](/assets/gifs/gettingstarted/dash-lightbox.gif)
 
 Note that you can interact with the document in the same way you would a document in the freeform.
 
-## **[Views](/views/)**
+## **[Views](/guides/views/views/)**
 
 Views represent various ways to visualize a collection. Users can toggle different views through the dropdown menu in the leftmost region of the context-sensitive toolbar. Alternatively, they can open a new view as an alias by right-clicking on the current collection and selecting the desired perspective. The default view is freeform.
 
-### **[Freeform](/views/freeform/)**
+### **[Freeform](/guides/views/freeform/)**
 
 **Description**: unbounded 2D space in the form of a canvas
 
@@ -133,7 +129,7 @@ Views represent various ways to visualize a collection. Users can toggle differe
 - Visualizing document relationships, e.g., neighborhoods/clusters of related materials, nesting, and linking
 - “Raw” document views to get a sense of individual layouts
 
-### **[Schema](/views/schema/)**
+### **[Schema](/guides/views/schema/)**
 
 **Description**: table view of documents. Each document is a row, and each column displays the contents (values) stored with the unique document key. Nested collections can be expanded in-line. The title, author, date last modified, text, and context columns are displayed by default, and users can manually add more columns with existing keys or user-defined keys.
 
@@ -154,7 +150,7 @@ Views represent various ways to visualize a collection. Users can toggle differe
 - Navigating Dash as a file directory
 - Manipulating document z-indices (overlay layer) */}
 
-### **[Stacking](/views/stacking/)**
+### **[Stacking](/guides/views/stacking/)**
 
 **Description**: scrollable stack of documents.
 
@@ -165,7 +161,7 @@ Views represent various ways to visualize a collection. Users can toggle differe
 - Having a structured list view of all the documents of the collection while still seeing live previews of the documents
 - Navigating Dash as a vertical scrolling page
 
-### **[Notetaking](/views/notetaking/)**
+### **[Notetaking](/guides/views/notetaking/)**
 
 **Description**: multiple scrollable stacks of documents. A multicolumn version of stacking view.
 
@@ -184,11 +180,11 @@ Views represent various ways to visualize a collection. Users can toggle differe
 - Avoiding vertical or horizontal padding required by grid perspectives
 - Navigating Dash as a “Pinterest Board” */}
 
-## **[Links and Anchors](/features/linking/)**
+## **[Links and Anchors](/guides/features/linking/)**
 
 A link is a bidirectional reference from one document to another. The link itself is also a document, so we can add tags and key-value pairs to it. The same source selection (aka anchor) can link to multiple destinations, which range from an entire document to a portion of a document (eg. an annotation in a PDF, highlighted phrase in text, etc.)
 
-For examples on linking between **parts** of documents, check out the [Annotation and Markup](/getting-started/#annotation-and-markup) section below.
+For examples on linking between **parts** of documents, check out the [Annotation and Markup](/getting-started/using-dash/#annotation-and-markup) section below.
 
 ### Creating links
 
@@ -201,7 +197,7 @@ Drag and drop creates a 1:1 link between documents that both appear on the scree
 
 Once a document is created, two messages will appear: one confirming successful link creation, and another prompting users for an optional link label. Labels may be modified later thorugh the link menu. The document will then display a number displaying the number of links it contains.
 
-![](/assets/gifs/gettingstarted/dash-creating-link.gif)
+![Screen recording: creating link in Dash.](/assets/gifs/gettingstarted/dash-creating-link.gif)
 
 Linkboards function as a clipboard: they "copy" source documents to the linkboard until they are cleared or linked to another source. This is convenient for creating multiple links with the same source and/or creating links while maintaining another workflow.
 
@@ -210,7 +206,7 @@ Linkboards function as a clipboard: they "copy" source documents to the linkboar
    1. A popup bar will display at the bottom of the screen with two options: one to toggle displaying or hiding optional link labels, and one to exit linking mode.
 3. Complete the link by clicking on the desired target document and selecting the second link icon that appears in the bottom menu.
 
-![](/assets/gifs/gettingstarted/dash-create-link-board.gif)
+![Screen recording: create link board in Dash.](/assets/gifs/gettingstarted/dash-create-link-board.gif)
 
 ### Following links
 
@@ -218,27 +214,27 @@ Once a link is created, a blue dot will appear in the document's bottom left cor
 
 Selecting an item from the list will follow the link from source to destination.
 
-The default following behavior is to pan the freeform so that the destination document is in view (if it isn't already) and highlight it in orange. You can customize the link following behavior and more in the [link editing](/getting-started/#editing-links) section of the properties menu.
+The default following behavior is to pan the freeform so that the destination document is in view (if it isn't already) and highlight it in orange. You can customize the link following behavior and more in the [link editing](/getting-started/using-dash/#editing-links) section of the properties menu.
 
-![](/assets/gifs/gettingstarted/dash-following-link.gif)
+![Screen recording: following link in Dash.](/assets/gifs/gettingstarted/dash-following-link.gif)
 
 If you toggle the hand pointing right icon on, clicking on the document will now follow the first linked document.
 
-![](/assets/gifs/gettingstarted/dash-follow-link-onclick.gif)
+![Screen recording: follow link onclick in Dash.](/assets/gifs/gettingstarted/dash-follow-link-onclick.gif)
 
 ### Editing links
 
 Once a link is created, a blue dot will appear in the document's bottom left corner both when you hover over the document and click on the document. The number represents the number of links on the document. Clicking on the dot displays all links in a list; hovering over each list item shows a preview of the document it links to. Clicking the pencil icon to the left will open up the properties pane on the right, where you can edit the link.
 
-![](/assets/gifs/gettingstarted/dash-edit-link.gif)
+![Screen recording: edit link in Dash.](/assets/gifs/gettingstarted/dash-edit-link.gif)
 
 In the link editing section of the properties pane, you can add a link relationship and description, toggle the display of the link line, control the link following animation behavior, and more.
 
-![](/assets/gifs/gettingstarted/dash-editing-link.gif)
+![Screen recording: editing link in Dash.](/assets/gifs/gettingstarted/dash-editing-link.gif)
 
 One common adjustment you might want to make to the link following behavior is centering and zooming into the destination document rather than just panning the freeform until it is in view. To do this, toggle the **Zoom %** option on. You can also adjust the zoom level.
 
-![](/assets/gifs/gettingstarted/dash-link-center-zoom.gif)
+![Screen recording: link center zoom in Dash.](/assets/gifs/gettingstarted/dash-link-center-zoom.gif)
 
 {/* The link editing options are as follows:
 
@@ -249,9 +245,9 @@ One common adjustment you might want to make to the link following behavior is c
 - Edit link: opens a modal for editing link descriptions, relationships, and follow behavior.
 - Delete link: removes the selected link. */}
 
-In Dash, you can also create links between **parts of documents**. Read the [Annotation and Markup](/getting-started/#annotation-and-markup) section below for examples of how to do this!
+In Dash, you can also create links between **parts of documents**. Read the [Annotation and Markup](/getting-started/using-dash/#annotation-and-markup) section below for examples of how to do this!
 
-## **[Annotation and Markup](/features/markup/)**
+## **[Annotation and Markup](/guides/features/markup/)**
 
 Media documents (eg. PDFs, webpages, images, videos, audio) currently support user annotations and markups. Note that certains ways of annotating provide a way to link between **parts** of documents rather than whole documents.
 
@@ -302,7 +298,7 @@ There are several ways to add annotations:
 - Click anywhere on the media document, then start typing
 - On PDFs: highlight the desired PDF text, then use the floating toolbar to create an annotation. Alternatively, drag the highlighted text to an existing annotation.
 
-![](/assets/gifs/gettingstarted/textannos.gif)
+![Screen recording: Selecting text and attaching an annotation to the selection.](/assets/gifs/gettingstarted/textannos.gif)
 
 ### Ink
 
@@ -320,7 +316,7 @@ There are several ways to add annotations:
 
 - Perform a marquee selection on the desired region, then select "Create a Collection" on the floating toolbar.
 
-![](/assets/gifs/gettingstarted/marqueeannos.gif)
+![Screen recording: Drawing a marquee selection over a region and turning it into an annotation.](/assets/gifs/gettingstarted/marqueeannos.gif)
 
 ### Highlight
 
@@ -338,7 +334,7 @@ There are several ways to add annotations:
 
 - By default, dragging an annotation outside of its parent document will leave a pushpin at the original location the annotation was created. */}
 
-## **[Presentation Trails](/features/trails/)**
+## **[Presentation Trails](/guides/features/trails/)**
 
 Presentation trails allow the user to navigate through documents in a predefined path, similar to a Prezi or Slides presentation, but with added, flexible functionality. You can pin any document to a presentation trail.
 
@@ -348,15 +344,15 @@ There are two ways to create a trail:
 
 - Creating a new trail from the trails panel on the left sidebar.
 
-![](/assets/gifs/gettingstarted/dash-create-trail-side.gif)
+![Screen recording: create trail side in Dash.](/assets/gifs/gettingstarted/dash-create-trail-side.gif)
 
 - Pinning a document or a view.
 
-![](/assets/gifs/gettingstarted/dash-pin-doc.gif)
+![Screen recording: pin doc in Dash.](/assets/gifs/gettingstarted/dash-pin-doc.gif)
 
 After creating a trail, a new tab will open up displaying the slides of the trail. You can click on each slide to view and transition between the different views and documents you've pinned.
 
-![](/assets/gifs/gettingstarted/dash-trail-transition.gif)
+![Screen recording: trail transition in Dash.](/assets/gifs/gettingstarted/dash-trail-transition.gif)
 
 ### Adding documents to a trail
 
@@ -364,7 +360,7 @@ After creating a trail, a new tab will open up displaying the slides of the trai
 
 To pin any document to the presentation trail simply select a document and use the ‘Pin’ button in the document decorations to add it to the presentation trail. If the user has not yet created a presentation trail, then this button will also create a new presentation trail and add that specific document as the first slide in the trail.
 
-![](/assets/images/trails/regularpin.png)
+![Screenshot: A slide pinned to a trail without view properties.](/assets/images/trails/regularpin.png)
 
 #### Pin with view:
 
@@ -379,21 +375,21 @@ You can customize how the document should be pinned by hovering over the pin ico
 
 This, combined with the ability to **group** slides (allows multiple slides to play **together**) can produce cool results like this:
 
-![](/assets/gifs/gettingstarted/dash-pres-layout-content-grouping.gif)
+![Screen recording: presentation layout content grouping in Dash.](/assets/gifs/gettingstarted/dash-pres-layout-content-grouping.gif)
 
-Check out the details on how to pin with layout and content [here](/features/trails/#other-pinning-options), and how to group slides [here](/features/trails/#slides).
+Check out the details on how to pin with layout and content [here](/guides/features/trails/#other-pinning-options), and how to group slides [here](/guides/features/trails/#slides).
 
 #### Reorganizing slides
 
 To reorganize the slides in your trail, simply drag and drop the slides to the order you want.
 
-![](/assets/gifs/gettingstarted/dash-reorganize-slides.gif)
+![Screen recording: A single slide in a presentation trail, with its controls.](/assets/gifs/gettingstarted/dash-reorganize-slides.gif)
 
 ### Customization
 
 Clicking the double arrows in the trail tab wil open up a pane where you can customize the transition behavior of each slide.
 
-![](/assets/gifs/gettingstarted/dash-slide-editing.gif)
+![Screen recording: A single slide in a presentation trail, with its controls.](/assets/gifs/gettingstarted/dash-slide-editing.gif)
 
 ### Presenting a trail
 
@@ -401,32 +397,19 @@ Now that you've created a trail, you can walk through it by entering presention 
 
 Click on the present button in the top right to enter present mode. You can use the arrows to navigate between slides, or select the play icon to autoplay the presentation.
 
-![](/assets/gifs/gettingstarted/dash-present-trail.gif)
+![Screen recording: present trail in Dash.](/assets/gifs/gettingstarted/dash-present-trail.gif)
 
 Alternatively, you can select the mini-player option from the dropdown to present with a mini-player instead.
 
-![](/assets/gifs/gettingstarted/dash-pres-miniplayer.gif)
+![Screen recording: Playing a trail in the minimised player.](/assets/gifs/gettingstarted/dash-pres-miniplayer.gif)
 
-{/* ## **[Collaboration](/features/collaboration/)**
+## Sharing and permissions
 
-Dash documents can be shared with individuals, groups of individuals, or a combination of both. Users may assign four types of document access rights:
+Dash documents can be shared with individuals, with groups, or both, using
+four levels of access. The permission model and the group-creation flow are
+documented on [collaboration](/guides/features/collaboration/).
 
-**1. Admin**: users can add, remove, edit, and change others' access rights to the document.
-
-**2. Can Edit**: users can add, remove, and edit the contents of a document. However, they may not change others' access rights.
-
-**3. Can Augment**: users can annotate and add other documents, but they cannot edit or remove the document.
-
-**4. Not Shared**: users have no access and cannot add, edit, remove, or view the document.
-
-**To create a group**:
-
-1. Click on the settings button on the top right in the menu and select the Modes submenu. Click on the Manage Groups Button.
-2. Click on the Create Group button to open the group creation menu.
-3. Enter a group name and add group members (or leave that field empty for an empty group). Click on Create to create the group.
-4. Click on the blue _i_ to view or edit group members. You can add or remove members or delete the group from this menu.
-
-![](/assets/gifs/gettingstarted/sharing.gif) */}
+![Screen recording: Sharing a dashboard with another user.](/assets/gifs/gettingstarted/sharing.gif)
 
 ## Important Notes
 
@@ -437,4 +420,4 @@ Dash documents can be shared with individuals, groups of individuals, or a combi
   This will occur while in the middle of an action, but if it remains yellow, the simplest fix is
   to refresh your browser.
 
-Unsure of how to navigate the overall Dash interface? Check out the **[Overall Environment page](/environment/)**.
+Unsure of how to navigate the overall Dash interface? Check out the **[Overall Environment page](/getting-started/environment/)**.

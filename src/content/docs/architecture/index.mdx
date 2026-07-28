@@ -5,11 +5,10 @@ description: The current Dash implementation, its four extension points, and the
 
 import ProjectNote from '../../../components/ProjectNote.astro';
 
-# Architecture
 
 This page describes the structure of the current system and the small number of
 places you extend it. It is aimed at someone about to work on Dash, or someone
-trying to judge what a project on the [Project index](/projects/)
+trying to judge what a project on the [Project index](/research/projects/)
 page actually touched.
 
 
@@ -44,7 +43,7 @@ an agent tool, all without special cases.
 
 ## The four extension points
 
-Almost every project in the [Project index](/projects/) list
+Almost every project in the [Project index](/research/projects/) list
 extends one of four things. If you are planning work, it is worth knowing which
 one you are aiming at, because the projects that reached `master` are
 overwhelmingly the ones that fit an existing slot.
@@ -143,7 +142,7 @@ answers and the other one edits.
 Because retrieved content and tool results both enter the model's context as
 messages, untrusted document content can carry instructions the model treats
 as its own. That is the problem the [2026 oversight
-study](/cohorts/2026/#post-hoc-oversight-of-prompt-injected-agents)
+study](/research/cohorts/2026/#post-hoc-oversight-of-prompt-injected-agents)
 was built to measure. The provenance capture it added is off by default.
 :::
 
@@ -158,7 +157,7 @@ the cohort pages are mostly the second kind.
 
 - [Concepts](/concepts/) for why the document and
   collection models are shaped this way, rather than only how.
-- [Project index](/projects/) filtered by system area,
+- [Project index](/research/projects/) filtered by system area,
   which maps directly onto the extension points above.
-- [Contributing to Dash](/joining-dash/) if you are about
+- [Contributing to Dash](/contributing/joining/) if you are about
   to pick a project and want to know which slot it should aim for.

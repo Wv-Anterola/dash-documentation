@@ -384,9 +384,30 @@ export function projectSlug(title: string): string {
     .replace(/^-|-$/g, '');
 }
 
-/** Site-root-relative href for a project's write-up. */
+/**
+ * Prefix a site-root path with Astro's configured base.
+ *
+ * Components build their own hrefs, so unlike Markdown they are not covered by
+ * the rehype plugin and have to do this themselves.
+ */
+export function withBase(path: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return base + path;
+}
+
+/** Href for a project's write-up on its cohort page. */
 export function projectHref(p: Project): string {
-  return `/cohorts/${p.cohort}/#${projectSlug(p.title)}`;
+  return withBase(`/research/cohorts/${p.cohort}/#${projectSlug(p.title)}`);
+}
+
+/** Href for a concept page. */
+export function conceptHref(c: Concept): string {
+  return withBase(`/${c.slug}/`);
+}
+
+/** Href for a cohort page. */
+export function cohortHref(c: Cohort): string {
+  return withBase(`/research/cohorts/${c.id}/`);
 }
 
 export function projectsInCohort(id: CohortId): Project[] {

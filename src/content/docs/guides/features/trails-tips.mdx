@@ -1,54 +1,68 @@
 ---
-title: Tips and Tricks
+title: Pinning documents to trails
+description: The three ways to pin a document to a presentation trail, and what pinning with view records.
 ---
 
-# Presentation Trails | Tips and Tricks
+Pinning is the term Dash uses for adding a document, or a particular view of a
+document, to a presentation trail. There are three ways to do it, and the third
+behaves differently enough to be worth reading about before you use it.
 
-## Pinning
+For what a trail is and why it is not a slideshow, see
+[trails](/concepts/trails/).
 
-In Dash, we use the term `pin` to refer to **adding** any node, or view of that node, to a presentation trail. GIFs showing how nodes are pinned to the trail are included below.
+## Pin with the pin button
 
-### Text
+1. Select the document you want to add.
+2. Click the pin icon on the document decoration menu.
+3. The document is added to the currently active trail.
 
-**Pin with Pin Button**
-1. Select the text node you would like to add.
-2. Hit the pin icon on the document decoration menu.
-3. Notice that the document is added to the currently active trail, in this case `Demo Trail` which is already open. 
-4. Clicking on the trail will `pan` and `zoom` to the relevant part of the trail.
+Clicking the slide in the trail pans and zooms to the relevant part.
 
-<img style="border: solid 2px darkgray; border-radius: 10px" src="https://i.imgur.com/oPAU7mL.gif" /><img/>
+![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/oPAU7mL.gif)
 
-**Pin with Drag**
-1. Drag the document into an empty space on the trail. You can *either* use the title bar to drag it, or drag on the document itself. 
+## Pin by dragging
 
+Drag the document into empty space on the trail. Either the title bar or the
+body of the document works as a drag handle.
 
-<img style="border: solid 2px darkgray; border-radius: 10px" src="https://i.imgur.com/4CaqhZY.gif" /><img/>
+![Dragging a text document from the canvas onto empty space in the trail panel.](https://i.imgur.com/4CaqhZY.gif)
 
-**Pin with View**
-1. To `Pin with View` you select the document to bring up the document decorations. 
-2. Hold down `Shift` and click on the `Pin` icon
-3. You know if a document is pinned with view, if it has the `V` button appear on the slide. 
+## Pin with view
 
-The notion of `Pin with View` for any document is that it will pin the document with the current view properties that the document currently has. These properties include:
-1. `scroll`: The scroll location of the document. 
-2. `x` and `y`: The x-coordinate on the 2D canvas.
+Hold `Shift` and click the pin icon. A slide pinned this way shows a `V` badge.
 
-If you click on the `Update View` button on the slide in the presentation trail it will update to whatever the current view specs of that document are. You can use this feature to animate movement. 
+Pinning with view records the document's current view properties alongside the
+reference, rather than only the document:
 
-**Pin with View: Scroll**
-<img style="border: solid 2px darkgray; border-radius: 10px" src="https://i.imgur.com/LC47Mum.gif" /><img/>
+- `scroll`, the scroll position within the document
+- `x` and `y`, the position on the 2D canvas
 
-**Pin with View: x & y**
-<img style="border: solid 2px darkgray; border-radius: 10px" src="https://i.imgur.com/eaxJWcZ.gif" /><img/>
+The `Update View` button on a slide re-captures whatever the document's current
+view properties are. Pinning the same document twice with different view
+properties and stepping between the slides is how you animate movement through a
+document.
 
+**Scroll position recorded with the slide:**
 
+![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/LC47Mum.gif)
 
-### Webpages & PDFs
+**Canvas position recorded with the slide:**
 
-### Audio & Video
+![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/eaxJWcZ.gif)
 
-### Collections
+:::note[Externally hosted recordings]
+The recordings on this page are hosted on imgur rather than in this repository,
+which is how they were added in 2021. They work, but they are outside our
+control. New assets should go in `public/assets/`.
+:::
 
-## Transitions
+## Not documented yet
 
-## Presenting
+The original version of this page had empty headings for pinning webpages,
+PDFs, audio, video, and collections, and for transitions and presenting. They
+had been empty since 2021.
+
+Pinning works the same way for every document type, so the first group needed no
+separate sections. Transitions and presenting are real gaps:
+[trails](/guides/features/trails/) covers playing a trail, and the transition
+model is described under [trails as a concept](/concepts/trails/).

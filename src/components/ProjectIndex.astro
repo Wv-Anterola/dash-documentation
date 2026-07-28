@@ -12,6 +12,7 @@ import {
   areas,
   cohortOf,
   conceptOf,
+  conceptHref,
   projectHref,
 } from '../data/dash';
 import StatusBadge from './StatusBadge.astro';
@@ -72,7 +73,7 @@ const allAreas = areas();
               return (
                 <>
                   {i > 0 && ', '}
-                  <a href={`/${c.slug}/`}>{c.title}</a>
+                  <a href={conceptHref(c)}>{c.title}</a>
                 </>
               );
             })}

@@ -6,7 +6,7 @@
  * elements per cohort, which needs a fragment, and MDX's markdown-flow parser
  * does not handle multi-line fragments in an expression cleanly.
  */
-import { cohorts } from '../data/dash';
+import { cohorts, cohortHref } from '../data/dash';
 import CohortRoster from './CohortRoster.astro';
 ---
 
@@ -14,7 +14,7 @@ import CohortRoster from './CohortRoster.astro';
   cohorts.map((c) => (
     <section class="cohort-roster-block">
       <h3 id={`cohort-${c.id}`}>
-        <a href={`/research/cohorts/${c.id}/`}>{c.title}</a>
+        <a href={cohortHref(c)}>{c.title}</a>
       </h3>
       <CohortRoster cohort={c.id} />
     </section>
