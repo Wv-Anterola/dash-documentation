@@ -2,7 +2,7 @@
 layout: page
 title: Overall Environment
 permalink: /environment/
-nav_order: 6
+nav_order: 2
 ---
 
 # Overall Environment

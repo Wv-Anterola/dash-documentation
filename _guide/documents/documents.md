@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Documents
-nav_order: 7
+nav_order: 3
 permalink: /documents/
 has_children: true
 ---

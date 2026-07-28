@@ -20,6 +20,44 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
+# The sidebar is grouped with these collections. just-the-docs renders one
+# heading per collection and keeps a full parent/child tree inside each, which
+# a single flat page list cannot do: the theme allows three nesting levels, and
+# Features > Trails > Tips already uses all three.
+#
+# Every page carries an explicit `permalink`, so which directory a page lives in
+# does not affect its URL. Moving a page between collections is a nav change
+# only.
+collections:
+  concepts:
+    permalink: "/:path/"
+    output: true
+  guide:
+    permalink: "/:path/"
+    output: true
+  system:
+    permalink: "/:path/"
+    output: true
+  research:
+    permalink: "/:path/"
+    output: true
+  contribute:
+    permalink: "/:path/"
+    output: true
+
+just_the_docs:
+  collections:
+    concepts:
+      name: Concepts
+    guide:
+      name: Using Dash
+    system:
+      name: System and architecture
+    research:
+      name: Research and history
+    contribute:
+      name: Contributing
+
 exclude:
   - Gemfile
   - Gemfile.lock
