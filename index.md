@@ -41,8 +41,8 @@ workspace, including one that lets it build itself another. Since March 2026
 there is a desktop build that bundles Ollama, so those features can run against
 a local model rather than a remote API.
 
-The [how Dash is built]({{ '/system/' | relative_url }}) page explains the
-structure and the four places you extend it.
+The [architecture]({{ '/system/' | relative_url }}) page explains the structure
+and the four places you extend it.
 
 ## Current work
 
@@ -52,13 +52,32 @@ workspace, scene-based video generation, and a study instrument for measuring
 whether people actually catch an agent that has been prompt-injected into
 editing their documents.
 
-## Where to go next
+That last one is the clearest example of how this documentation is meant to be
+read. The study is described on the cohort page, the threat it addresses is
+explained under [agents and tools]({{ '/concepts/agents/' | relative_url }}),
+and the undo machinery it attaches to is on the
+[architecture]({{ '/system/' | relative_url }}) page. The project is evidence
+for the concept, and the concept is what makes the project legible.
 
-- [Getting started]({{ '/getting-started/' | relative_url }}) if you want to use Dash.
-- [Cohorts]({{ '/cohorts/' | relative_url }}) for what each group of students built, year by year.
-- [Projects]({{ '/projects/' | relative_url }}) for every project with its implementation status.
-- [How Dash is built]({{ '/system/' | relative_url }}) for the architecture.
-- [Joining Dash]({{ '/joining-dash/' | relative_url }}) if you want to work on it.
+## How this site is organised
+
+Four sections, meant to be read in roughly this order if you are new.
+
+**[Concepts]({{ '/concepts/' | relative_url }})** covers the six ideas that
+explain most of Dash's behaviour: documents, collections, links, trails, agents,
+and generative media. Each page ends with the projects that exercised the idea,
+so you can see which parts have been stressed and which are mostly theory.
+
+**[Using Dash]({{ '/getting-started/' | relative_url }})** is the practical
+material: how to create documents, switch views, make links, build trails.
+
+**[System and architecture]({{ '/system/' | relative_url }})** describes the
+current implementation and the extension points, with the projects that
+introduced each one.
+
+**[Research and history]({{ '/projects/' | relative_url }})** holds the forty
+recovered projects, organised by cohort, each with an implementation status
+traceable to the code.
 
 ## Trying it
 

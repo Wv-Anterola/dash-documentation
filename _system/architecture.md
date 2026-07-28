@@ -1,11 +1,12 @@
 ---
 layout: default
-title: How Dash is built
+title: Architecture
 permalink: /system/
 nav_order: 1
+description: The current Dash implementation, its four extension points, and the projects that added to each.
 ---
 
-# How Dash is built
+# Architecture
 {: .no_toc }
 
 This page describes the structure of the current system and the small number of
@@ -68,6 +69,16 @@ cohorts: the 3D viewer and sketch canvas, the data visualisation box, the video
 generator, the life coach workspace and its events, policy testimony and policy
 checker, journals, tasks, scrapbooks, and the agent itself.
 
+This is the most-used extension point and the cheapest, which is why ten of the
+forty recorded projects are new document types. It is also where the
+[registry's limits]({{ '/concepts/documents/' | relative_url }}) show: every
+addition edits the same two core files, so two cohorts adding types in the same
+term will conflict.
+
+{% include project-note.html title="Document and field model"
+   note="Built the prototype system these factories use. `InstanceFromProto` and
+   `Prototypes.get` have not changed since." %}
+
 ### Collection view types
 
 `CollectionViewType` decides how a collection displays what it holds. There are
@@ -75,6 +86,16 @@ twenty-one. Freeform, stacking, schema, tree, carousel, and docking come from
 2019 and 2020. Calendar came from 2023. Graph came from 2026. Adding one means
 an enum value and a view component; every existing collection can then be
 switched into it without converting any data.
+
+Layout engines for freeform collections are separate, under
+`collectionFreeFormLayoutEngines/`, so positions can be computed rather than
+set by hand.
+
+{% include project-note.html title="Graph view for collections"
+   note="The most recent addition here, and the one that exposed the cost of
+   this extension point: a layout engine recomputing against MobX observables
+   re-renders the whole collection every frame. The fix was to scale iterations
+   by node count and stop once movement settles." %}
 
 ### Agent tools
 
@@ -91,12 +112,29 @@ tool and have it compiled into the running application.
 This is the extension point that grew fastest. Most of the 2025 and 2026 agent
 work is entries in this registry rather than new UI.
 
+{% include project-note.html title="Agent tool registry and dynamic tool creation"
+   note="Built the registry itself, plus the dynamic path that compiles a
+   generated tool into the running application. Everything below this line in
+   the 2025 and 2026 cohorts depends on it." %}
+
+{% include project-note.html title="Canvas awareness and UI control for the agent"
+   note="A good example of how small an addition can be once the registry
+   exists: two tool classes, one to enumerate canvas documents and one to drive
+   the interface." %}
+
 ### Undo batches
 
 Mutations run through `util/UndoManager`, and `UndoManager.RunInBatch` groups a
 set of changes under a name so they revert together. This matters more than it
-sounds: it is what makes an agent action individually revertible, and it is the
-hook the 2026 provenance work attaches to.
+sounds: it is what makes an agent action individually revertible.
+
+It is also the only place in the system where "what the agent just did" is a
+single addressable thing, which is why it is where provenance had to attach.
+
+{% include project-note.html title="Post-hoc oversight of prompt-injected agents"
+   note="Wrapped the batch mechanism so each agent action carries the source
+   content that caused it. Capture is off by default and the wrapper lives on a
+   branch, so the shipped application still batches without recording origin." %}
 
 ## Where the AI surfaces are
 
@@ -127,3 +165,12 @@ Look for the slot before you build the thing. A new document type, a new
 collection view, or a new agent tool will merge; a parallel subsystem next to
 one of those generally will not, however good it is. The unmerged branches on
 the cohort pages are mostly the second kind.
+
+## Where to read next
+
+- [Concepts]({{ '/concepts/' | relative_url }}) for why the document and
+  collection models are shaped this way, rather than only how.
+- [Project index]({{ '/projects/' | relative_url }}) filtered by system area,
+  which maps directly onto the extension points above.
+- [Contributing to Dash]({{ '/joining-dash/' | relative_url }}) if you are about
+  to pick a project and want to know which slot it should aim for.
