@@ -1,0 +1,42 @@
+{%- comment -%}
+An inline reference to one project, for use inside documentation prose.
+
+  {% include project-note.html title="Graph view for collections"
+     note="The physics constants are exposed rather than hidden because tuning
+           them turned out to be the only way to make dense graphs readable." %}
+
+Renders the project's name, cohort, contributors, and status, followed by the
+caller's own sentence about why it matters *here*. The `note` is required and
+deliberately written per call site: a generic "learn more" tells the reader
+nothing, and copying the project's own summary onto every page that touches it
+is how documentation starts repeating itself.
+
+Looks the project up by title across all cohorts, so the metadata stays in
+projects.yml and cannot drift out of sync with the cohort pages.
+{%- endcomment -%}
+{%- assign want = include.title -%}
+{%- assign found = false -%}
+{%- for c in site.data.cohorts -%}
+  {%- unless found -%}
+    {%- for p in site.data.projects[c.id] -%}
+      {%- if p.title == want and found == false -%}
+        {%- assign found = p -%}
+        {%- assign fc = c -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endunless -%}
+{%- endfor -%}
+{%- if found -%}
+{%- assign anchor = found.title | slugify -%}
+{%- capture href %}/cohorts/{{ fc.id }}/#{{ anchor }}{% endcapture -%}
+<div class="project-note">
+  <p class="project-note__head">
+    <a href="{{ href | relative_url }}">{{ found.title }}</a>
+    <span class="project-note__meta">{{ fc.short }}{% if found.people %}, {{ found.people | join: " and " }}{% endif %}</span>
+    {% include status-badge.html key=found.status %}
+  </p>
+  <p class="project-note__body">{{ include.note }}</p>
+</div>
+{%- else -%}
+<!-- project-note: no project titled "{{ want }}" in _data/projects.yml -->
+{%- endif -%}

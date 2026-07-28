@@ -21,6 +21,8 @@
   - title: Post-hoc oversight of prompt-injected agents
     people: [Wilber Sean Anterola]
     status: prototype
+    area: Agent system
+    concepts: [agents]
     problem: >-
       Dash's agent reads documents it did not write and can edit the workspace
       through tool calls, which is exactly the shape indirect prompt injection
@@ -60,6 +62,8 @@
   - title: Policy testimony and policy checker documents
     people: [Aura Sukapanpotharam]
     status: integrated
+    area: Document model
+    concepts: [documents, agents]
     problem: >-
       Reading a policy document against a pile of supporting testimony means
       holding both in your head at once and keeping track of which claim came
@@ -87,6 +91,8 @@
   - title: Graph view for collections
     people: [Finn Wilkie]
     status: integrated
+    area: Collections and views
+    concepts: [collections, links]
     problem: >-
       Dash has had links between documents since the beginning, but no way to
       look at the link structure itself. You could follow a link; you could not
@@ -116,6 +122,8 @@
   - title: Life coach workspace
     people: [McCormick Breviu]
     status: integrated
+    area: Document model
+    concepts: [documents, collections]
     problem: >-
       Planning that spans time, place, and mood does not fit a calendar grid or
       a document. It needs both, plus somewhere to put the parts that are not
@@ -142,6 +150,8 @@
   - title: Sketch-to-CAD drawing in 3D
     people: [McCormick Breviu]
     status: implemented
+    area: 3D
+    concepts: [documents]
     problem: >-
       Dash can hold a 3D model but had no way to make one. Getting from a rough
       2D sketch to a solid you can export is normally a separate application.
@@ -165,6 +175,8 @@
   - title: Data-visualisation generation pipeline
     people: [Camden Wright]
     status: integrated
+    area: Collections and views
+    concepts: [collections, generative]
     problem: >-
       Dash could render charts from a CSV, but choosing the chart and wiring the
       columns was manual, and the generation path that existed produced garbled
@@ -189,6 +201,8 @@
   - title: Video generator
     people: [Joanne Ding]
     status: integrated
+    area: Generative media
+    concepts: [documents, generative]
     problem: >-
       Turning notes on a canvas into a short explanatory video meant leaving
       Dash for a video tool and losing the connection to the source material.
@@ -214,6 +228,8 @@
   - title: Image generation with style and structure references
     people: [Alicia Yoon]
     status: implemented
+    area: Generative media
+    concepts: [generative]
     problem: >-
       Prompt-only image generation gives you no way to say "like this one" or
       "shaped like that", and the controls for trying tend to swamp the
@@ -239,6 +255,8 @@
   - title: Multi-objective trip planner
     people: [Wilber Sean Anterola]
     status: implemented
+    area: Document model
+    concepts: [documents]
     problem: >-
       Itinerary planning is a scheduling problem with objectives that genuinely
       conflict: travel time, weather risk, opening hours, how well an event fits
@@ -266,6 +284,8 @@
   - title: Probability teaching module
     people: [Jacob Elson]
     status: prototype
+    area: Document model
+    concepts: [documents]
     problem: >-
       Distributions are easier to understand when you can move a parameter and
       watch the shape change, which static course material cannot do.
@@ -286,6 +306,8 @@
   - title: Desktop build with local model execution
     people: [Bob Zeleznik]
     status: integrated
+    area: Infrastructure
+    concepts: [agents]
     problem: >-
       Every AI feature in Dash assumed an API key and a network round-trip,
       which rules out anyone who cannot or will not send their documents to a
@@ -312,6 +334,8 @@
   - title: Research agent
     people: [A.J. Shulman, Kartik Shrivastava]
     status: prototype
+    area: Agent system
+    concepts: [agents]
     problem: >-
       A general assistant is the wrong shape for sustained research work, which
       needs to accumulate context across sessions instead of answering one
@@ -333,6 +357,8 @@
 
   - title: Selection-aware text formatting actions
     status: integrated
+    area: Generative media
+    concepts: [documents, generative]
     people_unresolved: "recorded in git under the GitHub handle Skitty1238"
     problem: >-
       Asking a model to reformat a passage usually means copying it out,
@@ -360,6 +386,8 @@
   - title: Agent tool registry and dynamic tool creation
     people: [A.J. Shulman]
     status: integrated
+    area: Agent system
+    concepts: [agents]
     problem: >-
       The chatbot could answer questions about documents but could not act on
       them, and every new capability meant hand-writing another tool.
@@ -385,6 +413,8 @@
   - title: Canvas awareness and UI control for the agent
     people: [Lanyi Stroud]
     status: integrated
+    area: Agent system
+    concepts: [agents, collections]
     problem: >-
       The agent could reason about documents it had been handed but had no idea
       what was actually in front of the user, and could not change the view.
@@ -407,6 +437,8 @@
   - title: Tutorial agent
     people: [Joanne Ding]
     status: integrated
+    area: Agent system
+    concepts: [agents]
     problem: >-
       Dash has a lot of surface area and a documentation site that people have
       to know exists. New users were finding neither.
@@ -430,6 +462,8 @@
   - title: Scrapbook documents
     people: [Lanyi Stroud]
     status: integrated
+    area: Document model
+    concepts: [documents]
     problem: >-
       Not every collection of material wants a layout imposed on it.
     approach: >-
@@ -449,6 +483,8 @@
   - title: Symbolic mathematics in documents
     people: [Samuel Kurtis]
     status: integrated
+    area: Document model
+    concepts: [documents]
     problem: >-
       Equations in notes were text. You could read them; you could not evaluate
       or rearrange them.
@@ -470,6 +506,8 @@
   - title: 3D model documents
     people: [Kartik Shrivastava]
     status: integrated
+    area: 3D
+    concepts: [documents]
     problem: >-
       Dash handled every media type a knowledge worker deals with except three-
       dimensional ones.
@@ -495,6 +533,8 @@
   - title: Diagram documents from source code
     people: [Aisosa Idahosa]
     status: unclear
+    area: Document model
+    concepts: [documents]
     problem: >-
       Understanding an unfamiliar codebase means building a mental picture of it
       that nobody has written down.
@@ -519,6 +559,8 @@
   - title: Calendar and scheduling for the agent
     people: [Semir Ali]
     status: integrated
+    area: Agent system
+    concepts: [agents]
     problem: >-
       An agent that can read your documents but not your schedule can only do
       half of most planning tasks.
@@ -539,6 +581,8 @@
   - title: Task documents
     people: [Aarav Kumar]
     status: integrated
+    area: Document model
+    concepts: [documents]
     problem: >-
       Todo items kept being written as text, which meant they could not be
       queried or rolled up.
@@ -558,6 +602,8 @@
   - title: Mesh tooling
     people: [Thu Vu]
     status: implemented
+    area: 3D
+    concepts: [documents]
     problem: >-
       3D documents needed editing operations, not just viewing.
     approach: >-
@@ -577,6 +623,8 @@
   - title: Smart Draw and generative drawing
     people: [Eleanor Park]
     status: integrated
+    area: Generative media
+    concepts: [generative]
     problem: >-
       Ink in Dash was ink. There was no path from a rough drawing to a finished
       image, and no way to ask for one.
@@ -601,6 +649,8 @@
   - title: Interactive chart filtering
     people: [Sarah Richman]
     status: integrated
+    area: Collections and views
+    concepts: [collections]
     problem: >-
       A chart you cannot interrogate is a picture. Filtering meant going back to
       the data.
@@ -625,6 +675,8 @@
   - title: Animation remodel for presentation trails
     people: [Emily Perelman]
     status: integrated
+    area: Trails
+    concepts: [trails]
     problem: >-
       Trail transitions were mechanical. Getting a slide to feel like it moved
       rather than jumped required hand-tuning that most people would not do.
@@ -647,6 +699,8 @@
   - title: Presentation transitions and dictation
     people: [Sophie Zhang]
     status: integrated
+    area: Trails
+    concepts: [trails, documents]
     problem: >-
       Two separate gaps: trails had no transition customisation, and audio
       documents had no way to turn speech into text.
@@ -670,6 +724,8 @@
   - title: Branching presentation trails
     people: [Jesus Rodriguez]
     status: integrated
+    area: Trails
+    concepts: [trails, links]
     problem: >-
       A trail was a line. Real explanations branch, and Vannevar Bush's
       trailblazer was never meant to be stuck on rails.
@@ -693,6 +749,8 @@
   - title: Agent-created documents
     people: [Alyssa Feinberg]
     status: implemented
+    area: Agent system
+    concepts: [agents, documents]
     problem: >-
       The assistant could describe a document it thought you needed but could
       not make one.
@@ -713,6 +771,8 @@
   - title: Search over document content
     people: [Eric Ma]
     status: implemented
+    area: Collections and views
+    concepts: [collections]
     problem: >-
       Search matched titles and metadata, which is not how anyone remembers
       where they put something.
@@ -735,6 +795,8 @@
   - title: Calendar collection view and Mapbox documents
     people: [Zaul Tavangar]
     status: integrated
+    area: Collections and views
+    concepts: [collections, documents]
     problem: >-
       Documents with a date and documents with a place both existed, and neither
       could be laid out by the thing that made them coherent.
@@ -758,6 +820,8 @@
   - title: Physics simulation documents
     people: [Brynn Chernosky]
     status: archived
+    area: Document model
+    concepts: [documents]
     problem: >-
       Mechanics problems are easier to reason about when the setup animates
       correctly, and a static textbook figure cannot do that.
@@ -785,6 +849,8 @@
   - title: Sentiment analysis and containerised deployment
     people: [James Hu]
     status: implemented
+    area: Infrastructure
+    concepts: [generative]
     problem: >-
       Two unrelated things: text documents had no analysis attached, and
       deploying Dash meant reproducing a machine by hand.
@@ -806,6 +872,7 @@
   - title: Component library extraction
     people: [Geireann Lindfield Roberts]
     status: integrated
+    area: Infrastructure
     problem: >-
       Every feature was building its own buttons, and they all looked slightly
       different.
@@ -832,6 +899,7 @@
   - title: This documentation site
     people: [Geireann Lindfield Roberts, Victor Kalev, Mehek Jethani, Anh Truong, David Grossman, Aubrey Li, Lauren Choi]
     status: integrated
+    area: Infrastructure
     problem: >-
       Dash had accumulated more features than anyone could explain in a meeting.
     approach: >-
@@ -854,6 +922,8 @@
   - title: Data visualisation documents
     people: [Naafiyan Ahmed]
     status: integrated
+    area: Collections and views
+    concepts: [collections, documents]
     problem: >-
       CSVs in Dash were files. You could open one; you could not see it.
     approach: >-
@@ -874,6 +944,7 @@
   - title: Novice mode and homepage
     people: [Geireann Lindfield Roberts]
     status: archived
+    area: Interface
     problem: >-
       New users landing in an unbounded freeform canvas with no starting point
       tended to close the tab.
@@ -899,6 +970,8 @@
   - title: Document and field model
     people: [Bob Zeleznik, Tyler Schicke, Sam Wilkins]
     status: integrated
+    area: Document model
+    concepts: [documents]
     problem: >-
       A hypermedia system needs one representation that a PDF, a video, a text
       note, and a collection can all be, or the links between them are special
@@ -923,6 +996,8 @@
   - title: Collections and view types
     people: [Bob Zeleznik, Sam Wilkins, Stanley Yip, Monika Hedman]
     status: integrated
+    area: Collections and views
+    concepts: [collections]
     problem: >-
       One layout cannot serve both "arrange these spatially the way I think
       about them" and "show me this as a table".
@@ -947,6 +1022,8 @@
   - title: Linking and annotation
     people: [Bob Zeleznik, Tyler Schicke, Sam Wilkins]
     status: integrated
+    area: Linking
+    concepts: [links]
     problem: >-
       Bush's associative trail requires that a link can start and end anywhere,
       not just at a whole document.

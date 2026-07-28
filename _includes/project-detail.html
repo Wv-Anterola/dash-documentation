@@ -50,6 +50,11 @@ of empty headings.
     <dt>Evidence for the status above</dt>
     <dd>{{ p.evidence | markdownify | remove: "<p>" | remove: "</p>" }}</dd>
     {%- endif %}
+
+    {%- if p.concepts and p.concepts.size > 0 %}
+    <dt>Background reading</dt>
+    <dd>{% include concept-links.html concepts=p.concepts %}</dd>
+    {%- endif %}
   </dl>
 
   <ul class="project__links">
