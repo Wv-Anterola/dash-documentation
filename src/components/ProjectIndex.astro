@@ -22,21 +22,21 @@ const allAreas = areas();
 
 <div class="filter-bar">
   <div>
-    <label for="f-cohort">Cohort</label>
+    <label class="dash-label" for="f-cohort">Cohort</label>
     <select id="f-cohort">
       <option value="">Any</option>
       {cohorts.map((c) => <option value={c.id}>{c.title}</option>)}
     </select>
   </div>
   <div>
-    <label for="f-area">System area</label>
+    <label class="dash-label" for="f-area">System area</label>
     <select id="f-area">
       <option value="">Any</option>
       {allAreas.map((a) => <option value={a}>{a}</option>)}
     </select>
   </div>
   <div>
-    <label for="f-status">Status</label>
+    <label class="dash-label" for="f-status">Status</label>
     <select id="f-status">
       <option value="">Any</option>
       {statuses.map((s) => <option value={s.key}>{s.label}</option>)}

@@ -4,7 +4,6 @@ description: The capabilities present in the current master branch, the boundari
 ---
 
 import ProjectNote from '../../../components/ProjectNote.astro';
-import StatusKey from '../../../components/StatusKey.astro';
 
 This page is the honest inventory. Everything listed as present was checked
 against the current `master` branch of Dash-Web rather than inferred from a
@@ -84,10 +83,12 @@ deliberately not in `master`:
 
 ## Reading status labels
 
-Every project on this site carries one of six labels. The distinction that
-matters is between *integrated* and everything else.
+Every project on this site carries one of six labels, and the distinction that
+matters is between *integrated* and everything else. Integrated means it can be
+pointed at in the current `master` branch: a registered document type, an entry
+in `CollectionViewType`, a tool in the agent registry, or code one of those
+calls. A merged branch does not qualify, and neither does a demo recording or a
+finished report.
 
-<StatusKey />
-
-The [status taxonomy](/reference/status-taxonomy/) explains what evidence each
-label requires.
+The [status taxonomy](/reference/status-taxonomy/) defines all six labels and
+the evidence each one requires.

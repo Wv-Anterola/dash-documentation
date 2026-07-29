@@ -1,31 +1,53 @@
 /*
  * Dash documentation styling.
  *
- * This is deliberately small. Starlight's defaults are already a restrained
- * documentation system, so the job here is to give it Dash's palette and to
- * style the handful of Dash-specific components: status labels, project
- * references, case studies, and the project index.
+ * Two rules govern this file.
  *
- * The rule followed throughout: a component earns a border or a background
- * only when it needs to be distinguished from body text at a glance. Status
- * labels and project references qualify. Table rows do not, so they get rules.
+ * 1. Every size and every gap comes from the scales below. If a value is not on
+ *    a scale, it does not go in. The previous version of this file carried eight
+ *    font sizes under 1rem (0.72, 0.75, 0.82, 0.85, 0.9, 0.92, 0.94) and fifteen
+ *    different spacing values. Nobody could tell 0.9rem from 0.94rem; what they
+ *    could tell was that no one had decided anything.
+ *
+ * 2. A component earns a border or a background only when it needs to be
+ *    distinguished from body text at a glance. Status labels and project
+ *    references qualify. Table rows do not, so they get rules.
  *
  * Theming follows Starlight's own structure: bare `:root` carries the dark
  * values and `:root[data-theme='light']` overrides them. Do not put themed
- * values in a bare `:root` block on the assumption that light is the default.
- * That is what broke this file before: light-mode greys were declared in
- * `:root`, Starlight's dark theme had nothing to override them with, and body
- * text in dark mode came out at 2.8:1.
- *
- * Starlight's own `--sl-color-white`, `--sl-color-black`, and `--sl-color-gray-*`
- * are left alone. They are already correct in both themes, and their names are
- * relative rather than literal: `--sl-color-white` means "furthest from the
- * page background", which is #fff in dark mode and near-black in light. Setting
- * it to #ffffff unconditionally made every heading invisible on white.
+ * values in a bare `:root` on the assumption that light is the default, and do
+ * not override Starlight's `--sl-color-white`, `--sl-color-black`, or
+ * `--sl-color-gray-*`. Their names are relative rather than literal:
+ * `--sl-color-white` means "furthest from the page background", which is #fff in
+ * dark mode and near-black in light. Setting it to #ffffff unconditionally, as
+ * this file once did, makes every heading invisible on white.
  */
 
 :root {
-  /* Dark, matching Starlight's base. Light overrides follow. */
+  /* ------------------------------------------------------------- type scale
+     Six steps, each distinguishable from its neighbours at reading distance. */
+  --dash-text-xs: 0.75rem; /* 12px, uppercase labels only */
+  --dash-text-sm: 0.875rem; /* 14px, metadata and table cells */
+  --dash-text-base: 1rem; /* 16px, body */
+  --dash-text-lg: 1.125rem; /* 18px, h3 */
+  --dash-text-xl: 1.375rem; /* 22px, h2 */
+  --dash-text-2xl: 2rem; /* 32px, h1 */
+
+  /* ---------------------------------------------------------- spacing scale
+     0.25rem base. Six steps cover everything this site needs. */
+  --dash-space-1: 0.25rem;
+  --dash-space-2: 0.5rem;
+  --dash-space-3: 0.75rem;
+  --dash-space-4: 1rem;
+  --dash-space-6: 1.5rem;
+  --dash-space-8: 2rem;
+
+  /* Prose sits narrower than the content column so tables and the project
+     index keep their width while paragraphs stay near 75 characters. */
+  --dash-measure: 40rem;
+
+  /* ----------------------------------------------------------- dark palette
+     Light overrides follow. */
   --dash-blue: #8fb4ff;
   --dash-blue-bright: #a8c5ff;
   --dash-blue-light: #bdddf5;
@@ -38,8 +60,7 @@
   --dash-rule-soft: #262b39;
   --dash-muted: #a8aeba;
 
-  /* Not themed. */
-  --sl-content-width: 48rem;
+  --sl-content-width: 45rem;
   --sl-text-code: 0.9em;
 }
 
@@ -60,29 +81,77 @@
 
 /* ------------------------------------------------------------- typography */
 
+/* An even step from h1 down to body: 32, 22, 18, 16. Starlight's default h1 is
+   42px, which next to a 22px h2 reads as a magazine cover rather than a
+   document. */
 .sl-markdown-content {
-  --sl-text-h2: 1.4rem;
-  --sl-text-h3: 1.15rem;
+  --sl-text-h2: var(--dash-text-xl);
+  --sl-text-h3: var(--dash-text-lg);
 }
 
-/* Starlight sets generous top margin on headings after prose. Tighten the
-   step between a heading and its own first paragraph so sections read as
-   units rather than as a stack of separate blocks. */
-.sl-markdown-content :is(h2, h3, h4) + p {
-  margin-top: 0.5rem;
+:is(h1, .sl-markdown-content h1) {
+  font-size: var(--dash-text-2xl);
+  line-height: 1.2;
+}
+
+/* Starlight sets generous top margin on headings after prose. Tighten the step
+   between a heading and its own first paragraph so sections read as units
+   rather than as a stack of separate blocks. */
+.sl-markdown-content :is(h2, h3, h4) + * {
+  margin-top: var(--dash-space-2);
+}
+
+/* Prose only. Tables, the project index, and the case studies opt out by not
+   being direct-child text blocks. */
+.sl-markdown-content > :is(p, ul, ol, blockquote) {
+  max-width: var(--dash-measure);
 }
 
 .lede {
   color: var(--sl-color-gray-2);
-  font-size: 1.05rem;
+  font-size: var(--dash-text-lg);
   line-height: 1.6;
+}
+
+/* One uppercase treatment, used for column headers, field labels, and form
+   labels alike. Three near-identical versions of this is how a design starts
+   looking assembled rather than designed. 12px is the floor at which spaced
+   uppercase stays readable. */
+.dash-label {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* A section map: the term is the destination, the definition is what is there.
+   These were six bold-lead paragraphs, which is a description list wearing a
+   disguise. */
+.sl-markdown-content .section-map {
+  margin: var(--dash-space-6) 0;
+  max-width: var(--dash-measure);
+}
+
+.sl-markdown-content .section-map dt {
+  font-weight: 600;
+  margin-top: var(--dash-space-4);
+}
+
+.sl-markdown-content .section-map dt:first-child {
+  margin-top: 0;
+}
+
+.sl-markdown-content .section-map dd {
+  color: var(--sl-color-gray-2);
+  margin: var(--dash-space-1) 0 0;
 }
 
 /* ---------------------------------------------------------------- status */
 
 .status {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: var(--dash-text-xs);
   font-weight: 600;
   line-height: 1.35;
   white-space: nowrap;
@@ -101,7 +170,6 @@
   width: 0.85em;
 }
 
-/* Dark first, to match the theme structure above. */
 .status--integrated { color: #7ddba4; }
 .status--implemented { color: #8fb4ff; }
 .status--prototype { color: #f0c674; }
@@ -118,12 +186,13 @@
 
 .sl-markdown-content .status-key {
   border-left: 2px solid var(--dash-rule);
-  margin: 1.5rem 0;
-  padding: 0.25rem 0 0.25rem 1.1rem;
+  margin: var(--dash-space-6) 0;
+  max-width: var(--dash-measure);
+  padding: var(--dash-space-1) 0 var(--dash-space-1) var(--dash-space-4);
 }
 
 .status-key dt {
-  margin-top: 0.7rem;
+  margin-top: var(--dash-space-3);
 }
 
 .status-key dt:first-child {
@@ -132,9 +201,9 @@
 
 .sl-markdown-content .status-key dd {
   color: var(--sl-color-gray-2);
-  font-size: 0.9rem;
+  font-size: var(--dash-text-sm);
   line-height: 1.55;
-  margin: 0.15rem 0 0;
+  margin: var(--dash-space-1) 0 0;
 }
 
 /* ---------------------------------------------------------------- tables */
@@ -142,14 +211,14 @@
 .sl-markdown-content :is(.ref-table, .project-table) {
   border-collapse: collapse;
   display: table;
-  font-size: 0.9rem;
+  font-size: var(--dash-text-sm);
   width: 100%;
 }
 
 .sl-markdown-content :is(.ref-table, .project-table) :is(th, td) {
   border: 0;
   border-bottom: 1px solid var(--dash-rule-soft);
-  padding: 0.55rem 0.9rem 0.55rem 0;
+  padding: var(--dash-space-2) var(--dash-space-3) var(--dash-space-2) 0;
   text-align: left;
   vertical-align: top;
 }
@@ -157,7 +226,7 @@
 .sl-markdown-content :is(.ref-table, .project-table) thead th {
   border-bottom: 1px solid var(--dash-rule);
   color: var(--dash-muted);
-  font-size: 0.75rem;
+  font-size: var(--dash-text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -175,18 +244,18 @@
 .project-table__people {
   color: var(--dash-muted);
   display: block;
-  font-size: 0.82rem;
+  font-size: var(--dash-text-sm);
 }
 
 .project-table__concepts {
-  font-size: 0.85rem;
+  font-size: var(--dash-text-sm);
 }
 
 .nowrap {
   white-space: nowrap;
 }
 
-/* Wide tables scroll in their own box rather than pushing the page sideways. */
+/* Wide tables scroll in their own box rather than widening the page. */
 .table-scroll {
   overflow-x: auto;
 }
@@ -195,8 +264,9 @@
 
 .sl-markdown-content .project-note {
   border-left: 2px solid var(--dash-blue-bright);
-  margin: 1.5rem 0;
-  padding: 0.1rem 0 0.1rem 1.1rem;
+  margin: var(--dash-space-6) 0;
+  max-width: var(--dash-measure);
+  padding: 0 0 0 var(--dash-space-4);
 }
 
 .sl-markdown-content .project-note p {
@@ -207,26 +277,34 @@
   align-items: baseline;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem 0.6rem;
-  margin-bottom: 0.25rem !important;
+  gap: var(--dash-space-1) var(--dash-space-2);
+  margin-bottom: var(--dash-space-1) !important;
 }
 
 .project-note__meta {
   color: var(--dash-muted);
-  font-size: 0.85rem;
+  font-size: var(--dash-text-sm);
 }
 
 .project-note__body {
-  font-size: 0.94rem;
-  line-height: 1.55;
+  font-size: var(--dash-text-sm);
+  line-height: 1.6;
 }
 
-/* ----------------------------------------------------------- case studies */
+/* ----------------------------------------------------------- case studies
+
+   A case study leads with its title, one line of metadata, and the problem it
+   set out to solve. Everything else sits in a details panel.
+
+   The previous version rendered eight uppercase-labelled fields for every
+   project. With thirteen projects on the 2026 page that produced 104 labels on
+   one screenful-after-screenful page, and made forty genuinely different pieces
+   of work look like forty copies of the same form. */
 
 .case-study {
   border-top: 1px solid var(--dash-rule);
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: var(--dash-space-8);
+  padding-top: var(--dash-space-6);
 }
 
 .sl-markdown-content .case-study h3 {
@@ -238,47 +316,83 @@
   color: var(--dash-muted);
   display: flex;
   flex-wrap: wrap;
-  font-size: 0.85rem;
-  gap: 0.3rem 0.9rem;
-  margin-top: 0.4rem !important;
+  font-size: var(--dash-text-sm);
+  gap: var(--dash-space-1) var(--dash-space-3);
+  margin-top: var(--dash-space-1) !important;
 }
 
-.sl-markdown-content .case-study dl {
-  margin-top: 1rem;
+.sl-markdown-content .case-study__lead {
+  margin-top: var(--dash-space-3);
+  max-width: var(--dash-measure);
 }
 
-.sl-markdown-content .case-study dt {
-  color: var(--dash-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin-top: 0.85rem;
-  text-transform: uppercase;
+.case-study__detail {
+  margin-top: var(--dash-space-3);
 }
 
-.sl-markdown-content .case-study dd {
-  margin: 0.2rem 0 0;
+.case-study__detail > summary {
+  color: var(--sl-color-text-accent, var(--dash-blue));
+  cursor: pointer;
+  font-size: var(--dash-text-sm);
+  width: fit-content;
+}
+
+.case-study__detail > summary:focus-visible {
+  outline: 3px solid var(--dash-blue-bright);
+  outline-offset: 2px;
+}
+
+.case-study__body {
+  border-left: 1px solid var(--dash-rule);
+  margin-top: var(--dash-space-3);
+  padding-left: var(--dash-space-4);
+}
+
+.sl-markdown-content .case-study__body > p {
+  margin-top: var(--dash-space-3);
+  max-width: var(--dash-measure);
+}
+
+.sl-markdown-content .case-study__body > p:first-child {
+  margin-top: 0;
+}
+
+/* Evidence and implementation are reference material rather than narrative, so
+   they keep a label. These are the only two labels left in a case study. */
+.sl-markdown-content .case-study__body dl {
+  margin-top: var(--dash-space-4);
+}
+
+.sl-markdown-content .case-study__body dt {
+  margin-top: var(--dash-space-3);
+}
+
+.sl-markdown-content .case-study__body dd {
+  font-size: var(--dash-text-sm);
+  margin: var(--dash-space-1) 0 0;
+  max-width: var(--dash-measure);
 }
 
 /* --------------------------------------------------------------- rosters */
 
 .sl-markdown-content .roster {
   columns: 2 190px;
-  column-gap: 2rem;
+  column-gap: var(--dash-space-8);
   list-style: none;
-  margin: 1rem 0;
+  margin: var(--dash-space-4) 0;
   padding: 0;
 }
 
 .roster li {
   break-inside: avoid;
-  font-size: 0.92rem;
-  margin: 0 0 0.3rem;
+  font-size: var(--dash-text-sm);
+  margin: 0 0 var(--dash-space-1);
 }
 
 .roster__note {
   color: var(--dash-muted);
-  font-size: 0.85rem;
+  font-size: var(--dash-text-sm);
+  max-width: var(--dash-measure);
 }
 
 /* --------------------------------------------------------------- filters */
@@ -287,18 +401,13 @@
   align-items: flex-end;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1.5rem 0 0.75rem;
+  gap: var(--dash-space-4);
+  margin: var(--dash-space-6) 0 var(--dash-space-3);
 }
 
 .filter-bar label {
-  color: var(--dash-muted);
   display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
+  margin-bottom: var(--dash-space-1);
 }
 
 /* `--sl-color-black` is the page-background extreme and `--sl-color-white` the
@@ -308,14 +417,14 @@
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 4px;
   color: var(--sl-color-white);
-  font-size: 0.9rem;
+  font-size: var(--dash-text-sm);
   min-height: 2.25rem;
-  padding: 0.35rem 0.5rem;
+  padding: var(--dash-space-1) var(--dash-space-2);
 }
 
 .filter-count {
   color: var(--dash-muted);
-  font-size: 0.85rem;
+  font-size: var(--dash-text-sm);
 }
 
 /* ----------------------------------------------------------------- media */
@@ -328,7 +437,7 @@
 
 /* Intrinsic-ratio wrapper so embeds scale instead of overflowing. */
 .video {
-  margin: 1.5rem 0;
+  margin: var(--dash-space-6) 0;
   position: relative;
   width: 100%;
 }
@@ -375,11 +484,27 @@
   }
 
   .filter-bar > div {
-    margin-bottom: 0.85rem;
+    margin-bottom: var(--dash-space-3);
   }
 
   .filter-bar select {
     width: 100%;
+  }
+}
+
+/* A collapsed panel must not silently drop evidence from a printed page. */
+@media print {
+  .case-study__detail > summary {
+    display: none;
+  }
+
+  .case-study__body {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .case-study__detail > *:not(summary) {
+    display: block;
   }
 }
 

@@ -5,7 +5,6 @@ description: The current cohort. Agent tooling, generative media inside document
 
 import CohortProjects from '../../../../components/CohortProjects.astro';
 import CohortRoster from '../../../../components/CohortRoster.astro';
-import StatusKey from '../../../../components/StatusKey.astro';
 
 The largest single-year push since 2020, and the first where most of the work
 sits on top of the agent rather than beside it. Six student projects landed in
@@ -43,7 +42,10 @@ both in `master`; the step that would ship Ollama inside the installer is not.
 
 ## Projects
 
-<StatusKey />
+Each entry opens with the problem it set out to solve. The approach, the
+evidence behind its status label, and the source locations are one click below
+it. Labels are defined in the
+[status taxonomy](/reference/status-taxonomy/).
 
 <CohortProjects cohort="2026" />
 

@@ -137,30 +137,33 @@ have no tutorial section of their own. They are real and in `master`; what is
 missing is the walkthrough. Until someone writes one, the project write-ups are
 the most accurate description available.
 
+Four of them are document-level features. The
+[video generator](/research/cohorts/2026/#video-generator) plans a video as a
+sequence of scenes drawn from canvas content, and lets you re-prompt a single
+scene rather than starting over.
+[Policy testimony and checker documents](/research/cohorts/2026/#policy-testimony-and-policy-checker-documents)
+analyse a policy against the testimony linked to it and report back with
+citations you can filter by source. The
+[inline text actions](/research/cohorts/2026/#selection-aware-text-formatting-actions)
+reformat a selection in place, sending and returning HTML so styling survives
+the round trip. The
+[data-visualisation pipeline](/research/cohorts/2026/#data-visualisation-generation-pipeline)
+turns a single request into a usable chart.
+
+The two below are worth reading before you use any of the above, because they
+change what the AI surface can reach and where your documents go.
+
 <ProjectNote title="Agent tool registry and dynamic tool creation">
-  The reason there is an agent at all, and the thing to read before letting it loose on documents you care about: several of its tools write to the workspace rather than answering.
-</ProjectNote>
-
-<ProjectNote title="Video generator">
-  Plans a video as a sequence of scenes drawn from canvas content, with per-scene re-prompting so a bad scene three does not mean regenerating the whole thing.
-</ProjectNote>
-
-<ProjectNote title="Policy testimony and policy checker documents">
-  Analyses a policy against linked testimony documents and reports back with citations you can filter by source.
-</ProjectNote>
-
-<ProjectNote title="Selection-aware text formatting actions">
-  Inline reformatting from a text selection. Sends and receives HTML so styling survives, and snaps a partial selection to sentence boundaries first.
+  The reason there is an agent at all, and the thing to understand before letting it loose on documents you care about: several of its tools write to the workspace rather than answering questions about it.
 </ProjectNote>
 
 <ProjectNote title="Desktop build with local model execution">
-  The route that avoids sending documents to a hosted API: the desktop build can point the agent at a local Ollama instance instead. You install Ollama yourself, and the text features are the ones this covers; image and video generation still call external services.
+  The route that avoids sending documents to a hosted API: the desktop build can point the agent at a local Ollama instance instead. You install Ollama yourself, and this covers the text features; image and video generation still call external services.
 </ProjectNote>
 
 For the ideas underneath all of this, see
-[agents and tools](/concepts/agents/) for the acting
-surface and [generative media](/concepts/generative/) for
-the producing one.
+[agents and tools](/concepts/agents/) for the acting surface and
+[generative media](/concepts/generative/) for the producing one.
 
 :::note
 A copy of this page's text is also embedded in the application itself, in

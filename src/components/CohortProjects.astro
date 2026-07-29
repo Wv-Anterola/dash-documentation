@@ -1,11 +1,24 @@
 ---
 /**
- * The full case study for every project in a cohort.
+ * The case studies for one cohort.
  *
- * Sections render only when the underlying field exists, so a project with
- * thin evidence produces a short entry rather than a page of empty headings.
- * Each write-up ends with links back to the concepts it exercised, which is
- * the return direction of ProjectsForConcept.
+ * Each study shows its title, one line of metadata, and the problem it set out
+ * to solve. Approach, outcome, evidence, and implementation sit in a details
+ * panel underneath.
+ *
+ * The earlier version rendered eight uppercase-labelled fields per project.
+ * Every project record populates every field, so nothing ever varied: thirteen
+ * projects on the 2026 page produced 104 uppercase labels and made forty
+ * different pieces of work look like forty copies of one form.
+ *
+ * The panel is collapsed by default but never hidden:
+ *
+ * - `projectHref()` links from concept pages, the project index, and inline
+ *   project references all target `#<slug>`, so the script below opens the
+ *   panel a visitor was actually sent to.
+ * - Pagefind indexes the panel because it is in the DOM either way, so evidence
+ *   text still turns up in search.
+ * - Print styles in dash.css expand every panel.
  */
 import {
   projectsInCohort,
@@ -23,7 +36,7 @@ interface Props {
 const { cohort } = Astro.props;
 const rows = projectsInCohort(cohort);
 
-/** Inline code spans and links written as markdown inside the data file. */
+/** Inline code spans written as markdown inside the data file. */
 const md = (s: string) =>
   s
     .replace(/&/g, '&amp;')
@@ -32,51 +45,89 @@ const md = (s: string) =>
 ---
 
 {
-  rows.map((p) => (
-    <section class="case-study">
-      <h3 id={projectSlug(p.title)}>{p.title}</h3>
+  rows.map((p) => {
+    const slug = projectSlug(p.title);
+    /* The narrative fields, in the order someone would ask about them. */
+    const narrative = [p.approach, p.contribution, p.relation, p.outcome].filter(
+      (x): x is string => Boolean(x)
+    );
+    return (
+      <section class="case-study" id={`study-${slug}`}>
+        <h3 id={slug}>{p.title}</h3>
 
-      <p class="case-study__meta">
-        <StatusBadge status={p.status} />
-        <span>{p.area}</span>
-        {p.people && <span>{p.people.join(', ')}</span>}
-        {p.peopleUnresolved && <span>Contributor {p.peopleUnresolved}</span>}
-      </p>
+        <p class="case-study__meta">
+          <StatusBadge status={p.status} />
+          <span>{p.area}</span>
+          {p.people && <span>{p.people.join(', ')}</span>}
+          {p.peopleUnresolved && <span>Contributor {p.peopleUnresolved}</span>}
+        </p>
 
-      <dl>
-        {p.problem && (<><dt>Problem</dt><dd set:html={md(p.problem)} /></>)}
-        {p.approach && (<><dt>Approach</dt><dd set:html={md(p.approach)} /></>)}
-        {p.contribution && (<><dt>What was built</dt><dd set:html={md(p.contribution)} /></>)}
-        {p.relation && (<><dt>Relationship to Dash</dt><dd set:html={md(p.relation)} /></>)}
-        {p.outcome && (<><dt>Outcome</dt><dd set:html={md(p.outcome)} /></>)}
-        {p.evidence && (<><dt>Evidence for the status</dt><dd set:html={md(p.evidence)} /></>)}
-        {p.concepts.length > 0 && (
-          <>
-            <dt>Background reading</dt>
-            <dd>
-              {p.concepts.map((cid, i) => {
-                const c = conceptOf(cid);
-                return (
-                  <>
-                    {i > 0 && ', '}
-                    <a href={conceptHref(c)}>{c.title}</a>
-                  </>
-                );
-              })}
-            </dd>
-          </>
-        )}
-        {(p.tech || p.code) && (
-          <>
-            <dt>Implementation</dt>
-            <dd>
-              {p.tech && <span>{p.tech.join(', ')}</span>}
-              {p.tech && p.code && <span aria-hidden="true"> · </span>}
-              {p.code && <span set:html={md(p.code)} />}
-            </dd>
-          </>
-        )}
-      </dl>
-    </section>
-  ))
+        {p.problem && <p class="case-study__lead" set:html={md(p.problem)} />}
+
+        <details class="case-study__detail">
+          <summary>Approach, evidence, and implementation</summary>
+          <div class="case-study__body">
+            {narrative.map((text) => (
+              <p set:html={md(text)} />
+            ))}
+
+            <dl>
+              {p.evidence && (
+                <>
+                  <dt class="dash-label">Evidence for the status</dt>
+                  <dd set:html={md(p.evidence)} />
+                </>
+              )}
+              {(p.tech || p.code) && (
+                <>
+                  <dt class="dash-label">Implementation</dt>
+                  <dd>
+                    {p.tech && <span>{p.tech.join(', ')}</span>}
+                    {p.tech && p.code && <span aria-hidden="true"> · </span>}
+                    {p.code && <span set:html={md(p.code)} />}
+                  </dd>
+                </>
+              )}
+              {p.concepts.length > 0 && (
+                <>
+                  <dt class="dash-label">Background reading</dt>
+                  <dd>
+                    {p.concepts.map((cid, i) => {
+                      const c = conceptOf(cid);
+                      return (
+                        <>
+                          {i > 0 && ', '}
+                          <a href={conceptHref(c)}>{c.title}</a>
+                        </>
+                      );
+                    })}
+                  </dd>
+                </>
+              )}
+            </dl>
+          </div>
+        </details>
+      </section>
+    );
+  })
 }
+
+<script>
+  // Open the case study a visitor was linked to. Every project reference on the
+  // site resolves to `#<slug>`, so without this a reader following "see how the
+  // graph view connects to the layout engine" would land on a collapsed panel.
+  const openTarget = () => {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    if (!hash) return;
+    const heading = document.getElementById(hash);
+    const study = heading?.closest('.case-study');
+    const detail = study?.querySelector('details');
+    if (!detail || detail.open) return;
+    detail.open = true;
+    // The panel expanding moves the heading, so put it back under the cursor.
+    heading!.scrollIntoView({ block: 'start' });
+  };
+
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+</script>
