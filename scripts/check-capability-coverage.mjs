@@ -3,10 +3,12 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const [projectsSource, capabilitiesSource, visualsSource] = await Promise.all([
+const [projectsSource, capabilitiesSource, visualsSource, creatorsSource, pageVisualsSource] = await Promise.all([
   readFile(path.join(root, 'src/data/projects.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/capabilities.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/visuals.ts'), 'utf8'),
+  readFile(path.join(root, 'src/data/creators.ts'), 'utf8'),
+  readFile(path.join(root, 'src/data/pageVisuals.ts'), 'utf8'),
 ]);
 
 const projectPattern =
@@ -100,6 +102,34 @@ for (const poster of visualPosters) {
   }
 }
 
+const creatorLabels = [
+  ...creatorsSource.matchAll(/\{\s*label:\s*'([^']+)'/g),
+].map((match) => match[1]);
+const duplicateCreatorLabels = creatorLabels.filter(
+  (label, index) => creatorLabels.indexOf(label) !== index
+);
+const missingCreatorImages = [];
+for (const match of creatorsSource.matchAll(/image:\s*(captured|poster)\('([^']+)'\)/g)) {
+  const directory = match[1] === 'captured' ? 'creators' : 'visuals';
+  const candidate = path.join(root, 'public/assets/images', directory, `${match[2]}.webp`);
+  try {
+    await readFile(candidate);
+  } catch {
+    missingCreatorImages.push(`/${directory}/${match[2]}.webp`);
+  }
+}
+
+const missingPageVisuals = [];
+for (const match of pageVisualsSource.matchAll(/src:\s*(current|poster)\('([^']+)'\)/g)) {
+  const directory = match[1] === 'current' ? 'current' : 'visuals';
+  const candidate = path.join(root, 'public/assets/images', directory, `${match[2]}.webp`);
+  try {
+    await readFile(candidate);
+  } catch {
+    missingPageVisuals.push(`/${directory}/${match[2]}.webp`);
+  }
+}
+
 if (
   unknown.length ||
   unmappedIntegrated.length ||
@@ -108,7 +138,11 @@ if (
   unknownProjectVisuals.length ||
   missingCapabilityVisuals.length ||
   unknownCapabilityVisuals.length ||
-  missingVisualPosters.length
+  missingVisualPosters.length ||
+  creatorLabels.length !== 38 ||
+  duplicateCreatorLabels.length ||
+  missingCreatorImages.length ||
+  missingPageVisuals.length
 ) {
   if (unknown.length) {
     console.error('Capability registry references unknown projects:');
@@ -143,12 +177,28 @@ if (
     for (const poster of missingVisualPosters) console.error(`  - ${poster}.webp`);
     console.error('Run `npm run visuals` to rebuild the poster set.');
   }
+  if (creatorLabels.length !== 38) {
+    console.error(`Expected 38 documented creator entries, found ${creatorLabels.length}.`);
+  }
+  if (duplicateCreatorLabels.length) {
+    console.error('Creator atlas contains duplicate labels:');
+    for (const label of new Set(duplicateCreatorLabels)) console.error(`  - ${label}`);
+  }
+  if (missingCreatorImages.length) {
+    console.error('Creator cards reference missing images:');
+    for (const image of missingCreatorImages) console.error(`  - ${image}`);
+  }
+  if (missingPageVisuals.length) {
+    console.error('Automatic page visuals reference missing images:');
+    for (const image of missingPageVisuals) console.error(`  - ${image}`);
+  }
   process.exitCode = 1;
 } else {
   console.log(
     `Capability coverage complete: ${projects.length} projects, ` +
       `${projects.filter((project) => project.status === 'integrated').length} integrated projects mapped, ` +
       `${new Set(docsTargets).size} canonical documentation targets verified, ` +
-      `${projectVisualTitles.size} project visuals and ${capabilityVisualIds.size} capability visuals verified.`
+      `${projectVisualTitles.size} project visuals, ${capabilityVisualIds.size} capability visuals, ` +
+      `${creatorLabels.length} creator cards, and automatic page visuals verified.`
   );
 }

@@ -6,6 +6,7 @@ sidebar:
 ---
 
 import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+import CreatorAtlas from '../../../components/CreatorAtlas.astro';
 
 <p class="lede">
   This page names controls that the interface often communicates with an icon,
@@ -15,6 +16,19 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Three words the interface assumes you know
+
+| Word | Deliberately simple meaning |
+| :--- | :--- |
+| **Button** | Something you click to perform an action or open a panel. A button is a control; it is not saved content unless it is specifically the **Button** creator. |
+| **Document** | One saved thing in Dash: a note, picture, collection, map, task, agent, link, or other content object. |
+| **Node** | Usually a document as you can see it inside a canvas, collection, graph, or agent view. “Create a node” normally means “create a document and show it here.” |
+
+If an instruction says **select the node**, click the visible document. If it
+says **open its properties**, keep that document selected and open the right
+panel. If it says **create a node**, use a creator in **Tools** or type `:` on a
+canvas.
+
 The inventory combines three sources:
 
 - a live pass through the current Dash client on 29 July 2026;
@@ -23,10 +37,12 @@ The inventory combines three sources:
 - the document and collection enums in `DocumentTypes.ts`.
 
 The captured runtime and checked-out TypeScript are not perfectly identical.
-The running compiled client exposes a **Trip Planner** creator and workspace
-that are not recoverable as a dedicated source entry in the checked-out
-`creatorBtnDescriptors` registry. This page calls out that drift instead of
-pretending the two inventories match.
+The running compiled client exposes **Trip Planner Tool** and **Trip Doc**
+creators that are not recoverable as dedicated entries in the checked-out
+`creatorBtnDescriptors` registry. The source registry, meanwhile, contains
+newer developer and agent creators that the captured runtime does not expose.
+The creator cards label both states instead of pretending the two inventories
+match.
 
 ## The persistent frame
 
@@ -193,45 +209,7 @@ Dragging a creator lets you choose its position. A label in this palette is not
 always a `DocumentType`: several create a preconfigured collection/template,
 and `replviewer` opens an overlay rather than a persistent document.
 
-| Palette label | Creates | Use it for | Availability / important distinction |
-| :--- | :--- | :--- | :--- |
-| **Note** | Rich-text document | General editable notes and embedded content. | Core. Double-clicking an empty canvas is the faster route. |
-| **Flashcard** | Flashcard template | Prompt/answer practice in a collection-backed interface. | Specialized template, not a separate enum value. |
-| **Math** | Equation document | Editable symbolic expressions and evaluation. | Distinct from the Ink group’s handwritten Math mode. |
-| **Mermaids** | Mermaid diagram template | Diagrams generated from Mermaid source. | Template/composed view; the plural label is historical. |
-| **Plotly** | Plotly visualization template | Scripted interactive charts. | Template/composed view; not the same as the CSV-backed DataViz document. |
-| **Notes** | Note-board collection | Reading and writing across multiple note columns. | Collection template, not a single note. |
-| **Image** | Image document | Imported, generated, or edited raster media. | Starts empty until a source is supplied. |
-| **Col** | Collection | A container whose perspective can become freeform, schema, graph, calendar, and more. | `Col` means **Collection**. The click and drag paths use different default placement templates. |
-| **Html** | HTML document | Embedded authored HTML. | Generated HTML may have additional AI editing on branch builds. |
-| **Web** | Web document | An embedded webpage with Back, Forward, and URL controls. | Remote sites can refuse embedding. |
-| **Compare** | Comparison wrapper | Side-by-side comparison of documents or views. | A structural wrapper, not a copied dataset. |
-| **Diagram** | Source-driven diagram document | Rendered diagrams whose source remains editable. | Do not confuse with freehand Ink or Smart Draw. |
-| **Function** | Function-plot document | Plotting mathematical functions. | Separate from Equation and Plotly documents. |
-| **Audio** | Audio recorder/player | Recording or importing audio with a navigable timeline. | Opens as an overlay by default. |
-| **Recording** | Audio-note recording | A compact recorded note. | Separate serialized type from the general Audio document. |
-| **Map** | Mapbox map document | Places, pushpins, routes, linked notes, and spatial stories. | Requires configured map service access for tiles/search. |
-| **Trip Planner** | Trip-planning tool/preset | Multi-stop routes, resources, overview, and planning states. | Visible in the captured compiled runtime; the dedicated creator source entry is missing from the checked-out TypeScript and is tracked as source/build drift. |
-| **Chat Assist** | Retrieval chat document | Asking questions about Dash material. | Answers depend on the configured model/retrieval service. |
-| **Grab** | Screen-grabber overlay | Capturing part of the screen as a document. | Developer mode only; overlay, not an ordinary canvas node while capturing. |
-| **WebCam** | Webcam recorder overlay | Capturing camera input. | Developer mode only; browser/device permission required. |
-| **Button** | Action button document | Running a configured click script. | The visible label does not explain the script; inspect Properties before trusting an unfamiliar button. |
-| **Script** | Scripting document | Editing and running Dash scripts. | Developer mode only; scripts can mutate persistent documents. |
-| **DataViz** | CSV-backed data-visualization document | Tables, plots, linked filtering, and generated analyses. | Structured-data workflow, not Plotly’s free-form template. |
-| **Scrapbook** | Scrapbook template | Date-oriented collections of mixed media and notes. | Specialized document type built on the shared model. |
-| **Journal** | Daily journal document | Recurring dated writing. | The creator supplies the current-date-oriented template. |
-| **3D Model** | 3D viewer document | Loading and orbiting supported models. | A viewer; the separate 3D sketch/CAD branch is not this button. |
-| **Task** | Task document | Completion state, scheduling, and task metadata. | First-class document that can be collected and linked. |
-| **Agent** | Acting agent document | Tool-using inspection and workspace changes. | External model/service may be required; review mutations through undo/history. |
-| **API** | API connector document | Calling and mapping an external API into Dash. | Present in the current checkout; operational setup and credentials are connector-specific. |
-| **Policy Agent** | Policy-agent document | Agent-assisted policy analysis workflow. | Present in the current checkout; distinct from the earlier policy testimony/checker type names documented in the master snapshot. |
-| **Policy Doc** | Policy document | Policy content prepared for the policy-agent workflow. | Present in the current checkout. |
-| **API Demo** | Live-data pipeline preset | Demonstrating a configured connector-to-Dash pipeline. | A complete preset/dashboard, not a primitive node. |
-| **PPT Slide** | Bullet-slide template | A conventional slide-shaped document. | Developer mode only and opens as an overlay. Presentation trails do not require this format. |
-| **View Slide** | View-state slide template | Presenting a saved Dash view. | Developer mode only and opens as an overlay. |
-| **MetaNote** | Metadata-driven note template | Showing selected fields through a reusable layout. | Developer mode only; delegates a template over data rather than copying it. |
-| **replviewer** | Calculator/scripting REPL overlay | Evaluating expressions interactively. | Overlay UI, not a persistent document despite appearing in the creator palette. |
-| **Video Gen** | Video-generator document | Building and generating scene-based video. | External generation service required. |
+<CreatorAtlas />
 
 ## Tabs, tiles, and canvas controls
 
@@ -281,4 +259,3 @@ Treat that as a documentation defect. Record:
 Then update this atlas, the relevant operating guide, and—when the behavior is
 reusable—the [capability catalog](/capabilities/). A tooltip alone is not
 complete documentation.
-

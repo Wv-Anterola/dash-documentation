@@ -1,0 +1,24 @@
+---
+import { creators } from '../data/creators';
+---
+
+<div class="creator-atlas">
+  {creators.map((creator) => (
+    <article class="creator-card">
+      <div class="creator-card__media">
+        <img src={creator.image} alt={creator.imageAlt} loading="lazy" decoding="async" />
+      </div>
+      <div class="creator-card__body">
+        <div class="creator-card__heading">
+          <h3 id={`creator-${creator.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{creator.label}</h3>
+          <span class:list={['creator-card__status', { 'creator-card__status--source': creator.availability === 'Present in current source' }]}>
+            {creator.availability}
+          </span>
+        </div>
+        <p><strong>Clicking it makes:</strong> {creator.makes}.</p>
+        <p><strong>In plain words:</strong> {creator.plain}</p>
+        <p class="creator-card__note">{creator.important}</p>
+      </div>
+    </article>
+  ))}
+</div>

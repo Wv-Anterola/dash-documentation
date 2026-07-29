@@ -1,0 +1,22 @@
+---
+import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
+import { pageVisualForPath } from '../data/pageVisuals';
+
+const visual = pageVisualForPath(Astro.url.pathname);
+---
+
+<DefaultPageTitle />
+
+<figure class="page-visual">
+  <img
+    src={visual.src}
+    alt={visual.alt}
+    loading="eager"
+    decoding="async"
+    style={`object-position: ${visual.position ?? 'center'};`}
+  />
+  <figcaption>
+    <span>{visual.label}</span>
+    <strong>In plain words:</strong> {visual.plain}
+  </figcaption>
+</figure>
