@@ -48,21 +48,21 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'Policy testimony and policy checker documents': visual(
     poster('policy-checker'),
-    'Linked Dash documents with visible relationship lines and navigation',
-    'Policy testimony and checker documents are first-class linked documents. The archived recording demonstrates that shared relationship model; a checker-specific capture is still preferred.',
+    'Creating a link from a Dash annotation document back to source material',
+    'Policy testimony and checker documents depend on source-level citation links. This recording shows an annotation document being connected to evidence.',
     'Archived feature recording',
     {
-      source: '/assets/gifs/gettingstarted/dash-show-links.gif',
+      source: '/assets/gifs/gettingstarted/dash-link-annotation-document.gif',
       brief: 'Capture a policy checker beside linked testimony with one citation selected and the source filter visible.',
     }
   ),
   'Graph view for collections': visual(
     poster('graph-view'),
-    'Dash documents displayed in several collection perspectives',
+    'Changing the view used to arrange one Dash collection',
     'The graph view joined Dash’s existing family of collection perspectives. This recovered overview shows the view system; a graph-specific recording should replace it when available.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash2.jpg',
+      source: '/assets/gifs/views/dash-change-view.gif',
       brief: 'Capture a graph collection with at least eight nodes, visible link edges, a hovered neighbourhood, and the physics settings panel.',
     }
   ),
@@ -78,18 +78,18 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'Life coach workspace': visual(
     poster('life-coach'),
-    'A current Dash planning workspace with overview cards, mapped stops, route, resources, and planner',
-    'A current planning workspace built from the life-coach document family, events, locations, maps, and generated workspace structure.',
+    'The Life Coach document creator in the current Dash Tools panel',
+    'This current creator is direct interface evidence that the life-coach document family remains reachable from Dash.',
     'Current product capture',
-    { source: '/assets/images/current/dash-trip-planner-workspace.webp', recorded: '2026-07-29' }
+    { source: '/assets/images/creators/trip-doc.webp', recorded: '2026-07-29' }
   ),
   'Sketch-to-CAD drawing in 3D': visual(
     poster('sketch-3d'),
-    'Ink strokes being created and edited on a Dash canvas',
-    'The branch combines stroke input with a 3D scene and CAD generation. The recovered ink interaction shows only the drawing input shared with that prototype.',
+    'A selected ink drawing being reshaped with Dash editing controls',
+    'The branch combines editable stroke input with a 3D scene and CAD generation. This recording shows the drawing-side interaction shared with that prototype.',
     'Representative Dash interface',
     {
-      source: '/assets/gifs/features/inkdraw.gif',
+      source: '/assets/gifs/features/inkedit3.gif',
       brief: 'Capture the branch with the 2D sketch, generated 3D geometry, camera controls, and regeneration action visible.',
     }
   ),
@@ -102,11 +102,11 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'Video generator': visual(
     poster('video-generator'),
-    'A Dash canvas containing several AI-generated media documents',
-    'The video generator produces media as Dash documents. This recovered generative-media overview is representative; the generator panel itself still needs a clean capture.',
+    'A temporal-media document being edited in Dash timeline view',
+    'The video generator produces media as Dash documents. This recording shows the temporal-media timeline that receives and edits video output.',
     'Representative Dash interface',
     {
-      source: '/assets/images/gen_ai.png',
+      source: '/assets/gifs/video/timelineview.gif',
       brief: 'Capture the prompt, model and duration controls, generation state, and completed video document together.',
     }
   ),
@@ -130,17 +130,17 @@ export const projectVisuals: Record<string, VisualEvidence> = {
     'The teaching prototype combines formatted content and symbolic expressions. This is the shared document surface, not a recovered probability lesson.',
     'Representative Dash interface',
     {
-      source: '/assets/images/environment/text_doc.png',
+      source: '/assets/images/environment/text_doc2.gif',
       brief: 'Capture one complete probability exercise with editable parameters, equation output, and explanatory text.',
     }
   ),
   'Desktop build with local model execution': visual(
     poster('desktop-local'),
-    'The current Dash home screen showing saved and shared dashboards',
+    'Managing dashboards and workspace tabs in the Dash application shell',
     'The Electron build packages the same dashboard experience and can route agent work to a separately installed local model.',
     'Representative Dash interface',
     {
-      source: '/assets/images/current/dash-home-workspaces.webp',
+      source: '/assets/gifs/environment/dash-managing.gif',
       brief: 'Capture the Electron window chrome and a successful local-model response with the configured provider visible.',
     }
   ),
@@ -156,105 +156,105 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'Selection-aware text formatting actions': visual(
     poster('selection-formatting'),
-    'AI-generated text being inserted into a selected Dash text document',
+    'An AI-assisted edit being applied to selected Dash document content',
     'Selection-aware actions operate on the user’s active text context and return editable document content.',
     'Exact archived demo',
-    { source: '/assets/gifs/ai/ai-text.gif' }
+    { source: '/assets/gifs/ai/ai-edit-2.gif' }
   ),
   'Agent tool registry and dynamic tool creation': visual(
     poster('agent-tools'),
-    'A freeform Dash workspace containing several documents and active interface tools',
-    'The agent tool registry exposes workspace operations over the same document canvas. A tool-registry inspector capture is still needed.',
+    'The current Dash Tools panel open beside a workspace',
+    'The agent tool registry exposes operations over the same document types people can create from this panel. A tool-registry inspector capture is still needed.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash1.png',
+      source: '/assets/images/current/dash-tools-panel.webp',
       brief: 'Capture the agent tool list, one dynamically created tool definition, its approval or execution state, and the resulting canvas change.',
     }
   ),
   'Canvas awareness and UI control for the agent': visual(
     poster('canvas-aware-agent'),
-    'A labeled Dash interface showing the canvas, bars, panels, and interaction regions',
-    'Canvas awareness lets the agent reason about and control the same interface regions a person uses.',
+    'The current Dash Properties panel open beside a selected workspace item',
+    'Canvas awareness lets the agent reason about and control visible interface state such as the selected document and its properties.',
     'Representative Dash interface',
-    { source: '/assets/images/environment/dash-labeled-interface.png' }
+    { source: '/assets/images/current/dash-properties-panel.webp', recorded: '2026-07-29' }
   ),
   'Tutorial agent': visual(
     poster('tutorial-agent'),
-    'A labeled Dash interface showing the major controls a tutorial can explain',
-    'The tutorial agent guides a new user through the real Dash interface and its core controls.',
+    'A Dash document context toolbar with its actions labeled',
+    'The tutorial agent guides a new user through concrete controls such as those on this context toolbar.',
     'Representative Dash interface',
     {
-      source: '/assets/images/environment/dash-labeled-interface.png',
+      source: '/assets/images/getting-started/context-toolbar.png',
       brief: 'Capture the tutorial prompt, highlighted target control, progress state, and the resulting workspace action.',
     }
   ),
   'Scrapbook documents': visual(
     poster('scrapbook'),
-    'Mixed media documents arranged together on a freeform Dash canvas',
-    'Scrapbooks collect heterogeneous Dash documents into a recurring, date-oriented workspace.',
+    'The Scrapbook document creator in the current Dash Tools panel',
+    'The current creator shows where a scrapbook begins before it collects heterogeneous documents into a recurring workspace.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash1.png',
+      source: '/assets/images/creators/scrapbook.webp',
       brief: 'Capture a scrapbook with one date heading and a mix of text, image, web, and linked items.',
     }
   ),
   'Symbolic mathematics in documents': visual(
     poster('symbolic-math'),
-    'A rich text document open in Dash with formatted inline content',
-    'Symbolic mathematics is evaluated inside the rich-text editing surface. The recovered text capture does not yet show an evaluated expression.',
+    'The Math document creator in the current Dash Tools panel',
+    'The creator exposes the symbolic-mathematics document family; a capture of an evaluated expression is still needed.',
     'Representative Dash interface',
     {
-      source: '/assets/images/environment/text_doc.png',
+      source: '/assets/images/creators/math.webp',
       brief: 'Capture an editable expression, its evaluated result, and surrounding explanatory text in the same document.',
     }
   ),
   '3D model documents': visual(
     poster('model-documents'),
-    'A Dash canvas containing documents in a spatial freeform arrangement',
-    '3D models are embedded as first-class documents on the same canvas. No clean viewer-specific archive image was recovered.',
+    'The 3D Model document creator in the current Dash Tools panel',
+    'The creator is current evidence that 3D models remain a first-class document family. A clean viewer interaction is still needed.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash1.png',
+      source: '/assets/images/creators/3d-model.webp',
       brief: 'Capture a loaded 3D model with orbit controls, model document chrome, and a neighbouring linked Dash document.',
     }
   ),
   'Diagram documents from source code': visual(
     poster('diagram-documents'),
-    'A hand-drawn diagram being created inside Dash',
-    'Diagram documents render structured source, while this recovered recording shows the adjacent ink-based diagram workflow. The source-rendered view remains unverified.',
+    'The Diagram document creator in the current Dash Tools panel',
+    'The creator exposes the structured diagram document family. A source-editor and rendered-result capture remains the preferred evidence.',
     'Representative Dash interface',
     {
-      source: '/assets/gifs/features/inkdraw.gif',
+      source: '/assets/images/creators/diagram.webp',
       brief: 'Capture the diagram source editor and rendered diagram side by side, with the document type visible.',
     }
   ),
   'Calendar and scheduling for the agent': visual(
     poster('agent-calendar'),
-    'A current planning workspace with stops, dates, and mapped route information',
-    'Agent scheduling operates over temporal and spatial Dash documents. This current planning workspace demonstrates that combined context.',
+    'A map-based story moving through places and linked Dash documents',
+    'Agent scheduling operates over temporal and spatial Dash documents. This archived map story demonstrates the spatial half of that combined context.',
     'Representative Dash interface',
     {
-      source: '/assets/images/current/dash-trip-planner-detail.webp',
+      source: '/assets/gifs/environment/map_story.gif',
       brief: 'Capture the agent calendar tool, a proposed event, conflict handling, and the resulting calendar entry.',
     }
   ),
   'Task documents': visual(
     poster('task-documents'),
-    'Several editable documents arranged on a Dash canvas',
-    'Tasks use the common document model and can be arranged, linked, and collected with other content.',
+    'The Task document creator in the current Dash Tools panel',
+    'The current creator shows where a task starts before it is arranged, linked, and collected with other content.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash1.png',
+      source: '/assets/images/creators/task.webp',
       brief: 'Capture a task document with completion, due-date, assignee, and recurrence controls visible.',
     }
   ),
   'Mesh tooling': visual(
     poster('mesh-tooling'),
-    'A freeform Dash canvas capable of hosting specialized visual documents',
-    'The mesh branch extends the 3D document family. No branch-specific mesh screenshot was recovered from the documentation archive.',
+    'The REPL Viewer document creator in the current Dash Tools panel',
+    'The mesh branch extends specialized computational and 3D document families. This is a distinct nearby creator, not a branch-specific mesh capture.',
     'Representative Dash interface',
     {
-      source: '/assets/images/dash1.png',
+      source: '/assets/images/creators/replviewer.webp',
       brief: 'Capture an imported mesh with selection, material or transform controls, and an edited result.',
     }
   ),
@@ -326,31 +326,31 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'User-controlled document recommendations': visual(
     poster('document-recommendations'),
-    'The Dash search and discovery interface returning document results',
-    'Recommendations were explored as a user-directed discovery workflow. The recovered search recording shows the surrounding interface, not the branch-specific controls.',
+    'Opening a selected Dash document in the focused lightbox view',
+    'Recommendations were explored as a user-directed discovery workflow. This lightbox recording shows how an accepted item is inspected, not the branch-specific recommendation controls.',
     'Representative Dash interface',
     {
-      source: '/assets/gifs/features/andy_search.gif',
+      source: '/assets/gifs/gettingstarted/dash-lightbox.gif',
       brief: 'Capture recommendation controls, the reason for one recommendation, and the accept or dismiss interaction.',
     }
   ),
   'Sentiment analysis and containerised deployment': visual(
     poster('sentiment-deployment'),
-    'A Dash data visualization document combining records and a rendered chart',
-    'The separate deployment analyzed document data and returned structured results. This is the receiving Dash data surface, not the container service.',
+    'AI-generated explanatory text appearing beside a Dash data visualization',
+    'The separate deployment analyzed document data and returned structured results. This archived AI-and-data interaction represents the receiving surface, not the container service.',
     'Representative Dash interface',
     {
-      source: '/assets/images/environment/dataViz_doc.png',
+      source: '/assets/gifs/dataViz/aiText.gif',
       brief: 'Capture sentiment results beside their source documents and include a small architecture inset for the container boundary.',
     }
   ),
   'Component library extraction': visual(
     poster('component-library'),
-    'The Dash interface with its reusable navigation, toolbar, panel, and document components labeled',
-    'The component-library project extracted reusable interface primitives from the production Dash shell.',
+    'A close view labeling the reusable chrome around one Dash document',
+    'The component-library project extracted reusable interface primitives such as this document frame, title bar, and action chrome.',
     'Representative Dash interface',
     {
-      source: '/assets/images/environment/dash-labeled-interface.png',
+      source: '/assets/images/getting-started/document-chrome.png',
       brief: 'Capture the component Storybook with navigation, buttons, inputs, menus, and document chrome visible in one grid.',
     }
   ),
@@ -368,7 +368,7 @@ export const projectVisuals: Record<string, VisualEvidence> = {
     'A CSV-backed Dash data visualization document with table and chart controls',
     'Data visualization documents make structured records explorable as tables and charts without leaving the canvas.',
     'Exact archived demo',
-    { source: '/assets/images/environment/dataViz_doc.png' }
+    { source: '/assets/gifs/dataViz/simple_dataViz.gif' }
   ),
   'Novice mode and homepage': visual(
     poster('novice-home'),
@@ -386,10 +386,10 @@ export const projectVisuals: Record<string, VisualEvidence> = {
   ),
   'Collections and view types': visual(
     poster('collection-views'),
-    'The same Dash documents shown through multiple collection view types',
-    'One collection can change perspective without duplicating or converting its documents.',
+    'Opening and navigating a collection nested inside another Dash collection',
+    'Nested collections demonstrate that a collection is itself a document; its view can still change without duplicating its children.',
     'Exact archived demo',
-    { source: '/assets/images/dash2.jpg' }
+    { source: '/assets/gifs/gettingstarted/dash-nested-collection.gif' }
   ),
   'Linking and annotation': visual(
     poster('linking-annotation'),
@@ -407,22 +407,22 @@ export const capabilityVisuals: Record<string, VisualEvidence> = {
     'A formatted text document open on a Dash canvas',
     'Rich text remains embedded in the shared document and selection model.',
     'Exact archived demo',
-    { source: '/assets/images/environment/text_doc.png' }
+    { source: '/assets/images/environment/dash-text-toolbar.png' }
   ),
   'media-documents': visual(
-    '/assets/images/current/dash-tools-panel.webp',
-    'The current Dash Tools panel showing creators for image, HTML, web, audio, recording, map, 3D, and other document types',
-    'The current document palette exposes heterogeneous media and specialized content as first-class Dash documents.',
-    'Current product capture',
-    { recorded: '2026-07-29' }
+    poster('media-documents'),
+    'A Dash workspace overview containing several different document families',
+    'Dash treats heterogeneous media and specialized content as first-class documents on one canvas.',
+    'Exact archived demo',
+    { source: '/assets/images/environment/overview.png' }
   ),
   'drawing-diagrams': projectVisuals['Smart Draw and generative drawing'],
   'structured-personal-documents': visual(
-    '/assets/images/current/dash-tools-panel.webp',
-    'The current Dash Tools panel showing task, scrapbook, and journal document creators',
-    'Tasks, scrapbooks, and journals are directly creatable from the current document palette.',
+    poster('structured-personal-documents'),
+    'The Journal document creator in the current Dash Tools panel',
+    'Journal is one of the structured personal document families available from the current creator palette.',
     'Current product capture',
-    { recorded: '2026-07-29' }
+    { source: '/assets/images/creators/journal.webp', recorded: '2026-07-29' }
   ),
   'policy-analysis': projectVisuals['Policy testimony and policy checker documents'],
   'three-dimensional-content': projectVisuals['3D model documents'],
@@ -466,10 +466,10 @@ export const capabilityVisuals: Record<string, VisualEvidence> = {
   'desktop-local-models': projectVisuals['Desktop build with local model execution'],
   'workspace-interface': visual(
     poster('workspace-interface'),
-    'The current Dash workspace with top bar, sidebar, tab strip, freeform canvas, map, and planner',
-    'The current shell coordinates dashboards, tabs, tiles, panels, and interaction modes around one document canvas.',
-    'Current product capture',
-    { source: '/assets/images/current/dash-trip-planner-workspace.webp', recorded: '2026-07-29' }
+    'The Dash interface labeled with its top bar, document canvas, panels, and tool regions',
+    'The shell coordinates dashboards, tabs, tiles, panels, and interaction modes around one document canvas.',
+    'Exact archived demo',
+    { source: '/assets/images/environment/dash-labeled-interface.png' }
   ),
   'undo-history': projectVisuals['Post-hoc oversight of prompt-injected agents'],
   'developer-platform': projectVisuals['Component library extraction'],

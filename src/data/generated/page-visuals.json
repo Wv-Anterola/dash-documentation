@@ -1,0 +1,246 @@
+{
+  "/": {
+    "src": "/assets/images/current/dash-trip-planner-detail.webp",
+    "alt": "Dash demonstration of Trip Planner Detail."
+  },
+  "/architecture": {
+    "src": "/assets/images/dash1.png",
+    "alt": "Dash demonstration of Dash1."
+  },
+  "/architecture/agents-ai": {
+    "src": "/assets/gifs/ai/ai-websearch-2.gif",
+    "alt": "Dash demonstration of Ai Websearch 2."
+  },
+  "/architecture/collections-views": {
+    "src": "/assets/images/environment/views/freeform_view.gif",
+    "alt": "Dash demonstration of Freeform View."
+  },
+  "/architecture/desktop-local-models": {
+    "src": "/assets/images/environment/homemenu.png",
+    "alt": "Dash demonstration of Homemenu."
+  },
+  "/architecture/document-model": {
+    "src": "/assets/gifs/gettingstarted/dash-create-text.gif",
+    "alt": "Dash demonstration of Create Text."
+  },
+  "/architecture/extension-points": {
+    "src": "/assets/gifs/environment/colon-menu.gif",
+    "alt": "Dash demonstration of Colon Menu."
+  },
+  "/architecture/import-export": {
+    "src": "/assets/gifs/gettingstarted/dash-drag-drop.gif",
+    "alt": "Dash demonstration of Drag Drop."
+  },
+  "/architecture/links-trails": {
+    "src": "/assets/gifs/gettingstarted/dash-trail-transition.gif",
+    "alt": "Dash demonstration of Trail Transition."
+  },
+  "/architecture/rendering-lifecycle": {
+    "src": "/assets/gifs/environment/dash-flyout.gif",
+    "alt": "Dash demonstration of Flyout."
+  },
+  "/architecture/server-storage-security": {
+    "src": "/assets/gifs/gettingstarted/dash-pin-doc.gif",
+    "alt": "Dash demonstration of Pin Doc."
+  },
+  "/architecture/system-map": {
+    "src": "/assets/gifs/environment/menu-panel.gif",
+    "alt": "Dash demonstration of Menu Panel."
+  },
+  "/architecture/undo-provenance": {
+    "src": "/assets/gifs/gettingstarted/recently-closed.gif",
+    "alt": "Dash demonstration of Recently Closed."
+  },
+  "/capabilities/ai-automation": {
+    "src": "/assets/gifs/ai/ai-firefly-template-image-1.gif",
+    "alt": "Dash demonstration of Ai Firefly Template Image 1."
+  },
+  "/capabilities/connections-and-trails": {
+    "src": "/assets/gifs/trails/arrows-present-together.gif",
+    "alt": "Dash demonstration of Arrows Present Together."
+  },
+  "/capabilities/documents": {
+    "src": "/assets/images/environment/image_doc3.png",
+    "alt": "Dash demonstration of Image Doc3."
+  },
+  "/capabilities/organization": {
+    "src": "/assets/gifs/views/schema_columns.gif",
+    "alt": "Dash demonstration of Schema Columns."
+  },
+  "/concepts": {
+    "src": "/assets/gifs/gettingstarted/dash-show-links.gif",
+    "alt": "Dash demonstration of Show Links."
+  },
+  "/concepts/agents": {
+    "src": "/assets/gifs/dataViz/aiChat.gif",
+    "alt": "Dash demonstration of AiChat."
+  },
+  "/concepts/collections": {
+    "src": "/assets/gifs/gettingstarted/dash-create-collection-marquee.gif",
+    "alt": "Dash demonstration of Create Collection Marquee."
+  },
+  "/concepts/documents": {
+    "src": "/assets/gifs/gettingstarted/dash-image-text-embed.gif",
+    "alt": "Dash demonstration of Image Text Embed."
+  },
+  "/concepts/generative": {
+    "src": "/assets/gifs/ai/ai-firefly-image-1.gif",
+    "alt": "Dash demonstration of Ai Firefly Image 1."
+  },
+  "/concepts/links": {
+    "src": "/assets/gifs/links/linkboard.gif",
+    "alt": "Dash demonstration of Linkboard."
+  },
+  "/concepts/trails": {
+    "src": "/assets/gifs/trails/miniplayer.gif",
+    "alt": "Dash demonstration of Miniplayer."
+  },
+  "/contributing/joining": {
+    "src": "/assets/gifs/environment/dash-drag-tab-create-tile.gif",
+    "alt": "Dash demonstration of Drag Tab Create Tile."
+  },
+  "/development": {
+    "src": "/assets/gifs/environment/rename-dashboard.gif",
+    "alt": "Dash demonstration of Rename Dashboard."
+  },
+  "/development/add-agent-tool": {
+    "src": "/assets/gifs/ai/ai-pdf.gif",
+    "alt": "Dash demonstration of Ai Pdf."
+  },
+  "/development/add-collection-view": {
+    "src": "/assets/gifs/dataViz/fromSchema_dataViz.gif",
+    "alt": "Dash demonstration of FromSchema DataViz."
+  },
+  "/development/add-document-type": {
+    "src": "/assets/gifs/gettingstarted/createnode.gif",
+    "alt": "Dash demonstration of Createnode."
+  },
+  "/development/extension-points": {
+    "src": "/assets/gifs/trails/pinmenuview.gif",
+    "alt": "Dash demonstration of Pinmenuview."
+  },
+  "/development/testing-release": {
+    "src": "/assets/gifs/environment/dash-report.gif",
+    "alt": "Dash demonstration of Report."
+  },
+  "/getting-started/modes": {
+    "src": "/assets/gifs/gettingstarted/dash-shift-click.gif",
+    "alt": "Dash demonstration of Shift Click."
+  },
+  "/getting-started/running-dash": {
+    "src": "/assets/gifs/environment/new-dashboard.gif",
+    "alt": "Dash demonstration of New Dashboard."
+  },
+  "/guides/documents/temporal-media": {
+    "src": "/assets/gifs/audio/audiotrimming.gif",
+    "alt": "Dash demonstration of Audiotrimming."
+  },
+  "/guides/features/collaboration": {
+    "src": "/assets/gifs/gettingstarted/dash-create-link-board.gif",
+    "alt": "Dash demonstration of Create Link Board."
+  },
+  "/guides/features/scripting": {
+    "src": "/assets/gifs/ai/ai-edit-3.gif",
+    "alt": "Dash demonstration of Ai Edit 3."
+  },
+  "/guides/properties/fieldsandtags": {
+    "src": "/assets/gifs/dataViz/titleCol.gif",
+    "alt": "Dash demonstration of TitleCol."
+  },
+  "/guides/properties/filters": {
+    "src": "/assets/gifs/environment/map_filter.gif",
+    "alt": "Dash demonstration of Map Filter."
+  },
+  "/guides/properties/layout": {
+    "src": "/assets/gifs/trails/pinlayoutcontent.gif",
+    "alt": "Dash demonstration of Pinlayoutcontent."
+  },
+  "/guides/properties/linkedto": {
+    "src": "/assets/gifs/gettingstarted/dash-toggle-show-link.gif",
+    "alt": "Dash demonstration of Toggle Show Link."
+  },
+  "/guides/properties/options": {
+    "src": "/assets/gifs/gettingstarted/dash-colon-menu.gif",
+    "alt": "Dash demonstration of Colon Menu."
+  },
+  "/guides/properties/othercontexts": {
+    "src": "/assets/gifs/gettingstarted/dash-pres-layout-content-grouping.gif",
+    "alt": "Dash demonstration of Pres Layout Content Grouping."
+  },
+  "/guides/properties/sharingpermissions": {
+    "src": "/assets/gifs/gettingstarted/dash-drag-drop-link.gif",
+    "alt": "Dash demonstration of Drag Drop Link."
+  },
+  "/guides/videos": {
+    "src": "/assets/gifs/gettingstarted/dash-pres-miniplayer.gif",
+    "alt": "Dash demonstration of Pres Miniplayer."
+  },
+  "/guides/views/notetaking": {
+    "src": "/assets/gifs/gettingstarted/textannos.gif",
+    "alt": "Dash demonstration of Textannos."
+  },
+  "/guides/views/stacking": {
+    "src": "/assets/gifs/environment/colon-stack.gif",
+    "alt": "Dash demonstration of Colon Stack."
+  },
+  "/overview/current-state": {
+    "src": "/assets/images/current/dash-files-panel.webp",
+    "alt": "Dash demonstration of Files Panel."
+  },
+  "/reference/agent-tools": {
+    "src": "/assets/gifs/ai/ai-template-csv-1.gif",
+    "alt": "Dash demonstration of Ai Template Csv 1."
+  },
+  "/reference/collection-views": {
+    "src": "/assets/images/environment/views/schema_view.png",
+    "alt": "Dash demonstration of Schema View."
+  },
+  "/reference/configuration": {
+    "src": "/assets/gifs/gettingstarted/dash-properties-pane.gif",
+    "alt": "Dash demonstration of Properties Pane."
+  },
+  "/reference/document-types": {
+    "src": "/assets/gifs/gettingstarted/dash-context-menu.gif",
+    "alt": "Dash demonstration of Context Menu."
+  },
+  "/reference/glossary": {
+    "src": "/assets/gifs/gettingstarted/dash-edit-link.gif",
+    "alt": "Dash demonstration of Edit Link."
+  },
+  "/reference/implementation-snapshot": {
+    "src": "/assets/images/environment/dash-topbar.png",
+    "alt": "Dash demonstration of Topbar."
+  },
+  "/reference/keyboard-shortcuts": {
+    "src": "/assets/gifs/gettingstarted/dash-highlight-select.gif",
+    "alt": "Dash demonstration of Highlight Select."
+  },
+  "/reference/status-taxonomy": {
+    "src": "/assets/gifs/gettingstarted/dash-annotation-icon.gif",
+    "alt": "Dash demonstration of Annotation Icon."
+  },
+  "/research/cohorts": {
+    "src": "/assets/gifs/environment/dash-drag-tab-back.gif",
+    "alt": "Dash demonstration of Drag Tab Back."
+  },
+  "/research/lineage": {
+    "src": "/assets/gifs/gettingstarted/dash-following-link.gif",
+    "alt": "Dash demonstration of Following Link."
+  },
+  "/research/people": {
+    "src": "/assets/gifs/gettingstarted/groupselection.gif",
+    "alt": "Dash demonstration of Groupselection."
+  },
+  "/research/publications": {
+    "src": "/assets/gifs/gettingstarted/dash-pdf-select-annotate.gif",
+    "alt": "Dash demonstration of Pdf Select Annotate."
+  },
+  "/research/release-history": {
+    "src": "/assets/gifs/gettingstarted/dash-reorganize-slides.gif",
+    "alt": "Dash demonstration of Reorganize Slides."
+  },
+  "/workflows": {
+    "src": "/assets/gifs/gettingstarted/dash-present-trail.gif",
+    "alt": "Dash demonstration of Present Trail."
+  }
+}

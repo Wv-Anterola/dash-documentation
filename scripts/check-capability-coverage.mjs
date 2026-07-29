@@ -1,4 +1,5 @@
-import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -11,6 +12,8 @@ const [
   pageVisualsSource,
   workflowsSource,
   branchAuditSource,
+  posterBuilderSource,
+  pageRegistrySource,
 ] = await Promise.all([
   readFile(path.join(root, 'src/data/projects.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/capabilities.ts'), 'utf8'),
@@ -19,6 +22,8 @@ const [
   readFile(path.join(root, 'src/data/pageVisuals.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/projectWorkflows.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/generated/branch-audit.json'), 'utf8'),
+  readFile(path.join(root, 'scripts/build-visual-posters.mjs'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/page-visuals.json'), 'utf8'),
 ]);
 
 const projectPattern =
@@ -170,6 +175,101 @@ for (const match of pageVisualsSource.matchAll(/src:\s*(current|poster)\('([^']+
   }
 }
 
+const posterNames = [
+  ...posterBuilderSource.matchAll(
+    /^\s{2}(?:'([^']+)'|([a-z][a-z0-9-]*)):\s*'assets\/[^']+',?$/gmi
+  ),
+].map((match) => match[1] ?? match[2]);
+const posterHashGroups = new Map();
+for (const name of posterNames) {
+  const bytes = await readFile(
+    path.join(root, 'public/assets/images/visuals', `${name}.webp`)
+  );
+  const digest = createHash('sha256').update(bytes).digest('hex');
+  if (!posterHashGroups.has(digest)) posterHashGroups.set(digest, []);
+  posterHashGroups.get(digest).push(name);
+}
+const duplicatePosterContent = [...posterHashGroups.values()].filter(
+  (names) => names.length > 1
+);
+const posterSourcePaths = [
+  ...posterBuilderSource.matchAll(
+    /:\s*'((?:assets\/)[^']+\.(?:gif|png|jpe?g|webp))'/gi
+  ),
+].map((match) => `/${match[1]}`);
+const posterSourceHashGroups = new Map();
+for (const source of posterSourcePaths) {
+  const bytes = await readFile(path.join(root, 'public', source.replace(/^\//, '')));
+  const digest = createHash('sha256').update(bytes).digest('hex');
+  if (!posterSourceHashGroups.has(digest)) posterSourceHashGroups.set(digest, []);
+  posterSourceHashGroups.get(digest).push(source);
+}
+const duplicatePosterSourceContent = [...posterSourceHashGroups.values()].filter(
+  (sources) => sources.length > 1
+);
+
+const walk = async (directory) => {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(full));
+    else files.push(full);
+  }
+  return files;
+};
+
+const docsRoot = path.join(root, 'src/content/docs');
+const routeForFile = (filename) => {
+  const relative = path.relative(docsRoot, filename).replaceAll('\\', '/');
+  const withoutExtension = relative.replace(/\.(md|mdx)$/i, '');
+  if (withoutExtension === 'index') return '/';
+  return `/${withoutExtension.replace(/\/index$/i, '')}`.toLowerCase();
+};
+const inlineVisualPattern =
+  /!\[[^\]]*\]\(|<img\b|<VisualEvidence\b|<WorkflowGallery\b|<CohortProjects\b|<ProjectIndex\b|<CapabilityCatalog\b|<BranchAudit\b/i;
+const pageFiles = (await walk(docsRoot)).filter((file) => /\.(md|mdx)$/i.test(file));
+const pagesNeedingHero = [];
+for (const pageFile of pageFiles) {
+  const source = await readFile(pageFile, 'utf8');
+  if (!inlineVisualPattern.test(source)) pagesNeedingHero.push(routeForFile(pageFile));
+}
+
+const pageRegistry = JSON.parse(pageRegistrySource);
+const assignedRoutes = new Set(Object.keys(pageRegistry));
+const missingPageAssignments = pagesNeedingHero.filter(
+  (route) => !assignedRoutes.has(route)
+);
+const unexpectedPageAssignments = [...assignedRoutes].filter(
+  (route) => !pagesNeedingHero.includes(route)
+);
+const assignedSources = Object.values(pageRegistry).map((entry) => entry.src);
+const duplicateAssignedSources = assignedSources.filter(
+  (source, index) => assignedSources.indexOf(source) !== index
+);
+const pageVisualHashGroups = new Map();
+const missingAssignedPageMedia = [];
+for (const source of assignedSources) {
+  try {
+    const bytes = await readFile(path.join(root, 'public', source.replace(/^\//, '')));
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    if (!pageVisualHashGroups.has(digest)) pageVisualHashGroups.set(digest, []);
+    pageVisualHashGroups.get(digest).push(source);
+  } catch {
+    missingAssignedPageMedia.push(source);
+  }
+}
+const duplicatePageVisualContent = [...pageVisualHashGroups.values()].filter(
+  (sources) => sources.length > 1
+);
+const repeatedAcrossPageAndPoster = [];
+for (const [digest, sources] of pageVisualHashGroups) {
+  const posterSources = posterSourceHashGroups.get(digest);
+  if (posterSources) {
+    repeatedAcrossPageAndPoster.push([...posterSources, ...sources]);
+  }
+}
+
 if (
   unknown.length ||
   unmappedIntegrated.length ||
@@ -188,7 +288,15 @@ if (
   creatorLabels.length !== 38 ||
   duplicateCreatorLabels.length ||
   missingCreatorImages.length ||
-  missingPageVisuals.length
+  missingPageVisuals.length ||
+  duplicatePosterContent.length ||
+  duplicatePosterSourceContent.length ||
+  missingPageAssignments.length ||
+  unexpectedPageAssignments.length ||
+  duplicateAssignedSources.length ||
+  duplicatePageVisualContent.length ||
+  repeatedAcrossPageAndPoster.length ||
+  missingAssignedPageMedia.length
 ) {
   if (unknown.length) {
     console.error('Capability registry references unknown projects:');
@@ -262,6 +370,42 @@ if (
     console.error('Automatic page visuals reference missing images:');
     for (const image of missingPageVisuals) console.error(`  - ${image}`);
   }
+  if (duplicatePosterContent.length) {
+    console.error('Project/capability posters repeat identical image content:');
+    for (const names of duplicatePosterContent) console.error(`  - ${names.join(', ')}`);
+  }
+  if (duplicatePosterSourceContent.length) {
+    console.error('Project/capability posters reuse the same underlying image:');
+    for (const sources of duplicatePosterSourceContent) {
+      console.error(`  - ${sources.join(', ')}`);
+    }
+  }
+  if (missingPageAssignments.length) {
+    console.error('Pages without inline media also lack a unique page visual:');
+    for (const route of missingPageAssignments) console.error(`  - ${route}`);
+  }
+  if (unexpectedPageAssignments.length) {
+    console.error('Page visual registry contains pages that already own inline visuals:');
+    for (const route of unexpectedPageAssignments) console.error(`  - ${route}`);
+  }
+  if (duplicateAssignedSources.length) {
+    console.error('Page visual registry repeats source paths:');
+    for (const source of new Set(duplicateAssignedSources)) console.error(`  - ${source}`);
+  }
+  if (duplicatePageVisualContent.length) {
+    console.error('Page visual registry repeats identical image content:');
+    for (const sources of duplicatePageVisualContent) console.error(`  - ${sources.join(', ')}`);
+  }
+  if (repeatedAcrossPageAndPoster.length) {
+    console.error('Page visuals reuse image content already assigned to a poster:');
+    for (const sources of repeatedAcrossPageAndPoster) {
+      console.error(`  - ${sources.join(', ')}`);
+    }
+  }
+  if (missingAssignedPageMedia.length) {
+    console.error('Page visual registry references missing media:');
+    for (const source of missingAssignedPageMedia) console.error(`  - ${source}`);
+  }
   process.exitCode = 1;
 } else {
   console.log(
@@ -270,6 +414,7 @@ if (
       `${new Set(docsTargets).size} canonical documentation targets verified, ` +
       `${projectVisualTitles.size} project visuals, ${workflowTitles.size} complete project workflows, ` +
       `${capabilityVisualIds.size} capability visuals, ${creatorLabels.length} creator cards, ` +
+      `${posterNames.length} content-unique posters, ${assignedRoutes.size} non-repeating page visuals, ` +
       `and ${branchAudit.methodology.branchCount} branch tips / ` +
       `${branchAudit.methodology.uniqueCodeBlobsRead} unique code versions verified.`
   );

@@ -1,3 +1,5 @@
+import assignments from './generated/page-visuals.json';
+
 export interface PageVisual {
   src: string;
   alt: string;
@@ -120,7 +122,7 @@ const visuals = {
   },
 } satisfies Record<string, PageVisual>;
 
-export function pageVisualForPath(pathname: string): PageVisual {
+function baseVisualForPath(pathname: string): PageVisual {
   const path = pathname.toLowerCase();
 
   if (path === '/' || path.endsWith('/index/')) return visuals.workspace;
@@ -143,4 +145,14 @@ export function pageVisualForPath(pathname: string): PageVisual {
   if (path.includes('/reference')) return visuals.reference;
   if (path.includes('/current-state')) return visuals.home;
   return visuals.workspace;
+}
+
+export function pageVisualForPath(pathname: string): PageVisual | undefined {
+  const route = pathname.toLowerCase().replace(/\/+$/, '') || '/';
+  const assigned = assignments[route as keyof typeof assignments];
+  if (!assigned) return undefined;
+  return {
+    ...baseVisualForPath(pathname),
+    ...assigned,
+  };
 }
