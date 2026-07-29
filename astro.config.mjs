@@ -12,7 +12,7 @@ import { rehypeBaseUrls } from './src/plugins/rehype-base-urls.mjs';
 // Pages always link with site-root paths like `/concepts/documents/`. Starlight
 // rewrites the links it generates, and src/plugins/rehype-base-urls.mjs handles
 // the ones authors write by hand, so neither needs the prefix spelled out.
-const site = process.env.DOCS_SITE ?? 'https://dash-documentation-amber.vercel.app';
+const site = process.env.DOCS_SITE ?? 'https://brown-dash-documentation.vercel.app';
 const base = process.env.DOCS_BASE ?? '/';
 
 export default defineConfig({
