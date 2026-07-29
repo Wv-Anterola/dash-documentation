@@ -11,10 +11,10 @@ import {
   statuses,
   areas,
   cohortOf,
-  conceptOf,
-  conceptHref,
   projectHref,
+  withBase,
 } from '../data/dash';
+import { capabilitiesForProject } from '../data/capabilities';
 import StatusBadge from './StatusBadge.astro';
 
 const allAreas = areas();
@@ -55,7 +55,7 @@ const allAreas = areas();
       <th scope="col">Cohort</th>
       <th scope="col">Area</th>
       <th scope="col">Status</th>
-      <th scope="col">Concepts</th>
+      <th scope="col">Capabilities</th>
     </tr>
   </thead>
   <tbody>
@@ -70,12 +70,11 @@ const allAreas = areas();
           <td>{p.area}</td>
           <td><StatusBadge status={p.status} /></td>
           <td class="project-table__concepts">
-            {p.concepts.map((cid, i) => {
-              const c = conceptOf(cid);
+            {capabilitiesForProject(p.title).map((capability, i) => {
               return (
                 <>
                   {i > 0 && ', '}
-                  <a href={conceptHref(c)}>{c.title}</a>
+                  <a href={withBase(capability.docs)}>{capability.title}</a>
                 </>
               );
             })}

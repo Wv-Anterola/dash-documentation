@@ -1,0 +1,91 @@
+---
+title: Undo, redo, and provenance
+description: Mutation batching, async actions, agent write tools, reversibility, and the experimental action-provenance layer.
+sidebar:
+  order: 11
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Undo batches
+
+`UndoManager` groups mutations into a named conceptual action. Users expect one
+undo to reverse what one visible action did.
+
+Batch boundaries should wrap the mutation, not merely the UI callback that
+started an asynchronous operation.
+
+```text
+begin named batch
+  → validate inputs
+  → mutate all affected documents
+  → finish batch
+```
+
+For asynchronous work, avoid leaving the batch open across unrelated event-loop
+activity. Use the async-aware wrapper intended for the operation.
+
+## What belongs in one batch
+
+One batch:
+
+- Add a document and its initial layout
+- Apply one agent tag action to several selected documents
+- Create a link and both endpoint anchors
+- Move a selected group as one gesture
+
+Separate batches:
+
+- A series of independently reviewable agent tool calls
+- Several user actions inside a long-lived dialog
+- External service calls whose results are accepted separately
+
+## Agent write tools
+
+Filter, sort, tag, and create-links actions are a persistent harm surface. Each
+tool result should summarize the affected documents and the batch should be
+individually reversible.
+
+Undo is corrective control, not preventive permission. A tool can still expose
+data to an external service or cause effects outside the Dash document graph.
+
+## Action provenance
+
+The experimental provenance layer associates:
+
+- Tool name
+- Validated arguments
+- Timestamp
+- Undo batch name
+- Whether it is a write tool
+- Source document/chunk that caused the action
+- Success state and human-readable summary
+
+Capture is globally gated and off by default in ordinary use. The research
+prototype uses records as study stimuli and as a potential review affordance.
+
+## Threat model
+
+Indirect prompt injection arrives through content retrieved from a document.
+If the model treats it as an instruction, it may select a write tool. Provenance
+tries to make the causal source visible after the action.
+
+It does not:
+
+- Prove the model's internal reasoning
+- Prevent the action
+- Guarantee a reviewer notices the source
+- Replace tool permissions or input validation
+
+## Tests
+
+- Multi-document action forms one batch.
+- Consecutive agent tools form separate batches.
+- Failed tool does not leave a corrupt partial batch.
+- Undo restores ordering, visibility, tags, and links.
+- Redo is deterministic.
+- Provenance capture off is behaviorally inert.
+- Capture on records source and summary without secrets.
+- Imported adversarial text is represented as untrusted source content.

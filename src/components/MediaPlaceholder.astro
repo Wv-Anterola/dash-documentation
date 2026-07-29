@@ -1,0 +1,29 @@
+---
+interface Props {
+  title: string;
+  brief: string;
+  filename: string;
+  ratio?: '16:9' | '4:3' | '1:1';
+  alt: string;
+}
+
+const {
+  title,
+  brief,
+  filename,
+  ratio = '16:9',
+  alt,
+} = Astro.props;
+---
+
+<figure class={`media-placeholder media-placeholder--${ratio.replace(':', '-')}`}>
+  <div class="media-placeholder__canvas" role="img" aria-label={`Placeholder: ${alt}`}>
+    <span class="media-placeholder__eyebrow">Visual needed · {ratio}</span>
+    <strong>{title}</strong>
+    <span>{brief}</span>
+  </div>
+  <figcaption>
+    Replace with <code>/assets/images/capabilities/{filename}</code>.
+    Required alt text: “{alt}”
+  </figcaption>
+</figure>

@@ -1,0 +1,115 @@
+---
+title: Collections and view architecture
+description: Collection dispatch, user-selectable and special perspectives, layout engines, graph performance, and extension contracts.
+sidebar:
+  order: 5
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Dispatch
+
+`CollectionView` reads `_type_collection` from the effective layout document
+and dispatches to a subview in `renderSubView`.
+
+The verified implementation has:
+
+- 21 enum entries
+- 19 rendering paths
+- 15 types in the ordinary appearance menu
+
+Do not use “21 views” to imply that all 21 are user-selectable:
+`Invalid` is a sentinel, `StackedTimeline` is not currently dispatched, and
+docking, linear, pile-up, and card serve specialized contexts.
+
+## Shared subview contract
+
+Collection subviews receive operations and context such as:
+
+- Add, move, and remove document
+- Active/selected state
+- Panel dimensions
+- Screen-to-local transform
+- Child layout templates
+- Child decoration and resize settings
+
+A new view should implement arrangement and interaction through this contract
+rather than owning a separate collection data store.
+
+## Data versus perspective
+
+Children belong to the collection data. Perspective fields belong to the
+layout/context. Switching freeform to graph should not rewrite the children as
+graph-specific node records.
+
+View-specific state can include:
+
+- Positions or layout parameters
+- Sort and filter configuration
+- Selected chart rows or bins
+- Calendar/date field choice
+- Graph force constants
+- Saved zoom and pan
+
+State used only during a pointer gesture should remain transient.
+
+## Graph view
+
+Graph view derives edges from Dash links and positions nodes with an iterative
+layout engine. The integrated implementation includes link creation,
+neighbor highlighting, previews, settings, and early stopping.
+
+Performance risks:
+
+- Observing every child and every position in one computed path
+- Writing node positions every animation frame
+- Re-running layout after unrelated field changes
+- Rendering expensive document previews for every node
+
+Mitigations include work scaled by node count, convergence/early-stop logic,
+stable identity keys, and separating hover from persistent graph state.
+
+## Data visualization
+
+DataViz components interpret record fields and axes, render charts with D3, and
+store selection/filter state on documents so related views can coordinate.
+
+Validate:
+
+- Empty and malformed records
+- Numeric strings and currency/percent formatting
+- Missing axes
+- Selected-row propagation
+- Clearing a selection
+- Save/reload of chart configuration
+- Parent/child filtering cycles
+
+AI-generated chart configuration must pass the same validation as manual
+configuration.
+
+## Maps and calendars
+
+Calendar dispatch is a collection view over date-bearing documents. Map is a
+document renderer with pushpin and route supporting types. Life-coach events
+compose these systems by storing location and temporal fields on event
+documents.
+
+External tokens and network results are runtime dependencies, not collection
+data. Surface missing configuration without corrupting stored events.
+
+## Adding a view
+
+1. Add the enum value if the view is genuinely distinct.
+2. Implement a `CollectionSubView`-compatible component.
+3. Add dispatch in `CollectionView.renderSubView`.
+4. Decide whether it belongs in the appearance menu.
+5. Define which fields are view-specific.
+6. Add safe-mode behavior if the view is expensive or fragile.
+7. Test child add/move/remove, selection, drag, empty state, and reload.
+8. Test with heterogeneous document types.
+9. Document appropriate use and limitations.
+
+See [Adding a collection view](/development/add-collection-view/) for the
+implementation checklist.

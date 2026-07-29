@@ -25,8 +25,10 @@ import {
   conceptOf,
   conceptHref,
   projectSlug,
+  withBase,
   type CohortId,
 } from '../data/dash';
+import { capabilitiesForProject } from '../data/capabilities';
 import StatusBadge from './StatusBadge.astro';
 
 interface Props {
@@ -85,6 +87,19 @@ const md = (s: string) =>
                     {p.tech && <span>{p.tech.join(', ')}</span>}
                     {p.tech && p.code && <span aria-hidden="true"> · </span>}
                     {p.code && <span set:html={md(p.code)} />}
+                  </dd>
+                </>
+              )}
+              {capabilitiesForProject(p.title).length > 0 && (
+                <>
+                  <dt class="dash-label">Product capabilities</dt>
+                  <dd>
+                    {capabilitiesForProject(p.title).map((capability, i) => (
+                      <>
+                        {i > 0 && ', '}
+                        <a href={withBase(capability.docs)}>{capability.title}</a>
+                      </>
+                    ))}
                   </dd>
                 </>
               )}

@@ -1,0 +1,118 @@
+---
+title: Server, storage, identity, and security
+description: Express responsibilities, MongoDB persistence, sessions, access control, external-service boundaries, and operational review.
+sidebar:
+  order: 8
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Responsibility boundary
+
+The server supplies session, persistence, file, and service behavior needed by
+the client. A React view should not embed credentials or become the authority
+for access control merely because it hides a control.
+
+Server-side checks remain necessary for:
+
+- Authentication
+- Document and file authorization
+- Group membership changes
+- Persistent writes
+- Dynamic tool storage
+- External service credentials
+
+## Sessions and identity
+
+Session state is stored through the server session layer, with Mongo-backed
+storage in the current implementation. Treat session identifiers and
+serialized session content as secrets.
+
+Review session behavior for:
+
+- Expiration
+- Logout/invalidation
+- Encryption configuration
+- Error handling during store access
+- Multiple device/browser sessions
+
+## Document persistence
+
+Dash persists an object graph containing typed fields and document references.
+Persistence must preserve identity and must not recursively duplicate a shared
+document simply because several parents reference it.
+
+Test save/reload for:
+
+- New and legacy field types
+- Cyclic or repeated references
+- Specialized document fields
+- Layout/data separation
+- Access-control fields
+- Large media or file references
+
+## Identity, sharing, and ACLs
+
+Access control applies to documents, not just visible collection containers.
+Rendering paths check effective ACL state before displaying private content;
+server operations must enforce equivalent rules.
+
+Nested access requires explicit review:
+
+```text
+shared collection
+  ├─ readable child
+  ├─ private child
+  └─ alias of a document shared elsewhere
+```
+
+The parent being readable does not automatically authorize every child. Search,
+backlinks, agent discovery, and export must filter inaccessible documents as
+well as direct rendering.
+
+## External services
+
+Features may connect to:
+
+- Model APIs
+- Local Ollama through the agent service
+- Mapbox
+- Web scraping/search targets
+- Media-generation providers
+
+For each integration, document:
+
+- Data sent
+- Credential location
+- Timeout and retry behavior
+- User-visible error state
+- Logging/redaction policy
+- Whether results are persisted
+- Offline behavior
+
+Never render a secret into client-accessible documentation or store it as an
+ordinary Dash document field.
+
+## Upload and import risk
+
+Imported content can be malformed, oversized, private, copyrighted, or
+adversarial. Apply type, size, and access checks at the server boundary where
+possible. Treat document text used by an agent as untrusted even when the file
+format itself is valid.
+
+## Operational checklist
+
+- Production secrets are provided through environment configuration.
+- MongoDB and session stores have backups and retention policy.
+- Logs redact credentials and sensitive document content.
+- CORS, cookies, and transport security match the deployment.
+- External providers and model versions are recorded.
+- Lower-privilege permission tests cover nested documents.
+- Dynamic tool endpoints are restricted and audited.
+- Error responses do not expose stack traces or filesystem paths.
+
+This page documents architecture, not a deployment security certification.
+Review the active environment before handling regulated or highly sensitive
+data.

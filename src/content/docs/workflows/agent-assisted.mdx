@@ -1,0 +1,92 @@
+---
+title: Agent-assisted organization
+description: Let the Dash agent inspect and organize a bounded workspace while keeping every persistent change reviewable.
+sidebar:
+  order: 4
+---
+
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+
+## Outcome
+
+A titled and organized collection in which machine-generated tags, filters,
+sort order, and links have been reviewed by a person and can be reversed.
+
+## 1. Bound the workspace
+
+Do not begin with an entire account. Put the intended documents on one canvas
+or in one collection. Remove private or irrelevant material from that scope.
+
+Give documents distinct titles. The agent and reviewer both need to distinguish
+them in tool results.
+
+## 2. Ask for inspection before mutation
+
+Begin with read-oriented requests:
+
+- List the documents on this canvas.
+- Summarize their types and existing tags.
+- Identify likely duplicates without changing anything.
+- Propose categories and explain the criteria.
+
+Review the proposed interpretation. Correct ambiguous titles or missing fields
+before asking for edits.
+
+## 3. Apply one class of change at a time
+
+Prefer:
+
+1. Tag documents.
+2. Review.
+3. Sort or filter.
+4. Review.
+5. Create links.
+6. Review.
+
+Avoid combining broad tagging, deletion-like filtering, reordering, and link
+creation into one opaque instruction.
+
+<MediaPlaceholder
+  title="Human review of agent organization"
+  brief="Show the bounded canvas, an agent-proposed tag plan, a completed tag tool call, affected document titles, and the undo control."
+  filename="workflow-agent-review.webp"
+  ratio="16:9"
+  alt="A person reviewing tags applied by the Dash agent to a bounded collection."
+/>
+
+## 4. Review the effect, not only the response
+
+An agent message saying “tagged 12 documents” is not the final evidence.
+Inspect:
+
+- Which 12 documents changed
+- Whether any intended document was omitted
+- Whether tags were added consistently
+- Whether filtered documents are hidden rather than deleted
+- Whether created links have meaningful endpoints and descriptions
+
+Undo immediately if the action was conceptually wrong. Small isolated actions
+are easier to reverse than a long chain.
+
+## 5. Defend against untrusted content
+
+Imported pages, PDFs, and notes may contain text that tries to instruct the
+model. Treat the content as evidence, not authority over agent behavior.
+
+Stop the workflow when:
+
+- The agent cites instructions found inside a source as its reason to act.
+- It targets documents outside the stated scope.
+- It calls a write tool after a read-only request.
+- Tool results do not identify the affected documents.
+
+Preserve the chat and workspace state when reporting a security-relevant case.
+
+## Definition of done
+
+- The initial scope was explicit.
+- Read-oriented inspection preceded changes.
+- Mutations were separated into reviewable steps.
+- A person inspected the resulting workspace.
+- Unwanted changes were undone.
+- Important new links and tags make sense without the agent conversation.

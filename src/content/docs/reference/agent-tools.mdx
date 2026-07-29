@@ -1,0 +1,56 @@
+---
+title: Agent tool reference
+description: The 22 startup tools registered by the Dash agent, classified by effect and review requirement.
+sidebar:
+  order: 3
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+Tool names below match the static keys registered in `Agent.ts`. Dynamic tools
+may add runtime entries and must be reviewed separately.
+
+| Tool key | Effect | Purpose | Review requirement |
+| :--- | :--- | :--- | :--- |
+| `calculate` | Read | Evaluate a calculation | Verify expression and units |
+| `rag` | Read/model | Retrieve source chunks | Open citations |
+| `dataAnalysis` | Read/model | Analyze linked CSV data | Verify fields and calculations |
+| `websiteInfoScraper` | External read | Retrieve website information | Treat page content as untrusted |
+| `chatTool` | Model | Ask over managed documents | Inspect cited sources |
+| `searchTool` | Read | Search documents | Check scope and omissions |
+| `noTool` | None | Ask for clarification | No workspace effect |
+| `imageCreationTool` | External write | Generate image content/document | Review prompt, output, privacy |
+| `documentMetadata` | Workspace write | Read or edit document fields | Inspect affected fields |
+| `createLinks` | Workspace write | Create links between documents | Verify endpoints and descriptions |
+| `codebaseSummarySearch` | Read | Search indexed code summaries | Verify against source |
+| `fileContent` | Read | Read indexed file content | Check file/scope |
+| `fileNames` | Read | List indexed files | Check repository scope |
+| `generateTutorialNode` | Model/write | Create tutorial content | Review accuracy and placement |
+| `sortDocs` | Workspace write | Reorder documents | Verify order; undo if wrong |
+| `tagDocs` | Workspace write | Add/change document tags | Inspect every affected document |
+| `filterDocs` | Workspace write | Change document visibility/filtering | Confirm hidden is not deleted |
+| `takeQuiz` | Model | Run a quiz interaction | Verify source material |
+| `canvasDocs` | Read | Enumerate current canvas documents | Check container/system filtering |
+| `uiControl` | UI effect | Drive supported interface controls | Confirm resulting interface state |
+| `calendar` | External/workspace | Calendar and scheduling actions | Verify time, target, and provider |
+| `createNewTool` | Extension/code | Generate and load a dynamic tool | Code review and sandboxed test required |
+
+## Effect classes
+
+- **Read** tools should not persist workspace changes.
+- **Workspace write** tools must use a coherent named undo batch.
+- **External** tools may send data or cause effects outside Dash.
+- **Model** tools can generate untrusted or incorrect output.
+- **Extension/code** tools execute a new capability and require the highest
+  review level.
+
+## Result standard
+
+A write-tool observation should identify affected documents by title and/or ID,
+state how many changed, state what was skipped, and describe partial failure.
+Console logging is not a user-review mechanism.
+
+See [Add an agent tool](/development/add-agent-tool/) and
+[Agents, retrieval, and generation](/architecture/agents-ai/).

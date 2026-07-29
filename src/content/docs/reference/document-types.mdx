@@ -1,0 +1,83 @@
+---
+title: Document type reference
+description: The complete DocumentType inventory verified against Dash-Web origin/master, classified by user-facing role.
+sidebar:
+  order: 1
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+The verified `DocumentType` enum contains 51 entries. This table classifies
+them instead of presenting the enum count as “51 user features.”
+
+## User-facing content and workspace types
+
+| Enum | Serialized value | Role |
+| :--- | :--- | :--- |
+| `RTF` | `rich text` | Formatted text document |
+| `IMG` | `image` | Image document |
+| `WEB` | `web` | Webpage document |
+| `HTML` | `html` | HTML content |
+| `COL` | `collection` | Collection/container |
+| `VID` | `video` | Video document |
+| `AUDIO` | `audio` | Audio document |
+| `REC` | `recording` | Recording document |
+| `PDF` | `pdf` | PDF document |
+| `INK` | `ink` | Ink/vector stroke |
+| `DIAGRAM` | `diagram` | Source-driven diagram |
+| `SCREENSHOT` | `screenshot` | Captured screen image |
+| `LABEL` | `label` | Simple label |
+| `BUTTON` | `button` | Action button |
+| `WEBCAM` | `webcam` | Webcam surface |
+| `SCRIPTING` | `script` | Script editor/document |
+| `CHAT` | `chat` | Retrieval chat |
+| `EQUATION` | `equation` | Equation editor/solver |
+| `FUNCPLOT` | `function plot` | Function plot |
+| `MAP` | `map` | Mapbox-backed map |
+| `VIEWER3D` | `3d viewer` | 3D model viewer |
+| `SKETCH3D` | `3d sketch` | 3D sketch surface |
+| `DATAVIZ` | `dataviz` | Data visualization |
+| `JOURNAL` | `journal` | Daily journal |
+| `TASK` | `task` | Task document |
+| `SCRAPBOOK` | `scrapbook` | Scrapbook |
+| `LIFECOACH` | `lifecoach` | Life-coach workspace |
+| `LCEVENT` | `lcevent` | Life-coach event |
+| `POLICY_TESTIMONY` | `policy_testimony` | Policy testimony source |
+| `POLICY_CHECKER` | `policy_checker` | Policy analysis/checker |
+| `VIDGEN` | `vidgen` | Scene-based video generator |
+| `AGENT` | `agent` | Acting agent surface |
+
+## Structural and supporting types
+
+| Enum | Purpose |
+| :--- | :--- |
+| `KVP` | Key-value layout/content |
+| `FONTICON` | Icon renderer |
+| `SEARCH` | Persistent search query |
+| `IMAGEGROUPER` | Image grouping workflow |
+| `FACECOLLECTION` | Face collection |
+| `UFACE` | Unique-face document |
+| `CONFIG` | Reconstructable configuration/view state |
+| `CHATMSG` | Chat message |
+| `ANNOPALETTE` | Annotation palette |
+| `LINK` | First-class link |
+| `PRES` | Presentation/trail |
+| `PRESSLIDE` | Presentation slide |
+| `COMPARISON` | Comparison wrapper |
+| `PUSHPIN` | Map pushpin |
+| `MAPROUTE` | Map route |
+| `SCRIPTDB` | Script database |
+| `GROUPDB` | Group database |
+
+## Sentinel
+
+`NONE` represents the absence of a document type. `LOADING` represents a
+loading state. Neither is a user capability.
+
+## Integration note
+
+A usable document type requires more than this enum: prototype, factory,
+renderer registration, creation or import path, persistence, undo, tests, and
+documentation. See [Add a document type](/development/add-document-type/).

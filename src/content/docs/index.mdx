@@ -9,9 +9,10 @@ head:
     content: Dash documentation
 ---
 
-Dash is a hypermedia system: one workspace where a PDF, a video, a web page, a
-recording, a rich text note, and a collection of any of those are all the same
-kind of object, and a link can start or end anywhere inside any of them.
+Dash is a visual knowledge workspace where a PDF, video, web page, recording,
+rich-text note, dataset, task, map, 3D model, policy analysis, agent, and
+collection are all addressable documents—and a link can start or end at a
+precise region inside them.
 
 It has been in continuous development since December 2018, almost entirely by
 Brown undergraduates working in semester-length cohorts. This site documents
@@ -20,14 +21,19 @@ implementation status for every project that can be traced back to the code.
 
 ## Start here
 
-If you are new, read [what Dash is](/overview/what-dash-is/) for the problem it
-addresses, then [concepts](/concepts/) for the six ideas that explain most of
-its behaviour.
+If you are deciding whether Dash fits your work, open the
+[capability catalog](/capabilities/). It is the implementation-verified product
+inventory, with entry points, availability, technical references, and project
+provenance.
 
-If you want to judge the technical substance quickly,
-[current state](/overview/current-state/) lists what is actually in the running
-system, and the [project index](/research/projects/) shows all forty recovered
-projects with evidence-backed status labels.
+If you are new to the interface, read [what Dash is](/overview/what-dash-is/),
+then follow [Using Dash](/getting-started/using-dash/). If you have a concrete
+goal, start with a [workflow](/workflows/).
+
+If you want to judge the technical substance quickly, [System map](/architecture/system-map/)
+traces the runtime and [current state](/overview/current-state/) records the
+verified source snapshot. The [project index](/research/projects/) preserves all
+forty recovered projects with evidence-backed status labels.
 
 If you are about to work on Dash, [architecture](/architecture/) describes the
 implementation and the four places you extend it.
@@ -41,6 +47,18 @@ implementation and the four places you extend it.
     running Dash from source.
   </dd>
 
+  <dt><a href="/capabilities/">Capabilities</a></dt>
+  <dd>
+    The canonical product inventory: what Dash can do now, where each feature
+    starts, its limitations, implementation, and originating projects.
+  </dd>
+
+  <dt><a href="/workflows/">Workflows</a></dt>
+  <dd>
+    End-to-end recipes for research synthesis, data analysis, agent-assisted
+    organization, and team knowledge work.
+  </dd>
+
   <dt><a href="/concepts/">Concepts</a></dt>
   <dd>
     The ideas: documents, collections, links, trails, agents, generative media.
@@ -48,16 +66,15 @@ implementation and the four places you extend it.
     which projects have exercised it.
   </dd>
 
-  <dt><a href="/guides/features/features/">Using Dash</a></dt>
+  <dt><a href="/guides/features/features/">Detailed guides</a></dt>
   <dd>
-    The per-feature and per-document-type reference, written by the students who
-    built each one.
+    Interaction-level tutorials and the retained legacy guide library.
   </dd>
 
   <dt><a href="/architecture/">Architecture</a></dt>
   <dd>
-    The current implementation, its extension points, and the projects that
-    added to each.
+    Runtime, document model, rendering, collections, links, agents, server,
+    desktop, import/export, undo, and extension boundaries.
   </dd>
 
   <dt><a href="/development/">Development</a></dt>
@@ -69,12 +86,14 @@ implementation and the four places you extend it.
 
 ## A note on how projects appear here
 
-Projects are not confined to a projects page. A project shows up wherever it
-explains something: the graph view appears in the collections concept because
-it demonstrates that adding a view is cheap, and again in the architecture page
-because it exposed a re-render problem in the layout engine.
+Projects are not the product navigation. Integrated projects map to canonical
+capabilities, and capability pages link back to the historical evidence. The
+graph project, for example, appears under
+[Collections, views, maps, and data](/capabilities/organization/#graph-view);
+its cohort write-up remains the record of who built it and what happened.
 
-The [project index](/research/projects/) exists as a map, not as a portfolio.
+The [project index](/research/projects/) is the provenance map, not the feature
+manual.
 
 :::caution
 Dash is a research system under active development by students, not a product.

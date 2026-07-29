@@ -1,15 +1,50 @@
 ---
 title: Architecture
-description: The current Dash implementation, its four extension points, and the projects that added to each.
+description: A source-verified map of Dash's document runtime, rendering, collections, links, agents, persistence, desktop packaging, and extension points.
 ---
 
 import ProjectNote from '../../../components/ProjectNote.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 
 This page describes the structure of the current system and the small number of
 places you extend it. It is aimed at someone about to work on Dash, or someone
 trying to judge what a project on the [Project index](/research/projects/)
 page actually touched.
+
+<SourceSnapshot />
+
+## Architecture map
+
+Read this page for the structural overview, then follow the subsystem that
+matches the question you are trying to answer:
+
+- [System map](/architecture/system-map/) — client, server, persistence,
+  external services, and desktop runtime at a glance.
+- [Document model](/architecture/document-model/) — fields, prototypes,
+  layout/data separation, delegation, and identity.
+- [Rendering lifecycle](/architecture/rendering-lifecycle/) — factory to
+  `DocumentView` dispatch to reactive view updates.
+- [Collections and views](/architecture/collections-views/) — the collection
+  render paths, layout engines, and view switching contract.
+- [Links and trails](/architecture/links-trails/) — links as documents,
+  anchors, backlinks, navigation, and presentation state.
+- [Agents and AI](/architecture/agents-ai/) — retrieval, agent loops, tool
+  execution, model adapters, and trust boundaries.
+- [Server, storage, and security](/architecture/server-storage-security/) —
+  Express routes, MongoDB, files, authentication, and deployment boundaries.
+- [Import and export](/architecture/import-export/) — ingestion, conversion,
+  external APIs, and portability limits.
+- [Desktop and local models](/architecture/desktop-local-models/) — Electron
+  packaging and the Ollama execution path.
+- [Undo and provenance](/architecture/undo-provenance/) — transaction
+  boundaries, reversibility, and experimental action-origin capture.
+
+For implementation work, start with
+[extension points](/development/extension-points/) and use the focused recipes
+for adding a [document type](/development/add-document-type/), a
+[collection view](/development/add-collection-view/), or an
+[agent tool](/development/add-agent-tool/).
 
 
 ## The stack
@@ -43,12 +78,11 @@ documents, it could be a row in a table. Because a link is itself a document, it
 can carry a description, be annotated, appear in a collection, and be created by
 an agent tool, all without special cases.
 
-## The four extension points
+## Four recurring extension points
 
-Almost every project in the [Project index](/research/projects/) list
-extends one of four things. If you are planning work, it is worth knowing which
-one you are aiming at, because the projects that reached `master` are
-overwhelmingly the ones that fit an existing slot.
+Most projects in the [Project index](/research/projects/) extend one of four
+recurring mechanisms. They are not the whole architecture, but they explain a
+large share of how independent projects became product capabilities.
 
 ### Document types
 

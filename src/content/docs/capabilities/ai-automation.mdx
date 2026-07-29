@@ -1,0 +1,153 @@
+---
+title: AI, agents, generation, and automation
+description: The retrieval assistant, workspace agent, registered tools, generative media, scripts, local models, and safety boundaries.
+sidebar:
+  order: 5
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  Dash has both an assistant that answers from documents and an agent that can
+  act on the workspace. Treating them as one feature hides the most important
+  difference: tool calls can change persistent user data.
+</p>
+
+<SourceSnapshot />
+
+## Assistant and agent
+
+### Retrieval assistant
+
+The chatbot retrieves relevant chunks from Dash documents, places them in model
+context, and returns an answer with source citations. Use it for synthesis,
+comparison, explanation, and finding material whose title you do not remember.
+
+Good prompts state the evidence boundary:
+
+- “Compare the methods in the linked papers and cite each claim.”
+- “Summarize only documents currently on this canvas.”
+- “Find disagreements in the interview transcripts.”
+
+Open cited documents and inspect the source passage. Retrieval can miss a
+relevant document, and a fluent answer is not evidence that retrieval was
+complete.
+
+### Workspace agent
+
+The agent runs a reasoning/action loop over registered tools. It can inspect
+canvas documents, search, read metadata and files, create links, filter, sort,
+tag, control parts of the interface, create content, and use calendar actions.
+
+The current startup registry has 22 tools:
+
+| Group | Tools |
+| :--- | :--- |
+| Reasoning and retrieval | calculate, RAG, data analysis, web information, chat, search |
+| Document inspection | metadata, canvas documents, file names, file content, codebase summaries |
+| Workspace changes | create links, sort, tag, filter |
+| Creation and learning | image creation, tutorial generation, quiz, calendar |
+| Interface and extension | UI control, no-op/clarification, create-new-tool |
+
+See the [agent tool reference](/reference/agent-tools/) for inputs, effects, and
+risk classification.
+
+<MediaPlaceholder
+  title="Agent plan, tool call, result, and undo"
+  brief="Use synthetic workspace content. Show one visible tool call, the affected documents, the result summary, and the available undo action."
+  filename="agent-action-lifecycle.webp"
+  ratio="16:9"
+  alt="A Dash agent tool call changing workspace documents with a visible result and undo control."
+/>
+
+### Safe operating practice
+
+1. Start with a bounded collection or canvas.
+2. Ask for a plan before a broad mutation.
+3. Keep source documents titled so tool results are reviewable.
+4. Review link, tag, filter, and sort actions immediately.
+5. Use undo while the action is still isolated.
+6. Do not treat external or imported document text as trusted instructions.
+
+The current agent does not provide a general per-tool permission model.
+Retrieved document content can contain indirect prompt injection. Experimental
+provenance instrumentation records which source caused an action, but it is not
+enabled in the shipped application.
+
+<CapabilityProjects capability="agents" />
+
+## Generative media
+
+Dash exposes generation in context rather than as a separate gallery:
+
+- Rewrite or format selected text.
+- Generate and edit images.
+- Use style or structure references on non-integrated research branches.
+- Propose data visualizations from structured records.
+- Plan and generate scene-based videos.
+- Re-prompt or delete individual video scenes.
+- Generate diagrams or drawing content.
+
+Generated output becomes a Dash document and can therefore be compared,
+annotated, linked to its prompt or evidence, and placed in a trail.
+
+### Verification checklist
+
+- Confirm the model and service used.
+- Preserve the prompt or source context when provenance matters.
+- Verify text claims against source documents.
+- Inspect image and video output for private data, misleading detail, and
+  licensing concerns.
+- Confirm generated chart fields and aggregation against the input records.
+- Label generated material when a reader could mistake it for captured
+  evidence.
+
+<MediaPlaceholder
+  title="Scene-based video generation"
+  brief="Show a video generator with 3–4 collapsible scenes, a source-context document, one scene prompt, and scene-level re-prompt/delete controls."
+  filename="scene-video-generation.webp"
+  ratio="16:9"
+  alt="A Dash video generator organizing a generated video into editable scenes."
+/>
+
+<CapabilityProjects capability="generative-media" />
+
+## Scripting and automation
+
+Dash scripts attach behavior to documents and fields. Advanced users can:
+
+- Compute or transform fields.
+- Attach actions to click and input events.
+- Build custom document layouts.
+- Store reusable scripts in script documents.
+- Create custom agent tools through the dynamic tool path.
+
+Custom scripts run with access to Dash state. Treat copied scripts and
+dynamically generated tools as code: review them, constrain their inputs, and
+test them in a disposable workspace before applying them to important data.
+
+<CapabilityProjects capability="scripting-automation" />
+
+## Model and service configuration
+
+Remote AI features require the corresponding API credentials. Desktop/local
+agent work can talk to a separately installed Ollama model. Local execution
+changes where inference occurs; it does not automatically make every imported
+document safe or make generated output correct.
+
+Document the configured provider in research protocols and reproducibility
+notes. Never put credentials in a Dash document, screenshot, project record, or
+documentation example.
+
+## Failure modes
+
+| Symptom | First checks |
+| :--- | :--- |
+| No answer or tool result | API key/provider, network, model availability |
+| Irrelevant answer | Document titles, retrieval scope, missing source content |
+| Tool acts on wrong documents | Canvas/collection scope and ambiguous titles |
+| Generated chart is wrong | Field types, empty values, aggregation, selected axes |
+| Local model unavailable | Ollama process, selected model, agent service configuration |
+| Repeated unsafe actions | Stop the agent, undo batches, preserve logs, report the case |

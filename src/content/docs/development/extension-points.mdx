@@ -1,0 +1,94 @@
+---
+title: Extension points
+description: Choose the smallest established Dash extension surface and understand the integration contract before writing code.
+sidebar:
+  order: 2
+---
+
+## Choose the slot
+
+| Requirement | Primary extension point | Start with |
+| :--- | :--- | :--- |
+| New kind of addressable content | Document type | [Add a document type](/development/add-document-type/) |
+| New way to arrange one collection | Collection view | [Add a collection view](/development/add-collection-view/) |
+| New action the model can select | Agent tool | [Add an agent tool](/development/add-agent-tool/) |
+| Multi-document persistent edit | Undo-aware action | [Undo architecture](/architecture/undo-provenance/) |
+| Reusable visual control | Shared component | `packages/components` and Storybook |
+| One task-specific composition | Existing documents/views first | [Capability catalog](/capabilities/) |
+
+The extension point is a compatibility contract, not only a folder location.
+Integration means the feature participates in identity, permissions, undo,
+persistence, error handling, and documentation.
+
+## Document type contract
+
+A document type should be chosen when the content requires its own durable
+fields and renderer. It must remain usable in ordinary collections, links,
+sharing, and presentations.
+
+Avoid a new type when:
+
+- Existing fields and a custom layout are sufficient.
+- The distinction is only visual.
+- A configuration document can parameterize an existing renderer.
+
+## Collection view contract
+
+A view should be chosen when the same child documents need a new arrangement or
+interaction model. It should consume the standard subview operations rather
+than introduce a second child store.
+
+Avoid a new view when:
+
+- It is only a freeform layout algorithm.
+- It requires converting children into new data types.
+- It can be expressed by sort, filter, or existing perspective fields.
+
+## Agent tool contract
+
+A tool should represent one named action with a schema that can be validated
+before execution. Its result must be understandable without reading console
+logs.
+
+Avoid a new tool when:
+
+- Existing tools can perform the operation safely and clearly.
+- It is a prompt alias rather than a distinct capability.
+- Its scope cannot be bounded.
+- It executes arbitrary code without an extension/security review.
+
+## Undo-aware action contract
+
+All persistent mutations belonging to one visible action should share one named
+batch. The name is both user-facing review context and the handle used by
+experimental provenance.
+
+## Shared component contract
+
+Use the component library for buttons, toggles, inputs, dropdowns, and layout
+primitives. Add or improve a shared component when several product surfaces need
+the same behavior.
+
+New shared components need:
+
+- Typed props
+- Keyboard and focus behavior
+- Theme compatibility
+- Storybook stories for states
+- Loading, disabled, error, and empty states where relevant
+
+## Definition of integrated
+
+Before calling a project integrated:
+
+- Code is reachable in `origin/master`.
+- A normal user or documented advanced path can reach the capability.
+- Save/reload works.
+- Mutations are undoable.
+- Access control is not bypassed.
+- Tests cover the new contract.
+- Capability registry entry points to user and technical documentation.
+- Project provenance maps to the capability.
+
+Branch code and screenshots are valuable evidence of implementation, but they
+do not meet this definition.

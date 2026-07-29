@@ -1,0 +1,144 @@
+---
+title: Links, annotations, and presentation trails
+description: Connect precise source regions, inspect backlinks, and turn a knowledge workspace into a nonlinear presentation.
+sidebar:
+  order: 4
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  Dash links preserve navigable relationships between documents and regions.
+  Trails use those documents to prepare a path without locking the audience
+  into it.
+</p>
+
+<SourceSnapshot />
+
+## Links and annotations
+
+A Dash link is a document with two endpoints. Each endpoint may represent a
+whole document or a more precise anchor such as:
+
+- A text selection
+- A PDF page or selected region
+- A region of an image
+- An ink stroke
+- A media timestamp or interval
+- A saved collection view
+
+Because the link is itself a document, it can have a title or description,
+appear in collections, be searched, and be created by the agent.
+
+### Creating useful links
+
+1. Decide whether the claim concerns a whole source or a precise region.
+2. Select the region first when precision matters.
+3. Create the link by dragging a link handle, using the linkboard, or choosing
+   the link action from a selection.
+4. Give the link a description that says what the relationship means.
+5. Follow both directions to verify the anchors.
+6. Inspect **Properties → Linked to** when you need backlinks.
+
+“Related” is rarely a sufficient description. Prefer a relationship someone
+can evaluate: “supports the claim,” “contradicts,” “defines the method,” or
+“uses the dataset.”
+
+<MediaPlaceholder
+  title="A precise cross-media link"
+  brief="Show a selected sentence in a PDF linked to a highlighted region of a chart, with the link description and backlinks visible."
+  filename="cross-media-link.webp"
+  ratio="16:9"
+  alt="A selected PDF passage linked to a chart region with a descriptive Dash link."
+/>
+
+### Link visibility and navigation
+
+Links can be shown as on-canvas lines, followed through controls, or discovered
+through search and backlinks. If many link lines obscure the workspace, hide
+the global lines and use selection or backlink context instead. Graph view is
+better when the link structure itself is the object of study.
+
+Links do not currently have a formal type or numeric strength. Descriptions and
+consistent vocabulary carry that meaning. For research work, establish a small
+relationship vocabulary before creating hundreds of links.
+
+See [Linking](/guides/features/linking/) and
+[Markup and annotations](/guides/features/markup/) for the detailed interaction
+guides.
+
+<CapabilityProjects capability="links-annotations" />
+
+## Trails and presentations
+
+A trail is an ordered, optionally branching path through documents. A slide
+stores presentation state around a document: layout, view, transition, and
+timing information can differ from the ordinary workspace.
+
+This produces a presentation model unlike a linear slide deck:
+
+- Source documents remain live.
+- A presenter can leave the prepared path to inspect context.
+- A saved view can restore zoom, selection, or media position.
+- Branches can offer different explanations to different audiences.
+- Changes to the source can flow into the presentation.
+
+### Building a reliable trail
+
+1. Open the Trails panel and create a named trail.
+2. Pin the essential documents in narrative order.
+3. Use **pin with view** when zoom, selection, or layout carries meaning.
+4. Add slides only where the presentation state must differ from the document.
+5. Reorder the trail and name branches before styling transitions.
+6. Choose transitions that clarify movement; avoid motion that competes with
+   the content.
+7. Present once using only keyboard or presentation controls.
+8. Test every branch and return path.
+
+### Pinning choices
+
+| Choice | Use when |
+| :--- | :--- |
+| Regular pin | The document itself is enough |
+| Pin with view | Zoom, selection, or visible region matters |
+| Pin layout | Arrangement matters more than live content |
+| Pin layout and content | The exact composed state must be preserved |
+| Pin marquee view | A region containing several documents is the unit |
+
+<MediaPlaceholder
+  title="Branching trail with saved views"
+  brief="Show the trail tree, one branch, a slide selected, and a source document with a visible saved view. Use restrained transitions in any accompanying GIF."
+  filename="branching-trail.webp"
+  ratio="16:9"
+  alt="A branching Dash presentation trail with saved document views and slide controls."
+/>
+
+### Transitions, animation, and dictation
+
+Integrated trail work added branching, remodeled animation, expanded
+transitions, and dictation support. These are parts of one presentation
+capability, not isolated project demos.
+
+Use duration and visibility to establish reading order. Prefer a small
+transition vocabulary across one presentation. If a person using reduced
+motion would lose information, the animation is carrying content it should not
+carry alone.
+
+See [Presentation trails](/guides/features/trails/) and
+[Trail tips](/guides/features/trails-tips/) for control-level detail.
+
+<CapabilityProjects capability="trails-presentations" />
+
+## From links to trails to graphs
+
+Choose the representation that matches the question:
+
+- A **link** states one relationship.
+- **Backlinks** answer what refers to this item.
+- A **trail** prepares an explanatory path.
+- A **graph view** reveals the topology of many links.
+
+The same link documents support all four, so moving from research to
+explanation does not require rebuilding the relationship data.

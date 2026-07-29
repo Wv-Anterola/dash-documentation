@@ -1,0 +1,116 @@
+---
+title: Add a document type
+description: End-to-end checklist for adding a durable, renderable, creatable, persistent, and documented Dash document type.
+sidebar:
+  order: 3
+---
+
+## 1. Write the contract
+
+Before code, document:
+
+- What content or behavior existing types cannot represent
+- Durable data fields
+- Context-specific layout fields
+- External service dependencies
+- Creation and import paths
+- Link/anchor behavior
+- Permissions and sensitive data
+- Empty, loading, error, and unsupported states
+
+If a custom layout over existing fields satisfies the requirement, do that
+instead.
+
+## 2. Declare the type
+
+Add the enum value in `src/client/documents/DocumentTypes.ts`. Use a stable
+serialized value; changing it later can break stored documents.
+
+## 3. Register a prototype and factory
+
+Define defaults through the prototype system and add a factory in
+`Documents.ts`. The factory should:
+
+- Accept explicit inputs
+- Create required data/layout fields
+- Avoid external calls during basic construction
+- Produce a valid empty document
+- Use shared defaults rather than copying unrelated prototypes
+
+## 4. Build the renderer
+
+Implement the type-specific view under `src/client/views/nodes/` or the closest
+established domain folder.
+
+Honor common document behavior:
+
+- Active/selected state
+- Drag and resize
+- Decorations and titles
+- Link anchors
+- Permissions
+- Context menus
+- Loading/error states
+- Disposal of subscriptions and external engines
+
+## 5. Register rendering
+
+Make the component reachable from the layout/renderer registry initialized in
+`Main.tsx`. Confirm that a factory-created document resolves to the intended
+layout and component.
+
+## 6. Add creation and import paths
+
+Add the smallest appropriate user entry point:
+
+- Create/colon menu
+- Template
+- File or URL import
+- Agent creation tool
+- Specialized parent workflow
+
+Do not expose an unusable empty type in a global menu merely to make it
+reachable.
+
+## 7. Make changes reversible
+
+Creation and multi-field edits should form coherent undo batches. External
+service calls should not leave an invalid placeholder when they fail.
+
+## 8. Verify persistence and access
+
+Test:
+
+- Create, edit, save, reload
+- Alias/embedding in two collections
+- Private document in a shared parent
+- Copy/duplicate behavior
+- Delete/remove semantics
+- Legacy documents missing new fields
+
+## 9. Document it
+
+Add:
+
+- Capability registry entry or update
+- User-facing workflow and entry point
+- Technical source paths and fields
+- Limitations and external dependencies
+- Project provenance
+- High-quality screenshot or an exact `MediaPlaceholder`
+
+## Pull-request checklist
+
+- [ ] Stable type value
+- [ ] Prototype and factory
+- [ ] Renderer registration
+- [ ] Creation/import path
+- [ ] Common document interactions
+- [ ] Undo
+- [ ] Save/reload
+- [ ] Permission test
+- [ ] Empty/loading/error states
+- [ ] Unit/component/e2e coverage
+- [ ] User documentation
+- [ ] Technical documentation
+- [ ] Capability and project mapping

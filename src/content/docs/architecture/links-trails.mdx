@@ -1,0 +1,96 @@
+---
+title: Links, anchors, and trails
+description: First-class link documents, region anchors, backlink discovery, saved views, slides, branches, and presentation state.
+sidebar:
+  order: 6
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Links and anchors
+
+A link is represented as a document rather than an edge stored only on one
+endpoint. Its endpoints refer to anchor documents, which may describe an entire
+document or a region-specific target.
+
+This model supports:
+
+- Bidirectional navigation
+- Descriptions and other metadata on the link
+- Backlink queries
+- Links inside collections
+- Agent-created links
+- Graph views derived from the same relationship data
+
+Anchor creation is type-specific. Text, PDF, image, ink, audio, video, and
+collection views preserve different location state. A link implementation must
+not assume every anchor is a rectangle in canvas coordinates.
+
+## Navigation
+
+`LinkFollower` and link/view utilities resolve an endpoint, open the target in
+the requested context, and restore anchor state when supported.
+
+Navigation tests should cover:
+
+- Target already visible
+- Target in another tab or tile
+- Target requiring lightbox/full view
+- Region anchor restoration
+- Deleted or inaccessible target
+- Backward and forward traversal
+
+## Backlinks
+
+Backlinks query relationships pointing to the selected document or anchor.
+Permissions must be applied to backlink results: the existence or title of a
+private source should not leak through a readable target.
+
+## Trails and presentation state
+
+Presentation documents and slide documents organize an ordered or branching
+path. A pin can refer to content alone or include saved view/layout state.
+
+Keep these layers distinct:
+
+- Source document content
+- Layout in the ordinary workspace
+- Saved view used by a pin
+- Slide-specific presentation state
+- Trail ordering and branching
+
+Editing a slide transition should not rewrite source content. Editing source
+content may intentionally change what a live slide displays.
+
+## Transitions and animation
+
+Transition state includes movement, effects, visibility, and duration. The
+animation system must restore a deterministic end state even when a transition
+is skipped, interrupted, or reduced motion is requested.
+
+Test:
+
+- First and last slide
+- Branch entry and return
+- Rapid next/previous input
+- Missing or deleted pinned document
+- Reduced-motion preference
+- Media playback state
+- Saved zoom or selection
+- Presenting after save/reload
+
+## Graph derivation
+
+Graph view consumes link relationships but should not become a second link
+store. Link creation or deletion from the graph must call the same underlying
+operations and undo boundaries as link creation elsewhere.
+
+## Current limitations
+
+- Link semantics are carried mostly by descriptions rather than a typed
+  relationship schema.
+- Broken/inaccessible anchor UX is not uniform across types.
+- Complex presentation state can combine content, layout, selection, and media
+  position, making regression tests essential.

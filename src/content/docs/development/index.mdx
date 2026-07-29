@@ -12,6 +12,27 @@ Paths below were checked against `origin/master` in
 feature branch, because branches differ substantially from each other and from
 what ships.
 
+## Choose a development path
+
+- Start with [extension points](/development/extension-points/) when deciding
+  where a feature belongs and which existing contract it should reuse.
+- Follow [add a document type](/development/add-document-type/) for a new
+  content surface and its factory, prototype, renderer, and menu registration.
+- Follow [add a collection view](/development/add-collection-view/) for a new
+  projection over existing collection members.
+- Follow [add an agent tool](/development/add-agent-tool/) for a schema-bound,
+  reversible operation the agent can invoke.
+- Use [testing and release](/development/testing-release/) for the validation
+  ladder, branch evidence, production builds, desktop packaging, and release
+  checklist.
+
+The [implementation snapshot](/reference/implementation-snapshot/) records the
+exact source revision used for this documentation. The classified
+[document types](/reference/document-types/),
+[collection views](/reference/collection-views/), and
+[agent tools](/reference/agent-tools/) make the registries readable without
+turning raw enum entries into inflated feature counts.
+
 ## Repository layout
 
 Dash-Web is a monorepo. The web application is at the root; the shared
@@ -134,8 +155,8 @@ adding a page, and adding a cohort or project.
 
 ## Where to go next
 
-- [Architecture](/architecture/) for the four extension points and which one
-  your work should aim at.
+- [Architecture](/architecture/) for the complete subsystem map and the
+  extension points your work should use.
 - [Concepts](/concepts/) for why the document and collection models are shaped
   the way they are.
 - [Contributing to Dash](/contributing/joining/) for how projects get chosen and

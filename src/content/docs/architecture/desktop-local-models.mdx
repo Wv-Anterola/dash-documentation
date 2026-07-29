@@ -1,0 +1,87 @@
+---
+title: Desktop packaging and local models
+description: Electron boundaries, agent-service configuration, Ollama integration, packaging expectations, and local/offline claims.
+sidebar:
+  order: 10
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Desktop boundary
+
+Electron packages the web application into a desktop shell. Keep browser,
+main-process, preload, and server/service responsibilities explicit; desktop
+availability does not justify unrestricted filesystem or process access from
+ordinary renderer code.
+
+## Local agent service
+
+The local-model path connects Dash agent behavior to a separately installed
+Ollama service. The configured model must already be available to Ollama.
+
+```text
+Dash agent UI
+  → agent service request
+  → Ollama-compatible local endpoint
+  → selected local model
+  → tool plan / response
+  → normal Dash tool validation and execution
+```
+
+Model locality does not bypass the tool registry, document scope, undo, or
+review requirements.
+
+## Packaging expectations
+
+A release checklist should record:
+
+- Supported operating system and architecture
+- Node/Electron versions
+- Server and database expectations
+- Whether Ollama is required
+- Required model name and size
+- External API features that remain network-dependent
+- Location of user data and logs
+- Update and uninstall behavior
+
+Do not describe the application as offline when maps, web imports, remote
+models, or generation providers remain configured.
+
+## Security
+
+Use Electron security defaults:
+
+- Keep renderer privileges narrow.
+- Expose explicit preload APIs instead of raw Node access.
+- Validate messages across process boundaries.
+- Do not pass credentials through renderer-visible state.
+- Treat opened/imported files as untrusted.
+- Constrain any dynamic-tool or process execution path.
+
+## Failure handling
+
+The UI should distinguish:
+
+- Ollama not installed
+- Ollama not running
+- Model not downloaded
+- Incompatible model/service response
+- Agent service unavailable
+- Remote-only feature invoked while offline
+
+Each state should preserve workspace content and provide a concrete next step.
+
+## Verification matrix
+
+Test clean installs and upgrades on each supported platform. Include:
+
+- First run without Ollama
+- First run with service but missing model
+- Model switch
+- Agent tool execution and undo
+- Workspace persistence across restart
+- File import through desktop dialogs
+- External links
+- Update from the previous packaged version

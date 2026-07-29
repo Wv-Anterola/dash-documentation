@@ -1,6 +1,6 @@
 ---
 title: Working on this documentation
-description: How to run the docs site, add a page, add a cohort or project, and connect projects to concepts.
+description: How to run the site, document capabilities, add projects and cohorts, create accessible visuals, and pass coverage checks.
 ---
 
 This site is an [Astro](https://astro.build) project using
@@ -34,6 +34,7 @@ the ones you write by hand, so you never spell the prefix out yourself.
 npm run build     # production build into dist/
 npm run preview   # serve the built output
 npm run check     # Astro + TypeScript diagnostics
+npm run coverage  # capability, project, and canonical-target coverage
 npm run links     # internal link and anchor check over dist/
 ```
 
@@ -54,6 +55,8 @@ src/
   content/docs/       every page, as MDX
     overview/
     getting-started/
+    capabilities/
+    workflows/
     concepts/
     guides/
     architecture/
@@ -64,6 +67,7 @@ src/
     reference/
   components/         Dash-specific components only
   data/
+    capabilities.ts   canonical product inventory and source snapshot
     dash.ts           cohorts, concepts, statuses, people, helpers
     projects.ts       the forty project records
   styles/dash.css     palette and component styling
@@ -110,15 +114,34 @@ which is how "tempMedia" ended up in the sidebar.
 The distinction that keeps the site coherent:
 
 - **Concepts** explain an idea and why Dash represents it the way it does.
-- **Using Dash** explains how to do something in the application.
+- **Capabilities** are the canonical statement of what Dash can do now.
+- **Workflows** combine capabilities into an end-to-end task.
+- **Detailed guides** explain individual controls and legacy interactions.
 - **Architecture** and **Development** explain the implementation, for people
   changing it.
 - **Research and history** records what a cohort did and what became of it.
 
-A feature usually needs an entry in more than one, but only one of them is the
-canonical explanation. Write it fully there and link to it from the others
-rather than restating it, which is how the getting-started pages ended up
-duplicating four of the view guides.
+A feature usually needs an entry in more than one. Its capability section is
+canonical; concepts explain why, detailed guides explain controls, architecture
+explains implementation, and research pages preserve provenance.
+
+## Capability coverage
+
+Add or update a record in `src/data/capabilities.ts` whenever integrated work
+adds or materially changes product behavior. The record must include:
+
+- User-facing title and summary
+- Category and availability
+- Real interface entry points
+- Canonical user documentation target
+- Canonical technical documentation target
+- Verified source paths
+- Every related project title
+
+Every integrated project must appear in at least one capability record.
+`npm run coverage` validates project names, mappings, and documentation
+targets. Do not change a project to `integrated` until this check can pass with
+truthful documentation.
 
 ## Adding a cohort
 
@@ -267,14 +290,42 @@ it, the way [scripting](/guides/features/scripting/) and
 [layout](/guides/properties/layout/) do. Two sentences dressed up as a page is
 worse than two sentences admitting it.
 
+## Visual capture standard
+
+Use a real screenshot or short recording when the interface, spatial
+relationship, or state change is materially easier to understand visually.
+Do not add decorative screenshots that repeat the preceding sentence.
+
+Every final capability image should:
+
+- Use the current documented Dash-Web revision.
+- Contain synthetic or explicitly approved content.
+- Hide usernames, local paths, tokens, private URLs, and browser extensions.
+- Show enough interface chrome to locate the action.
+- Crop empty desktop/browser space.
+- Use a 16:9 or 4:3 master at least 1600 pixels wide.
+- Export as WebP for stills unless transparency requires PNG.
+- Use restrained callouts that remain readable in dark and light themes.
+- Have alt text describing the information conveyed, not visual decoration.
+
+For motion, keep the recording under 20 seconds when possible, begin in a
+stable state, pause on the result, avoid rapid cursor movement, and ensure the
+same procedure is available in prose.
+
+When the final capture is not available, use `MediaPlaceholder.astro`. A valid
+placeholder names the intended filename and ratio, specifies the exact scene to
+capture, and supplies final-quality alt text. Replace the component with the
+real asset; do not turn the placeholder canvas into an image.
+
 ## Before you commit
 
 ```bash
-npm run check && npm run build && npm run links
+npm run coverage && npm run check && npm run build && npm run links
 ```
 
-`check` runs Astro and TypeScript diagnostics, which is what catches a mistyped
-project title before the build does.
+`coverage` validates project/capability mappings and canonical targets. `check`
+runs Astro and TypeScript diagnostics, which is what catches a mistyped project
+title before the build does.
 
 The link checker walks the built output and reports broken internal links,
 broken anchors, missing images, images with no `alt` attribute, and headings

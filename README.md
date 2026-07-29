@@ -4,9 +4,11 @@ Documentation and project history for [Dash](https://github.com/brown-dash/Dash-
 a component-based hypermedia system built by Andries van Dam's research group at
 Brown University and in continuous development since December 2018.
 
-The site covers what Dash is, how the current system is put together, and what
-each student cohort contributed, with an evidence-backed implementation status
-for every recovered project.
+The site covers what Dash is, its complete user-facing capability surface,
+end-to-end workflows, how the current system is put together, and what each
+student cohort contributed. Every recovered project has an evidence-backed
+implementation status and every integrated project maps back into the
+capability it expanded.
 
 ## Relationship to the upstream project
 
@@ -34,10 +36,12 @@ there is no hosted editor and no account required.
 npm run build     # production build into dist/
 npm run preview   # serve the built output
 npm run check     # Astro and TypeScript diagnostics
+npm run coverage  # verify integrated projects map to canonical capability docs
 npm run links     # internal link, anchor, image, and heading checks over dist/
 ```
 
-Run `npm run check && npm run build && npm run links` before committing.
+Run `npm run coverage && npm run check && npm run build && npm run links`
+before committing.
 
 ## Where things live
 
@@ -48,7 +52,11 @@ src/
   data/
     dash.ts           cohorts, concepts, statuses, people, helpers
     projects.ts       the project records
+    capabilities.ts   product capabilities and project-to-feature mappings
   styles/dash.css     palette and component styling
+scripts/
+  check-capability-coverage.mjs
+                      rejects unmapped integrated work or dead canonical docs
 astro.config.mjs      sidebar, redirects, and site configuration
 public/assets/        images and screen recordings
 ```

@@ -1,0 +1,94 @@
+---
+title: Team knowledge workspace
+description: Establish conventions, permissions, review practices, and shared structures for collaborative Dash work.
+sidebar:
+  order: 5
+---
+
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+
+## Outcome
+
+A shared corpus whose naming, metadata, links, views, and permissions remain
+understandable when contributors change.
+
+## 1. Define the shared vocabulary
+
+Before importing at scale, agree on:
+
+- Collection boundaries
+- Required source fields
+- Relationship descriptions
+- Status values
+- Document title format
+- Who may edit shared structures
+
+Keep the vocabulary small. A field no one applies consistently is less useful
+than a short, well-defined schema.
+
+## 2. Separate source, synthesis, and presentation
+
+Use distinct collections or fields for:
+
+- Original source material
+- Individual annotations
+- Shared synthesis
+- Presentation trails
+- Archived or superseded work
+
+The documents can still be linked and embedded across those contexts. The
+separation clarifies ownership and review expectations.
+
+## 3. Apply least-necessary access
+
+Give collaborators only the access required for their role. Verify important
+nested documents separately: a collection layout may reference a document the
+recipient cannot open, or an alias may expose a document in another context.
+
+Never use screenshots as the only permission test. Open the shared workspace as
+a lower-privilege account when possible.
+
+<MediaPlaceholder
+  title="Shared team workspace"
+  brief="Use fictitious contributors. Show a shared collection, schema fields for owner/status, the sharing panel, and linked source/synthesis collections."
+  filename="workflow-team-workspace.webp"
+  ratio="16:9"
+  alt="A shared Dash team workspace with ownership fields, status, and permissions."
+/>
+
+## 4. Make review visible
+
+Use fields such as owner, review status, and last-reviewed date. Use links for
+substantive relationships, not as a replacement for workflow state.
+
+Suggested review states:
+
+- Unreviewed
+- In review
+- Verified
+- Needs revision
+- Superseded
+
+Record disagreement in a linked note instead of overwriting another
+contributor's interpretation without context.
+
+## 5. Maintain the workspace
+
+Schedule periodic cleanup:
+
+- Resolve untitled documents.
+- Find broken or unexplained links.
+- Inspect disconnected graph components.
+- Archive abandoned drafts.
+- Check group membership and permissions.
+- Verify that key trails still open the intended views.
+- Export or back up critical sources.
+
+## Definition of done
+
+- Contributors understand the schema.
+- Source and synthesis material are distinguishable.
+- Permissions were tested.
+- Ownership and review state are visible.
+- Links have meaningful descriptions.
+- The workspace has an explicit maintenance owner.

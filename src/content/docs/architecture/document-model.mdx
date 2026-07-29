@@ -1,0 +1,129 @@
+---
+title: Document and field model
+description: Identity, references, prototypes, data/layout separation, fields, aliases, serialization, and specialized document types.
+sidebar:
+  order: 3
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Identity first
+
+`Doc` is the common addressable object in Dash. A view receives a document and
+layout context; it does not own the underlying content. Identity enables the
+same document to appear in multiple collections without becoming multiple
+independent copies.
+
+This is the distinction to preserve in code:
+
+- A **document** owns fields and identity.
+- An **embedding or alias** refers to underlying content in another context.
+- A **layout document** stores how a context presents data.
+- A **view component** renders and interacts with those documents.
+
+Confusing the four produces subtle bugs: editing an embedding instead of its
+data, persisting transient view state as content, or duplicating a document
+that should remain shared.
+
+## Fields
+
+Fields provide typed values such as strings, numbers, lists, document
+references, rich text, scripts, and object-backed data. Cast helpers in
+`src/fields/Types.ts` convert an unknown field value into the expected runtime
+shape while supplying a default or nullable result.
+
+Use the narrowest field representation that preserves the requirement:
+
+- Primitive field for a scalar
+- `List` for observable ordered values
+- `Doc` reference for identity-bearing nested material
+- Rich-text field for formatted editable content
+- Script field for executable behavior
+- Configuration document when several fields form reusable view state
+
+Do not store serialized JSON in a string merely to avoid defining observable
+fields. That hides dependencies from MobX and makes partial updates,
+permissions, and migration harder.
+
+## Prototypes and delegation
+
+Document factories in `Documents.ts` create instances from registered
+prototypes. A prototype supplies fields and defaults without requiring every
+instance to copy them.
+
+When reading a field, distinguish:
+
+- A value defined directly on the instance
+- A value inherited through the prototype/delegation chain
+- A value supplied by a cast default
+- A value stored on the layout document rather than the data document
+
+When changing behavior globally, a prototype may be appropriate. When changing
+one document, write to the instance or its context-specific layout.
+
+## Data and layout
+
+Dash separates what a document contains from how a context displays it.
+Collection position, width, height, fit, title visibility, view type, and
+saved presentation state are commonly layout concerns.
+
+This separation permits:
+
+- One PDF shown at different sizes in different collections
+- One collection shown in schema and graph perspectives
+- A presentation slide that saves a view without changing ordinary use
+- A link to a specific visible region
+
+New features should state explicitly which fields are content, layout,
+configuration, or transient UI state.
+
+## Document creation
+
+A complete user-facing document type generally requires:
+
+1. `DocumentType` enum value
+2. Prototype registration
+3. Factory in `Documents.ts`
+4. React view component
+5. Renderer/component registration
+6. Creation entry point
+7. Import behavior if relevant
+8. Undo-aware mutations
+9. Serialization and reload verification
+10. User and technical documentation
+
+An enum entry alone is not an integrated feature.
+
+## Specialized document types
+
+Task, journal, scrapbook, life-coach event, policy testimony, policy checker,
+3D sketch, video generator, and agent documents use the same identity and field
+infrastructure. Their custom UI does not exempt them from links, permissions,
+undo, layout, or persistence expectations.
+
+When adding a specialized type, prefer fields and shared components over a
+parallel application state model. A feature that can only operate inside its
+own view is harder to compose with the rest of Dash.
+
+## References and containment
+
+A collection holding a document is a reference relationship, not necessarily
+exclusive ownership. Removing a child from one collection must not be assumed
+to delete the underlying document from every context.
+
+Nested references also affect sharing and serialization. A container may be
+readable while a referenced child is not; a persistence operation may need to
+walk a graph rather than a tree.
+
+## Invariants to test
+
+- Identity remains stable after save and reload.
+- An alias and its source reflect intended shared edits.
+- Layout changes do not corrupt source data.
+- Prototype defaults do not overwrite instance values.
+- Removing from one collection does not unexpectedly delete elsewhere.
+- Private nested documents do not leak through a shared layout.
+- Type-specific fields survive serialization.
+- Creation and destructive actions form coherent undo batches.

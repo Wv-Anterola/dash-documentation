@@ -4,20 +4,23 @@ description: The capabilities present in the current master branch, the boundari
 ---
 
 import ProjectNote from '../../../components/ProjectNote.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
-This page is the honest inventory. Everything listed as present was checked
-against the current `master` branch of Dash-Web rather than inferred from a
-merged branch or a demo recording.
+This page summarizes the verified implementation. The complete feature-level
+inventory is the [capability catalog](/capabilities/).
+
+<SourceSnapshot />
 
 ## Counts
 
-Fifty-one document types, twenty-one collection views, and twenty-two agent
-tools registered at startup. Those numbers come from three enums and one
-constructor:
+The inspected source contains 51 document-type enum entries, 21
+collection-view enum entries, 19 collection render paths, 15 perspectives in
+the ordinary appearance menu, and 22 agent tools registered at startup.
 
-- `DocumentType` in `client/documents/DocumentTypes.ts`
-- `CollectionViewType` in the same file
-- the tool registry in `chatbot/agentsystem/Agent.ts`
+Enum counts include internal, special, loading, and sentinel types. See the
+[document type](/reference/document-types/),
+[collection view](/reference/collection-views/), and
+[agent tool](/reference/agent-tools/) references for classified inventories.
 
 ## What works today
 
@@ -91,4 +94,6 @@ calls. A merged branch does not qualify, and neither does a demo recording or a
 finished report.
 
 The [status taxonomy](/reference/status-taxonomy/) defines all six labels and
-the evidence each one requires.
+the evidence each one requires. The
+[implementation snapshot](/reference/implementation-snapshot/) records the
+exact source revision behind this page.

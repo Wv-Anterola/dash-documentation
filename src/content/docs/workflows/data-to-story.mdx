@@ -1,0 +1,91 @@
+---
+title: Data to explanation
+description: Import structured data, build coordinated visualizations, validate them, and present an analytical story.
+sidebar:
+  order: 3
+---
+
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+
+## Outcome
+
+A documented dataset, one or more validated interactive visualizations, notes
+that explain analytical choices, and a trail that preserves the relationship
+between claims and underlying records.
+
+## 1. Import and inspect
+
+Import the CSV through the supported import path. Confirm:
+
+- The first row was interpreted as headers.
+- Numeric values are numeric rather than formatted strings.
+- Dates use one consistent representation.
+- Missing values are distinguishable from zero.
+- Units are present in names or metadata.
+- Personally identifying fields are handled appropriately.
+
+Open the collection in schema view. Correct field names before building charts;
+labels propagate into axes, filters, search, and agent context.
+
+## 2. Write the analytical question
+
+Choose a chart only after writing the question. Examples:
+
+- Distribution → histogram
+- Change over an ordered variable → line chart
+- Comparison among categories → bars
+- Relationship between two numeric fields → 2D plot
+
+If AI proposes a visualization, treat it as a draft. Verify selected fields,
+aggregation, binning, axis order, and labels against the records.
+
+## 3. Coordinate views
+
+Place the source table and chart documents in one collection. Use interactive
+selection filtering when choosing a chart region should narrow another view.
+
+Keep one unfiltered source perspective available. It provides a baseline when
+several filters compose into an unexpected result.
+
+<MediaPlaceholder
+  title="Validated coordinated views"
+  brief="Use a synthetic dataset. Show a source schema, two linked charts, a selected bin, a visible filter status, and an analysis note."
+  filename="workflow-data-to-story.webp"
+  ratio="16:9"
+  alt="A Dash data workflow with a source table and coordinated interactive charts."
+/>
+
+## 4. Validate
+
+For each chart:
+
+1. Check a small set of values manually.
+2. Compare record count before and after filtering.
+3. Inspect missing and out-of-range values.
+4. Confirm units and axis direction.
+5. Record transformations or exclusions in a linked note.
+6. Test whether a chart selection persists and clears correctly.
+
+Visual polish is not validation. A chart with clean labels can still use the
+wrong field or aggregation.
+
+## 5. Build the explanation
+
+Create one note per major claim. Link the claim to:
+
+- The relevant chart
+- The selected or filtered view when state matters
+- A methods note
+- The source records or dataset description
+
+Use pin-with-view in the trail so the presentation opens with the intended
+selection and zoom.
+
+## Definition of done
+
+- Field types and missing values were checked.
+- Every visualization answers a stated question.
+- AI-generated choices were verified.
+- Transformations are documented.
+- Claims link to charts and source data.
+- The trail restores the analytical state used in the explanation.

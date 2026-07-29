@@ -1,0 +1,88 @@
+---
+title: Add a collection view
+description: Implement a perspective over existing collection children without forking their data model.
+sidebar:
+  order: 4
+---
+
+## 1. Define the question
+
+State what analytical or interaction question the perspective answers. “A new
+layout” is not enough.
+
+Decide whether the requirement is actually:
+
+- A freeform layout engine
+- Sort/filter configuration
+- A reusable child layout
+- A specialized collection view
+
+Only the last requires a new `CollectionViewType`.
+
+## 2. Declare and dispatch
+
+Add the enum value and a subview compatible with the shared collection view
+props. Add dispatch in `CollectionView.renderSubView`.
+
+Decide separately whether ordinary users should see it in the appearance menu.
+Internal/special views can be rendered without being a global choice.
+
+## 3. Preserve collection data
+
+Read children from the collection contract. Store perspective-specific state on
+the layout/context. Do not replace the children with view-specific wrapper
+records unless those wrappers are independently meaningful documents.
+
+## 4. Implement interactions
+
+Support the operations relevant to the view:
+
+- Add
+- Remove from this collection
+- Move/reorder
+- Select/multi-select
+- Drag in and out
+- Open/lightbox
+- Link and annotation
+- Context menu
+
+If an operation is intentionally unsupported, disable it visibly and explain
+why.
+
+## 5. Control performance
+
+Test empty, small, typical, and large collections. For iterative layouts:
+
+- Use stable document identity.
+- Avoid writes during React render.
+- Bound work per frame.
+- Stop after convergence.
+- Recompute only for relevant changes.
+- Dispose reactions and animation loops.
+
+## 6. Test heterogeneous documents
+
+A collection can hold text, PDF, image, media, collection, chart, link, or
+specialized documents. Test previews and fallbacks across several types.
+
+## 7. Test perspective changes
+
+- Switch to the new view and back.
+- Open the same collection in two perspectives.
+- Save and reload.
+- Duplicate an embedding with different layout state.
+- Apply sort/filter and clear them.
+- Test safe mode if applicable.
+
+## 8. Document
+
+Explain:
+
+- What question the view answers
+- When not to use it
+- How to select it
+- Required fields
+- Interaction differences
+- Performance limits
+- Source component and view-specific fields
+- Originating project

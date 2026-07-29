@@ -1,0 +1,41 @@
+---
+title: Collection view reference
+description: All CollectionViewType values, with render-path and appearance-menu availability.
+sidebar:
+  order: 2
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+| View type | Rendered | Appearance menu | Notes |
+| :--- | :---: | :---: | :--- |
+| Freeform | Yes | Yes | Primary spatial canvas |
+| Card | Yes | No | Specialized card context |
+| Carousel | Yes | Yes | Sequential browsing |
+| 3D Carousel | Yes | Yes | Spatial carousel |
+| Grid | Yes | Yes | Uniform grid |
+| Masonry | Yes | Yes | Packed varied-size layout |
+| Multicolumn | Yes | Yes | Column flow |
+| Multirow | Yes | Yes | Row flow |
+| Notetaking | Yes | Yes | Reading/writing columns |
+| Pivot | Yes | Yes | Structured pivot layout |
+| Schema | Yes | Yes | Field/table view |
+| Stacking | Yes | Yes | Grouped stacks |
+| Time | Yes | Yes | Temporal layout |
+| Tree | Yes | Yes | Hierarchy |
+| Calendar | Yes | Yes | Date-based collection |
+| Graph | Yes | Yes | Link-derived force graph |
+| Docking | Yes | No | Dashboard/tab infrastructure |
+| Pile | Yes | No | Specialized pile-up |
+| Linear | Yes | No | Specialized linear layout |
+| Stacked Timeline | No current dispatch | No | Enum remains; not a current user feature |
+| Invalid | No | No | Sentinel/fallback state |
+
+“Rendered” means `CollectionView.renderSubView` dispatches to an implementation
+in the verified source. “Appearance menu” means a normal collection perspective
+can be created through `setupViewTypes`.
+
+For selection guidance, see
+[Collections, views, maps, and data](/capabilities/organization/).

@@ -1,0 +1,101 @@
+---
+title: Import, export, and search pipelines
+description: Type detection, file and URL conversion, structured data, embeddings, export semantics, and content discovery.
+sidebar:
+  order: 9
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Import pipeline
+
+Import begins with a file, URL, text payload, or structured record source. The
+converter chooses or constructs a Dash document type, attaches source data or a
+file reference, and adds the result to a target collection.
+
+```text
+drop / picker / URL / generated payload
+  → validate and identify input
+  → convert to document factory inputs
+  → create document and layout
+  → add to target collection in an undo batch
+  → render or show a recoverable error
+```
+
+Input detection and document creation should be separate enough that an
+unsupported input does not leave a partial document.
+
+## Files and URLs
+
+File-backed views may depend on uploaded content, object URLs, server paths, or
+external URLs. Persist a stable reference, not a transient browser object URL.
+
+Web embedding can fail because of remote security headers. Provide a visible
+fallback that retains the source URL and explains why live embedding is
+unavailable.
+
+## Structured data
+
+CSV import must decide headers, row records, primitive types, and missing
+values. Preserve raw source or an import note when automatic inference changes
+representation.
+
+Downstream schema and visualization views assume stable field names. Renaming
+fields after chart creation can invalidate saved axes or filters.
+
+## Embeddings and aliases
+
+Embedding an existing Dash document should preserve identity. Importing the
+same external file twice generally creates separate Dash documents unless the
+workflow explicitly resolves duplicates.
+
+Make the user-facing choice clear:
+
+- Embed/reference existing content
+- Copy/duplicate a Dash document
+- Import a new external source
+
+## Export semantics
+
+Export may mean:
+
+- Original source data
+- Current document content
+- Current rendered appearance
+- A hierarchy of images/files
+- Structured records
+- A presentation or generated media artifact
+
+Every export action should name its semantic level and verify the result
+outside the application.
+
+## Search indexes
+
+Dash search operates over titles, fields, document content, links, and
+retrieval-specific indexes. Different indexes may update at different times.
+
+When adding a document type, decide:
+
+- Which text is searchable
+- Which fields become metadata
+- Whether private fields are excluded
+- How updates invalidate indexes
+- How citations navigate back to a source region
+
+Semantic retrieval chunks content for vector search. Chunk identifiers and
+source document identifiers must remain connected so an answer can navigate to
+evidence.
+
+## Tests
+
+- Supported and unsupported file types
+- Empty, large, malformed, and duplicate inputs
+- URL embed refusal
+- CSV headers, missing values, and encoding
+- Undo after import
+- Reload after import
+- Export with nested/private documents
+- Search after create, edit, delete, and permission change
+- Citation navigation to the correct source

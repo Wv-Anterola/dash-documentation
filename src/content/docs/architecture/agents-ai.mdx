@@ -1,0 +1,123 @@
+---
+title: Agents, retrieval, and generation
+description: Chatbot retrieval, ReAct-style tool execution, static and dynamic tools, policy analysis, generation services, and safety boundaries.
+sidebar:
+  order: 7
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Two execution models
+
+The chatbot and agent share model-facing infrastructure but have different
+effect boundaries.
+
+```text
+Chatbot
+  query → retrieve chunks → model context → cited answer
+
+Agent
+  request → model plan/action → validate tool + inputs
+          → execute tool → observation → next model step
+          → optional persistent document mutations
+```
+
+Retrieval quality is mainly an evidence-selection problem. Agent quality also
+includes action selection, parameter validation, mutation scope, undo, and
+review.
+
+## Tool registry
+
+`chatbot/agentsystem/Agent.ts` constructs the static registry. Each tool extends
+`BaseTool`, declares parameter rules and metadata, and implements `execute`.
+
+Tool inputs are validated against the declared rules before execution. Tool
+results return observations that are appended to the model interaction.
+
+The registry contains 22 startup tools when `createNewTool` is included.
+Use [Agent tool reference](/reference/agent-tools/) for the current inventory.
+
+## Read and write tools
+
+Classify tools by effect:
+
+- **Read-only**: calculation, retrieval, metadata inspection, file lookup,
+  canvas listing.
+- **External/service**: web scraping, model-based generation, calendar/service
+  calls.
+- **Workspace write**: filter, sort, tag, link, metadata edit, create content.
+- **Extension**: dynamic tool creation.
+
+The current provenance research explicitly identifies filter, sort, tag, and
+create-links as a core write surface. New tools must declare their effect class
+in documentation and tests.
+
+## Document scope
+
+`AgentDocumentManager` and the parent document view determine which documents a
+tool can discover. Canvas-document tooling combines parent collection,
+rendered-view, and lightbox discovery while filtering containers, hidden
+documents, system documents, and duplicates.
+
+Do not infer safe scope from what is currently visible on screen. Define scope
+in tool code and include affected document identifiers/titles in results.
+
+## Dynamic tools
+
+The agent can request a new tool, persist its source through the server path,
+load it dynamically, and add it to the runtime registry.
+
+Dynamic tools are executable code. A production-quality path requires:
+
+- Source review
+- Restricted imports/capabilities
+- Schema validation
+- Name collision handling
+- Persistence/versioning
+- Clear effect classification
+- Tests in a disposable workspace
+
+The existence of the mechanism does not make arbitrary generated code safe.
+
+## Policy-analysis documents
+
+Policy testimony and policy checker components are document renderers that call
+model-backed analysis while retaining source lists and citations. They compose
+the document/link model with AI services rather than living only in the agent
+registry.
+
+Validate source filtering, citation navigation, deletion of linked sources,
+disabled/loading states, re-analysis, and scroll behavior.
+
+## Generation services
+
+Text, image, visualization, diagram, and video generation have different input
+and output contracts. Keep provider-specific transport separate from Dash
+document creation so:
+
+- A failed service call does not leave a half-valid document.
+- Provider changes do not rewrite the workspace model.
+- Prompts and source context can be recorded consistently.
+- Output validation occurs before persistence.
+
+## Prompt injection and permissions
+
+Retrieved document content and tool observations enter model context. Untrusted
+content can therefore attempt to redirect agent behavior.
+
+The current application does not implement a general permission prompt before
+each write tool. Undo makes correction possible but does not prevent an action.
+Experimental provenance can link actions to triggering content, but capture is
+off by default.
+
+Minimum safeguards for new tools:
+
+- Narrow default scope
+- Explicit required parameters
+- No hidden fallback to a broader scope
+- Effect summary naming affected documents
+- One coherent undo batch
+- No secrets in observations or logs
+- Tests with adversarial document content

@@ -1,0 +1,100 @@
+---
+title: Add an agent tool
+description: Design a bounded, validated, observable, undoable, and documented tool for the Dash agent.
+sidebar:
+  order: 5
+---
+
+## 1. Define one effect
+
+A tool should have one nameable responsibility. Write:
+
+- User intent it satisfies
+- Read/write/external/extension classification
+- Default document scope
+- Required and optional inputs
+- Observable result
+- Failure behavior
+- Undo behavior
+
+Do not hide several unrelated mutations behind a vague tool name.
+
+## 2. Declare parameter rules
+
+Parameter names, types, descriptions, and required state become part of the
+model-visible contract. Descriptions should constrain ambiguity:
+
+- Use enumerated action names.
+- State which identifier refers to which object.
+- Distinguish “all canvas documents” from “linked documents.”
+- Avoid optional values that silently broaden scope.
+
+## 3. Implement `BaseTool`
+
+Extend the shared base class and implement `execute`. Validate domain
+conditions after schema validation: a string can have the correct type and
+still name an inaccessible document.
+
+Return observations that identify:
+
+- What the tool found or changed
+- Affected document titles/IDs
+- Counts
+- Skipped items and reasons
+- External or partial failures
+
+## 4. Bound discovery
+
+Use `AgentDocumentManager` or an explicit parent/canvas scope. Filter:
+
+- System documents
+- Hidden documents where appropriate
+- Infrastructure containers
+- Inaccessible documents
+- Duplicate embeddings of the same data when duplication would mislead
+
+## 5. Batch writes
+
+Wrap one persistent action in one named undo batch. Do not batch separate model
+actions together. Ensure a thrown error does not leave a half-applied batch.
+
+## 6. Register the tool
+
+Import and add the tool to the static registry in `Agent.ts`, or use the
+reviewed dynamic-tool path when the requirement specifically concerns runtime
+extension.
+
+Update the tool reference and effect classification.
+
+## 7. Test adversarially
+
+Include:
+
+- Missing and wrong-type inputs
+- Unknown document IDs
+- Empty scope
+- Duplicate and hidden documents
+- Private documents
+- Partial external failure
+- Undo/redo
+- Imported content containing tool-like instructions
+- Result summaries with no secret leakage
+
+## 8. Human-review standard
+
+A reviewer should be able to decide whether the action was correct from the
+workspace and observation without reading application console output. If that
+is not possible, the tool is not ready to integrate.
+
+## Pull-request checklist
+
+- [ ] Narrow name and scope
+- [ ] Complete parameter schema
+- [ ] Effect classification
+- [ ] Access checks
+- [ ] Structured observation
+- [ ] Named undo batch for writes
+- [ ] Adversarial tests
+- [ ] Tool reference update
+- [ ] Capability/project mapping
+- [ ] User-facing safety and workflow documentation

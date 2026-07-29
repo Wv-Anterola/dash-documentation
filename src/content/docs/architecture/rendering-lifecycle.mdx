@@ -1,0 +1,128 @@
+---
+title: Rendering and interaction lifecycle
+description: How a document reaches a React component, how layout strings and renderer registration work, and where interaction state belongs.
+sidebar:
+  order: 4
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## From document to component
+
+The main client initializes `DocumentContentsView` with a default layout string
+and a component registry. `DocumentContentsView` resolves the effective layout,
+builds bindings, rewrites Dash-specific layout tags, and passes the result to
+the JSX parser.
+
+```text
+DocumentView
+  → DocumentContentsView
+      → choose layout document/string
+      → expand template layout
+      → create document bindings
+      → parse JSX with registered components
+      → render the type-specific component
+```
+
+The registry contains content renderers, collection views, interface helpers,
+and supporting components. Registration makes a component available to layout
+strings; the document factory and creation UI remain separate responsibilities.
+
+## Layout resolution
+
+Layout resolution may use:
+
+- A layout template supplied by the caller
+- An explicit layout string
+- A layout field on the document
+- An expanded template/layout document
+- The default key-value layout
+
+When a document renders the wrong component, inspect the effective layout and
+layout field key before changing the document type.
+
+## Data and layout documents
+
+Type-specific components commonly receive both the data document and layout
+document. Write durable content to the data document. Write context-specific
+size, presentation, or view state to the layout document.
+
+Transient interaction state—hover, an open local menu, pointer capture—usually
+belongs on the component unless it must survive remount, reload, another
+embedding, or presentation restoration.
+
+## Formatted content
+
+Formatted text uses a rich editor and custom node views for embedded Dash
+objects, equations, summaries, and footnotes. A document embedded inside text
+still renders through the document system; it is not flattened into the text
+model.
+
+Editor transactions and Dash document mutations cross two state systems. Test
+selection preservation, undo behavior, and embedded document identity when
+changing formatted-text actions.
+
+## Type-specific views
+
+Image, PDF, audio, video, map, chart, 3D, policy, life-coach, and agent views
+have domain-specific interaction. They should still honor common document-view
+contracts:
+
+- Active and selected state
+- Decorations and title visibility
+- Link anchors
+- Resize and drag behavior
+- Context menus
+- Permissions
+- Undo and persistence
+
+Reuse `DocComponent`/view base contracts and shared controls before creating a
+standalone interaction layer.
+
+## 3D rendering
+
+3D viewer and sketch components introduce an imperative rendering engine inside
+the React/document lifecycle. Dispose engine resources on unmount, keep
+serializable scene state separate from runtime handles, and avoid writing
+high-frequency pointer or animation state into broadly observed document
+fields.
+
+## MobX performance
+
+MobX tracks observable values read during computed/render execution. A broad
+computed getter can make a small field change invalidate a large subtree.
+
+For interactive layout:
+
+- Compute from stable snapshots where possible.
+- Avoid observable writes inside render.
+- Stop iterative layout when movement settles.
+- Scale work by collection size.
+- Separate pointer-frame state from persistent document fields.
+- Dispose reactions and listeners on unmount.
+
+## Error boundaries and failure visibility
+
+Layout parsing errors currently risk becoming console-oriented failures. New
+components should provide a user-visible failure state for missing external
+services, invalid data, unsupported media, and parse errors.
+
+An error state should identify:
+
+- What failed
+- Whether source data is intact
+- What the user can try
+- Where a developer should inspect logs
+
+## Review checklist
+
+- Renderer is registered and reachable from a creation path.
+- Data/layout writes go to the intended document.
+- Permissions are checked before rendering private content.
+- Reactions, listeners, media, and engines are disposed.
+- Reduced-motion and keyboard interaction are supported.
+- Empty, loading, error, and unsupported states are visible.
+- Multiple embeddings of the same document behave consistently.
+- Save/reload and undo tests cover type-specific fields.

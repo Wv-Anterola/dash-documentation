@@ -1,0 +1,126 @@
+---
+title: System map
+description: The Dash-Web runtime, repository boundaries, client shell, server, storage, AI services, and the path from user input to persistent state.
+sidebar:
+  order: 2
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Runtime at a glance
+
+```text
+Browser or Electron shell
+  └─ React client
+      ├─ Main workspace shell
+      ├─ MobX-backed document and field graph
+      ├─ Document renderer registry
+      ├─ Collection-view dispatch
+      ├─ Links, trails, import/export, undo
+      └─ Chatbot and agent surfaces
+           ├─ Remote model APIs
+           └─ Local agent service / Ollama path
+
+Express server
+  ├─ Session and identity routes
+  ├─ Document and file APIs
+  ├─ Dynamic agent-tool support
+  └─ MongoDB persistence
+```
+
+Dash-Web is a TypeScript monorepo. The main application is at the repository
+root; `packages/components` contains the shared component library and
+Storybook. The browser build uses React for views and MobX for observable state.
+The server uses Express and MongoDB. Electron packages the application for
+desktop use.
+
+## Repository map
+
+| Area | Responsibility |
+| :--- | :--- |
+| `src/fields/` | Document, field, reference, list, script, and casting primitives |
+| `src/client/documents/` | Type declarations, factories, document utilities, prototype setup |
+| `src/client/views/` | React views, workspace shell, properties, menus, links, collections |
+| `src/client/views/nodes/` | Type-specific document renderers |
+| `src/client/views/collections/` | Collection dispatch and perspective implementations |
+| `src/client/util/` | Undo, import/export, search, sharing, scripting, drag/drop |
+| `src/server/` | Express APIs, sessions, storage, service integrations |
+| `packages/components/` | Shared presentational and form controls |
+| `electron/` | Desktop packaging and process integration |
+
+Treat this as a responsibility map rather than a rule that every file follows.
+Dash grew through research projects; some older modules combine UI, state, and
+domain behavior.
+
+## Client shell
+
+`Main.tsx` initializes shared systems and passes the renderer component map to
+`DocumentContentsView.Init`. `MainView` owns the application-level workspace.
+Tabs and tiles are represented through docking collections and `TabDocView`.
+
+The selected document determines which context toolbar and properties controls
+appear. A document view can therefore be active in one tab while another
+embedding of the same data remains visible elsewhere.
+
+## State flow
+
+The core state is a graph of `Doc` and `Field` objects rather than one Redux-like
+store. MobX observability causes views to re-render when accessed fields change.
+
+```text
+Pointer, keyboard, import, or agent tool
+  → action / validated operation
+  → optional UndoManager batch
+  → Doc or Field mutation
+  → MobX invalidation
+  → affected React view recomputes
+  → persistence path serializes the changed graph
+```
+
+The cost of a mutation depends on which computed values observed the changed
+field. Collection layout engines must avoid changing an observed position on
+every frame without a stopping condition.
+
+## Server boundary
+
+The Express server handles sessions, stored documents, file-backed content,
+and service integrations. Client code should not assume a successful local
+mutation means persistence or an external call succeeded.
+
+Authentication, authorization, persistence, and external-service behavior are
+separate concerns:
+
+- Authentication identifies the session.
+- Access control determines whether a document may be read or changed.
+- Persistence writes serializable document state.
+- External integrations may send selected content to another service.
+
+See [Server, storage, and security](/architecture/server-storage-security/).
+
+## AI boundary
+
+Dash has two AI-facing interaction models:
+
+- The chatbot retrieves and answers.
+- The agent selects and executes tools.
+
+Both may use document content as model context. Agent tools add a persistent
+mutation boundary and therefore require undo, review, and security treatment
+that read-only retrieval does not.
+
+See [Agents and AI](/architecture/agents-ai/).
+
+## Where to start debugging
+
+| Symptom | First boundary to inspect |
+| :--- | :--- |
+| Wrong type-specific UI | Document type, prototype, renderer registration |
+| Collection shows wrong layout | `_type_collection`, `CollectionView.renderSubView` |
+| View does not update | MobX observation, cast result, computed dependency |
+| Too many re-renders | Layout loop, observable writes, broad computed getter |
+| Undo splits one action | Missing or nested batch boundary |
+| Saved state differs after reload | Serialization/persistence boundary |
+| Agent chooses wrong operation | Tool schema, prompt registry, document scope |
+| Shared user cannot open child | Nested document ACL rather than container ACL |

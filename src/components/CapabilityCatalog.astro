@@ -1,0 +1,64 @@
+---
+import {
+  capabilities,
+  capabilityCategories,
+  verifiedAgainst,
+  type CapabilityAvailability,
+} from '../data/capabilities';
+import { withBase } from '../data/dash';
+
+const availabilityClass: Record<CapabilityAvailability, string> = {
+  Core: 'capability-availability--core',
+  Advanced: 'capability-availability--advanced',
+  'Optional service': 'capability-availability--optional',
+  Experimental: 'capability-availability--experimental',
+  Legacy: 'capability-availability--legacy',
+};
+---
+
+<p class="capability-snapshot">
+  Verified against <code>{verifiedAgainst.repository}</code>
+  <code>{verifiedAgainst.commit.slice(0, 12)}</code>, {verifiedAgainst.date}.
+</p>
+
+<nav class="capability-jump" aria-label="Capability categories">
+  {capabilityCategories.map((category) => (
+    <a href={`#${category.toLowerCase().replace(/\s+/g, '-')}`}>{category}</a>
+  ))}
+</nav>
+
+{
+  capabilityCategories.map((category) => {
+    const rows = capabilities.filter((capability) => capability.category === category);
+    return (
+      <section class="capability-group">
+        <h2 id={category.toLowerCase().replace(/\s+/g, '-')}>{category}</h2>
+        <div class="capability-grid">
+          {rows.map((capability) => (
+            <article class="capability-card">
+              <div class="capability-card__head">
+                <h3><a href={withBase(capability.docs)}>{capability.title}</a></h3>
+                <span class={`capability-availability ${availabilityClass[capability.availability]}`}>
+                  {capability.availability}
+                </span>
+              </div>
+              <p>{capability.summary}</p>
+              <dl>
+                <dt>Start from</dt>
+                <dd>{capability.entryPoints.join(' · ')}</dd>
+                <dt>Implementation</dt>
+                <dd><a href={withBase(capability.technical)}>Technical reference</a></dd>
+                <dt>Project provenance</dt>
+                <dd>
+                  {capability.projects.length
+                    ? `${capability.projects.length} mapped project${capability.projects.length === 1 ? '' : 's'}`
+                    : 'Core capability; no single originating project recorded'}
+                </dd>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </section>
+    );
+  })
+}

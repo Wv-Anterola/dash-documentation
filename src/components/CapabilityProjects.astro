@@ -1,0 +1,31 @@
+---
+import { capabilityById } from '../data/capabilities';
+import { projectByTitle, projectHref } from '../data/dash';
+import StatusBadge from './StatusBadge.astro';
+
+interface Props {
+  capability: string;
+}
+
+const capability = capabilityById(Astro.props.capability);
+const rows = capability.projects.map(projectByTitle);
+---
+
+{
+  rows.length > 0 && (
+    <div class="capability-provenance">
+      <h3>Projects behind this capability</h3>
+      <ul>
+        {rows.map((project) => (
+          <li>
+            <a href={projectHref(project)}>
+              {project.title}
+            </a>
+            {' '}
+            <StatusBadge status={project.status} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

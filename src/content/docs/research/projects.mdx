@@ -5,15 +5,39 @@ description: All forty recovered Dash projects with cohort, system area, and evi
 
 import ProjectIndex from '../../../components/ProjectIndex.astro';
 import StatusKey from '../../../components/StatusKey.astro';
-import { projects, cohorts, areas } from '../../../data/dash';
+import { projects, cohorts, areas, withBase } from '../../../data/dash';
+import { capabilitiesForProject } from '../../../data/capabilities';
 
 Forty projects across six cohorts, with the part of Dash each one touched and
 whether it is in the running system.
 
-This is a map, not a showcase. The full write-up for each project lives on its
-[cohort page](/research/cohorts/), and the ideas behind the work are in
-[concepts](/concepts/). The concepts column below is the fastest way in if you
-care about a topic rather than a year.
+This is provenance, not the product manual. The full write-up for each project
+lives on its [cohort page](/research/cohorts/). Current product behavior lives
+in the [capability catalog](/capabilities/), where integrated projects are
+mapped to the features they introduced or changed.
+
+## Integrated projects now update capabilities
+
+Every project marked integrated maps to at least one canonical capability.
+`npm run coverage` fails if an integrated record becomes stranded in history.
+For example:
+
+<ul>
+  {projects.filter((project) => project.status === 'integrated').slice(0, 8).map((project) => {
+    const mapped = capabilitiesForProject(project.title);
+    return (
+      <li>
+        <strong>{project.title}</strong>: {' '}
+        {mapped.map((capability, index) => (
+          <>
+            {index > 0 && ', '}
+            <a href={withBase(capability.docs)}>{capability.title}</a>
+          </>
+        ))}
+      </li>
+    );
+  })}
+</ul>
 
 ## How to read the status column
 

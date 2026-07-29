@@ -1,0 +1,144 @@
+---
+title: Workspace, collaboration, desktop, and platform
+description: Dash interface structure, sharing and permissions, undo, desktop packaging, local models, and the developer platform.
+sidebar:
+  order: 7
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  Product capabilities depend on the workspace shell around them: dashboards,
+  access controls, reversible edits, deployment choices, and extension points.
+</p>
+
+<SourceSnapshot />
+
+## Workspace interface
+
+The interface has several persistent levels:
+
+- **Home menu** for dashboards, files, imports, shared content, trails,
+  recently closed material, tools, and settings.
+- **Sidebar** for navigation and workspace services.
+- **Top bar** for dashboard-level controls and global actions.
+- **Tabs and tiles** for multiple active contexts.
+- **Context toolbar** for the selected document or collection.
+- **Properties panel** for fields, layout, links, filters, and sharing.
+
+A dashboard contains tiles; each tile can contain tabs; each tab displays a
+document, often a collection. Dragging a tab can reorder it, move it to another
+tile, or create a new tile.
+
+Use separate tabs when contexts should remain available. Use an embedded
+document when the relationship belongs in the content itself.
+
+<MediaPlaceholder
+  title="Annotated Dash interface"
+  brief="A clean current screenshot labeled with home menu, sidebar, top bar, tabs, tiles, context toolbar, canvas, and properties panel. Use subtle numbered callouts."
+  filename="interface-anatomy.webp"
+  ratio="16:9"
+  alt="The Dash interface labeled with its main navigation, workspace, and editing regions."
+/>
+
+<CapabilityProjects capability="workspace-interface" />
+
+## Collaboration, sharing, and permissions
+
+Documents can be shared with users or groups and can carry access-control
+state. Because collections and layouts contain references to other documents,
+sharing a container does not automatically make every nested document readable
+to every recipient.
+
+Before sharing:
+
+1. Decide whether the recipient needs view or edit access.
+2. Check important nested documents.
+3. Check aliases and other collection contexts.
+4. Open the shared result as a lower-privilege test user when possible.
+5. Avoid placing credentials or private service responses in shared fields.
+
+Collaboration is document-centered rather than a separate “team project”
+object. Establish title, field, and collection conventions for large teams so
+search and link descriptions remain understandable.
+
+<CapabilityProjects capability="collaboration-sharing" />
+
+## Undo, redo, and provenance
+
+Dash groups mutations into named undo batches. A well-formed user or agent
+action should be reversible as one conceptual operation.
+
+Undo is not a replacement for backups:
+
+- It is local interaction history, not durable version control.
+- External API calls may have effects outside the workspace.
+- A compound operation is only safely reversible if all mutations joined the
+  same batch.
+
+Experimental agent provenance extends an action record with the source content
+that caused it. That work is a research prototype and capture remains off in
+the ordinary application.
+
+<CapabilityProjects capability="undo-history" />
+
+## Desktop and local models
+
+Dash has Electron packaging for macOS and Windows and an agent-service path
+that can talk to a local Ollama model. Ollama is installed and managed
+separately; the desktop package does not bundle every required model.
+
+“Local model” describes inference location, not the entire data path. Web
+content, Mapbox, or other configured services may still use the network.
+Document deployment assumptions before using Dash in a restricted or
+privacy-sensitive environment.
+
+<MediaPlaceholder
+  title="Desktop Dash with local model status"
+  brief="Show the packaged application, the agent panel, selected local model, and a clear connected status. Do not expose machine usernames, paths, or API keys."
+  filename="desktop-local-model.webp"
+  ratio="16:9"
+  alt="The Dash desktop application connected to a local language model."
+/>
+
+<CapabilityProjects capability="desktop-local-models" />
+
+## Developer platform
+
+Dash-Web is a TypeScript monorepo using React, MobX, Express, MongoDB, webpack,
+Electron, and a shared component workspace. Most successful additions use one
+of four established slots:
+
+1. Document type
+2. Collection view
+3. Agent tool
+4. Undo-aware action
+
+The shared component library under `packages/components` provides reusable
+controls and Storybook examples. New UI should use those components before
+creating a local variant.
+
+Continue with [Extension points](/development/extension-points/) for
+implementation checklists.
+
+<CapabilityProjects capability="developer-platform" />
+
+## Documentation as product infrastructure
+
+The capability registry connects user documentation, technical architecture,
+source locations, and project provenance. It is intentionally separate from
+the project index: history can grow without forcing readers to reconstruct the
+current product from old semesters.
+
+The documentation build validates:
+
+- MDX and Astro types
+- Canonical capability targets
+- Integrated-project capability mappings
+- Internal links and anchors
+- Images and alternative text
+- Heading order
+
+<CapabilityProjects capability="documentation-platform" />

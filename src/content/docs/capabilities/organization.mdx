@@ -1,0 +1,175 @@
+---
+title: Collections, views, maps, and data
+description: How Dash organizes one set of documents through multiple perspectives, including graph, calendar, map, and data-visualization workflows.
+sidebar:
+  order: 3
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  A collection answers “what belongs together.” A view answers “how should I
+  work with it right now.” Dash keeps those questions separate.
+</p>
+
+<SourceSnapshot />
+
+## Collections and perspectives
+
+A collection stores child documents. Its `_type_collection` layout field
+selects the rendering strategy. Changing that field changes the perspective,
+not the documents.
+
+The implementation currently contains 21 enum entries, 19 rendering paths, and
+15 view types exposed by the appearance menu. The difference matters:
+`Invalid` is a sentinel, `StackedTimeline` has no current render path, and
+special views such as docking, pile-up, and linear are not ordinary appearance
+choices.
+
+### User-selectable perspectives
+
+| Perspective | Best for | Important behavior |
+| :--- | :--- | :--- |
+| Freeform | Spatial thinking and mixed media | Manual placement, zoom, pan, layout engines |
+| Schema | Structured records | Columns come from document fields |
+| Tree | Hierarchy | Parent/child navigation |
+| Stacking | Grouping by a field | Live document previews by group |
+| Notetaking | Reading beside writing | Column-oriented workspace |
+| Multicolumn / multirow | Dense repeated layouts | Regular row or column flow |
+| Masonry | Differently sized cards | Packs content while preserving aspect |
+| Carousel / 3D carousel | Sequential browsing | Focused item with adjacent context |
+| Grid | Uniform overview | Scannable repeated cells |
+| Pivot | Cross-tabulated structured data | Field-driven aggregation |
+| Time | Temporal placement | Positions records by time values |
+| Calendar | Dates and schedules | Requires usable date fields |
+| Graph | Link topology | Documents become nodes; links become edges |
+
+Card, docking, linear, and pile-up render for specialized contexts but are not
+normal appearance-menu options.
+
+<MediaPlaceholder
+  title="One collection, four perspectives"
+  brief="A four-panel composite of the same collection in freeform, schema, graph, and calendar views. Keep titles identical so the shared data is obvious."
+  filename="collection-perspectives.webp"
+  ratio="16:9"
+  alt="The same Dash collection shown in freeform, schema, graph, and calendar perspectives."
+/>
+
+<CapabilityProjects capability="collections" />
+
+## Graph view
+
+Graph view makes a linked collection inspectable as a network.
+
+Use it when topology is the question: which documents are hubs, which groups
+are disconnected, and what path connects two sources. Do not use it as a
+replacement for every freeform canvas; dense graphs need filtering and tuned
+layout constants.
+
+Workflow:
+
+1. Put the relevant documents in one collection.
+2. Create meaningful Dash links between them.
+3. Choose **Appearance → Add a Perspective → Graph**.
+4. Hover nodes to inspect neighbors.
+5. Open document previews before following an edge.
+6. Create or remove links while viewing the graph.
+7. Adjust force settings only after reducing irrelevant nodes.
+
+The layout engine scales iteration work by node count and stops when motion
+settles. That protects MobX-driven rendering from recomputing forever, but very
+large or rapidly changing graphs can still be expensive.
+
+<MediaPlaceholder
+  title="Graph view with neighbors and preview"
+  brief="Show 12–20 nodes, visible link edges, one highlighted neighborhood, the graph settings, and a preview of a non-text document."
+  filename="graph-view.webp"
+  ratio="16:9"
+  alt="A Dash graph view with a highlighted node neighborhood and an open document preview."
+/>
+
+<CapabilityProjects capability="graph-view" />
+
+## Data visualization
+
+Data visualization documents render CSV-backed or record-like data as tables
+and charts. The current system includes interactive selection/filtering and an
+AI-assisted generation pipeline.
+
+Start with trustworthy structure:
+
+1. Import a CSV and confirm the title row and column types.
+2. Open or create a data-visualization document.
+3. Select the fields that should control the axes.
+4. Choose a chart based on the analytical question, not decoration.
+5. Enable selection filtering only when linked views should respond.
+6. Use AI generation as a proposal, then verify fields, aggregation, labels,
+   and missing values.
+
+Interactive chart selections persist through document fields. A selected bin
+or row can filter another visualization that identifies the first as its
+parent. This makes coordinated views possible without copying the dataset.
+
+<MediaPlaceholder
+  title="Linked interactive visualizations"
+  brief="Show a table, histogram, and line chart over the same synthetic dataset. Select a histogram bin and visibly filter the other view."
+  filename="interactive-data-visualization.webp"
+  ratio="16:9"
+  alt="A selected histogram bin filtering a linked table and line chart in Dash."
+/>
+
+<CapabilityProjects capability="data-visualization" />
+
+## Maps and calendars
+
+Map documents use Mapbox for search, pushpins, routes, selection, and linked
+notes. Calendar is a collection perspective over documents with date fields.
+
+Use maps for spatial evidence and calendars for temporal coordination. When a
+workflow needs both, keep location and time as explicit fields on event
+documents so the same records can appear in either view.
+
+External map functionality requires a valid Mapbox token. Location search and
+route results are external data; record the result you relied on when
+reproducibility matters.
+
+<CapabilityProjects capability="maps-calendar" />
+
+## Life-coach workspaces
+
+The integrated life-coach feature combines specialized workspace and event
+documents, a spreadsheet-style event view, categories, maps, locations,
+recurrence, reminders, and generated imagery.
+
+This is a good example of a Dash capability composed from existing concepts:
+events remain documents, the spreadsheet is a view, locations use maps, and
+the AI features enhance rather than replace those stored records.
+
+For team or research use, avoid placing sensitive health or personal data into
+external generation prompts. Verify which model service is configured before
+using AI-assisted recurring events or imagery.
+
+<MediaPlaceholder
+  title="Life-coach event workspace"
+  brief="Use synthetic events. Show the event spreadsheet, categories, a map location, and one event open in a lightbox."
+  filename="life-coach-workspace.webp"
+  ratio="16:9"
+  alt="A Dash life-coach workspace with categorized events, a spreadsheet, and a map."
+/>
+
+<CapabilityProjects capability="life-coach" />
+
+## Choosing a perspective
+
+- Choose **freeform** when spatial relationships are part of the thinking.
+- Choose **schema** when fields and consistent records matter most.
+- Choose **graph** when links are the subject of analysis.
+- Choose **calendar** or **time** when dates determine the work.
+- Choose **stacking** when one field defines meaningful groups.
+- Choose **notetaking** when you need persistent reading and writing columns.
+- Choose **grid**, **masonry**, or **carousel** for scanning and presentation.
+
+If you cannot explain what question a new perspective answers, keep the
+collection in freeform or schema until the question becomes clearer.

@@ -1,0 +1,106 @@
+---
+title: Search, filtering, import, and export
+description: Find information across Dash, narrow collections without destroying data, and move content into or out of the workspace.
+sidebar:
+  order: 6
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  A workspace is only useful if material can enter it, be found again, and
+  leave in a form another system can use.
+</p>
+
+<SourceSnapshot />
+
+## Search and filtering
+
+Dash provides several search surfaces because they answer different questions:
+
+- **Global/sidebar search** finds known documents and workspace material.
+- **Search documents** preserve a query as an object in the workspace.
+- **Collection filters** narrow the documents displayed by a view.
+- **Link search** finds link relationships and anchors.
+- **Agent retrieval** searches content semantically before answering.
+
+Title documents consistently. Search quality and agent reviewability both
+degrade when a workspace contains dozens of “Untitled” items.
+
+### Search workflow
+
+1. Start with title or exact-field search when you know the vocabulary.
+2. Search document content when the relevant phrase may be inside a source.
+3. Use filters to narrow an already meaningful collection.
+4. Use graph or backlink inspection when the question concerns relationships.
+5. Use semantic retrieval when wording may differ from the query.
+6. Save a search document if the query is part of an ongoing workflow.
+
+Filters change what a collection view displays; they should not delete the
+underlying documents. Name important filter configurations or preserve them in
+a separate perspective before applying a radically different view.
+
+<MediaPlaceholder
+  title="Search to filtered collection"
+  brief="Show a global search result, a selected result opened on canvas, and a collection filter narrowing related documents. Use realistic titles."
+  filename="search-and-filter.webp"
+  ratio="16:9"
+  alt="Dash search results leading to a filtered collection of related documents."
+/>
+
+<CapabilityProjects capability="search-discovery" />
+
+## Import and embedding
+
+Common entry paths include:
+
+- Drag files onto a freeform collection.
+- Paste or drag a URL.
+- Use the import/flyout panel.
+- Import CSV data for schema and visualization workflows.
+- Record audio or capture a screenshot.
+- Embed an existing Dash document rather than importing a second copy.
+
+After import:
+
+1. Give the document a durable title.
+2. Confirm the detected type.
+3. Add source, author, date, or license fields when relevant.
+4. Verify that the content rendered completely.
+5. Decide whether collaborators should see the imported data.
+6. Link the source to the note or claim that uses it.
+
+Embedding preserves identity. Copying creates a separate document that can
+diverge. Use an embedding when several contexts should refer to the same
+source.
+
+## Export
+
+Export behavior depends on the document and view. Dash contains paths for image
+hierarchies, media, structured data, and application-specific artifacts.
+
+Before relying on export:
+
+- Confirm whether it exports source data, current layout, or a rendered image.
+- Check nested documents and external media.
+- Verify filenames and character encoding.
+- Open the result outside Dash.
+- Record the source commit when the export supports research reproducibility.
+
+Dash is not a universal archival format. Preserve original imported files
+alongside the Dash workspace when long-term portability matters.
+
+<CapabilityProjects capability="import-export" />
+
+## Data handling boundaries
+
+Imported documents may contain private information, copyrighted material,
+malicious instructions, or content that external services should not receive.
+Before invoking AI, mapping, or scraping features, understand which content is
+sent to a third party.
+
+For shared workspaces, verify permissions after importing sensitive material.
+Nested layouts and aliases can make a document visible in more contexts than
+the initial drop location suggests.

@@ -1,0 +1,65 @@
+---
+title: Capability catalog
+description: A complete, implementation-verified map of what Dash can do, where to find it, and which projects made it possible.
+sidebar:
+  order: 1
+---
+
+import CapabilityCatalog from '../../../components/CapabilityCatalog.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  This is the canonical product inventory. Start here when you want to know
+  whether Dash supports a workflow—not in the project archive.
+</p>
+
+<SourceSnapshot />
+
+Dash is a visual knowledge workspace built from documents. A document can hold
+content, other documents, a link, a presentation step, a query, an agent, or
+even interface state. That common model is why capabilities that look unrelated
+can work together: a PDF excerpt can link to a chart, appear in a graph, become
+a presentation slide, and provide evidence to an agent without being copied
+into four different systems.
+
+## How to read the catalog
+
+Every capability has four pieces of documentation:
+
+1. **What it enables**, written for someone deciding whether Dash fits a task.
+2. **Where to start**, using names that appear in the interface.
+3. **How it works**, linked to the technical architecture.
+4. **Where it came from**, linked to the projects that introduced or changed it.
+
+Availability labels describe the current product surface:
+
+- **Core** capabilities are part of ordinary Dash use.
+- **Advanced** capabilities are available but may require advanced mode or
+  domain knowledge.
+- **Optional service** capabilities need an external API, model, or hosted
+  service.
+- **Experimental** capabilities are real implementations whose packaging or
+  operational contract is still changing.
+- **Legacy** capabilities remain documented for old workspaces but should not
+  be chosen for new work.
+
+Counts in source enums are not presented as product claims here. Dash includes
+internal configuration, loading, wrapper, and workspace document types; an enum
+entry is not automatically a feature a user can select.
+
+<CapabilityCatalog />
+
+## Coverage policy
+
+An integrated project must map to at least one capability above. A capability
+must link to both user and technical documentation. The build runs
+`npm run coverage` to enforce those relationships.
+
+Projects that are implemented on a branch, prototypes, or archived work can
+still appear as provenance. Their project status remains visible so a reader
+does not mistake a research result for something available in the current
+application.
+
+For the historical record, see the [project index](/research/projects/). For
+task-oriented recipes that combine several capabilities, continue to
+[workflows](/workflows/).

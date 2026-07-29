@@ -1,0 +1,86 @@
+---
+title: Testing and release discipline
+description: A proportional verification matrix for document, view, agent, server, desktop, and documentation changes.
+sidebar:
+  order: 6
+---
+
+## Test layers
+
+| Layer | Best for |
+| :--- | :--- |
+| Unit | Casts, transforms, parsers, scoring, pure layout calculations |
+| Component/Storybook | Shared controls and isolated renderer states |
+| Integration | Document factories, serialization, collection dispatch, tool execution |
+| End to end | Real user workflows across UI, persistence, and undo |
+| Manual exploratory | Spatial interaction, media, accessibility, desktop packaging |
+
+Use the lowest layer that proves the contract, then add an end-to-end path for
+user-visible integrations.
+
+## Document-type matrix
+
+- Create
+- Empty state
+- Edit
+- Link/anchor
+- Embed twice
+- Undo/redo
+- Save/reload
+- Permission boundary
+- Import/export when relevant
+- Loading and external-service failure
+
+## Collection-view matrix
+
+- Empty, one, typical, and large child sets
+- Heterogeneous child types
+- Add/move/remove
+- Selection and drag
+- Perspective switch
+- Save/reload
+- Filter/sort
+- Performance/convergence
+
+## Agent-tool matrix
+
+- Schema validation
+- Empty and bounded scope
+- Access filtering
+- Observation content
+- Write batching
+- Undo/redo
+- External failure
+- Adversarial source content
+
+## Documentation matrix
+
+Run:
+
+```bash
+npm run coverage
+npm run check
+npm run build
+npm run links
+```
+
+Review generated pages at desktop and narrow widths. Placeholders are valid
+during drafting only when they include an exact capture brief, filename, ratio,
+and required alt text.
+
+## Release record
+
+For each release or deploy, record:
+
+- Dash-Web commit
+- Documentation commit
+- Build environment
+- External provider/model assumptions
+- Schema or stored-document changes
+- Added, changed, deprecated, and removed capabilities
+- Known limitations
+- Migration or rollback steps
+
+Documentation should be updated in the feature pull request. A later project
+summary cannot substitute for the operating and technical documentation needed
+at integration time.

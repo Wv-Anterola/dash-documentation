@@ -1,0 +1,201 @@
+---
+title: Documents and content
+description: Every major Dash content type, how document creation works, and the workflows supported by modern specialized documents.
+sidebar:
+  order: 2
+---
+
+import CapabilityProjects from '../../../components/CapabilityProjects.astro';
+import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  Dash does not separate “notes,” “files,” and “app objects.” They are documents
+  with different fields and renderers, so they can be arranged, linked,
+  annotated, shared, and presented through the same interactions.
+</p>
+
+<SourceSnapshot />
+
+<MediaPlaceholder
+  title="The document family"
+  brief="A polished canvas showing text, PDF, image, equation, task, 3D, policy, and collection documents together. Use real content with no private data; keep the Dash chrome visible."
+  filename="document-family.webp"
+  ratio="16:9"
+  alt="A Dash canvas containing several document types arranged and linked together."
+/>
+
+## The document foundation
+
+A Dash document has identity, fields, a prototype, data, and one or more layout
+representations. The visible rectangle on a canvas is a view of that document,
+not the document itself. You can therefore:
+
+- Show the same underlying document in multiple collections.
+- Give each placement a different size, position, or presentation state.
+- Link to a whole document or to a region inside it.
+- Put specialized documents inside ordinary collections.
+- Change collection perspectives without converting the contained documents.
+
+Create documents by double-clicking a canvas, typing `:`, using the import
+panel, dragging files or URLs into Dash, duplicating an existing document, or
+using a template. See [Creating and selecting documents](/guides/documents/documents/)
+for the interaction-level tutorial.
+
+<CapabilityProjects capability="document-model" />
+
+## Text, equations, and editing
+
+Rich-text documents support headings, lists, links, embedded documents,
+selection annotations, and selection-aware AI editing. A text selection is an
+addressable region, so a comment or link can target the selection rather than
+the containing note.
+
+Equation documents add symbolic expressions and solver-backed operations. Use
+them when mathematical notation and computation should remain part of the
+workspace rather than being pasted in as an image.
+
+Recommended workflow:
+
+1. Create a text document and give it a descriptive title.
+2. Use headings to expose structure to readers and search.
+3. Drag a related document into the text editor to embed it.
+4. Select a sentence to create a precise annotation or link.
+5. Use an equation document for reusable mathematics instead of static markup.
+
+See [Text documents](/guides/documents/text/) for formatting details.
+
+<CapabilityProjects capability="rich-text" />
+
+## Media documents
+
+Dash has first-class views for images, PDFs, web pages, HTML, audio, recordings,
+video, screenshots, and several supporting media wrappers.
+
+| Type | What remains interactive | Typical use |
+| :--- | :--- | :--- |
+| PDF | Pages, zoom, selections, annotations | Papers, reports, source evidence |
+| Image | Crop/edit state, regions, ink, masks | Figures, photographs, visual notes |
+| Web | Embedded page or captured URL context | Reference sites and web research |
+| Audio/recording | Playback range and timeline anchors | Interviews, dictation, commentary |
+| Video | Playback time and timeline view | Lecture review and media analysis |
+| Screenshot | Image content plus capture context | UI evidence and reproducible reports |
+
+For durable research, prefer imported or captured content over a live webpage:
+an external page can change or refuse to embed. Give every media document a
+title before linking it; titles become the readable labels in search, trails,
+citations, and agent results.
+
+Detailed tutorials:
+
+- [PDFs](/guides/documents/pdf/)
+- [Images](/guides/documents/images/)
+- [Web pages](/guides/documents/webpage/)
+- [Audio](/guides/documents/audio/)
+- [Video](/guides/documents/video/)
+
+## Drawing and diagrams
+
+Ink is both an annotation medium and a document type. You can change stroke
+geometry, endpoints, fill and stroke color, rotation, scale, and point-level
+shape. Masks use ink geometry to reveal or hide part of another document.
+
+Smart drawing and diagram documents extend this model:
+
+- Smart drawing can transform or generate visual material.
+- Diagram documents render structured diagrams from source.
+- Ink remains linkable and presentable rather than being flattened onto the
+  canvas background.
+
+Use ink for spatial explanation and quick markup. Use a diagram document when
+the source should remain editable and reproducible.
+
+<CapabilityProjects capability="drawing-diagrams" />
+
+## Tasks, journals, and scrapbooks
+
+These are specialized document types, not isolated mini-apps:
+
+- **Tasks** carry task-specific state while remaining ordinary collection
+  members.
+- **Daily journals** provide a recurring writing surface organized around time.
+- **Scrapbooks** collect visual or heterogeneous material in a purpose-built
+  layout.
+
+Because they share the document model, a task can link to the evidence needed
+to complete it, a journal entry can appear in a calendar collection, and a
+scrapbook item can become part of a presentation trail.
+
+<MediaPlaceholder
+  title="Tasks, journal, and scrapbook"
+  brief="Three adjacent real Dash documents showing a task with state, a dated journal entry, and a scrapbook containing mixed media."
+  filename="structured-personal-documents.webp"
+  ratio="16:9"
+  alt="Task, daily journal, and scrapbook documents shown side by side in Dash."
+/>
+
+<CapabilityProjects capability="structured-personal-documents" />
+
+## Policy analysis
+
+Policy testimony and policy checker documents are available in the current
+implementation. A checker evaluates a policy against linked testimony and
+retains citations to its evidence.
+
+Use the feature as an evidence workflow:
+
+1. Create or import testimony documents and title each source.
+2. Create the policy document to be evaluated.
+3. Link the relevant testimony to the checker.
+4. Run the analysis and inspect citations before accepting a conclusion.
+5. Filter by source to test whether the result depends too heavily on one
+   testimony document.
+6. Re-run after changing the policy or evidence set.
+
+The checker is an analysis aid, not an authority. Its output should remain
+traceable to source documents, and the external model/service configuration
+must be available.
+
+<MediaPlaceholder
+  title="Policy checker with cited testimony"
+  brief="Show a policy checker, its linked testimony list, a result with citations, and the source filter. Use synthetic policy content."
+  filename="policy-analysis.webp"
+  ratio="16:9"
+  alt="A policy checker document displaying a cited analysis beside linked testimony sources."
+/>
+
+<CapabilityProjects capability="policy-analysis" />
+
+## 3D content
+
+Dash can display 3D models and includes a sketching surface in the current
+master branch. Keep three maturity levels distinct:
+
+- **3D viewing** is an integrated document capability.
+- **3D sketching** is integrated but intended for advanced use.
+- **Sketch-to-CAD extrusion and mesh tooling** have working branch
+  implementations and remain non-integrated research projects.
+
+Use the 3D document for inspecting a model in the context of notes, images, and
+references. Do not promise CAD export from the main application until the
+branch work is merged and re-verified.
+
+<MediaPlaceholder
+  title="3D document and sketch plane"
+  brief="A high-resolution capture with a model, visible orbit controls, and a sketch plane. Avoid debug overlays and use a simple permissively licensed model."
+  filename="3d-view-and-sketch.webp"
+  ratio="16:9"
+  alt="A 3D model document in Dash with an active sketch plane and surrounding notes."
+/>
+
+<CapabilityProjects capability="three-dimensional-content" />
+
+## Internal and supporting types
+
+The source enum also contains types such as configuration, loading, link,
+presentation slide, chat message, pushpin, route, and internal databases. They
+are documented with the feature that uses them instead of being presented as
+independent creation choices.
+
+See the [document type reference](/reference/document-types/) for the complete
+implementation-facing inventory.

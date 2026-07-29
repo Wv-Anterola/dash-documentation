@@ -1,0 +1,56 @@
+---
+title: Implementation snapshot
+description: The exact Dash-Web revision used for capability and technical documentation, plus the verification method.
+sidebar:
+  order: 4
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+## Why this page exists
+
+“Current master” changes. A reader must be able to reproduce the source state
+used for counts, status labels, paths, and architectural claims.
+
+This documentation pass inspected:
+
+```text
+Repository: https://github.com/brown-dash/Dash-Web
+Ref:        origin/master
+Commit:     3170124bdbf216156151aa5fe6c0085b17c1a63a
+Date:       2026-07-08
+Subject:    more cleanup
+```
+
+## Verified registries
+
+- 51 `DocumentType` entries
+- 21 `CollectionViewType` entries
+- 19 collection-view render paths
+- 15 collection perspectives in the appearance menu
+- 22 startup agent tools including `createNewTool`
+
+## Verification method
+
+Claims were checked against the type enum, `CollectionView.renderSubView`,
+`CollectionView.setupViewTypes`, the `Agent` constructor, the
+`DocumentContentsView.Init` component registry, and source paths recorded in the
+capability registry.
+
+Project integration status remains evidence-backed prose maintained in
+`src/data/projects.ts`. Capability coverage is enforced automatically, but a
+future documentation update must still re-check project status against the
+new source commit.
+
+## Updating the snapshot
+
+1. Fetch the intended Dash-Web remote.
+2. Record the exact commit hash.
+3. Re-run registry inventory checks.
+4. Inspect added and removed user entry points.
+5. Update capability availability and source paths.
+6. Update project statuses only with direct evidence.
+7. Run documentation coverage, type, build, and link checks.
+8. Record the change in release history.
