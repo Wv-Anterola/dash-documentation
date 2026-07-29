@@ -3,12 +3,22 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const [projectsSource, capabilitiesSource, visualsSource, creatorsSource, pageVisualsSource] = await Promise.all([
+const [
+  projectsSource,
+  capabilitiesSource,
+  visualsSource,
+  creatorsSource,
+  pageVisualsSource,
+  workflowsSource,
+  branchAuditSource,
+] = await Promise.all([
   readFile(path.join(root, 'src/data/projects.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/capabilities.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/visuals.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/creators.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/pageVisuals.ts'), 'utf8'),
+  readFile(path.join(root, 'src/data/projectWorkflows.ts'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/branch-audit.json'), 'utf8'),
 ]);
 
 const projectPattern =
@@ -71,6 +81,36 @@ const missingProjectVisuals = projects.filter(
 const unknownProjectVisuals = [...projectVisualTitles].filter(
   (title) => !knownTitles.has(title)
 );
+
+const workflowTitles = new Set(
+  [...workflowsSource.matchAll(/^\s{2}'([^']+)':\s*\[/gm)].map((match) => match[1])
+);
+const missingProjectWorkflows = projects.filter(
+  (project) => !workflowTitles.has(project.title)
+);
+const unknownProjectWorkflows = [...workflowTitles].filter(
+  (title) => !knownTitles.has(title)
+);
+
+const branchAudit = JSON.parse(branchAuditSource);
+const auditBranchNames = new Set(
+  branchAudit.branches.map((branch) => branch.shortName)
+);
+const duplicateAuditBranches = branchAudit.branches
+  .map((branch) => branch.fullName)
+  .filter((name, index, rows) => rows.indexOf(name) !== index);
+const unreadAuditBlobs =
+  branchAudit.methodology.uniqueCodeBlobsExpected -
+  branchAudit.methodology.uniqueCodeBlobsRead;
+
+const missingNamedBranches = [];
+for (const match of projectsSource.matchAll(/^\s{4}code:\s*'(?<code>[^']+)',/gm)) {
+  const branchSegment = match.groups.code.match(/\bbranches?\s+([^;]+)/i)?.[1];
+  if (!branchSegment) continue;
+  for (const quoted of branchSegment.matchAll(/`([^`]+)`/g)) {
+    if (!auditBranchNames.has(quoted[1])) missingNamedBranches.push(quoted[1]);
+  }
+}
 
 const capabilityIds = new Set(
   [...capabilitiesSource.matchAll(/^\s{4}id:\s*'([^']+)',/gm)].map((match) => match[1])
@@ -136,6 +176,12 @@ if (
   missingTargets.length ||
   missingProjectVisuals.length ||
   unknownProjectVisuals.length ||
+  missingProjectWorkflows.length ||
+  unknownProjectWorkflows.length ||
+  duplicateAuditBranches.length ||
+  unreadAuditBlobs !== 0 ||
+  !branchAudit.branches.some((branch) => branch.name === 'origin/master') ||
+  missingNamedBranches.length ||
   missingCapabilityVisuals.length ||
   unknownCapabilityVisuals.length ||
   missingVisualPosters.length ||
@@ -163,6 +209,30 @@ if (
   if (unknownProjectVisuals.length) {
     console.error('Visual registry references unknown projects:');
     for (const title of unknownProjectVisuals) console.error(`  - ${title}`);
+  }
+  if (missingProjectWorkflows.length) {
+    console.error('Projects without a complete interaction workflow:');
+    for (const project of missingProjectWorkflows) console.error(`  - ${project.title}`);
+  }
+  if (unknownProjectWorkflows.length) {
+    console.error('Workflow registry references unknown projects:');
+    for (const title of unknownProjectWorkflows) console.error(`  - ${title}`);
+  }
+  if (duplicateAuditBranches.length) {
+    console.error('Branch audit contains duplicate branch names:');
+    for (const name of new Set(duplicateAuditBranches)) console.error(`  - ${name}`);
+  }
+  if (unreadAuditBlobs !== 0) {
+    console.error(
+      `Branch audit did not read every expected blob: ${unreadAuditBlobs} remain.`
+    );
+  }
+  if (!branchAudit.branches.some((branch) => branch.name === 'origin/master')) {
+    console.error('Branch audit does not contain the origin/master baseline.');
+  }
+  if (missingNamedBranches.length) {
+    console.error('Project records name branches absent from the branch audit:');
+    for (const name of new Set(missingNamedBranches)) console.error(`  - ${name}`);
   }
   if (missingCapabilityVisuals.length) {
     console.error('Capabilities without visual evidence:');
@@ -198,7 +268,9 @@ if (
     `Capability coverage complete: ${projects.length} projects, ` +
       `${projects.filter((project) => project.status === 'integrated').length} integrated projects mapped, ` +
       `${new Set(docsTargets).size} canonical documentation targets verified, ` +
-      `${projectVisualTitles.size} project visuals, ${capabilityVisualIds.size} capability visuals, ` +
-      `${creatorLabels.length} creator cards, and automatic page visuals verified.`
+      `${projectVisualTitles.size} project visuals, ${workflowTitles.size} complete project workflows, ` +
+      `${capabilityVisualIds.size} capability visuals, ${creatorLabels.length} creator cards, ` +
+      `and ${branchAudit.methodology.branchCount} branch tips / ` +
+      `${branchAudit.methodology.uniqueCodeBlobsRead} unique code versions verified.`
   );
 }

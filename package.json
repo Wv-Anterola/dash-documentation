@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "visuals": "node scripts/build-visual-posters.mjs",
+    "audit:branches": "node scripts/build-branch-audit.mjs",
     "coverage": "node scripts/check-capability-coverage.mjs",
     "links": "node scripts/check-links.mjs"
   },

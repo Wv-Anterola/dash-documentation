@@ -44,17 +44,29 @@ scrolling, and submenu rendering. They did not change the document, collection,
 or agent registries, so the verified counts remain the same.
 
 Project integration status remains evidence-backed prose maintained in
-`src/data/projects.ts`. Capability coverage is enforced automatically, but a
-future documentation update must still re-check project status against the
-new source commit.
+`src/data/projects.ts`, but it is no longer based on the current branch alone.
+The [complete branch audit](/reference/branch-audit/) reads every unique source
+version reachable from every local and origin branch tip and records the exact delta
+of each branch from this master snapshot.
+
+That separation matters:
+
+- **current behavior** comes from this exact `origin/master` commit;
+- **branch-only behavior** must be labelled implemented, prototype, or
+  archived rather than integrated;
+- **historical descriptions without source** remain documentation-only or
+  unclear;
+- **project workflows** name both the human interaction and the internal
+  view/model/tool/service path recovered from code.
 
 ## Updating the snapshot
 
 1. Fetch the intended Dash-Web remote.
 2. Record the exact commit hash.
-3. Re-run registry inventory checks.
-4. Inspect added and removed user entry points.
-5. Update capability availability and source paths.
-6. Update project statuses only with direct evidence.
-7. Run documentation coverage, type, build, and link checks.
-8. Record the change in release history.
+3. Run `npm run audit:branches` to read all branch-tip code versions.
+4. Re-run registry inventory checks.
+5. Inspect added and removed user entry points.
+6. Update capability availability and source paths.
+7. Update project statuses only with direct evidence.
+8. Run documentation coverage, type, build, and link checks.
+9. Record the change in release history.

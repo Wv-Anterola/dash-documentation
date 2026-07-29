@@ -1,0 +1,36 @@
+---
+interface GalleryItem {
+  src: string;
+  alt: string;
+  caption: string;
+  label: string;
+}
+
+interface Props {
+  title: string;
+  items: GalleryItem[];
+}
+
+const { title, items } = Astro.props;
+---
+
+<section class="workflow-gallery" aria-label={title}>
+  <div class="workflow-gallery__heading">
+    <p class="dash-label">Real Dash interaction</p>
+    <h3>{title}</h3>
+  </div>
+  <div class="workflow-gallery__frames">
+    {items.map((item, index) => (
+      <figure>
+        <div class="workflow-gallery__image">
+          <img src={item.src} alt={item.alt} loading="lazy" />
+          <span>{index + 1}</span>
+        </div>
+        <figcaption>
+          <strong>{item.label}</strong>
+          <span>{item.caption}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>

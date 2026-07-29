@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import WorkflowGallery from '../../../components/WorkflowGallery.astro';
 
 ## Outcome
 
@@ -58,12 +58,28 @@ the link description.
 A useful test is whether a collaborator can follow the link and understand why
 it exists without asking you.
 
-<MediaPlaceholder
-  title="Claim-to-evidence workspace"
-  brief="Show three source documents, precise passage annotations, a synthesis note, and labeled supporting/contradicting links."
-  filename="workflow-research-synthesis.webp"
-  ratio="16:9"
-  alt="A Dash research workspace linking synthesis claims to precise evidence in several sources."
+<WorkflowGallery
+  title="Source to evidence to presentation"
+  items={[
+    {
+      src: '/assets/gifs/gettingstarted/dash-pdf-select-annotate.gif',
+      alt: 'Selecting a passage in a PDF and creating a precise Dash annotation.',
+      label: 'Mark the evidence',
+      caption: 'Select the exact passage instead of writing a detached note.',
+    },
+    {
+      src: '/assets/gifs/gettingstarted/dash-create-link-board.gif',
+      alt: 'Creating a link between evidence and another document on a Dash board.',
+      label: 'Connect the claim',
+      caption: 'Link the synthesis note back to the material that supports it.',
+    },
+    {
+      src: '/assets/gifs/gettingstarted/dash-present-trail.gif',
+      alt: 'Playing a Dash presentation trail through linked source material.',
+      label: 'Tell the story',
+      caption: 'Present a trail that can still return to the underlying source.',
+    },
+  ]}
 />
 
 ## 4. Change perspective

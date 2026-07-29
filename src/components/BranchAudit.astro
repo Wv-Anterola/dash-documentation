@@ -1,0 +1,171 @@
+---
+import audit from '../data/generated/branch-audit.json';
+import { branchAnchor } from '../data/branchEvidence';
+
+const formatBytes = (bytes: number) => {
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let value = bytes;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit++;
+  }
+  return `${value.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
+};
+
+const current = audit.branches.filter((branch) => branch.containedInBaseline);
+const branchOnly = audit.branches.filter((branch) => !branch.containedInBaseline);
+---
+
+<div class="audit-summary" aria-label="Branch audit totals">
+  <div><strong>{audit.methodology.branchCount}</strong><span>{audit.methodology.originBranchCount} origin + {audit.methodology.localBranchCount} local refs</span></div>
+  <div><strong>{audit.methodology.branchTipSourceFileReferences.toLocaleString()}</strong><span>branch-to-file references</span></div>
+  <div><strong>{audit.methodology.uniqueCodeBlobsRead.toLocaleString()}</strong><span>unique code versions read</span></div>
+  <div><strong>{audit.methodology.totalUniqueLinesRead.toLocaleString()}</strong><span>unique lines read</span></div>
+</div>
+
+<div class="audit-pipeline" role="img" aria-label="How the source audit works">
+  <div><span>1</span><strong>List every branch tip</strong><small>origin and local refs</small></div>
+  <b aria-hidden="true">→</b>
+  <div><span>2</span><strong>List every source blob</strong><small>{audit.methodology.branchTipSourceFileReferences.toLocaleString()} references</small></div>
+  <b aria-hidden="true">→</b>
+  <div><span>3</span><strong>Read each unique version</strong><small>{formatBytes(audit.methodology.totalUniqueBytesRead)}</small></div>
+  <b aria-hidden="true">→</b>
+  <div><span>4</span><strong>Attribute branch deltas</strong><small>paths, symbols, services, tests</small></div>
+</div>
+
+<div class="filter-bar branch-audit__filters">
+  <div>
+    <label class="dash-label" for="branch-query">Find a branch, file, symbol, or feature</label>
+    <input id="branch-query" type="search" placeholder="Try mapbox, agent, trails, dataviz…" />
+  </div>
+  <div>
+    <label class="dash-label" for="branch-state">Relationship to master</label>
+    <select id="branch-state">
+      <option value="">All {audit.branches.length}</option>
+      <option value="current">Contained in master ({current.length})</option>
+      <option value="branch-only">Branch-only ({branchOnly.length})</option>
+    </select>
+  </div>
+</div>
+
+<p class="filter-count" id="branch-count" role="status"></p>
+
+<div class="branch-audit" id="branch-audit">
+  {audit.branches.map((branch) => {
+    const searchable = [
+      branch.shortName,
+      branch.displayName,
+      branch.subject,
+      branch.author,
+      ...branch.architectureAreas,
+      ...branch.featureSignals.map((signal) => signal.name),
+      ...branch.significantSymbols,
+      ...branch.changedPaths,
+    ].join(' ').toLowerCase();
+    return (
+      <details
+        id={branchAnchor(branch)}
+        class="branch-audit__row"
+        data-state={branch.containedInBaseline ? 'current' : 'branch-only'}
+        data-search={searchable}
+      >
+        <summary>
+          <span>
+            <code>{branch.displayName}</code>
+            <small>{branch.subject || 'No commit subject'}</small>
+          </span>
+          <span class:list={[
+            'branch-audit__state',
+            branch.containedInBaseline && 'branch-audit__state--current',
+          ]}>
+            {branch.containedInBaseline ? 'in master' : 'branch-only'}
+          </span>
+        </summary>
+        <div class="branch-audit__body">
+          <dl>
+            <div><dt>Tip</dt><dd><code>{branch.tip}</code></dd></div>
+            <div><dt>Ref</dt><dd><code>{branch.fullName}</code></dd></div>
+            <div><dt>Last authored</dt><dd>{branch.authoredAt.slice(0, 10)} by {branch.author}</dd></div>
+            <div><dt>Compared with master</dt><dd>{branch.aheadOfBaseline} ahead · {branch.behindBaseline} behind</dd></div>
+            <div><dt>Source delta</dt><dd>{branch.changeSummary.added} added · {branch.changeSummary.modified} modified · {branch.changeSummary.deleted} deleted · {branch.changeSummary.renamed} renamed</dd></div>
+            <div><dt>Source tree</dt><dd>{branch.sourceFileCount.toLocaleString()} code files at this tip</dd></div>
+            <div><dt>Visual assets</dt><dd>{branch.visualAssetCount} image/video paths recorded</dd></div>
+          </dl>
+
+          {branch.architectureAreas.length > 0 && (
+            <>
+              <h3>Architecture touched</h3>
+              <ul class="branch-audit__chips">
+                {branch.architectureAreas.map((area) => <li>{area}</li>)}
+              </ul>
+            </>
+          )}
+
+          {branch.featureSignals.length > 0 && (
+            <>
+              <h3>Implementation signals in changed code</h3>
+              <ul class="branch-audit__chips">
+                {branch.featureSignals.map((signal) => <li>{signal.name} · {signal.files} files</li>)}
+              </ul>
+            </>
+          )}
+
+          {branch.significantSymbols.length > 0 && (
+            <details>
+              <summary>Named classes, functions, interfaces, and exports</summary>
+              <p class="branch-audit__code-list">
+                {branch.significantSymbols.map((symbol) => <code>{symbol}</code>)}
+              </p>
+            </details>
+          )}
+
+          {branch.changedPaths.length > 0 && (
+            <details>
+              <summary>Every changed source path ({branch.changedPaths.length})</summary>
+              <ul class="branch-audit__paths">
+                {branch.changedPaths.map((path) => <li><code>{path}</code></li>)}
+              </ul>
+            </details>
+          )}
+        </div>
+      </details>
+    );
+  })}
+</div>
+
+<p class="audit-digest">
+  Reproducibility digest: <code>{audit.methodology.auditDigest}</code><br />
+  Baseline: <code>{audit.repository.baselineTip}</code> · generated {audit.generatedAt.slice(0, 10)}
+</p>
+
+<script>
+  const query = document.getElementById('branch-query') as HTMLInputElement | null;
+  const state = document.getElementById('branch-state') as HTMLSelectElement | null;
+  const count = document.getElementById('branch-count');
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('.branch-audit__row'));
+
+  const apply = () => {
+    const needle = query?.value.trim().toLowerCase() ?? '';
+    const selectedState = state?.value ?? '';
+    let shown = 0;
+    for (const row of rows) {
+      const matchesText = !needle || row.dataset.search?.includes(needle);
+      const matchesState = !selectedState || row.dataset.state === selectedState;
+      row.hidden = !(matchesText && matchesState);
+      if (!row.hidden) shown++;
+    }
+    if (count) count.textContent = `Showing ${shown} of ${rows.length} branches.`;
+  };
+
+  query?.addEventListener('input', apply);
+  state?.addEventListener('change', apply);
+  apply();
+
+  const openHash = () => {
+    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target instanceof HTMLDetailsElement) target.open = true;
+  };
+  openHash();
+  window.addEventListener('hashchange', openHash);
+</script>

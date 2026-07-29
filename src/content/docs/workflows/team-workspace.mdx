@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 
-import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import WorkflowGallery from '../../../components/WorkflowGallery.astro';
 
 ## Outcome
 
@@ -48,12 +48,28 @@ recipient cannot open, or an alias may expose a document in another context.
 Never use screenshots as the only permission test. Open the shared workspace as
 a lower-privilege account when possible.
 
-<MediaPlaceholder
-  title="Shared team workspace"
-  brief="Use fictitious contributors. Show a shared collection, schema fields for owner/status, the sharing panel, and linked source/synthesis collections."
-  filename="workflow-team-workspace.webp"
-  ratio="16:9"
-  alt="A shared Dash team workspace with ownership fields, status, and permissions."
+<WorkflowGallery
+  title="Structure, share, and maintain"
+  items={[
+    {
+      src: '/assets/gifs/views/schema_columns.gif',
+      alt: 'Configuring columns in a Dash schema collection view.',
+      label: 'Agree on fields',
+      caption: 'Make ownership and review status visible to everyone.',
+    },
+    {
+      src: '/assets/gifs/gettingstarted/sharing.gif',
+      alt: 'Sharing a Dash document and changing its access permissions.',
+      label: 'Share deliberately',
+      caption: 'Give people the access they need and verify the result.',
+    },
+    {
+      src: '/assets/gifs/gettingstarted/dash-show-links.gif',
+      alt: 'Showing relationships among documents in a shared Dash workspace.',
+      label: 'Keep context visible',
+      caption: 'Connections explain how source, synthesis, and presentation relate.',
+    },
+  ]}
 />
 
 ## 4. Make review visible

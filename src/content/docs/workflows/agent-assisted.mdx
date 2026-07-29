@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import WorkflowGallery from '../../../components/WorkflowGallery.astro';
 
 ## Outcome
 
@@ -46,12 +46,28 @@ Prefer:
 Avoid combining broad tagging, deletion-like filtering, reordering, and link
 creation into one opaque instruction.
 
-<MediaPlaceholder
-  title="Human review of agent organization"
-  brief="Show the bounded canvas, an agent-proposed tag plan, a completed tag tool call, affected document titles, and the undo control."
-  filename="workflow-agent-review.webp"
-  ratio="16:9"
-  alt="A person reviewing tags applied by the Dash agent to a bounded collection."
+<WorkflowGallery
+  title="Ask, inspect, and reverse"
+  items={[
+    {
+      src: '/assets/gifs/ai/ai-websearch-1.gif',
+      alt: 'An AI-assisted web search returning source material inside Dash.',
+      label: 'Ask inside the workspace',
+      caption: 'The assistant works with material that can become real documents.',
+    },
+    {
+      src: '/assets/images/current/dash-tools-panel.webp',
+      alt: 'The current Dash tools panel open beside a workspace.',
+      label: 'Inspect the tool surface',
+      caption: 'Know which workspace operations are available before allowing edits.',
+    },
+    {
+      src: '/assets/gifs/environment/undo-redo.gif',
+      alt: 'Using Dash undo and redo controls to reverse workspace actions.',
+      label: 'Reverse a bad change',
+      caption: 'Review the visible result and undo it when the action was wrong.',
+    },
+  ]}
 />
 
 ## 4. Review the effect, not only the response

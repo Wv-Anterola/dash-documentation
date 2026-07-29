@@ -1,0 +1,77 @@
+---
+title: Every branch and code path
+description: A reproducible audit of every source version reachable from every Dash-Web local and origin branch tip.
+---
+
+import BranchAudit from '../../../components/BranchAudit.astro';
+
+This is the evidence ledger behind the technical and project documentation.
+It answers three different questions that older project lists blurred
+together:
+
+1. **What is in the current product?** Code contained in `origin/master`.
+2. **What was built somewhere else?** Code that survives on a branch but is
+   not contained in current master.
+3. **What was only described?** A project claim for which no matching
+   implementation branch or current source path was recovered.
+
+In very plain words: a **branch** is an alternate copy of the code’s history.
+Something can work beautifully on that copy and still not exist when a person
+opens today’s normal Dash. The label beside every branch below makes that
+difference visible.
+
+## What “read every branch” means
+
+Checking out every branch and rereading the same inherited files again and again
+would produce a large number without better evidence. This audit uses Git’s
+content identity instead:
+
+- enumerate every local and origin branch tip;
+- enumerate every code file under `src/` at every tip;
+- identify every exact file version by its Git blob SHA;
+- read every unique version once;
+- compare each branch with its merge-base against `origin/master`;
+- retain the complete changed-path list, named symbols, architecture areas,
+  service signals, visual-asset paths, and ahead/behind counts.
+
+That means inherited code is not double-counted, while the feature delta of
+every branch remains separately inspectable.
+
+<BranchAudit />
+
+## How this evidence changes the rest of the documentation
+
+Every project case study now has a four-frame workflow:
+
+```text
+what the person does
+        ↓
+what appears in the interface
+        ↓
+which model / view / tool / service performs it
+        ↓
+what reusable Dash artifact remains
+```
+
+The case study also names the exact branch tips recovered from its source
+record. Integrated projects additionally point to `master`, then map into the
+canonical [capability catalog](/capabilities/) so project history updates the
+product manual instead of remaining a separate museum.
+
+The audit is intentionally stricter than screenshots. A picture proves that a
+surface existed at some time. A branch tip proves where its implementation
+survives. Containment in current master is what supports the **Integrated**
+label.
+
+## Rebuild it
+
+From the documentation repository:
+
+```sh
+npm run audit:branches
+```
+
+The generator never checks out or modifies Dash-Web. It reads refs, trees, and
+blobs from the Git object database and writes
+`src/data/generated/branch-audit.json`. `npm run coverage` verifies that the
+project workflows and branch-audit coverage remain complete.

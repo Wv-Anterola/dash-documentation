@@ -274,6 +274,7 @@ export default defineConfig({
             { slug: 'reference/agent-tools' },
             { slug: 'reference/configuration' },
             { slug: 'reference/implementation-snapshot' },
+            { slug: 'reference/branch-audit', label: 'Every branch and code path' },
             { slug: 'reference/status-taxonomy' },
             { slug: 'reference/glossary' },
           ],

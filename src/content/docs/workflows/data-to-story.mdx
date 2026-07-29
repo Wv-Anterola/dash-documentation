@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import MediaPlaceholder from '../../../components/MediaPlaceholder.astro';
+import WorkflowGallery from '../../../components/WorkflowGallery.astro';
 
 ## Outcome
 
@@ -47,12 +47,28 @@ selection filtering when choosing a chart region should narrow another view.
 Keep one unfiltered source perspective available. It provides a baseline when
 several filters compose into an unexpected result.
 
-<MediaPlaceholder
-  title="Validated coordinated views"
-  brief="Use a synthetic dataset. Show a source schema, two linked charts, a selected bin, a visible filter status, and an analysis note."
-  filename="workflow-data-to-story.webp"
-  ratio="16:9"
-  alt="A Dash data workflow with a source table and coordinated interactive charts."
+<WorkflowGallery
+  title="Records to chart to checked explanation"
+  items={[
+    {
+      src: '/assets/gifs/dataViz/fromSchema_dataViz.gif',
+      alt: 'Creating a Dash data visualization from records shown in schema view.',
+      label: 'Start from records',
+      caption: 'Keep the source rows visible while choosing the visualization.',
+    },
+    {
+      src: '/assets/gifs/dataViz/filteringC.gif',
+      alt: 'Selecting marks in an interactive Dash chart to filter related data.',
+      label: 'Ask with a selection',
+      caption: 'Touch a mark to narrow the records behind the chart.',
+    },
+    {
+      src: '/assets/gifs/dataViz/aiVisualize.gif',
+      alt: 'Dash proposing a visualization from selected data with AI assistance.',
+      label: 'Review the proposal',
+      caption: 'Treat the generated chart as a draft and verify fields and values.',
+    },
+  ]}
 />
 
 ## 4. Validate

@@ -32,6 +32,7 @@ import { capabilitiesForProject } from '../data/capabilities';
 import { visualForProject } from '../data/visuals';
 import StatusBadge from './StatusBadge.astro';
 import VisualEvidence from './VisualEvidence.astro';
+import ProjectWorkflow from './ProjectWorkflow.astro';
 
 interface Props {
   cohort: CohortId;
@@ -76,6 +77,8 @@ const md = (s: string) =>
             {narrative.map((text) => (
               <p set:html={md(text)} />
             ))}
+
+            <ProjectWorkflow project={p} />
 
             <dl>
               {p.evidence && (
