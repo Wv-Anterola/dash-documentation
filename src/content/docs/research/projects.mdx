@@ -8,8 +8,8 @@ import StatusKey from '../../../components/StatusKey.astro';
 import { projects, cohorts, areas, withBase } from '../../../data/dash';
 import { capabilitiesForProject } from '../../../data/capabilities';
 
-Forty projects across six cohorts, with the part of Dash each one touched and
-whether it is in the running system.
+{projects.length} projects across six cohorts, with the part of Dash each one
+touched and whether it is in the running system.
 
 This is provenance, not the product manual. The full write-up for each project
 lives on its [cohort page](/research/cohorts/). Current product behavior lives
@@ -38,6 +38,26 @@ For example:
     );
   })}
 </ul>
+
+## What integration looks like in the product
+
+An integrated project should stop reading like a disconnected demo. Its
+project record explains provenance; its feature guide explains the complete
+workflow; its capability pages explain the older Dash concepts it extended;
+and its architecture pages identify the implementation and persistence path.
+
+The current Trip Planner preset is a visible example. The project-shaped
+experience is helpful, but it is assembled from existing Dash capabilities:
+dashboard creation, a freeform canvas, embedded documents, shared fields, a
+Mapbox document, links, resources, and an AI-assisted tool.
+
+![The New Dashboard dialog showing Trip Planner as an integrated preset rather than a separate application.](/assets/images/current/dash-trip-planner-preset.webp)
+
+Its [operating guide](/guides/features/trip-planner/) documents the complete
+workflow. The [workspace capability](/capabilities/platform/), [map
+guide](/guides/documents/map/), [link model](/concepts/links/), and [AI
+capability](/capabilities/ai-automation/) document the reusable parts behind
+it. That is the expected documentation path for every integrated project.
 
 ## How to read the status column
 

@@ -1,0 +1,209 @@
+---
+title: Trip Planner workspace
+description: 'Create and operate the Trip Planner dashboard preset, understand its linked map, itinerary, resources, health checks, and AI-assisted planning, and maintain the feature safely.'
+---
+
+The Trip Planner is a useful example of how a Dash project becomes a product
+feature. It is not a separate application pasted beside Dash. Creating the
+preset assembles ordinary Dash objects—a dashboard, freeform documents, a map,
+linked resources, and a planner tool—into one opinionated workflow.
+
+:::note[Observed runtime feature]
+This guide was verified against the current local client bundle on 29 July
+2026. The public Dash deployment was unavailable during verification. See
+[Runtime and source alignment](#runtime-and-source-alignment) before changing
+the implementation.
+:::
+
+## Create the workspace
+
+1. Open the Dash home menu.
+2. Select **New Dashboard**.
+3. Give the dashboard a descriptive title.
+4. Set **Preset** to **Trip Planner**.
+5. Select **Create**.
+
+![The current Dash New Dashboard dialog with the Trip Planner preset selected.](/assets/images/current/dash-trip-planner-preset.webp)
+
+The result is still a normal dashboard. You can use the top bar, tabs, sidebar,
+properties, sharing, undo, links, and other Dash controls around it.
+
+## What the preset creates
+
+The preset starts with several coordinated surfaces:
+
+| Surface | Purpose | Existing Dash concept behind it |
+| :--- | :--- | :--- |
+| Trip overview | Holds the trip title, lifecycle phase, setup gaps, inbox, health, itinerary, bookings, and connected resources | Embedded document on a freeform canvas |
+| Trip map | Shows stops, routes, and the geographic state of the plan | [Map document](/guides/documents/map/) |
+| Trip Planner tool | Accepts an intent, shows status checks, edits stops, searches for places, and compares route order | Tool document linked to the map |
+| Setup fields | Origin, destination, dates, and traveler count | Shared document fields |
+| Stops and itinerary | Groups places by day and preserves their order | Structured child documents and collections |
+| Resources | Keeps notes, links, and travel material next to the plan | Linked Dash documents |
+| Inbox | Stages pasted notes, reservations, links, or dropped files before applying them | Import and review workflow |
+
+This matters when you edit the workspace. A map is still a map, a linked note
+is still a document, and the dashboard still follows Dash sharing and layout
+rules. The preset adds coordination and defaults; it does not replace the
+underlying model.
+
+![A current Dash freeform workspace combining a trip overview, linked map, route, and Trip Planner tool.](/assets/images/current/dash-trip-planner-workspace.webp)
+
+## Work through the trip lifecycle
+
+The overview divides work into four phases.
+
+### Plan
+
+Use **Plan** while the trip is still becoming concrete.
+
+1. Fill in origin, destination, departure, return, and travelers.
+2. Add research, links, reservations, or notes to the inbox.
+3. Open the planner and add places manually or describe the trip to Trip AI.
+4. Review the proposed stops on both the itinerary and the map.
+5. Resolve health warnings before treating the plan as ready.
+
+The setup fields feed more than the title. Dates affect day assignment and
+calendar export; origin and destination affect routing; traveler count affects
+the meaning of costs and bookings.
+
+### Prepare
+
+Use **Prepare** after the route and dates are credible. Confirm reservations,
+travel time, opening hours, and any material that came from an external
+service. A link in the workspace is not proof that a booking exists.
+
+### Today
+
+Use **Today** for the operational view during travel. Keep the current day's
+stops easy to reach and distinguish fixed commitments from suggestions. If a
+route is recomputed, review the changed order rather than assuming the new
+route preserved every constraint.
+
+### Recap
+
+Use **Recap** to retain notes, media, costs, and outcomes after the trip. The
+workspace can remain a normal Dash research object: annotate what happened,
+link evidence to places, and reuse the route in a trail or story.
+
+## Use Trip AI without losing control
+
+The planner accepts a natural-language request such as:
+
+> 3 days in Boston, museums and inexpensive food, $300 budget.
+
+Treat the result as a draft. The model may produce a plausible place with an
+incorrect duration, day, cost, or geographic assumption.
+
+After generation:
+
+1. Confirm every stop exists and is the intended place.
+2. Check dates, opening hours, accessibility, and reservation requirements
+   against authoritative sources.
+3. Inspect travel time on the map.
+4. Move, remove, or add stops directly.
+5. Review the status strip and itinerary health score.
+6. Save important evidence as linked documents rather than only chat text.
+
+The planner's **Search**, **Plan**, and **Overview** tabs answer different
+questions. Search finds candidate places; Plan edits the itinerary; Overview
+summarizes the trip and its constraints.
+
+## Read the integrated view
+
+![A closer view of the Trip Planner overview, mapped route, stops, and planning tool inside the same Dash canvas.](/assets/images/current/dash-trip-planner-detail.webp)
+
+The screenshot shows four relationships that are easy to miss:
+
+- The overview links to the map, planner, and resources instead of copying
+  them.
+- Stops are visible as itinerary records and geographic markers.
+- The route is a map state that can become stale independently of the stop
+  list.
+- The planner remains embedded in the surrounding freeform workspace, so
+  ordinary Dash documents can sit beside it.
+
+Use **Open planner** or **Open Map** when the embedded view is too small. The
+linked object remains the same; the command changes where you inspect it.
+
+## Health, inbox, and route status
+
+The health score is a checklist summary, not a guarantee. Read the individual
+issues below it. Typical gaps include missing dates, missing destination data,
+or directions that are no longer current.
+
+The inbox is intentionally a staging area. Paste or drop travel material
+there, review what Dash extracted, and only then apply it to the trip. This
+prevents a reservation email, web page, or generated answer from silently
+becoming trusted itinerary data.
+
+Route status describes the last computed route. Recompute it after changing
+stops, their order, or the travel assumptions. A saved line on a map can look
+current even when the underlying service response is old.
+
+## Sharing and privacy
+
+A trip can expose more than its title. Before sharing, inspect:
+
+- exact home, hotel, school, or medical locations;
+- travel dates that reveal when people are away;
+- reservation numbers and confirmation links;
+- traveler names and contact information;
+- private notes embedded in resources or the inbox; and
+- permissions on the map, overview, planner, and linked child documents.
+
+Sharing the dashboard does not automatically make every referenced document
+safe or readable. Test the result with the recipient's permission level.
+
+## Troubleshooting
+
+**The preset is not listed.** The running client bundle may not include this
+feature. Record the client commit or packaged build version before assuming the
+documentation is wrong.
+
+**The map is blank.** Check Mapbox configuration and network access. Dash data
+can load while map tiles, geocoding, or directions fail.
+
+**Trip AI does not respond.** Confirm the configured model provider and API
+credentials. You can still add and reorder places manually.
+
+**The overview and planner disagree.** Open the linked planner and map,
+recompute the route if necessary, and reload the dashboard. Do not repair the
+disagreement by duplicating the objects.
+
+**The workspace opens far from its documents.** Use the freeform navigation
+controls to pan or zoom back to the overview, map, and planner. The objects may
+be present outside the current viewport.
+
+## Runtime and source alignment
+
+The verified compiled client contains the Trip Planner preset and runtime
+surfaces shown above. In the source snapshot inspected for this documentation,
+the dedicated `trip-shell` and `tripPlannerTool` implementation was not
+recoverable as corresponding TypeScript source outside the compiled bundle.
+
+That is a maintenance risk:
+
+- a clean production rebuild may omit the feature;
+- runtime behavior cannot be reviewed or tested at the source level;
+- generated bundles must not become the canonical source of truth; and
+- documentation cannot provide stable file-level links until the source is
+  restored and committed.
+
+Before extending the feature, recover or commit its source, add a browser test
+that creates the preset, and verify a clean build produces the same workspace.
+The test should cover preset creation, linked object creation, manual stop
+editing, map loading, route refresh, and persistence after reload.
+
+## Related
+
+- [The Dash workspace](/getting-started/environment/) explains the surrounding
+  dashboard, tabs, sidebar, toolbar, and properties panel.
+- [Maps](/guides/documents/map/) covers pins, routes, saved views, and location
+  links independently of Trip Planner.
+- [Links and anchors](/concepts/links/) explains why the overview, map,
+  resources, and planner can remain distinct objects.
+- [Generative AI](/guides/features/generative-ai/) covers model configuration
+  and verification practices.
+- [Project index](/research/projects/) records project provenance separately
+  from current operating instructions.
