@@ -46,6 +46,35 @@ Layout engines for freeform collections live separately under
 positions computed rather than set by hand. The graph view's force-directed
 engine is one of these.
 
+### What a collection actually stores
+
+A collection holds its children in a `List<Doc>` field, and each entry is a
+`ProxyField` rather than the document itself, so opening a collection of two
+thousand documents does not load two thousand documents. See
+[documents and fields](/concepts/documents/#identity-and-references).
+
+Position is not stored on the child. `x`, `y`, `z`, and `zIndex` are declared on
+`documentSchema` and live on the child's *layout* document, which is why the
+same document can sit at different coordinates in two collections without
+either one winning. The view type is a single field on the collection, so
+switching it changes which component `CollectionView.tsx` mounts and nothing
+else.
+
+That is the whole of "layout is a property". There is no conversion step because
+there is nothing to convert: the documents were never arranged, only rendered.
+
+### Why the graph view was the hard case
+
+Every field read inside a MobX-observed render registers a dependency. A layout
+engine that reads positions each frame therefore re-renders on each frame, and
+because it also *writes* positions, it re-triggers itself.
+
+`GraphLayoutEngine.tsx` deals with this by scaling its iteration count to the
+node count and stopping once movement falls below a threshold, so the
+simulation converges and then goes quiet. That is a workaround for a general
+problem the architecture has not solved: nothing prevents a computed layout from
+re-rendering its own inputs.
+
 ## Current limitations
 
 Views do not compose. You cannot have a calendar of stacks, or a graph whose

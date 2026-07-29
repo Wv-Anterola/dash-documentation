@@ -37,9 +37,32 @@ Slides carry their own pinning and layout options, so the same document can
 appear in two trails at different zoom levels without either affecting the
 document.
 
-Transitions are spring-based. Stiffness, damping, and mass are the parameters,
-which is why the AI customisation path in `apis/gpt/PresCustomization.ts` can
-map a phrase like "settle gently" onto numbers.
+### The transition model
+
+Transitions are spring-based rather than duration-based. `src/PresSpringUtils.ts`
+declares the shape:
+
+```ts
+export interface SpringSettings {
+  stiffness: number;
+  damping: number;
+  mass: number;
+}
+```
+
+A duration-based transition asks "how long"; a spring asks "how heavy, how
+stiff, how much friction", and the duration falls out of the physics. That is
+what makes a slide look like it settled rather than stopped.
+
+Because the settings are three numbers rather than a named easing curve, the AI
+customisation path in `apis/gpt/PresCustomization.ts` can map a phrase like
+"settle gently" onto values directly. A named-curve system would have needed a
+lookup table and would only ever produce the curves someone had already named.
+
+`src/PresEnums.ts` carries the rest of the vocabulary: `PresMovement` for how
+the viewport travels between slides, `PresEffect` and `PresEffectDirection` for
+how a document enters, and `PresStatus` for the state of a running
+presentation.
 
 ## Current limitations
 

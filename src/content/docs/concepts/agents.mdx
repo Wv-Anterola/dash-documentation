@@ -44,6 +44,39 @@ schema and an execute method. Twenty-two are registered at startup, and
 `tools/dynamic/` exists because the agent can write a new tool and have it
 compiled into the running application.
 
+### Inside the Agent class
+
+The registry is a plain record, typed by each tool's parameter list:
+
+```ts
+private tools: Record<string, BaseTool<ReadonlyArray<Parameter>>>;
+private dynamicToolRegistry: Map<string, BaseTool<ReadonlyArray<Parameter>>>;
+```
+
+Every tool extends `BaseTool` (`chatbot/tools/BaseTool.ts`), and the generic
+parameter is what lets the same class supply both the JSON schema sent to the
+model and the argument types checked at compile time. A tool that declares a
+parameter it does not handle will not build.
+
+Two registries rather than one, because tools written at runtime cannot be in
+the constructor. `dynamicToolRegistry` holds those, and the deferred webpack
+rebuild is what gets them into the running bundle.
+
+The agent keeps two message arrays. `messages` is the conversation;
+`interMessages` is the intermediate reasoning stream, appended to as the loop
+runs. `thoughtNumber` and `actionNumber` count the steps of that loop, which is
+the ReAct pattern made literal: think, act, observe the tool result, repeat.
+`StreamedAnswerParser` turns the model's partial output into something the
+interface can render before the response is finished.
+
+`AgentDocumentManager` is the boundary between the agent and the workspace, and
+`Vectorstore` holds the chunked document embeddings the retrieval side reads.
+
+This is also where the trust problem lives. Retrieved chunks and tool results
+both enter `interMessages` as ordinary messages, so a document Dash retrieved
+and an instruction the user gave are, by the time the model sees them, the same
+kind of thing.
+
 The tools worth separating out are the ones that mutate rather than read:
 
 - `FilterDocsTool` hides documents by applying a filter tag

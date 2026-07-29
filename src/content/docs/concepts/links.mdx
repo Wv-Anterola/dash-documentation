@@ -31,13 +31,49 @@ in the agent registry is a thin wrapper over machinery from 2019.
 
 ## How Dash represents it
 
-`DocumentType.LINK` is a registered type. The linking UI lives in
-`client/views/linking/`, with the link menu, link editor, and description popup.
+`Docs.Create.LinkDocument(source, target, options, id)` in
+`client/documents/Documents.ts` is the whole mechanism:
+
+```ts
+const linkDoc = InstanceFromProto(
+  Prototypes.get(DocumentType.LINK),
+  undefined,
+  { link_anchor_1: source, link_anchor_2: target, ...options },
+  id,
+  'link'
+);
+Doc.AddLink(linkDoc);
+```
+
+A link is a document of type `LINK` carrying two fields, `link_anchor_1` and
+`link_anchor_2`, each a reference to another document. Nothing else.
+
+The consequence is the part worth understanding. An anchor is a document
+reference, and an annotation is a document, so a link "into the middle of" a PDF
+is not a special case: it is an ordinary link whose anchor happens to be the
+annotation document representing that region, rather than the PDF itself.
+Highlighting a passage, marqueeing an image region, and dragging across an audio
+timeline all create an anchor document, and linking to it is then the same
+operation in all three cases.
+
+`links` on `documentSchema` is a computed read-only list, so a document reports
+its own links without anything writing them onto it.
+`client/util/LinkManager.ts` handles registration and lookup, and the fields
+`link_displayArrow`, `hideLinkButton`, and `layout_hideAllLinks` control how
+links are drawn.
+
+Because the link is a document, its description, relationship, and any fields
+you add live on the link itself and travel with it.
+
+### The interaction on top of it
+
+The linking UI lives in `client/views/linking/`, with the link menu, the link
+editor, and the description popup.
 
 Creating a link is a two-step interaction rather than a drag: one document
 becomes the source, then a second becomes the destination. This exists because
-the endpoints are frequently not visible at the same time, which a drag
-gesture assumes.
+the endpoints are frequently not visible at the same time, which a drag gesture
+assumes.
 
 Anchors are stored against the document they point into, which is what lets a
 PDF remember that a link lands on page 12 rather than on the file.

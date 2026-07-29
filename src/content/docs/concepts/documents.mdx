@@ -38,13 +38,63 @@ fifty-one entries. `client/documents/Documents.ts` holds a factory per type,
 and each factory calls `InstanceFromProto` with a prototype fetched by
 `Prototypes.get(DocumentType.SOMETHING)`.
 
-Documents inherit from prototypes. A specific PDF is an instance whose prototype
-carries the defaults shared by all PDFs, so changing a default on the prototype
-changes it everywhere it has not been overridden.
+### Identity and references
 
-Fields are typed but not fixed. A document can carry arbitrary keys, which is
-what makes tagging, filtering, and the schema view work across types that were
-never designed to have anything in common.
+`Doc` extends `RefField` (`src/fields/RefField.ts`), which gives every document
+a GUID at construction and makes it serialisable through
+[serializr](https://github.com/mobxjs/serializr). That identifier is the only
+thing a reference needs.
+
+A field that points at another document does not hold the document. It holds a
+`ProxyField` (`src/fields/Proxy.ts`), which stores the target's id plus a
+MobX-observable cache and a promise for a load already in flight. Reading a
+proxy either returns the cached document or returns `FieldWaiting` while
+`DocServer` fetches it.
+
+This is why a canvas with two thousand documents on it is not two thousand
+loads: the collection holds proxies, and a document is fetched when something
+actually reads it.
+
+### Prototype delegation
+
+`Doc.Get(doc, key)` walks the prototype chain. Passing `ignoreProto: true` reads
+only the document's own fields, which is the distinction between "what is this
+document's title" and "what title does it inherit".
+
+`Doc.MakeDelegate` creates a document whose prototype is the original, so it
+starts with everything the original has and diverges only where you write to it.
+`Doc.MakeCopy` duplicates instead. `Doc.GetProto` walks up one level and
+`Doc.GetDataDoc` recurses to the root, which is how a view knows which document
+actually owns the content it is rendering.
+
+### Layout and data are different documents
+
+A document that appears in two places has one data document and a layout
+document per appearance. Position, size, and scroll state live on the layout
+side; the content lives on the data side. `Doc.GetLayoutDataDocPair` is what
+resolves the two for a given render.
+
+That split is what makes [other contexts](/guides/properties/othercontexts/)
+work: the same content, two positions, no copy.
+
+### The schema
+
+`src/fields/documentSchemas.ts` declares `documentSchema` through
+`createSchema`, giving typed accessors for the keys Dash itself relies on:
+`title`, `type`, `author_date`, `x`, `y`, `zIndex`, `_nativeWidth`,
+`_layout_scrollTop`, `_layout_currentTimecode`, and around a hundred more.
+
+`links` is declared there as a computed read-only list, which is why a document
+knows its own links without anything writing them onto it.
+
+Documents are not limited to schema keys. Any key can be set, which is what
+makes tagging, filtering, and the schema view work across types that were never
+designed to have anything in common. The schema exists to type the keys the
+system reads, not to constrain the ones you add.
+
+Sharing is a field too. `updateCachedAcls` maintains symbol-keyed access-control
+entries on the document, resolved through `HierarchyMapping`, which is why
+permissions travel with a document rather than living in a separate table.
 
 :::note
 `InstanceFromProto` and `Prototypes.get` were written in 2019 and are still
