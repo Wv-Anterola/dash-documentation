@@ -15,7 +15,9 @@ import {
   withBase,
 } from '../data/dash';
 import { capabilitiesForProject } from '../data/capabilities';
+import { visualForProject } from '../data/visuals';
 import StatusBadge from './StatusBadge.astro';
+import VisualEvidence from './VisualEvidence.astro';
 
 const allAreas = areas();
 ---
@@ -46,68 +48,63 @@ const allAreas = areas();
 
 <p class="filter-count" id="f-count" role="status"></p>
 
-{/* Five columns does not fit a phone. The wrapper scrolls instead of the page. */}
-<div class="table-scroll">
-<table class="project-table" id="project-table">
-  <thead>
-    <tr>
-      <th scope="col">Project</th>
-      <th scope="col">Cohort</th>
-      <th scope="col">Area</th>
-      <th scope="col">Status</th>
-      <th scope="col">Capabilities</th>
-    </tr>
-  </thead>
-  <tbody>
-    {
-      projects.map((p) => (
-        <tr data-cohort={p.cohort} data-area={p.area} data-status={p.status}>
-          <th scope="row">
-            <a href={projectHref(p)}>{p.title}</a>
-            {p.people && <span class="project-table__people">{p.people.join(', ')}</span>}
-          </th>
-          <td class="nowrap">{cohortOf(p.cohort).short}</td>
-          <td>{p.area}</td>
-          <td><StatusBadge status={p.status} /></td>
-          <td class="project-table__concepts">
-            {capabilitiesForProject(p.title).map((capability, i) => {
-              return (
-                <>
-                  {i > 0 && ', '}
-                  <a href={withBase(capability.docs)}>{capability.title}</a>
-                </>
-              );
-            })}
-          </td>
-        </tr>
-      ))
-    }
-  </tbody>
-</table>
+<div class="project-atlas" id="project-atlas">
+  {
+    projects.map((p) => (
+      <article
+        class="project-atlas__card"
+        data-cohort={p.cohort}
+        data-area={p.area}
+        data-status={p.status}
+      >
+        <VisualEvidence evidence={visualForProject(p.title)} compact />
+        <div class="project-atlas__body">
+          <h3><a href={projectHref(p)}>{p.title}</a></h3>
+          <p class="project-atlas__meta">
+            <StatusBadge status={p.status} />
+            <span>{cohortOf(p.cohort).short}</span>
+            <span>{p.area}</span>
+          </p>
+          {p.people && <p class="project-atlas__people">{p.people.join(', ')}</p>}
+          <p class="project-atlas__capabilities">
+            <span class="dash-label">Product capabilities</span>
+            {capabilitiesForProject(p.title).length > 0
+              ? capabilitiesForProject(p.title).map((capability, i) => (
+                  <>
+                    {i > 0 && ', '}
+                    <a href={withBase(capability.docs)}>{capability.title}</a>
+                  </>
+                ))
+              : <span> No canonical capability mapping; see project status.</span>}
+          </p>
+        </div>
+      </article>
+    ))
+  }
 </div>
 
 <script>
-  const table = document.getElementById('project-table') as HTMLTableElement | null;
+  const atlas = document.getElementById('project-atlas');
   const count = document.getElementById('f-count');
   const selects = ['f-cohort', 'f-area', 'f-status'].map(
     (id) => document.getElementById(id) as HTMLSelectElement | null
   );
 
-  if (table && count && selects.every(Boolean)) {
-    const rows = Array.from(table.tBodies[0].rows);
+  if (atlas && count && selects.every(Boolean)) {
+    const cards = Array.from(atlas.querySelectorAll<HTMLElement>('.project-atlas__card'));
     const keys = ['cohort', 'area', 'status'] as const;
 
     const apply = () => {
       let shown = 0;
-      for (const row of rows) {
-        const ok = selects.every((sel, i) => !sel!.value || row.dataset[keys[i]] === sel!.value);
-        row.hidden = !ok;
+      for (const card of cards) {
+        const ok = selects.every((sel, i) => !sel!.value || card.dataset[keys[i]] === sel!.value);
+        card.hidden = !ok;
         if (ok) shown++;
       }
       count.textContent =
-        shown === rows.length
-          ? `Showing all ${rows.length} projects.`
-          : `Showing ${shown} of ${rows.length} projects.`;
+        shown === cards.length
+          ? `Showing all ${cards.length} projects.`
+          : `Showing ${shown} of ${cards.length} projects.`;
     };
 
     for (const sel of selects) sel!.addEventListener('change', apply);

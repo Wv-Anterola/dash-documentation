@@ -242,6 +242,7 @@ export default defineConfig({
         {
           label: 'Reference',
           items: [
+            { slug: 'reference/interface-controls' },
             { slug: 'reference/configuration' },
             { slug: 'reference/keyboard-shortcuts' },
             { slug: 'reference/document-types' },

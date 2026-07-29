@@ -31,6 +31,12 @@ Every capability has four pieces of documentation:
 3. **How it works**, linked to the technical architecture.
 4. **Where it came from**, linked to the projects that introduced or changed it.
 
+Each catalog card also carries visual evidence. The label under the image tells
+you whether it is a current product capture, an exact archived demo, an
+archived feature recording, or a representative interface awaiting a more
+specific capture. That distinction is deliberate: an image can explain an
+interaction without proving that a historical branch is available today.
+
 Availability labels describe the current product surface:
 
 - **Core** capabilities are part of ordinary Dash use.
@@ -52,7 +58,8 @@ entry is not automatically a feature a user can select.
 ## Coverage policy
 
 An integrated project must map to at least one capability above. A capability
-must link to both user and technical documentation. The build runs
+must link to both user and technical documentation, and every project and
+capability must have a provenance-labeled visual. The build runs
 `npm run coverage` to enforce those relationships.
 
 Projects that are implemented on a branch, prototypes, or archived work can

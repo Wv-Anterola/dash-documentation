@@ -1,0 +1,32 @@
+---
+import { withBase } from '../data/dash';
+import type { VisualEvidence as Evidence } from '../data/visuals';
+
+interface Props {
+  evidence: Evidence;
+  compact?: boolean;
+}
+
+const { evidence, compact = false } = Astro.props;
+const sourceIsDifferent = evidence.source && evidence.source !== evidence.src;
+---
+
+<figure class:list={['visual-evidence', { 'visual-evidence--compact': compact }]}>
+  <a
+    class="visual-evidence__media"
+    href={withBase(evidence.source ?? evidence.src)}
+    aria-label={sourceIsDifferent ? `Open source media: ${evidence.alt}` : `Open image: ${evidence.alt}`}
+  >
+    <img src={withBase(evidence.src)} alt={evidence.alt} loading="lazy" decoding="async" />
+    {sourceIsDifferent && <span class="visual-evidence__play">View source media</span>}
+  </a>
+  <figcaption>
+    <span class="visual-evidence__scope">{evidence.scope}</span>
+    {evidence.recorded && <span>Captured {evidence.recorded}</span>}
+    <span class="visual-evidence__caption">{evidence.caption}</span>
+    {!compact && evidence.brief && (
+      <span class="visual-evidence__brief"><strong>Next capture:</strong> {evidence.brief}</span>
+    )}
+  </figcaption>
+</figure>
+

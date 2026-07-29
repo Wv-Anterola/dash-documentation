@@ -737,3 +737,197 @@
     padding: var(--dash-space-4);
   }
 }
+
+/* ------------------------------------------------------ visual evidence */
+
+.visual-evidence {
+  margin: var(--dash-space-5) 0;
+  max-width: 52rem;
+}
+
+.visual-evidence__media {
+  background: #0e141f;
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-space-2);
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.visual-evidence__media:focus-visible {
+  outline: 3px solid var(--dash-blue-bright);
+  outline-offset: 3px;
+}
+
+.sl-markdown-content .visual-evidence__media img {
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+  display: block;
+  margin: 0;
+  object-fit: contain;
+  width: 100%;
+}
+
+.visual-evidence__play {
+  background: rgb(9 15 25 / 88%);
+  border-radius: 999px;
+  bottom: var(--dash-space-3);
+  color: #fff;
+  font-size: var(--dash-text-xs);
+  font-weight: 700;
+  padding: var(--dash-space-1) var(--dash-space-3);
+  position: absolute;
+  right: var(--dash-space-3);
+}
+
+.sl-markdown-content .visual-evidence figcaption {
+  color: var(--dash-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--dash-text-xs);
+  gap: var(--dash-space-1) var(--dash-space-2);
+  line-height: 1.5;
+  margin-top: var(--dash-space-2);
+}
+
+.visual-evidence__scope {
+  border: 1px solid var(--dash-rule);
+  border-radius: 999px;
+  color: var(--sl-color-text-accent);
+  font-weight: 700;
+  padding: 0 var(--dash-space-2);
+}
+
+.visual-evidence__caption,
+.visual-evidence__brief {
+  flex-basis: 100%;
+}
+
+.visual-evidence__brief {
+  border-left: 2px solid var(--dash-rule);
+  margin-top: var(--dash-space-1);
+  padding-left: var(--dash-space-2);
+}
+
+.visual-evidence--compact {
+  margin: 0;
+  min-width: 12rem;
+}
+
+.visual-evidence--compact .visual-evidence__play,
+.visual-evidence--compact .visual-evidence__caption {
+  display: none;
+}
+
+.visual-evidence--compact figcaption {
+  margin-top: var(--dash-space-1);
+}
+
+.visual-evidence--compact .visual-evidence__scope {
+  border: 0;
+  padding: 0;
+}
+
+.project-table__visual {
+  min-width: 14rem;
+  width: 16rem;
+}
+
+.project-atlas {
+  display: grid;
+  gap: var(--dash-space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--dash-space-5);
+}
+
+.project-atlas__card {
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-space-2);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.project-atlas__card[hidden] {
+  display: none;
+}
+
+.project-atlas__card > .visual-evidence {
+  min-width: 0;
+}
+
+.project-atlas__card > .visual-evidence .visual-evidence__media {
+  border: 0;
+  border-bottom: 1px solid var(--dash-rule);
+  border-radius: 0;
+}
+
+.project-atlas__card > .visual-evidence figcaption {
+  padding: 0 var(--dash-space-4);
+}
+
+.project-atlas__body {
+  padding: 0 var(--dash-space-4) var(--dash-space-4);
+}
+
+.sl-markdown-content .project-atlas__body h3 {
+  font-size: var(--dash-text-lg);
+  margin: var(--dash-space-3) 0 0;
+}
+
+.sl-markdown-content .project-atlas__meta {
+  align-items: baseline;
+  color: var(--dash-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--dash-text-xs);
+  gap: var(--dash-space-1) var(--dash-space-2);
+  margin-top: var(--dash-space-2);
+}
+
+.sl-markdown-content .project-atlas__people,
+.sl-markdown-content .project-atlas__capabilities {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  line-height: 1.5;
+  margin-top: var(--dash-space-2);
+}
+
+.project-atlas__capabilities .dash-label {
+  display: block;
+  margin-bottom: var(--dash-space-1);
+}
+
+.case-study > .visual-evidence {
+  margin: var(--dash-space-5) 0 var(--dash-space-3);
+}
+
+.capability-card > .visual-evidence {
+  margin: calc(-1 * var(--dash-space-4)) calc(-1 * var(--dash-space-4))
+    var(--dash-space-4);
+  min-width: 0;
+}
+
+.capability-card > .visual-evidence .visual-evidence__media {
+  border-left: 0;
+  border-radius: var(--dash-space-2) var(--dash-space-2) 0 0;
+  border-right: 0;
+  border-top: 0;
+}
+
+.capability-card > .visual-evidence figcaption {
+  padding: 0 var(--dash-space-4);
+}
+
+@media (max-width: 50rem) {
+  .visual-evidence--compact {
+    min-width: 10rem;
+  }
+
+  .project-table__visual {
+    min-width: 11rem;
+  }
+
+  .project-atlas {
+    grid-template-columns: 1fr;
+  }
+}

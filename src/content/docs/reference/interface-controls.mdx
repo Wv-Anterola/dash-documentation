@@ -1,0 +1,284 @@
+---
+title: Interface control and node atlas
+description: Every persistent Dash control, sidebar panel, context-toolbar group, document decoration, properties section, and creator in the current Tools palette.
+sidebar:
+  order: 1
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  This page names controls that the interface often communicates with an icon,
+  abbreviation, or hover tooltip alone. Use it when “click the button” is not
+  enough to identify which button or what it will create.
+</p>
+
+<SourceSnapshot />
+
+The inventory combines three sources:
+
+- a live pass through the current Dash client on 29 July 2026;
+- the control registries in `TopBar.tsx`, `CurrentUserUtils.ts`, and
+  `DocumentButtonBar.tsx`;
+- the document and collection enums in `DocumentTypes.ts`.
+
+The captured runtime and checked-out TypeScript are not perfectly identical.
+The running compiled client exposes a **Trip Planner** creator and workspace
+that are not recoverable as a dedicated source entry in the checked-out
+`creatorBtnDescriptors` registry. This page calls out that drift instead of
+pretending the two inventories match.
+
+## The persistent frame
+
+![The current Dash workspace with the top bar, context toolbar, sidebar, tab strip, freeform canvas, map, planner, and panel handles visible.](/assets/images/current/dash-trip-planner-workspace.webp)
+
+The interface is layered:
+
+1. The **top bar** changes the application or dashboard as a whole.
+2. The **context toolbar** changes with the current selection.
+3. The **sidebar** opens persistent collections and creation surfaces.
+4. **Document decorations** appear around selected documents.
+5. The **properties panel** exposes the selected document’s fields and view
+   configuration.
+6. **Tabs and tiles** determine which documents occupy the workspace frame.
+
+When a control is missing, first clear the current selection, leave Explore
+mode, and check whether Dash is in Novice or Developer mode. Many controls are
+conditional rather than broken.
+
+## Top bar
+
+| Control | What it does | What to expect |
+| :--- | :--- | :--- |
+| **Home** | Leaves the active dashboard and returns to the dashboard home screen. | The dashboard remains saved; this is navigation, not deletion. |
+| **Explore** | Toggles browsing mode for directly navigating to documents. | Clicking a document centers or opens it instead of selecting it for editing. Active Explore mode changes the button styling and hides incompatible editing controls. |
+| **Dashboard title** | Opens the active dashboard’s context menu. | The menu contains dashboard-level operations; it is not only a label. |
+| **Share** | Opens sharing for a dashboard you administer. | On a shared copy without admin access, the label becomes **View Original**. |
+| **Issue reporter** | Opens the bug and feature-reporting surface. | Existing issues can be inspected before a new report is filed. |
+| **Help** | Opens **Documentation**, **Tutorial**, and **Ask AI!**. | Tutorial re-enables contextual explainers. Ask AI creates a Dash help-assistant chat in a new pane. |
+| **Settings** | Opens account, mode, appearance, and application settings. | Novice/Developer mode changes can make additional controls appear immediately. |
+| **Heart / broken heart** | Shows server reachability and version state; opens server statistics. | Blue means connected and current, yellow means connected to a different version, and a broken red heart means the connection is down. |
+
+## Sidebar panels
+
+The panel buttons are document-backed menu controls. Clicking a selected button
+closes its flyout; clicking another switches the flyout without changing the
+workspace documents.
+
+| Panel | Purpose | Important behavior |
+| :--- | :--- | :--- |
+| **Dashboards** | Lists dashboards in the older developer-mode sidebar. | Hidden in Novice mode because the current home screen is the primary dashboard manager. |
+| **Search** | Searches titles, content, and metadata in the active scope. | <kbd>Ctrl/Cmd</kbd> + <kbd>F</kbd> toggles it. The type dropdown narrows results. |
+| **Files** | Organizes documents into folders independently of their canvas location. | Includes **My Dashboards** and **My Recently Closed**; double-click or drag a listed document to reopen it. |
+| **Tools** | Creates documents, templates, special workspaces, and overlays. | Click creates in the default destination; drag controls placement. The complete palette is below. |
+| **Imports** | Receives imported files, URLs, and structured data. | <kbd>Ctrl/Cmd</kbd> + <kbd>I</kbd> toggles it. Importing creates Dash documents; it does not merely upload opaque files. |
+| **Shared** | Lists documents and dashboards shared with the current user. | A badge indicates unseen shared items. Access still depends on document ACLs. |
+| **Trails** | Lists presentation trails for the active dashboard. | <kbd>Ctrl/Cmd</kbd> + <kbd>R</kbd> toggles it. **New trail** creates a presentation path. |
+| **Image Grouper** | Runs the image-grouping workflow. | This is a specialized collection surface, not a normal folder. |
+| **Faces** | Opens the recovered unique-face collection. | It is a specialized computer-vision workflow and may depend on prior image processing. |
+| **User Doc** | Exposes the current user’s system document. | Developer mode only. Treat it as implementation state, not an ordinary note. |
+| **Recently Closed** | Stores closed documents until explicitly emptied. | Hidden as a standalone sidebar button; Files embeds it. Closing a document is not deletion. |
+
+### Current panel states
+
+![The current Dash Search panel beside an active workspace.](/assets/images/current/dash-search-panel.webp)
+
+![The current Dash Files panel with dashboard and recently closed collections.](/assets/images/current/dash-files-panel.webp)
+
+![The current Dash Imports panel with its import entry point.](/assets/images/current/dash-imports-panel.webp)
+
+![The current Dash Trails panel with the New trail action.](/assets/images/current/dash-trails-panel.webp)
+
+## Context toolbar
+
+The strip below the top bar is selection-driven. Some controls are global
+defaults; others mutate only the selected document or collection.
+
+### Always-relevant appearance and workspace controls
+
+| Label | Expanded meaning | Effect |
+| :--- | :--- | :--- |
+| **Perspective** | Collection view picker | Changes how the selected collection displays the same children. Holding Shift can create or target a perspective rather than replacing the active one. |
+| **Pin** | Pin current view to a trail | Saves a presentation step from the current selection or view. Modifier keys determine whether content/view state is included. |
+| **Header** | Header/title-bar color | Changes document chrome, not the content background. |
+| **Template** | Default note template | Makes the selected note layout the default for newly created notes. |
+| **Img Temp** | Default image template | Makes the selected image layout the default for new image documents. |
+| **Fill** | Fill/background color | Changes the selected document or view background. |
+| **Border** | Border color | Changes the selected document border. |
+| **B.Width** | Border width | Sets border thickness; zero removes the visible border. |
+| **Chat** | Toggle chat assistant | Shows or hides the freeform assistant associated with the workspace. |
+| **Ink** | Ink tool group | Expands drawing, width, color, eraser, mask, label, and Smart Draw controls. |
+| **Text** | Text tool group | Expands controls relevant to rich-text creation or selection. |
+| **Close/Open header** | Double vertical chevrons | Collapses or restores the application top bar. |
+| **Close/Open properties** | Double horizontal chevrons | Collapses or restores the right properties panel. |
+
+### Controls that appear for a matching selection
+
+| Label | Appears for | What it contains |
+| :--- | :--- | :--- |
+| **Filter** | Collections | Tag/field filtering controls. Filtering changes the visible set; it should not delete children. |
+| **Sort** | Collections | Sort key and direction controls. |
+| **Eqn** | Equation documents | Equation-specific editing and evaluation controls. |
+| **Doc** | Freeform documents | Freeform canvas options. |
+| **View** | Collections | View-specific controls for the active perspective. |
+| **Stack** | Stacking view | Stack grouping and display controls. |
+| **Board** | Notetaking view | Note-board layout controls. |
+| **Web** | Web documents | Back, Forward, and editable URL. |
+| **Video** | Video documents | Current-frame snapshot. |
+| **Image** | Image documents | Native pixel size, rotate 90°, remove background, mask foreground, and background blending. |
+| **Schema** | Schema view | Selection preview, single-line rows, and conversion to a data-visualization document. |
+| **Overlay** | Floating freeform document | Toggles overlay behavior. Developer mode only. |
+| **Back / Num / Fwd** | Freeform animation | Previous keyframe, frame number/edit mode, and next keyframe. Developer mode only. |
+
+### Ink group
+
+| Control | Meaning |
+| :--- | :--- |
+| **Pen** | Draw ordinary ink strokes. |
+| **Highlight** | Draw translucent highlighting strokes. |
+| **Write** | Handwriting-oriented ink mode. Developer mode only. |
+| **Math** | Handwritten mathematics mode. Developer mode only. |
+| **Width / Color** | Change the active stroke width and color. |
+| **Eraser → Stroke** | Remove an entire intersected stroke. |
+| **Eraser → Segment** | Remove only part of a stroke. |
+| **Eraser → Area** | Erase with a radius like a pencil eraser; **Size** controls that radius. |
+| **Mask** | Turns a stroke into a stencil/presentation mask. Developer mode only. |
+| **Labels** | Shows recognized labels inside supported shapes. |
+| **Smart Draw** | Uses the drawn input as a generative drawing request. Developer mode only. |
+
+## Document decorations
+
+Selecting a document can show a small action bar on or near its chrome. Its
+contents vary with permissions, mode, and document capabilities.
+
+| Decoration | What it does | Variants and cautions |
+| :--- | :--- | :--- |
+| **Links/count** | Opens the document’s links and begins a new link. | A link may target a whole document or an anchor returned by its view. |
+| **Link search** | Searches for a target instead of dragging to one. | Useful when the destination is not visible on the current canvas. |
+| **Linked trail** | Opens or creates the trail associated with the document. | This is a link relationship, not the global list of all trails. |
+| **Follow primary link** | Makes clicking the document follow its primary link. | When enabled, selection behavior changes; the button remains highlighted. |
+| **Finish link** | Completes an in-progress link on the selected target. | Flyout variants save layout state, content/view state, or both on the endpoint. |
+| **Customize layout / embedding** | Opens the template menu; dragging creates an embedding. | Hidden in Novice mode because it edits the layout layer directly. |
+| **Pin to trail** | Adds the document to the active presentation trail. | Shift saves layout, Alt saves content/view state, Shift+Alt saves both; the calendar variant schedules instead. |
+| **Edit with AI** | Opens the document’s supported AI editor. | Only appears when the renderer declares an AI editor. A drag gesture can invoke Smart Draw in a parent view. |
+| **Tags** | Shows or hides document tags. | Shift also applies the visibility choice to supported face annotations. |
+| **Sharing** | Opens document-level sharing. | Only shown when the full link/action menu is enabled and permissions allow it. |
+| **Context menu** | Opens the complete right-click menu for the selected content. | The entries depend on document type, mode, and access. |
+
+## Properties panel
+
+![The current Dash Properties panel showing title, type, fields, options, links, generation, transforms, contexts, and filters.](/assets/images/current/dash-properties-panel.webp)
+
+| Section | What it controls | Scope |
+| :--- | :--- | :--- |
+| **Title** | The selected document’s displayed title. | Data/prototype title depending on the selected view. |
+| **Type** | The renderer or collection perspective currently in use. | Read this before changing type-specific fields. |
+| **Fields & Tags** | Typed document data, metadata, and tags. | Advanced mode exposes more fields; direct field edits can affect scripts and views. |
+| **Options** | Appearance and interaction settings. | Usually applies to the selected layout/view rather than every instance. |
+| **Linked To** | Links and anchors connected to the selection. | Deleting a link removes the relationship, not its endpoint documents. |
+| **Firefly / generation** | Supported image-generation or editing controls. | Requires the configured external service and only appears for compatible selections. |
+| **Transform** | Width, height, position, and related layout values. | Values are layout coordinates, not intrinsic media dimensions. |
+| **Other Contexts** | Other collections that contain the same document. | These are additional views of the same document, not copies. |
+| **Filters** | Rules controlling which collection children render. | Filters affect visibility; they are not a delete operation. |
+| **Sharing & Permissions** | Users, groups, and access levels. | Developer mode only. Nested content can have stricter permissions than its parent. |
+| **Layout** | Raw layout fields and templates. | Developer mode only; use when building or diagnosing a renderer. |
+| **Presentation variants** | Visibility, progressivize, media, media options, and transitions. | Replaces ordinary properties while editing selected trail slides. |
+
+## Tools palette: every current creator
+
+![The current Dash Tools panel showing the visible document creators beside a live workspace.](/assets/images/current/dash-tools-panel.webp)
+
+Clicking a creator opens a new instance in the configured default destination.
+Dragging a creator lets you choose its position. A label in this palette is not
+always a `DocumentType`: several create a preconfigured collection/template,
+and `replviewer` opens an overlay rather than a persistent document.
+
+| Palette label | Creates | Use it for | Availability / important distinction |
+| :--- | :--- | :--- | :--- |
+| **Note** | Rich-text document | General editable notes and embedded content. | Core. Double-clicking an empty canvas is the faster route. |
+| **Flashcard** | Flashcard template | Prompt/answer practice in a collection-backed interface. | Specialized template, not a separate enum value. |
+| **Math** | Equation document | Editable symbolic expressions and evaluation. | Distinct from the Ink group’s handwritten Math mode. |
+| **Mermaids** | Mermaid diagram template | Diagrams generated from Mermaid source. | Template/composed view; the plural label is historical. |
+| **Plotly** | Plotly visualization template | Scripted interactive charts. | Template/composed view; not the same as the CSV-backed DataViz document. |
+| **Notes** | Note-board collection | Reading and writing across multiple note columns. | Collection template, not a single note. |
+| **Image** | Image document | Imported, generated, or edited raster media. | Starts empty until a source is supplied. |
+| **Col** | Collection | A container whose perspective can become freeform, schema, graph, calendar, and more. | `Col` means **Collection**. The click and drag paths use different default placement templates. |
+| **Html** | HTML document | Embedded authored HTML. | Generated HTML may have additional AI editing on branch builds. |
+| **Web** | Web document | An embedded webpage with Back, Forward, and URL controls. | Remote sites can refuse embedding. |
+| **Compare** | Comparison wrapper | Side-by-side comparison of documents or views. | A structural wrapper, not a copied dataset. |
+| **Diagram** | Source-driven diagram document | Rendered diagrams whose source remains editable. | Do not confuse with freehand Ink or Smart Draw. |
+| **Function** | Function-plot document | Plotting mathematical functions. | Separate from Equation and Plotly documents. |
+| **Audio** | Audio recorder/player | Recording or importing audio with a navigable timeline. | Opens as an overlay by default. |
+| **Recording** | Audio-note recording | A compact recorded note. | Separate serialized type from the general Audio document. |
+| **Map** | Mapbox map document | Places, pushpins, routes, linked notes, and spatial stories. | Requires configured map service access for tiles/search. |
+| **Trip Planner** | Trip-planning tool/preset | Multi-stop routes, resources, overview, and planning states. | Visible in the captured compiled runtime; the dedicated creator source entry is missing from the checked-out TypeScript and is tracked as source/build drift. |
+| **Chat Assist** | Retrieval chat document | Asking questions about Dash material. | Answers depend on the configured model/retrieval service. |
+| **Grab** | Screen-grabber overlay | Capturing part of the screen as a document. | Developer mode only; overlay, not an ordinary canvas node while capturing. |
+| **WebCam** | Webcam recorder overlay | Capturing camera input. | Developer mode only; browser/device permission required. |
+| **Button** | Action button document | Running a configured click script. | The visible label does not explain the script; inspect Properties before trusting an unfamiliar button. |
+| **Script** | Scripting document | Editing and running Dash scripts. | Developer mode only; scripts can mutate persistent documents. |
+| **DataViz** | CSV-backed data-visualization document | Tables, plots, linked filtering, and generated analyses. | Structured-data workflow, not Plotly’s free-form template. |
+| **Scrapbook** | Scrapbook template | Date-oriented collections of mixed media and notes. | Specialized document type built on the shared model. |
+| **Journal** | Daily journal document | Recurring dated writing. | The creator supplies the current-date-oriented template. |
+| **3D Model** | 3D viewer document | Loading and orbiting supported models. | A viewer; the separate 3D sketch/CAD branch is not this button. |
+| **Task** | Task document | Completion state, scheduling, and task metadata. | First-class document that can be collected and linked. |
+| **Agent** | Acting agent document | Tool-using inspection and workspace changes. | External model/service may be required; review mutations through undo/history. |
+| **API** | API connector document | Calling and mapping an external API into Dash. | Present in the current checkout; operational setup and credentials are connector-specific. |
+| **Policy Agent** | Policy-agent document | Agent-assisted policy analysis workflow. | Present in the current checkout; distinct from the earlier policy testimony/checker type names documented in the master snapshot. |
+| **Policy Doc** | Policy document | Policy content prepared for the policy-agent workflow. | Present in the current checkout. |
+| **API Demo** | Live-data pipeline preset | Demonstrating a configured connector-to-Dash pipeline. | A complete preset/dashboard, not a primitive node. |
+| **PPT Slide** | Bullet-slide template | A conventional slide-shaped document. | Developer mode only and opens as an overlay. Presentation trails do not require this format. |
+| **View Slide** | View-state slide template | Presenting a saved Dash view. | Developer mode only and opens as an overlay. |
+| **MetaNote** | Metadata-driven note template | Showing selected fields through a reusable layout. | Developer mode only; delegates a template over data rather than copying it. |
+| **replviewer** | Calculator/scripting REPL overlay | Evaluating expressions interactively. | Overlay UI, not a persistent document despite appearing in the creator palette. |
+| **Video Gen** | Video-generator document | Building and generating scene-based video. | External generation service required. |
+
+## Tabs, tiles, and canvas controls
+
+| Control | Result |
+| :--- | :--- |
+| **Tab title** | Activates the document in that tile. Dragging the title can move it to another tile or the canvas. |
+| **Tab x** | Closes the tab; the document remains recoverable in Recently Closed unless explicitly deleted. |
+| **Tile +** | Creates a new collection tab in the tile. |
+| **Tile x** | Closes the tile. |
+| **Grey side handle** | Opens or closes the adjacent sidebar/properties panel. |
+| **Canvas –** | Zooms out. |
+| **Undo / Redo** | Reverses or reapplies named action batches. Yellow indicates an action is still in flight. |
+| **stack** | Opens the undo-stack/history list so the workspace can jump to an earlier action. |
+| **Toggle** | Switches the relevant mode/control state in the bottom canvas toolbar. Its exact target depends on the active view. |
+
+The full drag-and-drop procedures are in [The Dash
+workspace](/getting-started/environment/). Keyboard equivalents are in
+[Keyboard shortcuts](/reference/keyboard-shortcuts/).
+
+## Controls inside project-shaped workspaces
+
+A project can add its own tabs and controls without creating new global
+concepts. The current Trip Planner is the clearest example:
+
+- **Plan / Prepare / Today / Recap** change workflow phase.
+- **Map** opens the linked map document.
+- **Planner** opens the planning tool.
+- **Overview** exposes shared trip data.
+- **Search / Plan** inside the planner change the planner subview.
+- A day summary expands stops and can center them on the map.
+
+Those controls are documented end to end in the [Trip Planner operating
+guide](/guides/features/trip-planner/). Project-specific controls belong in
+their project guide, while any reusable document, view, link, agent, or
+properties behavior must also update its canonical capability documentation.
+
+## If a label is still unexplained
+
+Treat that as a documentation defect. Record:
+
+1. the visible label or icon;
+2. the selected document type and mode;
+3. where it appeared;
+4. the action taken and resulting state;
+5. a synthetic screenshot with enough surrounding chrome to locate it.
+
+Then update this atlas, the relevant operating guide, and—when the behavior is
+reusable—the [capability catalog](/capabilities/). A tooltip alone is not
+complete documentation.
+

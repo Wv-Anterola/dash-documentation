@@ -29,7 +29,9 @@ import {
   type CohortId,
 } from '../data/dash';
 import { capabilitiesForProject } from '../data/capabilities';
+import { visualForProject } from '../data/visuals';
 import StatusBadge from './StatusBadge.astro';
+import VisualEvidence from './VisualEvidence.astro';
 
 interface Props {
   cohort: CohortId;
@@ -65,6 +67,8 @@ const md = (s: string) =>
         </p>
 
         {p.problem && <p class="case-study__lead" set:html={md(p.problem)} />}
+
+        <VisualEvidence evidence={visualForProject(p.title)} />
 
         <details class="case-study__detail">
           <summary>Approach, evidence, and implementation</summary>

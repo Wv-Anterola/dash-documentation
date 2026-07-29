@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "visuals": "node scripts/build-visual-posters.mjs",
     "coverage": "node scripts/check-capability-coverage.mjs",
     "links": "node scripts/check-links.mjs"
   },

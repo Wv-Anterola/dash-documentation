@@ -6,6 +6,8 @@ import {
   type CapabilityAvailability,
 } from '../data/capabilities';
 import { withBase } from '../data/dash';
+import { visualForCapability } from '../data/visuals';
+import VisualEvidence from './VisualEvidence.astro';
 
 const availabilityClass: Record<CapabilityAvailability, string> = {
   Core: 'capability-availability--core',
@@ -36,6 +38,7 @@ const availabilityClass: Record<CapabilityAvailability, string> = {
         <div class="capability-grid">
           {rows.map((capability) => (
             <article class="capability-card">
+              <VisualEvidence evidence={visualForCapability(capability.id)} compact />
               <div class="capability-card__head">
                 <h3><a href={withBase(capability.docs)}>{capability.title}</a></h3>
                 <span class={`capability-availability ${availabilityClass[capability.availability]}`}>
