@@ -1,71 +1,190 @@
 ---
 title: Audio
-description: 'Audio documents: recording inside Dash, trimming, dictation, and anchoring a link to a time range.'
+description: 'Record or import audio, navigate it on a timeline, trim the playable range, transcribe speech, and link notes to exact moments.'
 ---
 
-![Screenshot: audio doc in Dash.](/assets/images/environment/audio_doc.png)
+![An audio document with playback controls and a timeline](/assets/images/environment/audio_doc.png)
 
-The audio document allows the user to record and play back audio or play back imported audio files.
+An audio document is more than a player. Dash keeps the recording, its current
+playback state, its timeline, and any time-based annotations together as one
+document. A link can therefore point to the recording as a whole, to one
+moment, or to a bounded passage.
 
-## Creating Audio Documents
+## Create an audio document
 
-Audio documents can be created by:
+There are three common routes:
 
-1. Using the colon menu
-2. Importing an audio file from outside of Dash using the Import Menu
-3. Dragging and dropping a file in from outside of Dash
+1. Open the canvas node menu with `:` and choose **Audio**.
+2. Import an audio file through the import menu.
+3. Drag a local audio file onto a collection or freeform canvas.
 
-## Actions
+An empty audio document opens in recording mode. A document backed by an
+uploaded file opens in playback mode.
 
-### Pre-Recording
+Browser support still matters. The current player declares the source as
+MPEG audio, so MP3 is the safest interchange format. Other files only work if
+the browser and upload path can decode them. If a file imports but the
+duration remains empty or playback never starts, convert it to MP3 before
+debugging the Dash document itself.
 
-- **Record:** Pressing the white microphone with record on a new empty audio document begins a recording
-- **Dictation:** Selecting the grey transcript button on the left before beginning the recording creates a text document that transcribes what you say after you begin recording.
+## Record in Dash
 
-![Screen recording: Creating an audio document and starting a recording.](/assets/gifs/audio/audiocreaterecord.gif)
+Before starting, allow the browser to use the microphone. Recording cannot
+begin if that permission is denied or no input device is available.
 
-### During Recording
+- **Record** starts a new capture.
+- **Pause / resume** stops and restarts capture without closing the document.
+- **Stop** finalizes the recording and changes the document to its playback
+  interface.
+- **Dictation** creates a text document and sends recognized speech into it.
 
-- **Pause/Play:** This button pauses and resumes the recording.
-- **Stop:** This button stops the recording.
-- **Dictation:** Transcription can also be started during the recording by selecting the button and then left clicking the generated text document. This creates a linked timecode in the document of the time you begin talking.
-- **Linking:** Documents that are created while recording will be automatically linked to the audio recording and will have a linked label marker displayed on the timeline at the point where the document was created.
+![Starting a recording in a new audio document](/assets/gifs/audio/audiocreaterecord.gif)
 
-![Screen recording: Dictating into a text document and stopping the dictation.](/assets/gifs/audio/dictation.gif)
+While recording, Dash tracks elapsed time. Documents created during the
+session can be linked at the time they were created, giving the recording an
+immediate set of notes rather than requiring a separate annotation pass.
 
-### Post-Recording
+### Dictation
 
-- **Pause/Play:** This button pauses or plays the audio document from the current time indicated by the red line on the timeline and the timestamp in the bottom left corner.
-- **Trimming:** Clicking the scissor icon displays the trim controls. Dragging either of the handles at the end of the timeline will change the range the clip is being trimmed to. Double clicking either handle will reset it to the start or end of the clip. Pressing the play button while trimming will preview the trimmed range. Selecting the check icon will finish the trim and display the new altered clip. Trimming is  destructive so a shortened clip cannot  be lengthened again up to its original duration. Markers that are cut off by trimming a clip will be cut down to the portion that remains in the range of the new clip. If a marker is entirely out of range it will no longer play. Lengthening the clip again will increase the marker up to its initial length.
-{/* trimming used to not be destructive */}
+Enable dictation before recording to create a transcript document from the
+start. It can also be enabled during a session: turn it on, then select the
+text document that should receive the transcript.
 
-![Screen recording: Trimming an audio clip by dragging the handles at each end of the timeline.](/assets/gifs/audio/audiotrimming.gif)
+![Dictating into a linked text document](/assets/gifs/audio/dictation.gif)
 
-- **Region Markers:** To create a region marker, click on the desired starting time on the timeline and drag until the desired ending time. The region marker will play audio from the the marker's start to end. Clicking on a region marker reveals handles on both sides that allow the user to change the marker's range.
-- **Label Markers:** To create a label marker, shift-click the desired time on the timeline. The label marker will playback audio from the start time of the marker to the end of the entire audio clip.
+Dictation depends on the browser's speech-recognition support and microphone
+permission. Treat the result as a draft. Names, punctuation, and specialist
+terms should be checked against the recording.
 
-Both types of markers can be deleted by right clicking on them to display the context menu and then selecting delete.
+The 2024 project that added dictation also added an explicit stop control. Its
+implementation is part of the current audio workflow; it is not a separate
+prototype. See [presentation transitions and dictation](/research/cohorts/2024/#presentation-transitions-and-dictation).
 
-## Right-Click Menu
+## Play and navigate
 
-The following audio-specific items can be found in the right-click menu for an audio document:
+The playhead and timestamp show the current position. Selecting a different
+point on the timeline seeks to it; **Play** continues from that point until it
+reaches the visible clip boundary. When the document is made very small, Dash
+collapses the full timeline into a compact player.
 
-- **Hide Anchors:** This will show/hide all range and label markers from the timeline
-- **Don't play when link is selected:** Toggles the ability for markers to play automatically when one of their links is selected
-- **Auto play anchors onClick:** Toggles the ability for markers to play automatically when they are clicked
+Only one media document should normally remain in Dash's active-playing set.
+Opening another recording or following a timed link can pause or supersede the
+previous one.
 
-![Screen recording: Hiding and showing the link anchor markers on an audio timeline.](/assets/gifs/audio/audiohideanchors.gif)
+## Trim the playable range
 
-## Link Audio Documents
+The scissors control exposes the start and end handles:
 
-While recording, if the user creates any text documents, it will automatically be linked to the audio document at the creation time. While recording, the user can generate timestamps for the text document by pressing enter or pausing for 10 seconds (this can be toggled in the text document’s context menu). Linking to the audio document will generate a link at the current time. Linking to range/label markers will generate a link corresponding to their start/end time.
+1. Drag either handle to set the clip boundary.
+2. Press **Play** to preview that range.
+3. Confirm the trim to return to the normal player.
+4. Double-click the trim control or use its full-clip state to expose the
+   original bounds again.
 
-![Screen recording: Following a link anchored to a point in an audio recording.](/assets/gifs/audio/audiolinks.gif)
+![Adjusting an audio document's playback bounds](/assets/gifs/audio/audiotrimming.gif)
+
+Trimming changes the range Dash plays; it does not rewrite the uploaded audio
+file. An anchor outside the current bounds will not play while it is excluded.
+Expanding the bounds can make that material available again. This distinction
+is important when a recording is cited elsewhere: the source media and its
+annotations remain intact even when one view uses a shorter excerpt.
+
+## Add time anchors
+
+Dash uses two timeline anchor shapes:
+
+- A **range anchor** covers a start and end time. Drag across the timeline to
+  create one, then drag either edge to refine it.
+- A **point or label anchor** starts at a single time. Shift-click the timeline
+  to create one.
+
+Selecting a range plays that passage. A point anchor seeks to its time and,
+depending on the document's playback setting, may continue toward the end of
+the clip. Right-click an anchor to delete or adjust it.
+
+These anchors are documents in their own right. Internally, their timing is
+stored as start/end fields, and links connect to the anchor rather than to an
+anonymous pixel on the waveform. That is why an anchored note can survive
+layout changes.
+
+## Link notes to the recording
+
+To make a deliberate link:
+
+1. Move the playhead to the relevant moment, or select a time range.
+2. Start Dash's normal link action.
+3. Choose the note, source, or destination document.
+4. Follow the link once to confirm that it seeks to the intended passage.
+
+![Following a link to a precise point in an audio recording](/assets/gifs/audio/audiolinks.gif)
+
+During recording, creating a note can perform the same operation
+automatically. Transcript paragraphs may also carry timestamps, so following
+one returns to the corresponding point in the audio.
+
+The audio context menu includes timeline-specific behavior:
+
+- **Hide anchors** hides or restores the visual markers without deleting them.
+- **Don't play when link is selected** prevents link navigation from
+  automatically starting playback.
+- **Auto play anchors on click** controls whether selecting a marker starts its
+  passage immediately.
+
+![Showing and hiding audio timeline anchors](/assets/gifs/audio/audiohideanchors.gif)
+
+## A reliable review workflow
+
+For interviews, lectures, or field recordings:
+
+1. Preserve one untrimmed source document.
+2. Create range anchors for passages worth citing.
+3. Link each range to a short note that says why it matters.
+4. Put the notes in a collection and add fields such as speaker, topic, and
+   review status.
+5. Use a trail when the excerpts need a deliberate reading or presentation
+   order.
+
+This keeps evidence, interpretation, and sequence separate. The audio remains
+the evidence; notes carry analysis; links preserve the precise relationship.
+
+## Troubleshooting
+
+**The microphone button does nothing.** Check the browser's site permission and
+the operating system's input-device permission. Reload after changing either.
+
+**An imported file has no usable duration.** Wait for the upload to finish,
+then try MP3. The timeline is initialized from the media element's duration.
+
+**Following a link seeks but does not play.** Automatic playback may be disabled
+in the document menu, or the browser may be enforcing its autoplay policy.
+
+**A marker appears silent.** Its time may fall outside the current trim bounds.
+Show the full clip, inspect the marker, and then set the intended bounds again.
+
+**Dictation is incomplete.** Keep the recording as the authoritative source and
+correct the generated text manually.
+
+## For maintainers
+
+The current implementation lives in:
+
+- `src/client/views/nodes/AudioBox.tsx` — recording and playback state,
+  timed-link behavior, and the audio element
+- `src/client/views/collections/CollectionStackedTimeline.tsx` — trim bounds,
+  time conversion, markers, and anchor playback
+- `src/client/views/nodes/RecordingBox/` — workspace and camera recording
+  infrastructure shared with other media workflows
+
+The registered audio template uses `DocumentType.AUDIO`. Its primary media
+field is an `AudioField`; duration and the current timecode are stored
+separately so timeline behavior does not depend on the visual size of the
+document.
 
 ## Related
 
-- [Temporal media](/guides/documents/temporal-media/) for why a time
-  range is a link anchor in the same way a text selection is.
-- [Links and anchors](/concepts/links/) for the anchor model underneath that.
-- [Dictation and its stop control](/research/cohorts/2024/#presentation-transitions-and-dictation)
-  for the project that added speech-to-text on audio documents.
+- [Temporal media](/guides/documents/temporal-media/) explains the shared
+  timeline model used by audio and video.
+- [Links and anchors](/concepts/links/) explains why a time range can be a link
+  endpoint.
+- [Fields and tags](/guides/properties/fieldsandtags/) shows how to add review
+  metadata to a recording or its notes.

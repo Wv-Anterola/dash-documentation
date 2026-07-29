@@ -3,9 +3,16 @@ title: Temporal media
 description: How Dash treats audio and video, and why a link can point at a moment in a recording rather than at the file.
 ---
 
-Dash supports [audio](/guides/documents/audio/) and
-[video](/guides/documents/video/), and annotation and markup of both.
-The two types are handled the same way wherever it is possible to do so.
+Dash treats audio and video as documents with addressable time. You can place
+them in collections, give them fields, link them to other material, and target
+a moment or interval instead of only the whole recording.
+
+Use the type-specific guides for controls:
+
+- [Audio](/guides/documents/audio/) covers recording, playback, trimming, and
+  dictation.
+- [Video](/guides/documents/video/) covers imported video, playback, and the
+  timeline.
 
 ## Why they get their own section
 
@@ -13,16 +20,42 @@ Everything else in Dash is addressed by position: a region of an image, a
 passage of text, a page of a PDF. Time-based media adds another axis, and Dash
 treats it as a first-class one.
 
-Both types carry a timeline you can drag across to select a range. That range
-is a valid link anchor, so a link can point at fifteen seconds of a recording,
-and following it plays that stretch rather than opening the file at the start.
+Both types carry a timeline. A temporal anchor stores its position against the
+media document, and a link can use that anchor as an endpoint. Following the
+link can therefore seek to the relevant point or play a bounded interval
+instead of opening the file at zero.
 
 This falls directly out of the link model: an anchor is a selection rather than
 a document, so a temporal selection needs no special case.
 [Links and anchors](/concepts/links/) explains the model and where it is still
 thin.
 
-## What differs between them
+## A source-review workflow
+
+1. Put the recording and the document you are writing into one collection.
+2. Play or scrub to the relevant passage.
+3. Create an anchor at that time or over the interval.
+4. Link the anchor to a note, claim, or annotation.
+5. Give the link a relationship or description so another reader knows why it
+   matters.
+6. Follow the link once to confirm that it opens the intended passage.
+
+This is more durable than typing “around 12:40” into a note because the time is
+part of the link endpoint. It still depends on the underlying media remaining
+available.
+
+## Shared behavior
+
+Audio and video both use a media state, current timecode, timeline annotations,
+and clip boundaries. Their document views register and unregister with Dash's
+currently-playing set so playback can be coordinated with the surrounding
+workspace. Timecode changes also drive timeline scrolling and can highlight
+linked material as playback crosses a linked point.
+
+Shrinking an audio document below a small size collapses it to a mini-player.
+Full controls return when it has enough space.
+
+## What differs
 
 Audio documents can be recorded inside Dash and trimmed. Video documents are
 imported and cannot be trimmed, though they carry the same timeline for
@@ -30,10 +63,32 @@ placing labels and region markers.
 
 Audio also supports dictation, which transcribes speech to text.
 
+## Reliability and access
+
+- A temporal anchor does not package the media. If the referenced URL, upload,
+  or local asset is unavailable, the link record can survive while playback
+  fails.
+- Browser media support depends on the encoded format and response headers.
+- Recording requires microphone permission.
+- Transcription requires its configured service and credentials.
+- Sharing a Dash document does not override access controls on an external
+  media host.
+- Check seek behavior after replacing a media source: the old duration and
+  anchors may no longer line up.
+
+## Implementation map
+
+`AudioBox.tsx` owns recording and audio playback. `VideoBox.tsx` owns video
+playback. Both use the stacked timeline and annotatable view infrastructure;
+temporal anchors are ordinary Dash documents associated with the media
+document. The [links architecture](/architecture/links-trails/) follows the
+anchor-to-link path in more detail.
+
 ## Related
 
-- [Audio](/guides/documents/audio/) for recording, trimming, and
-  dictation.
-- [Video](/guides/documents/video/) for playback and the timeline.
 - [Annotation and markup](/guides/features/markup/) for the annotation routes
   these documents share with images, PDFs, and web pages.
+- [Presentation trails](/guides/features/trails/) for using media inside a
+  prepared path.
+- [Document and field model](/architecture/document-model/) for how media
+  source, duration, layout, and annotations are stored.

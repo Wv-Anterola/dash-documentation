@@ -1,0 +1,86 @@
+---
+title: Keyboard shortcuts
+description: Source-verified Dash keyboard shortcuts, including search, import, trails, undo, ink, selection, movement, grouping, and canvas-only commands.
+sidebar:
+  order: 1
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+Dash routes shortcuts by modifier state in
+`src/client/views/GlobalKeyHandler.ts`. On macOS, use <kbd>Command</kbd> where
+the tables say <kbd>Ctrl/Cmd</kbd>. Shortcuts do not override ordinary typing
+inside text inputs unless noted.
+
+## Global shortcuts
+
+| Shortcut | Result |
+| :--- | :--- |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>F</kbd> | Search inside the selected document when that document implements search; otherwise open the global search panel. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>I</kbd> | Open the import panel. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>S</kbd> | Open the trails panel. This intentionally replaces the browser's Save command in the workspace. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>T</kbd> | Run the configured Tools button action. The exact surface depends on the current user document. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>Z</kbd> | Undo the most recent Dash batch outside the home screen. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>Y</kbd> | Redo outside the home screen. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | Redo. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>P</kbd> | Toggle the ink tool. |
+| <kbd>Ctrl/Cmd</kbd> + <kbd>E</kbd> | Toggle the eraser. |
+| <kbd>Esc</kbd> | Cancel the active link, ink, drag, region selection, or authentication flow; close open menus and managers; then clear selection or lightbox state where applicable. |
+
+The browser keeps <kbd>Ctrl/Cmd</kbd> + <kbd>R</kbd> for reload. Copy and paste
+also retain their normal behavior when text is selected or focus is in an
+input.
+
+## Selection and movement
+
+| Shortcut | Result |
+| :--- | :--- |
+| Arrow key | Move the selected freeform document or documents by 1 canvas unit. |
+| <kbd>Shift</kbd> + Arrow key | Move the selection by 10 canvas units. |
+| <kbd>Delete</kbd> or <kbd>Backspace</kbd> | Invoke the selected document's close/remove action when focus is not in an input and no text is selected. |
+| <kbd>Shift</kbd> + <kbd>G</kbd> | Assign the selected documents to one group, then clear the selection. |
+| <kbd>Shift</kbd> + <kbd>U</kbd> | Remove grouping from the selected documents, then clear the selection. |
+| <kbd>Alt/Option</kbd> + <kbd>F</kbd> | Float the selected item when its collection view supports floating. |
+
+Dash copy and cut place document identifiers and the selection's canvas
+position on the clipboard. Pasting into a compatible collection recreates
+contexts for the same documents; copying requests clones. This is different
+from copying selected text inside a document.
+
+## Canvas commands
+
+The freeform canvas listens for several commands after it has focus:
+
+| Key | Result |
+| :--- | :--- |
+| <kbd>:</kbd> | Open the document-creation menu at the pointer. |
+| <kbd>?</kbd> | Open a prompt that creates a Wikipedia web document for the entered topic. |
+| Start typing | Create a rich-text note at the pointer and put the typed character into it. |
+| <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Read plain text from the clipboard and turn non-empty lines into vertically arranged text notes, preserving indentation approximately. |
+| <kbd>Ctrl</kbd> + <kbd>P</kbd> while the canvas command handler owns focus | Parse tab-separated clipboard text into a CSV-backed table document. |
+| <kbd>Ctrl</kbd> + <kbd>H</kbd> while the canvas command handler owns focus | Create an HTML document from clipboard text. |
+
+The two <kbd>Ctrl</kbd> + <kbd>P</kbd> behaviors are context-dependent: the
+global handler toggles ink, while the focused freeform command handler can
+consume the key first for table paste. If the result is not the one you
+expected, use the import panel for tabular data.
+
+## Search and media
+
+Once global search has found a document, selecting the result calls that
+document view's own `search()` method when available. PDF search can therefore
+highlight the query inside the file and <kbd>Shift</kbd>-clicking a result moves
+backward through matches.
+
+Media editors and rich-text fields also define local shortcuts. Those are
+handled inside the editor and can change as their upstream libraries change;
+this page lists only shortcuts routed by Dash itself.
+
+## Source note
+
+The tables above describe the active handlers, not commented-out commands. For
+example, the source still contains a disabled <kbd>Ctrl</kbd> + <kbd>S</kbd>
+canvas branch for creating a slide, but it does not execute and is not listed.
+

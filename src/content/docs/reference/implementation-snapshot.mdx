@@ -19,9 +19,9 @@ This documentation pass inspected:
 ```text
 Repository: https://github.com/brown-dash/Dash-Web
 Ref:        origin/master
-Commit:     3170124bdbf216156151aa5fe6c0085b17c1a63a
-Date:       2026-07-08
-Subject:    more cleanup
+Commit:     e7473b5d1076d5b77f6e580c4367afd8c4958033
+Date:       2026-07-22
+Subject:    fixed context menus again to allow submenus & scrolling
 ```
 
 ## Verified registries
@@ -38,6 +38,10 @@ Claims were checked against the type enum, `CollectionView.renderSubView`,
 `CollectionView.setupViewTypes`, the `Agent` constructor, the
 `DocumentContentsView.Init` component registry, and source paths recorded in the
 capability registry.
+
+The two commits after the previous snapshot changed context-menu positioning,
+scrolling, and submenu rendering. They did not change the document, collection,
+or agent registries, so the verified counts remain the same.
 
 Project integration status remains evidence-backed prose maintained in
 `src/data/projects.ts`. Capability coverage is enforced automatically, but a

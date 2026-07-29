@@ -3,9 +3,14 @@ title: Linked to
 description: The properties-panel section listing documents linked to the current selection.
 ---
 
-Lists the documents linked to whatever is currently selected. It is a reading
-surface: to follow or edit a link, use the link indicator on the document
-itself.
+**Linked To** lists the links connected to the current document. If the current
+selection is an annotation anchor, it uses that anchor; while a link is being
+created, it can use the active link anchor instead.
+
+Select an entry to follow it. Dash records the chosen link as current, unhides
+the opposite endpoint if necessary, and opens that endpoint in the right-hand
+pane. When the endpoint is an annotation on non-text media, Dash opens the
+annotated document rather than leaving you at an internal anchor record.
 
 ## Creating a link
 
@@ -19,6 +24,17 @@ click the dotted-circle chain icon beside the solid one.
 the link icon from one document onto another, along with link labels, follow
 behaviour, and deleting links.
 
+## Reading the list
+
+The section is empty when the document has no registered links. A row represents
+a link document and its opposite endpoint, not merely a URL. The direction you
+follow depends on which endpoint is currently selected.
+
+If you linked a text range, PDF region, video interval, or other annotation,
+selecting the parent document and selecting the anchor can produce different
+lists. That is expected: anchors let Dash attach a relationship to a precise
+part of a document.
+
 ## Why a link is more than a row here
 
 A link in Dash is itself a document. It can carry a description, a relationship,
@@ -28,3 +44,19 @@ rather than a bare pointer.
 The [links concept page](/concepts/links/) explains what that buys and what it
 still lacks: links have no type or strength, so a citation and a passing
 association look the same unless someone wrote a description.
+
+## Troubleshooting
+
+- **The section says there are no links:** select the anchor itself if the
+  relationship was attached to a region rather than the whole document.
+- **A destination opens at the document rather than the region:** check that
+  the link endpoint is the intended anchor and that the annotation still
+  exists.
+- **A destination is missing:** access control applies to endpoints as well as
+  links. A visible link record does not grant permission to a private target.
+- **You meant to reuse the same document elsewhere:** use
+  [another context](/guides/properties/othercontexts/), not a link.
+
+At the implementation level, `PropertiesDocBacklinksSelector` delegates the
+list to `LinkMenu`, resolves the opposite anchor with
+`Doc.getOppositeAnchor`, and opens it through the docking view.

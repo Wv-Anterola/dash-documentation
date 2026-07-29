@@ -1,56 +1,80 @@
 ---
 title: Images
-description: Image documents, the background-image mode, rotation and zoom, and the AI image editor that fills a marked region from a prompt.
+description: Import, arrange, annotate, anchor, and generate edits from image documents.
 ---
 
 import ProjectNote from '../../../../components/ProjectNote.astro';
 
 ![Screenshot: an image document open on a Dash canvas.](/assets/images/environment/image_doc.png)
 
-Images brought in from outside Dash.
+An image document holds an image source plus Dash layout, fields, links, and an
+annotation overlay. Sources can come from local import, a dragged web image,
+search, or a generation service.
 
-## Creating one
+## Create one
 
-Drag an image in from the web or from your desktop.
+Drag an image from the web or desktop onto a canvas, or use the Imports panel.
+For research or publication work, record its origin and whether Dash stored a
+copy or still depends on a remote URL.
 
-## What you can do
+## Work with the image
 
-- Embed marquee selections, annotations, and ink on top of the image. The
-  overlay behaves like a collection, so anything you place there is a document
-  in its own right.
-- **Make it a background.** "Make Background" in the right-click menu locks the
-  image into the canvas: it can no longer be selected, and a red lock icon
-  appears at its top right. Clicking that icon turns it back into an ordinary
-  image.
-- **Rotate** it 90 degrees clockwise from the right-click menu.
-- **Zoom** with the scroll wheel.
+- Add marquee regions, annotations, documents, and ink on its overlay.
+- Make a region into a link anchor when the relationship concerns one detail.
+- Choose **Make Background** to lock it into the canvas; use the red lock
+  control to make it selectable again.
+- Rotate it 90 degrees clockwise from the context menu.
+- Zoom the content with the scroll wheel while the image is active.
 
-## The image editor
+The overlay behaves like a collection. A note placed on the image remains a
+document, not pixels burned into the file.
 
-The image editor fills a region you mark, guided by a prompt.
+## Generate an edit
 
-1. Mark the parts of the image you want replaced.
-2. Describe what should go there in the prompt box.
-3. Click "Get edits". Two generated versions appear alongside the original.
+The image editor fills a marked region from a prompt:
+
+1. Mark the area to replace.
+2. Describe the requested result.
+3. Choose **Get edits**.
+4. Compare the two generated variants with the source.
 
 ![Screenshot: the Dash image editor showing two generated variants beside the original image.](/assets/images/environment/image_doc2.png)
 
-Returning to the dashboard leaves behind a collection of linked images
-recording the iterations, so the versions stay connected rather than
-overwriting each other.
+Returning to the dashboard leaves a collection of linked versions rather than
+silently overwriting the original.
 
 ![Screenshot: a collection of linked image versions produced by successive edits.](/assets/images/environment/image_doc3.png)
 
 <ProjectNote title="Smart Draw and generative drawing">
-  Where the image editor came from, alongside a drawing surface that hands a sketch to an image model. Both are in `master`; the Bézier generation branch is not.
+  The image editor and sketch-to-image surface are in `master`. The separate
+  Bézier-generation branch is not.
 </ProjectNote>
 
-## Related
+The editor depends on configured generation services. A visible control does
+not prove the server has working Firefly or OpenAI credentials, and a successful
+request does not prove the output is accurate.
 
-- [Generative AI](/guides/features/generative-ai/) for the other generation
-  surfaces and what they share.
-- [Generative media](/concepts/generative/) for how Dash treats generated
-  content as documents rather than exports, and what it still does not do:
-  generation quality is not evaluated anywhere in the codebase.
-- [Ink](/guides/features/ink/) for drawing on an image rather than generating
-  into it.
+## Source and generation practice
+
+- Keep the original beside its edits.
+- Title iterations so links and trails are understandable.
+- Preserve prompts and reference images when reproducibility matters.
+- Check provider data-handling rules before sending private material.
+- Describe material that will be used outside an immediate visual workflow.
+- Verify generated labels, text, people, and scientific detail manually.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Remote image is blank | Source still exists, response permits embedding, and URL is HTTPS |
+| Wheel zoom moves the canvas | Activate the image content before scrolling |
+| Background cannot be selected | Use the red lock control |
+| Annotation no longer aligns | Source dimensions, rotation, or crop changed |
+| **Get edits** fails | Provider credentials, server route, mask, prompt, quota, and returned content type |
+| Collaborator cannot see it | Upload persistence and permission on the source |
+
+See [Generative AI](/guides/features/generative-ai/),
+[Generative media](/concepts/generative/),
+[Ink](/guides/features/ink/), and
+[Configuration](/reference/configuration/).

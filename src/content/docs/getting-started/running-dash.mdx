@@ -3,9 +3,10 @@ title: Running Dash locally
 description: Prerequisites, MongoDB setup, and the commands that start the Dash server, the component library, and the desktop build from a source checkout.
 ---
 
-You need a local checkout to work on Dash. If you only want to use the
-application, [browndash.com](https://browndash.com/signup) is the hosted
-version and this page is not for you.
+You need a local checkout to work on Dash. The historical hosted deployment at
+`browndash.com` did not resolve when checked on 29 July 2026, so this is also
+the documented fallback when the team has not supplied another active
+deployment.
 
 Everything below is taken from the `README.md` and `package.json` in
 [brown-dash/Dash-Web](https://github.com/brown-dash/Dash-Web). Where the two
@@ -63,9 +64,14 @@ OPENAI_API_KEY=sk-xxxxx
 ```
 
 Other integrations read their own variables, including Adobe Firefly, Google
-Maps, Google search, Dropbox, and Desmos. Grep the server source for
+search, Dropbox, and Desmos. Grep the server source for
 `process.env.` to see the current set; the names are in the code, the values
 are not, and they should never be committed.
+
+The [configuration reference](/reference/configuration/) lists the current
+names, where each one is read, and the important `_CLIENT_` behavior. Variables
+with that prefix are compiled into browser JavaScript and must not be assumed
+secret.
 
 You do not need any of them to run Dash. Features that call a service you have
 not configured will fail at the point of use rather than at startup.

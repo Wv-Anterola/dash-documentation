@@ -1,54 +1,218 @@
 ---
 title: Schema view
-description: The table view over a collection, where each document is a row and each column is a document field, with sorting, in-line nesting, and user-defined keys.
+description: 'Work with a collection as a field-aware table: add and edit columns, sort records, inspect nested collections, preview documents, and create data visualisations.'
 ---
 
-![Screenshot: a Dash collection displayed as a schema table, with documents as rows and fields as columns.](/assets/images/environment/views/schema_view.png)
+![A Dash collection displayed as a schema table](/assets/images/environment/views/schema_view.png)
 
-A table over a collection. Each document is a row; each column shows the value
-stored under one key for that document. Nested collections expand in place.
+Schema view presents a collection as a table. Each document is a row; each
+column is one document field. It is useful when the content itself is less
+important than comparing the facts stored about it.
 
-Title, type, author, date last modified, and text are shown by default, and you
-can add columns for any other key.
+Schema is a **view**, not an export. Editing a cell changes the underlying Dash
+document, and the same change appears anywhere else that document is shown.
 
-## What it suits
+## When to use it
 
-- Working with documents through their fields rather than their contents
-- Sorting and comparing a set of documents on one value
-- Reviewing search results in a structure you can scan
-- Treating a collection as a spreadsheet
+Schema view works well for:
 
-## Adding and editing columns
+- reviewing a collection record by record;
+- comparing status, owner, date, score, or another shared field;
+- cleaning metadata before filtering or visualization;
+- scanning search results in a compact structure;
+- adding one new field across an existing collection; and
+- opening documents one at a time without leaving the table.
 
-A column title is a key, and each cell under it is that document's value for
-that key.
+Use [Freeform](/guides/views/freeform/) when spatial relationships matter,
+[Stacking](/guides/views/stacking/) when documents share a repeated layout, or
+[Data visualisation](/guides/documents/dataviz/) when the goal is a chart rather
+than direct field editing.
 
-Click **+** in the top left to add one. You can add a column for a key the
-documents already carry, or invent a new key. The difference matters: adding a
-column for an existing key is a viewing operation, while adding one for a new
-key writes new fields onto the documents.
+## Understand rows and columns
 
-Columns can hold strings, numbers, checkboxes, or documents.
+The table is a projection over documents:
 
-To change a column, click the small circular button beside its title. The
-dropdown there lets you change, filter, or delete it.
+- A row identifies one document in the collection.
+- A column heading identifies a field key.
+- A cell displays or edits that document's value under the key.
+- A blank cell means the field is absent or has no displayable value; it does
+  not necessarily mean the document itself is empty.
 
-To change a cell, click it and type. String values need quotation marks.
+Dash initially exposes common fields such as title, type, author, last-modified
+date, and text. The exact starting set depends on the collection and its saved
+schema.
 
-To sort, use the arrows beside a column title.
+Nested collections can expand inside the table. This makes hierarchy visible
+without converting child documents into copies or flattening the collection
+permanently.
 
-![Screen recording: adding, sorting, and editing columns in a Dash schema view.](/assets/gifs/views/schema_columns.gif)
+## Add a column
 
-## Previewing a document
+Choose **+** at the upper left of the table.
 
-The leftmost column has a "show preview" toggle, which opens a live preview of
-the selected row's document in a side tab. It is the fastest way to work through
-a table without losing the table.
+You can:
+
+1. expose a key already present on some documents; or
+2. create a new key that the documents do not yet carry.
+
+The first is only a change to the view. The second can write a new field onto
+documents as values are entered. Before inventing a key, check
+[fields and tags](/guides/properties/fieldsandtags/) so spelling and value type
+stay consistent with the rest of the workspace.
+
+Prefer short keys that describe the value itself: `status`, `reviewer`, or
+`publicationDate`. Put explanation in the documentation or a companion note,
+not in an unwieldy column name.
+
+## Edit values
+
+Select a cell and enter the new value. Schema cells use Dash's field-aware
+editor, so values are not all treated as plain text. Depending on the column,
+a cell may hold:
+
+- text;
+- a number;
+- a checkbox/Boolean value;
+- a date;
+- another document; or
+- a computed or expression-backed field.
+
+When editing through an expression-capable cell, a literal string may require
+quotation marks. If an unquoted word is interpreted as a field name or
+expression, enter it as a quoted string instead.
+
+Edits affect the underlying document immediately. For high-impact bulk work,
+test the field and value type on one row before filling the rest.
+
+## Change a column
+
+Use the circular control beside a heading to open its menu. Depending on the
+field and build, the menu can rename or change the displayed field, filter the
+column, or remove it from the table.
+
+Removing a column from the view is not the same as deleting that field from
+every document. Check the wording of the action before confirming it.
+
+### Sort
+
+Use the arrows beside a heading to sort by that field. Sorting changes row
+order, not collection membership or the values themselves.
+
+Documents with missing values may group separately. If a sort looks wrong,
+inspect whether the column mixes strings and numbers—for example, `"10"` and
+`10` are not necessarily ordered as the same kind of value.
+
+![Adding, sorting, and editing schema columns](/assets/gifs/views/schema_columns.gif)
+
+## Filter the table
+
+Column filters narrow the visible records without deleting documents from the
+collection. A reliable workflow is:
+
+1. normalize the field values;
+2. apply one filter;
+3. verify a known included and excluded record;
+4. add the next condition; and
+5. clear filters before concluding that a document has disappeared.
+
+Schema filtering and document-property filtering address related but distinct
+layers. See [filters](/guides/properties/filters/) for the broader collection
+filter model.
+
+## Preview a document
+
+The leftmost column includes a preview control. Turn it on, then select a row
+to open a live document preview beside the table.
+
+The preview is useful for quality review because it preserves context:
+
+- keep the table sorted by the field under review;
+- inspect the rendered content of each row;
+- correct a field in the table; and
+- move to the next record.
+
+The preview is not a detached snapshot. Changes to the document can appear in
+both places.
+
+## Create a chart from the table
+
+The schema toolbar can create a CSV-backed data-visualisation document from
+the current table. This is the bridge between a collection of Dash documents
+and the chart system.
+
+1. Expose the fields the chart needs.
+2. Clean mixed or missing values.
+3. Choose **DataViz**.
+4. Place the generated document on a freeform canvas.
+5. Decide whether it should show live changes from the source collection.
+
+With **Display live updates to canvas** enabled, additions and removals in the
+source collection update the visualisation. Without it, the generated
+document acts as a stable snapshot.
+
+See [data visualisation](/guides/documents/dataviz/) for axis selection,
+interactive filtering, chart types, and analysis.
+
+## A practical metadata-review workflow
+
+For a research collection:
+
+1. Add `source`, `author`, `date`, `reviewStatus`, and `topic` columns.
+2. Sort by `reviewStatus`.
+3. Preview each unreviewed item.
+4. Normalize dates and topic names while the source is visible.
+5. Filter to the reviewed records before generating a chart or trail.
+
+This uses Schema for what it does best: making inconsistencies visible before
+they become search, filtering, or visualization problems.
+
+## Troubleshooting
+
+**A field is visible in Properties but not in Schema.** Add a column using the
+exact field key. The table does not automatically expose every key carried by
+every row.
+
+**A cell will not accept text.** The column may have a different field type, or
+the editor may be parsing the input as an expression. Try a quoted literal and
+inspect the field in Properties.
+
+**Sorting looks lexical instead of numeric.** Some values are probably stored
+as strings. Normalize the field type rather than relying on their visual
+appearance.
+
+**A nested collection is hard to read.** Collapse it, work with the child
+collection directly, or switch that level to another view.
+
+**The generated chart omits records.** Check blank and mixed-type cells in the
+selected columns. Chart components deliberately discard records they cannot
+interpret for the chosen plot.
+
+## For maintainers
+
+The implementation is under
+`src/client/views/collections/collectionSchema/`:
+
+- `CollectionSchemaView.tsx` composes the table and saved schema.
+- `SchemaColumnHeader.tsx` and `SchemaHeaderField` represent columns and their
+  settings.
+- `SchemaRowBox.tsx`, `SchemaTableCell.tsx`, and `SchemaCellField.tsx` render
+  and edit rows and values.
+
+`SchemaHeaderField` is a serializable field object, not merely a React column
+definition. This is why column configuration can persist with the collection.
+Selection is also integrated with the global document selection manager, so a
+schema row can participate in actions elsewhere in Dash.
+
+Schema-to-CSV creation crosses into
+`src/client/views/nodes/DataVizBox/SchemaCSVPopUp.tsx`. Changes to the schema
+field model should therefore be checked against both table rendering and
+data-visualisation generation.
 
 ## Related
 
-Columns are document fields, so what you can put in one is governed by the field
-system described in [documents and fields](/concepts/documents/).
-
-[Fields and tags](/guides/properties/fieldsandtags/) covers the same fields from
-the properties panel, one document at a time.
+- [Documents and fields](/concepts/documents/) explains the data/layout
+  distinction underneath each cell.
+- [Fields and tags](/guides/properties/fieldsandtags/) covers one-document
+  editing in the Properties panel.
+- [Collection views](/reference/collection-views/) compares Schema with the
+  other available presentations.

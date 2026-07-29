@@ -1,77 +1,195 @@
 ---
 title: Maps
-description: 'Mapbox map documents: placing and selecting pins, searching for locations, and linking notes to places.'
+description: 'Use a Mapbox-backed document to search for places, create pins and routes, attach notes to locations, and preserve map state in links.'
 ---
 
-![Screen recording: create map in Dash.](/assets/gifs/environment/create_map.gif)
+![Creating a map document in Dash](/assets/gifs/environment/create_map.gif)
 
+A map document turns location into part of Dash's link model. It can hold
+pushpins, routes, and a sidebar of related documents. A link may return to the
+map as a whole, to a saved viewport, or to one selected place.
 
+Map documents were introduced with the 2023 calendar work and are integrated
+into the current document registry.
 
-## What it is
+## Before using maps
 
-Map document supports searching, pushpins, pushpin selection, content view pinning, text note linking, and link to pin following. Details can be found below.
+The current implementation uses Mapbox. A working deployment needs a valid
+Mapbox token and network access to the map and geocoding services. The token
+handling in the application source predates the rest of the environment
+configuration and should be reviewed before a public deployment; see
+[configuration](/reference/configuration/#mapbox).
 
-## Creating a MapBox
+Do not assume the map is an offline asset. Base tiles, location search, and
+some place metadata can fail even though the Dash document itself loads.
 
-Type colon on your canvas to invoke the node menu and type "MAP" or click and drag map icon from tools menu
-![Screen recording: create map in Dash.](/assets/gifs/environment/create_map.gif)
+## Create a map
 
-## Searching
+Open the node menu with `:` and choose **Map**, or drag the map tool onto a
+canvas. Resize the document before adding detailed annotations; its pins use
+geographic coordinates, but the working viewport is also part of the state a
+link may preserve.
 
-Type a location in the top bar and click search (or press enter/return).
-![Screen recording: map search in Dash.](/assets/gifs/environment/map_search.gif)
+## Search and navigate
 
-## Pushpins
+Enter a place or address in the search bar and press `Enter` or choose a
+result. Dash stores the result's display name and coordinates when it creates
+a pin.
 
-- Drag and drop pushpin icon onto map to place pushpin
-- Click pushpin icon to place icon on center of map
-  ![Screen recording: dragging the pushpin icon onto a map to place a pin.](/assets/gifs/environment/map_placepin.gif)
+![Searching for a place in a map document](/assets/gifs/environment/map_search.gif)
 
-## Pin Selection
+Use normal map gestures to pan and zoom. The implementation also stores
+bearing and pitch, allowing a saved view to include more than latitude,
+longitude, and zoom.
 
-- Select upon clicking pin (selected pins turn green and anchor menu will pop up)
-- Deselect pin by clicking elsewhere on the map
-- Delete pin by clicking trash icon on anchor menu
-- Center pin by clicking center icon on anchor menu
+Search results come from a third-party geocoder. Confirm important locations,
+especially similarly named places, before using them as evidence.
 
-![Screen recording: map select in Dash.](/assets/gifs/environment/map_select.gif)
+## Add and manage pushpins
 
-## Linked Text Notes
+There are two placement paths:
 
-- Create a note document in the sidebar linked to the selected pin
-- Follow the link of a note by clicking it, and the map will center on the linked pin and highlight the view/pin orange
+- Drag the pushpin control to a precise point on the map.
+- Select the pushpin control to place one at the current center.
 
-![Screen recording: map createnote in Dash.](/assets/gifs/environment/map_createnote.gif)
+![Placing a pushpin](/assets/gifs/environment/map_placepin.gif)
 
-- Selecting a pin will filter the notes to those linked to the selected pin
-- Deselecting a pin will reveal all notes made on that map
+A pushpin stores latitude, longitude, a title, description, marker type, and
+marker color. Search-created pins may also retain the place name and a
+Wikidata identifier returned by the geocoder.
 
-![Screen recording: map filter in Dash.](/assets/gifs/environment/map_filter.gif)
+Select a pin to open its anchor menu. A selected pin changes color and can be:
 
-## More with linking
+- centered in the viewport;
+- deleted;
+- used as the anchor for a new link; or
+- associated with a document in the map sidebar.
 
-- You can link a document to the map or add the map to a trail and preserve the map's contents (location, zoom, map view type)
-- If a pin is selected when the link was made, following the link will bring you to the map centered on the (highlighted) link
-- If a pin is not selected when the link was made, following the link will bring you to the same location as when the link was made
+Click open map space to clear the selection.
 
-![Screen recording: map link in Dash.](/assets/gifs/environment/map_link.gif)
+![Selecting and centering a pushpin](/assets/gifs/environment/map_select.gif)
 
-With this functionality, we can create some pretty cool results:
-![Screen recording: map story in Dash.](/assets/gifs/environment/map_story.gif)
+Deleting a pin removes that location anchor from the map. Review linked notes
+first so the deletion does not leave a relationship without its intended
+geographic endpoint.
 
-## Feedback
+## Attach notes and other documents
 
-If you are having trouble with any features or encounter unexpected behavior, email me at eric_ma@brown.edu!
+The map sidebar is an annotation collection. Create a text note there, or add
+an existing Dash document. When a pin is selected, Dash links the added
+document to that pin and copies the coordinates onto the document when
+appropriate.
+
+![Creating a note linked to a selected place](/assets/gifs/environment/map_createnote.gif)
+
+Selecting a pin filters the sidebar to documents linked to that location.
+Clearing the selection restores the full set of map annotations.
+
+![Filtering map notes by selected pin](/assets/gifs/environment/map_filter.gif)
+
+This supports a useful division of labor:
+
+- the pin identifies **where**;
+- the linked note records **what happened or why the place matters**;
+- fields on the note store structured facts such as date, category, or status;
+- a trail supplies a deliberate order when the places form a story.
+
+## Link to a map state
+
+Start the normal link action while the map is active.
+
+- If a pin is selected, the link targets that pin.
+- If no pin is selected, the link can preserve the current map location and
+  view.
+- Following a pin link centers the map and highlights the destination.
+- Following a view link restores the saved map state without claiming that one
+  point is the subject.
+
+![Following links into a map document](/assets/gifs/environment/map_link.gif)
+
+Because the endpoint is a Dash anchor document, a map can participate in the
+same trails and bidirectional navigation as text selections, PDF regions, and
+media time ranges.
+
+![A place-based story assembled with linked map states](/assets/gifs/environment/map_story.gif)
+
+## Routes
+
+The current map implementation includes route documents in addition to
+pushpins. A route stores a series of coordinates plus named endpoints. Route
+availability depends on the current interface and configured map services;
+when documenting a workflow, distinguish a route saved in Dash from directions
+that may change in an external service.
+
+For an itinerary:
+
+1. Add and verify the stops.
+2. Keep one note per stop rather than putting the entire itinerary in pin
+   labels.
+3. Create the route only after the endpoints are stable.
+4. Use a trail if the narrative order matters independently of the drawn
+   route.
+
+## Maps and calendars
+
+Map and calendar views complement one another. Calendar organizes documents by
+time; map organizes them by location. A document with both date and coordinate
+fields can appear in both contexts without being duplicated.
+
+The 2026 life-coach workspace uses this pattern for location-bearing events.
+See [life coach workspace](/research/cohorts/2026/#life-coach-workspace).
+
+## Privacy and accuracy
+
+Coordinates can be sensitive. Before sharing a workspace:
+
+- remove exact home, school, health, or other private locations when a
+  neighborhood-level reference is sufficient;
+- inspect the sharing state of both the map and its linked notes;
+- verify geocoded results rather than trusting the first match; and
+- state whether a route is observed, proposed, or generated.
+
+A visual location can look authoritative even when it is approximate. Put
+uncertainty in the linked note, not only in conversation around the map.
+
+## Troubleshooting
+
+**The document is blank or shows no tiles.** Check the browser console,
+network access, and Mapbox token. A Dash data connection can work while the
+external map service fails.
+
+**Search returns nothing.** Try a more specific place string and check the
+geocoding request. Existing pins should still be usable when only search is
+unavailable.
+
+**A note is not associated with the expected pin.** Select the pin before
+adding the note, then inspect the link from both ends.
+
+**Following a link opens the map but not the place.** The link may target the
+map viewport rather than a pin, or its anchor may have been deleted.
+
+**Several pins overlap.** Zoom in, use distinct titles, and keep descriptive
+content in linked notes rather than trying to encode it all in marker labels.
+
+## For maintainers
+
+The current implementation is centered in
+`src/client/views/nodes/MapBox/MapBox.tsx`. It owns geocoding results, pins,
+routes, viewport state, the sidebar, and map-specific link anchors.
+
+Important persisted fields include latitude, longitude, map title, zoom,
+bearing, pitch, marker type, and marker color. Adding a document through the
+sidebar checks for a matching coordinate, creates a pushpin when necessary,
+and creates a link with the relationship `link to map location`.
+
+Map rendering currently has no dedicated automated test coverage. Changes to
+token handling, map-library versions, link following, or sidebar filtering
+need a browser-level regression check.
 
 ## Related
 
-Map documents were added in December 2023 alongside the calendar collection
-view; see [where map documents came from](/research/cohorts/2023/#calendar-collection-view-and-mapbox-documents).
-
-A pushpin is a link anchor, so a note can be linked to a place and following the
-link moves the map to it. [Links and anchors](/concepts/links/) explains why an
-anchor can be a location rather than a whole document.
-
-Events with locations also appear in the 2026 life-coach workspace, which places
-its events on a map; see
-[the life coach workspace](/research/cohorts/2026/#life-coach-workspace).
+- [Calendar collection view and Mapbox documents](/research/cohorts/2023/#calendar-collection-view-and-mapbox-documents)
+  records the feature's project history.
+- [Links and anchors](/concepts/links/) explains the underlying endpoint model.
+- [Sharing and permissions](/guides/properties/sharingpermissions/) matters
+  when maps contain sensitive locations.

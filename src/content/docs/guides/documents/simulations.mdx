@@ -1,40 +1,80 @@
 ---
 title: Physics simulations
-description: 'Physics simulation documents, built in 2023 and since removed from Dash.'
+description: The archived 2023 physics-simulation document, its seven simulation types, three learning modes, and removal from current Dash.
 ---
 
-:::danger
-Physics simulation documents are no longer part of Dash. They were built in
-spring 2023 by Brynn Chernosky and removed at some point afterwards; there is
-no simulation document type in the current codebase.
+:::danger[Removed feature]
+Physics simulation documents are not part of the current Dash client. They were
+built by Brynn Chernosky in 2023 and later removed. `DocumentTypes.ts`,
+`Documents.ts`, and the renderer registry at the current snapshot contain no
+simulation document type.
 
-This page is kept as a record of what the feature did. Nothing on it describes
-current behaviour. See the
-[Spring 2023 to Fall 2023 cohort](/research/cohorts/2023/) for
-the project entry.
+The controls below are a historical record. They are not instructions for the
+deployed application.
 :::
 
 ![A physics simulation document in Dash, showing a ramp-and-block setup with editable initial values.](/assets/images/environment/simulation_doc.png)
 
+## What the project built
 
-## Description
-Basic physics simulation platform with three modes: Freeform Mode, Tutorial Mode, and Review Mode.
-- In Freeform Mode, users can set up basic simulations that are animated physically correctly. 
-- In Tutorial Mode, users can go through step-by-step tutorials explaining how to solve particular mechanics problems for different simulations. 
-- In Review Mode, users can solve example mechanics problem and animate simulations based on their answers to questions. 
+The project put introductory mechanics simulations inside the same workspace as
+notes, readings, and links. Its aim was to avoid the usual choice between a
+simple, fixed educational simulator and a programmable tool with a steep
+learning curve.
 
-## Simulation Types
-- Projectiles
-- Inclined planes
-- Pendulums
-- Springs
-- Pulleys
-- Weights suspended from two rods
-- Weights undergoing circular motion 
+It supported seven setups:
 
-## Access 
-Type colon on your canvas to invoke the node menu. Under “CREATE DOCUMENT”, select “SIMULATION” to create a default simulation.
+- projectile motion;
+- inclined planes;
+- pendulums;
+- springs;
+- pulleys;
+- a weight suspended from two rods;
+- circular motion.
 
-## Use
-- The dropdown menus in the upper right corner of the simulation document can be used to change the simulation mode and type. 
-- The input fields on the left side of the document can be used to change the simulation parameters.
+The simulation document presented parameters at the left and mode and
+simulation-type selectors at the upper right.
+
+## Three learning modes
+
+**Freeform mode** let a student choose parameters and run a physically computed
+animation. It was intended for exploration and for checking how a system
+responds when one input changes.
+
+**Tutorial mode** led the student through the reasoning for a particular
+mechanics problem step by step.
+
+**Review mode** asked questions and drove the animation from the student's
+answers. That made an incorrect answer visible as behavior rather than only a
+score.
+
+The modes were separate interfaces over the same simulation platform, not
+three unrelated document types.
+
+## Historical access and operation
+
+In the 2023 client, typing a colon on a canvas opened the creation menu. Under
+**Create Document**, **Simulation** created a default simulation. A user then
+selected the simulation and learning mode from dropdowns and changed the
+initial values in the parameter panel.
+
+These entry points no longer exist. Do not add them to onboarding material or
+describe simulation as an available capability.
+
+## Why it matters to Dash's history
+
+The work is a good example of the difference between an implemented project and
+a current feature. It produced a working document, a substantial public report,
+and this guide. Removal from `master` does not erase that contribution, but it
+does mean the capability catalog must not advertise it as usable.
+
+The report describes the educational motivation, related systems, interface,
+seven simulation types, and three modes in detail:
+
+- [Physics Simulations in the Dash Hypermedia System](https://cs.brown.edu/media/filer_public/2c/20/2c208c8e-0560-49d3-b43c-6e5136004aab/chernoskybrynn.pdf)
+- [2023 project record](/research/cohorts/2023/#physics-simulation-documents)
+- [Publications and project reports](/research/publications/#physics-simulations-in-the-dash-hypermedia-system)
+
+If simulation work returns, it should receive a new project record and a new
+source-backed guide. This archived page should continue to describe the 2023
+implementation rather than being silently repurposed.

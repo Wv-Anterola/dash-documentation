@@ -1,24 +1,139 @@
 ---
 title: Fields and tags
-description: The properties section showing a document's authorship and timestamps, and where you add your own key-value fields and tags.
+description: Read and edit document metadata, add typed key-value fields and tags, distinguish data from layout fields, and update several selected documents at once.
 ---
 
-Shows the selected document's own metadata: author, creation date, and date last
-modified. It is also where you add fields of your own, as a key-value pair or a
-tag.
+Fields and tags are not a separate metadata database. They are entries on the
+same document objects that hold titles, content, collection members, links, and
+view configuration.
 
-Developer mode exposes further fields on the same document.
+Open the properties panel, select a document, and expand **Fields & Tags**.
 
-## Why this matters more than it looks
+## What the panel shows
 
-A field you add here is a real field on the document, not a note about it. That
-means it becomes available everywhere fields are used:
+In the simplified interface, the section includes a small required set such as
+author, creation date, tags, current page, and modification dates, plus fields
+whose names are intended for display.
 
-- as a column in [schema view](/guides/views/schema/)
-- as a grouping key in [stacking view](/guides/views/stacking/)
-- as a filter in [filters](/guides/properties/filters/)
-- to the agent, which can sort and tag documents through its tools
+The advanced interface shows every enumerable field available on the chosen
+side of the document. That can include implementation details. Before changing
+an unfamiliar field, check its use in the relevant guide or source.
 
-This is the same field system that document types are built on.
-[Documents and fields](/concepts/documents/) explains why one representation
-covers a PDF, a collection, and a link alike.
+## Add a field
+
+Use the final row, labeled **add key:value or #tags**.
+
+```text
+status:reviewed
+```
+
+Dash capitalizes the first character of a newly entered key, so the stored name
+for that example is `Status`. The text after the first colon becomes its value.
+
+Common corpus fields:
+
+```text
+Status:draft
+SourceType:interview
+Year:2026
+Confidence:high
+```
+
+Field names are case-sensitive elsewhere in the system. Pick one spelling and
+reuse it across the collection; `Status`, `status`, and `reviewStatus` are
+different keys.
+
+To clear an existing value from the panel, edit it to the serialized undefined
+value accepted by the field editor. Deleting a field used by schema, filters,
+scripts, or custom layouts can change those views immediately.
+
+## Add a tag
+
+Enter a value beginning with `#`:
+
+```text
+#methods
+```
+
+Dash appends it to the document's tag list unless the same tag is already
+present. Tags are convenient for membership in a loose category. Use a named
+field when the category has one value from a controlled set or needs to carry
+more meaning than membership.
+
+| Use a tag for | Use a field for |
+| :--- | :--- |
+| `#methods`, `#interview`, `#follow-up` | `Status:reviewed` |
+| Several labels on one document | One lifecycle stage |
+| Quick filtering and visual grouping | Sorting, chart axes, ranges, or scripts |
+
+## Edit several documents
+
+With multiple documents selected, the panel builds the union of their field
+names.
+
+- A shared value is shown normally.
+- Different values are shown as `-multiple-`.
+- Replacing `-multiple-` writes the entered value to every selected document.
+- Adding a new field or tag applies it to the whole selection.
+
+This is the fastest way to normalize a small corpus before opening schema view.
+For a large or repeatable change, use a script or an agent tool and inspect the
+result.
+
+## Data fields and layout fields
+
+Dash separates the content-bearing data document from the layout document that
+describes one appearance. The **Layout Fields** control switches which side the
+field editor exposes.
+
+Edit **data fields** when the value should follow the document everywhere:
+title, tags, status, source, transcript, or a domain-specific field.
+
+Edit **layout fields** when the value belongs to this appearance: coordinates,
+dimensions, rotation, view-specific configuration, and some display flags.
+
+If the same document appears in two contexts, changing a data field affects
+both. Changing a context-specific layout field may affect only the selected
+appearance. See [other contexts](/guides/properties/othercontexts/).
+
+## Where fields are used
+
+A field added here becomes available to:
+
+- columns and sorting in [schema view](/guides/views/schema/);
+- grouping in [stacking view](/guides/views/stacking/);
+- text, value, tag, and numeric-range [filters](/guides/properties/filters/);
+- [global search](/guides/features/search/), when the field is searchable;
+- data visualization axes and labels;
+- scripts, computed fields, and agent tools;
+- custom document layouts.
+
+## Naming guidance
+
+Good field names are stable, specific, and unsurprising:
+
+- `PublicationYear`, not `year2`;
+- `ReviewStatus`, not `done`;
+- `SourceURL`, not `link` when the document can also have Dash links.
+
+Avoid names beginning with `_`, `$`, `acl_`, `layout_`, or `__`. Those prefixes
+have runtime meaning:
+
+- `_field` addresses layout data through the document proxy;
+- `$field` addresses the underlying data document;
+- `acl_` stores access-control entries;
+- `layout_` is widely used by templates and render configuration;
+- `__` is reserved for implementation state.
+
+## Troubleshooting
+
+| Symptom | Cause |
+| :--- | :--- |
+| A field appears in one context but not another | You edited a layout field rather than the shared data field. |
+| A filter offers several near-identical headings | The corpus uses inconsistent spelling or capitalization. |
+| Schema shows `-multiple-` | Multiple selected documents have different values. |
+| A numeric filter becomes checkboxes | Too many values cannot be parsed as numbers. Normalize the field values. |
+| A field is visible only in advanced mode | The simplified view intentionally hides internal and lowercase fields. |
+
+For the implementation model behind these behaviors, see
+[documents and fields](/architecture/document-model/).

@@ -7,8 +7,12 @@ This page names the parts of the interface. It is worth reading once before
 [your first session](/getting-started/using-dash/), because the rest of the
 documentation assumes the vocabulary.
 
-Sign up at [browndash.com](https://browndash.com/signup) if you have not
-already.
+:::caution[Hosted service status]
+The historical `browndash.com` deployment did not resolve when checked on
+29 July 2026. Ask the Dash team for the active deployment or
+[run Dash locally](/getting-started/running-dash/). The screenshots below
+document the current client source, not the availability of that domain.
+:::
 
 ## The home menu
 
@@ -45,9 +49,11 @@ clicking the icon or the grey drag handle.
 | ![](/assets/icons/shared.png) | **Shared** | Documents and dashboards other users have shared with you. To share something, right-click it and select `Share`. |
 | ![](/assets/icons/trails.png) | **Trails** | Every presentation trail you have created. |
 
-Search matches metadata rather than the text inside documents. That boundary is
-recorded on [search](/guides/features/search/), along with the project that
-tried to move it.
+Global search matches text-valued document fields, including rich text when it
+is stored in a searchable field. It does not crawl every byte of imported
+files, live webpage DOM, or visual media. [Search](/guides/features/search/)
+defines the exact scope and distinguishes it from the agent's semantic
+retrieval.
 
 ## The top bar
 

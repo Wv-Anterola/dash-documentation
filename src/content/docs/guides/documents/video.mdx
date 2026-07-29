@@ -1,42 +1,81 @@
 ---
 title: Video
-description: 'Video documents: import, playback, the timeline, and embedding annotations and ink over a video.'
+description: Import and play video, annotate frames and intervals, and link to a precise passage in time.
 ---
 
 ![Screenshot: a video document open on a Dash canvas with playback controls.](/assets/images/environment/video_doc.png)
 
-Video documents play back imported video clips.
+Video documents play imported clips while keeping playback state, fields,
+links, and annotations in the Dash document model.
 
-## Creating one
+## Create one
 
-Import a video file through the import menu, or drag one in from outside Dash.
+Import a supported video through the Imports panel or drag it onto a canvas.
+The media source remains distinct from the fields that store layout,
+annotations, links, and current playback state.
 
-## What you can do
+## Playback and timeline
 
-- Play, pause, scrub to a point, and toggle fullscreen with the controls at the
-  top right.
-- Embed annotations and ink over the video by typing or drawing on it, or by
-  dragging a document onto it.
-- Toggle the timeline with the eye icon at the top right. It works like the
-  [audio](/guides/documents/audio/) timeline for placing labels and
-  region markers, but video cannot be trimmed.
+- Play, pause, scrub, and toggle fullscreen with the video controls.
+- Toggle the timeline with the eye control.
+- Place labels, documents, and temporal regions on the timeline.
+- Add ink or spatial annotations over the rendered frame.
 
 ![Screen recording: scrubbing a video document along its timeline.](/assets/gifs/video/timelineview.gif)
 
-A region on that timeline can anchor a link, so following the link plays that
-stretch of video. See [temporal media](/guides/documents/temporal-media/)
-for why time is treated as an addressable axis.
+Video uses the same temporal model as [audio](/guides/documents/audio/), but the
+current video surface does not provide audio-style trimming.
 
-## Not the same as generated video
+## Choose the right anchor
 
-This page is about playing video you already have. Dash also has a separate
-document type that plans and generates a video scene by scene, added in 2026:
-see [the video generator](/research/cohorts/2026/#video-generator) for what it
-does, and [generative AI](/guides/features/generative-ai/) for the surrounding
-features.
+A spatial anchor identifies a visible region of the frame. A temporal anchor
+identifies a point or interval in playback. Use the one that matches the claim:
+“this object” and “this thirty-second explanation” are different evidence.
 
-## Related
+Following a temporal link seeks to or plays the linked passage. Give the link a
+description so the destination explains why the passage matters.
 
-[Documents and fields](/concepts/documents/) explains why a video is the same
-kind of object as a collection or a link, and why that is what lets a link point
-into the middle of one.
+### Review workflow
+
+1. Place the recording and review notes in one collection.
+2. Scrub to the relevant passage.
+3. Create a point or interval anchor.
+4. Link it to a note, claim, or task.
+5. Describe the relationship.
+6. Follow the link once and confirm the expected passage plays.
+
+## Format and access limits
+
+Dash uses the browser media element, so codec support depends on the browser
+and operating system. A recognized extension does not guarantee that its audio
+and video codecs can be decoded.
+
+Remote sources need compatible response headers. If a video works for the
+importer but not a collaborator, check the source URL, authentication, upload
+availability, content type, and codec before checking the link.
+
+Replacing the media behind an existing document can invalidate time anchors
+when duration or editing changes. Import and link a new version when auditability
+matters.
+
+## Imported versus generated video
+
+This page covers playback of existing media. `DocumentType.VIDGEN` is a
+separate scene-based generator added in 2026. See the
+[video-generator project](/research/cohorts/2026/#video-generator) and
+[AI capability guide](/capabilities/ai-automation/#generative-media).
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Blank or unsupported player | Codec, content type, URL, and browser media support |
+| Timeline has the wrong duration | Wait for media metadata to load; check whether the source changed |
+| Link opens the video but not the interval | Confirm the endpoint is a temporal anchor rather than the whole document |
+| Ink or region drifts | Rendering dimensions or source aspect ratio changed |
+| Collaborator cannot play it | Upload persistence or external-host permission |
+
+The current renderer is `VideoBox.tsx`. Timeline and temporal anchors share the
+media annotation infrastructure described in
+[temporal media](/guides/documents/temporal-media/) and
+[links architecture](/architecture/links-trails/).

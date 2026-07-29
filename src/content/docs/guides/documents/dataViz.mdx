@@ -1,83 +1,310 @@
 ---
 title: Data visualisation
-description: 'Data visualisation documents backed by a CSV field: building charts, filtering them interactively, and generating one from a prompt.'
+description: 'Turn CSV-backed records into tables and charts, select and filter data interactively, and derive visualisations from a live schema view.'
 ---
 
 import ProjectNote from '../../../../components/ProjectNote.astro';
 
+![A CSV-backed data visualisation document](/assets/images/environment/dataViz_doc.png)
 
-![A data visualisation document rendering a chart from a CSV](/assets/images/environment/dataViz_doc.png)
+A data-visualisation document keeps a dataset and its presentation together.
+The same CSV-backed records can be shown as a table, line chart, histogram,
+pie chart, or scatter plot. Changing the view does not create a second
+dataset.
 
+This is one of the clearest examples of an integrated research feature in
+Dash. The original 2022 document type, later chart filtering, and the current
+generation pipeline all contribute to the interface described here.
 
-## What it is
-Data visualized in a table, line chart, histogram, or pie chart.
+## Create one
 
-## Creating one
-To create a DataViz box, either import / drag a CSV file into your canvas or copy a data table and use the command 'ctrl + p' to bring the data table to your canvas. See below for how to turn a schema table into a DataViz box.
+Use any of these routes:
 
-## What you can do
+1. Import or drag a CSV file onto a canvas.
+2. Copy tabular data and use `Ctrl+P` / `Command+P` when that paste workflow is
+   available in the current browser build.
+3. Open a collection in **Schema** view and create a data visualisation from
+   the schema toolbar.
 
-- ### **Basic Graphs:** 
-  A data set composed of string, numbers, prices, or percents can be viewed as a table, line chart, histogram, or pie chart that can be customized by its title and colors. To create a visualization, click the title of the column you want to visualize and then select the graph type. When viewing the data set as a table view, clicking on a row selects the row for filtering, and clicking on a row while holding 'Command/Windows' highlights the row visually.
-  ![Screen recording: clicking a column heading in a CSV and choosing a chart type to visualise it.](/assets/gifs/dataViz/simple_dataViz.gif)
+Dash removes completely empty rows before rendering. If the CSV cannot be
+loaded or parsed, the document reports **Data not found** rather than silently
+showing an empty chart.
 
-- ### **2D Graphs:** 
-  The first column selected will turn green and be the x-axis, and the second column selected will turn red and be the y-axis.
-  ![Screen recording: selecting two columns, the first turning green as the x-axis and the second red as the y-axis.](/assets/gifs/dataViz/2D_graph.gif)
+## Prepare the dataset
 
-- ### **Filtering:** 
-  To filter the data, drag off a column of data. To select data to display on the filtered doc,
+Good charts begin with predictable columns:
 
-  a: click rows from the original DataViz box,
-  ![Screen recording: filtering a visualisation by clicking rows in the original data table.](/assets/gifs/dataViz/filteringA.gif)
+- Give every column a unique, meaningful heading.
+- Keep one kind of value in each column.
+- Prefer plain numbers for quantitative axes.
+- Use consistent spelling and capitalization for categories.
+- Remove totals and explanatory footer rows from the chart range.
+- Keep a stable identifier or name column, even if it is not plotted.
 
-  b: filter a table choosing a value or range of values in a column, or 
-  ![Screen recording: filtering a table by choosing a value or a range of values in one column.](/assets/gifs/dataViz/filteringB.gif)
+The current chart code tolerates some formatted numeric strings by stripping
+characters such as currency signs and percent marks. That is a convenience,
+not a substitute for cleaning the data. Empty or non-numeric values can be
+excluded from a histogram or line series, and ambiguous formatting may produce
+an unexpected scale.
 
-  c: click on data in a line chart, histogram, or pie chart while the 'Select data to filter' toggle is on.
-  ![Screen recording: filtering by clicking data points directly in a chart with select-to-filter enabled.](/assets/gifs/dataViz/filteringC.gif)
+## Choose a view
 
-- ### **Artificial Intelligence**
-  Clicking the context menu's 'Analyze with AI' button will use aritificial intelligence to analyze the dataset. Initially, a general analysis will pop up, and from here, you can
+| View | Best for | Selection behavior |
+| --- | --- | --- |
+| **Table** | Inspecting records, choosing exact rows, and applying value or range filters | Select individual rows; use the platform modifier key to extend a selection |
+| **Line chart** | Comparing one or two numeric series over a shared x-axis | Select plotted points when chart filtering is enabled |
+| **Histogram** | Inspecting the distribution of one quantitative field | Select one or more bins |
+| **Pie chart** | Comparing a small number of categories or parts of a whole | Select one or more slices |
+| **Scatter plot** | Comparing two quantitative fields or exploring a generated semantic map | Select points; a point with a valid source-document ID can open that document |
 
-  a: click 'Transfer to Text' to save this analysis as an annotation on the DataViz doc,
-  ![Screen recording: transferring a generated analysis to text, saving it as an annotation on the data visualisation.](/assets/gifs/dataViz/aiText.gif)
+Click a column heading to choose the columns and available chart type. The
+first selected axis is shown in green; the second is red. With three numeric
+columns in a line chart, the first acts as the shared x-axis and the other two
+become plotted series.
 
-  b: click 'Visualize' to create a line chart visualization of a correlation found in the dataset, and
-  ![Screen recording: generating a line chart of a correlation found in the dataset.](/assets/gifs/dataViz/aiVisualize.gif)
+![Selecting two columns for a two-dimensional chart](/assets/gifs/dataViz/2D_graph.gif)
 
-  c: click 'Chat with AI' to ask the artificial intelligence specific questions about your dataset,
-  ![Screen recording: asking questions about a dataset in the chat panel beside it.](/assets/gifs/dataViz/aiChat.gif)
+![Plotting two selected series against a shared x-axis](/assets/gifs/dataViz/3colLinechart.gif)
 
-- ### **Schema Tables as Data Visualization:** 
-  When in Schema view, click the 'DataViz' button on the top bar. This will create a DataViz doc that represents the schema table - then, when back in Freeform view, this can be dropped onto the canvas. When the 'Display Live Updates to Canvas' toggle is selected, this DataViz doc will change as docs are added to and deleted from the canvas, and otherwise, it will represent the static schema table that it was created from.
-  ![Screen recording: creating a data visualisation from a schema table and dropping it onto the canvas.](/assets/gifs/dataViz/fromSchema_dataViz.gif)
+### Keep a title column
 
-- ### **Setting a Title Column:** 
-  Click 'Select Title Column' and then select any column's title to set that column as the data's title column. This means that no matter which columns are being displayed in a graph, the title column will also be available. Alternatively, selecting a column's title while holding 'shift' will set / remove that column as the data's title.
-  ![Screen recording: setting a column as the title column so it stays available in every chart.](/assets/gifs/dataViz/titleCol.gif)
+Use **Select title column**, or shift-select a heading, to designate the
+record label. Dash keeps that column available when the plotted axes change,
+which makes selections intelligible after the chart no longer displays every
+field.
 
-- ### **3-Column Line Charts:** 
-  If three numerical columns are selected, the 'line chart' tab will display the second two columns selected (blue and red) over the first one (green).
-  ![Screen recording: a line chart plotting two selected columns against a third.](/assets/gifs/dataViz/3colLinechart.gif)
-## Where this came from
+![Setting a stable title column](/assets/gifs/dataViz/titleCol.gif)
 
-The data visualization document type has been extended by a different student
-in almost every cohort since 2022, which makes it a good illustration of how
-work accumulates in Dash: nobody rebuilt it, and each person picked up the type
-the previous one left.
+## Select and filter records
+
+Selection is stored on the data-visualisation document, so it can be shared by
+the table and chart views.
+
+### Select in the table
+
+Click a row to select it. Use `Ctrl` on Windows/Linux or `Command` on macOS to
+extend the selection rather than replace it.
+
+The table filter supports:
+
+- **Value** — select rows whose chosen column exactly matches one value.
+- **Range** — select rows whose value falls between a start and end value.
+
+![Selecting records with a table value or range filter](/assets/gifs/dataViz/filteringB.gif)
+
+### Select in a chart
+
+Enable **Select data to filter**, then click points, bins, or slices. The
+interactive-filtering work merged into Dash added multi-selection and made
+chart selections survive a refresh.
+
+![Selecting records directly in a rendered chart](/assets/gifs/dataViz/filteringC.gif)
+
+### Create a filtered document
+
+Drag a column or use the filtered-document action to create a derived
+visualisation. The new document represents the selected rows while the source
+document remains the complete dataset.
+
+![Creating and populating a filtered data document](/assets/gifs/dataViz/filteringA.gif)
+
+This distinction is useful in analysis: the source is the population; a
+filtered document is a named subset that can be placed, linked, or annotated
+elsewhere.
+
+## Create a visualisation from Schema view
+
+Schema view already presents a collection as rows and fields. Its **DataViz**
+action serializes that table into a CSV-backed visualisation:
+
+1. Open the collection in [Schema view](/guides/views/schema/).
+2. Confirm that the columns you need are visible and consistently typed.
+3. Choose **DataViz** in the schema toolbar.
+4. Return to Freeform view and place the resulting document.
+5. Turn on **Display live updates to canvas** if the chart should track
+   additions and deletions in the source collection.
+
+![Creating a data visualisation from a schema table](/assets/gifs/dataViz/fromSchema_dataViz.gif)
+
+Leave live updates off when the visualisation is evidence for a report and
+must stay stable. Turn them on for monitoring views where freshness matters
+more than reproducibility.
+
+## Make a semantic map of documents
+
+**Visualize Unstructured Data** turns a mixed selection of documents into a
+two-dimensional similarity map. It is not the same operation as importing a
+CSV: Dash first derives a numeric representation of each usable document,
+then creates the CSV and scatter plot for you.
+
+1. On a freeform canvas, marquee-select at least two documents.
+2. Open the marquee menu.
+3. Choose **Visualize Unstructured Data** (the project-diagram icon).
+4. Wait while the browser loads the embedding model and processes the
+   selection.
+5. Inspect the new **Semantic Map** data-visualisation document.
+6. Hover a point to read its label. Click it to select it and, when the row
+   retains a valid `docId`, open the source document in the right tab.
+
+The merged implementation can extract:
+
+- plain or rich text;
+- text from PDF pages;
+- readable text fetched from a webpage; and
+- an original-resolution image when the uploaded asset is reachable.
+
+Documents with no extractable content are omitted. Dash uses the
+`Xenova/clip-vit-base-patch32` text and vision models from Transformers.js to
+create 512-dimensional embeddings in the browser, then runs principal
+component analysis (PCA) in a Pyodide worker to reduce them to the `pc1` and
+`pc2` columns plotted on screen. Generated embeddings are cached on the
+backing CSV document so the same map does not have to recompute every vector.
+
+This is an exploratory view, not a classification or proof of similarity.
+Distance is affected by the model, the text Dash can extract, PCA, and the
+particular documents selected. Treat nearby points as a prompt to inspect the
+sources, not as a conclusion.
+
+### Runtime requirements and limits
+
+- The model is downloaded on first use, so the first map may take materially
+  longer than later ones.
+- The current embedding configuration requests WebGPU. Browser and graphics
+  support therefore matter even though the rest of Dash is running.
+- Webpage extraction depends on the configured CORS proxy and the remote page
+  remaining reachable.
+- Scanned PDFs without a text layer do not become searchable text through this
+  path.
+- Image processing depends on the original uploaded asset being available.
+- The scatter plot needs two numeric axes. For a generated semantic map these
+  are selected automatically as `pc1` and `pc2`.
+- The result is a two-dimensional projection. It necessarily discards
+  information from the original embedding.
+
+Two later commits on `cam-dataviz-single-select` experiment with a learned
+projection head and moving the original freeform documents into the projected
+layout. Those changes are not in the verified `master` snapshot and should
+not be described as current product behavior.
+
+## Ask Dash to analyse the data
+
+The context menu can expose **Analyze with AI** when the model-backed data
+workflow is configured. It can:
+
+- draft a general textual analysis;
+- transfer that analysis into a text annotation;
+- propose a line chart for a detected relationship; and
+- open a follow-up chat about the dataset.
+
+![Saving a generated analysis as a text annotation](/assets/gifs/dataViz/aiText.gif)
+
+![Generating a visualisation for a detected relationship](/assets/gifs/dataViz/aiVisualize.gif)
+
+![Asking follow-up questions about a dataset](/assets/gifs/dataViz/aiChat.gif)
+
+Generated analysis is not a statistical guarantee. Check the selected columns,
+units, missing values, sample size, and chart against the source CSV. The
+feature also requires the relevant server and model credentials; see
+[configuration](/reference/configuration/).
+
+## Annotation and provenance
+
+A chart can be annotated like other media documents. Before sharing an
+interpretation, record:
+
+- the source and retrieval date;
+- what one row represents;
+- units and any transformations;
+- filters or excluded values;
+- whether the document is live or a snapshot; and
+- which columns and chart type support the claim.
+
+Link the note to the visualisation and keep the raw CSV nearby. That makes it
+possible to inspect the claim without reverse-engineering a screenshot.
+
+## Troubleshooting
+
+**The document says “Data not found.”** Confirm the CSV field still points to a
+reachable uploaded asset and re-import the file if necessary.
+
+**A numeric chart is empty.** Inspect blank cells, mixed types, commas, currency
+symbols, and footer rows. Start with a one-column histogram to isolate the
+problem.
+
+**The axes are wrong.** Clear the selection and choose columns again in the
+intended order. The first chosen column is the x-axis.
+
+**Selections appear to disappear.** Return to the table and inspect the
+selected rows. A chart may not render a selected record when its plotted value
+is empty or invalid.
+
+**Visualize Unstructured Data does nothing.** Select at least two documents.
+If the selection is valid, check the browser console for model-download,
+WebGPU, CORS, PDF, or worker failures.
+
+**A semantic-map source was omitted.** Dash could not derive supported text or
+image input from that document. For a scanned PDF, add an OCR-derived text
+note; for a webpage, confirm that the URL can be fetched through the proxy.
+
+**A semantic-map point does not open its source.** Point navigation depends on
+the generated row retaining a valid Dash document ID. The scatter plot itself
+still works when that identity field is absent or malformed.
+
+**The AI action is missing or fails.** Verify the application configuration
+and server logs. The underlying table and chart workflows do not require the
+AI service.
+
+## How the feature accumulated
 
 <ProjectNote title="Data visualisation documents">
-  The original CSV-backed document type, from 2022. Everything on this page is built on it.
+  The 2022 project established the CSV-backed document, table, chart choices,
+  and field-to-axis workflow. It is registered in the current application.
 </ProjectNote>
 
 <ProjectNote title="Interactive chart filtering">
-  Added selection-driven filtering on the rendered chart, including multi-selection on pie charts and selections that survive a refresh. Most of the filtering behaviour described above came from this.
+  The 2024 work added selection-driven filtering, pie-chart multi-selection,
+  persistent selections, and better handling of formatted numeric values. It
+  is integrated into the current chart components.
 </ProjectNote>
 
 <ProjectNote title="Data-visualisation generation pipeline">
-  Reworked generation so a single request produces a usable chart. The earlier path produced garbled text and unreliable images.
+  The 2026 work replaced an unreliable multi-step generation path with a
+  single-request pipeline. The merged work also includes the scatter-plot
+  renderer and semantic-map path: browser-side CLIP embeddings, PCA, a
+  generated CSV, and point-to-document navigation. Two later projection-head
+  experiments remain on their development branch.
 </ProjectNote>
 
-See [collections and views](/concepts/collections/) for
-why a CSV can be a document and a chart can be a view of it.
+## For maintainers
+
+The main implementation is under
+`src/client/views/nodes/DataVizBox/`:
+
+- `DataVizBox.tsx` owns the CSV records, current view, axes, title column,
+  selected rows, annotations, live-schema toggle, and AI entry point.
+- `components/TableBox.tsx` implements row selection plus value and range
+  filters.
+- `components/LineChart.tsx`, `Histogram.tsx`, `PieChart.tsx`, and
+  `ScatterPlot.tsx` render chart views and translate chart selections back to
+  record identifiers.
+- `SchemaCSVPopUp.tsx` creates a visualisation from a schema table.
+- `utils/SemanticMapManager.ts` extracts supported document content, maintains
+  the embedding cache, builds the derived CSV, and selects the scatter-plot
+  fields.
+- `utils/EmbeddingService.ts` loads the CLIP text and vision models and creates
+  normalized embeddings.
+- `utils/PyodideWorker.ts` sends the PCA work to the shared Pyodide worker.
+
+The persisted view values are `table`, `lineChart`, `histogram`, `pieChart`,
+and `scatterPlot`. Axes and selection state live on the layout document,
+while the CSV field remains on the data document. That separation lets
+multiple layouts present the same underlying records differently.
+
+## Related
+
+- [Collections and views](/concepts/collections/) explains how one set of
+  documents can support several presentations.
+- [Schema view](/guides/views/schema/) covers the collection-to-table side of
+  the workflow.
+- [Filters](/guides/properties/filters/) covers document filters outside the
+  chart-specific selection system.

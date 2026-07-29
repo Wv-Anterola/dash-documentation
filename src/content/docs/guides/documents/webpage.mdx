@@ -1,49 +1,85 @@
 ---
 title: Web pages
-description: Embedded web page documents, how to bring one in, web clippings, and the JavaScript-heavy sites where embedding does not work.
+description: Embed, search, annotate, and link web content, with framing and preservation limits.
 ---
 
 ![Screenshot: an embedded web page document open on a Dash canvas.](/assets/images/environment/webpage_doc.png)
 
-Web pages embedded directly in Dash, rather than links out to a browser.
+A webpage document places a live or captured web surface inside Dash so it can
+sit beside notes, carry annotations, and participate in links and collections.
+It does not make the remote site part of Dash's storage by default.
 
-## Creating one
+## Create one
 
-Drag the lock icon beside a page's URL from your browser onto the tab running
-Dash.
-
-Alternatively, create an empty web page document from the colon menu. It opens a
-Bing search, and you can type a URL into the horizontal toolbar.
+Drag the site icon beside a browser URL onto the Dash tab, then drop it on a
+canvas. You can also create an empty webpage document from the colon menu and
+enter a URL in its toolbar.
 
 ![Screen recording: dragging a web page into Dash to embed it.](/assets/gifs/webpage/dash-website-embed.gif)
 
-## What you can do
+## Read and annotate
 
-- Embed marquee selections, annotations, and ink on the overlay.
-- Highlight and annotate text with the same annotation sidebar used for PDFs and
-  text documents.
-- Pan and scroll the page.
-- Follow the page's own hyperlinks by clicking them; the target opens in the
-  same document frame.
+- Scroll and interact with the embedded page when the site permits it.
+- Use the in-document search control on searchable embedded content.
+- Highlight or annotate selectable text.
+- Add marquee regions, ink, or documents on the overlay.
+- Follow links inside the frame when site and browser policy allow it.
 
-Because a highlight is a link anchor, you can link from a passage on an embedded
-page to a note elsewhere on the canvas, and the link survives the page being
-closed. See [links and anchors](/concepts/links/).
+A highlight or region can be a link anchor. The link record survives after the
+page is closed, but its target can drift if the live site changes.
 
-## Where embedding fails
+## Browser boundaries
 
-Embedding works well for Wikipedia and similar pages. JavaScript-heavy sites
-often break: the page may render but its internal links will not follow,
-because of browser permission restrictions Dash cannot work around.
+Sites can refuse embedding with `X-Frame-Options` or Content Security Policy.
+Others render but block authentication, navigation, or cross-origin
+inspection. Dash cannot override those browser protections.
 
-Some sites cannot be dragged in at all, for the same security reasons.
+A blank frame is not necessarily a Dash renderer bug. Test the source in a
+normal browser, inspect the frame or CSP error, and use a clipping or external
+link when the publisher forbids embedding.
 
-**Web clippings** are the fallback. Select the part of the page you want and
-drag that into Dash instead. A clipping behaves like any other document, so you
-keep the annotation and linking behaviour even where full embedding is blocked.
+## Live page or clipping?
 
-## Related
+Web clippings preserve selected material as a Dash document when a full page
+cannot or should not remain live.
 
-- [Annotation and markup](/guides/features/markup/) for the annotation routes.
-- [Documents and fields](/concepts/documents/) for why an embedded page is the
-  same kind of object as a PDF or a collection.
+| Need | Prefer |
+| :--- | :--- |
+| Follow a site as it changes | Live webpage |
+| Cite what was visible at a specific time | Clipping or exported capture |
+| Interact with a permitted web app | Live webpage |
+| Annotate a site that blocks framing | Clipping |
+| Preserve searchable research material | Captured text plus source URL |
+
+A clipping becomes useful evidence only when it includes a source URL, capture
+date, and enough surrounding context. Pixels without provenance can preserve
+appearance while losing meaning.
+
+## Search boundaries
+
+The webpage view has its own search surface, but global Dash search does not
+crawl arbitrary live DOM as a general index. Global search may find the Dash
+document from its title, URL, or stored text fields. The agent's semantic
+retrieval is another path again.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Frame is blank or refuses connection | Site framing policy; use a clipping or open externally |
+| Page loads but clicks fail | Content activation, locked position, frame policy, and site scripts |
+| Annotation no longer aligns | Remote layout changed; preserve a capture for durable anchors |
+| Global search misses visible text | Live DOM is outside the general field index |
+| Collaborator gets a login screen | Remote site has its own session and permissions |
+| Browser reports mixed content | HTTPS Dash is trying to embed an HTTP source |
+
+## Implementation
+
+`WebBox.tsx` owns content, scroll state, search UI, annotation layers, sidebar,
+and pointer-event handoff. Its annotation overlay is a freeform collection
+transformed by webpage scroll position.
+
+See [Annotation and markup](/guides/features/markup/),
+[Links and anchors](/concepts/links/),
+[Search](/guides/features/search/), and
+[Import and export architecture](/architecture/import-export/).

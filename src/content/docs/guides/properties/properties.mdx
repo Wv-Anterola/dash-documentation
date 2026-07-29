@@ -3,30 +3,64 @@ title: The properties panel
 description: The right-hand panel showing the selected document's contexts, links, display options, and fields, and which sections require developer mode.
 ---
 
-The properties panel shows the characteristics of whatever is selected: a
-document, or the current view if nothing is selected. Its top line gives the
-name and the document type; below that are collapsible sections.
+The properties panel is where Dash exposes the document model without making
+you write code. It follows the current selection, shows the document's title
+and type, and groups the available operations into collapsible sections.
+
+That distinction matters: some controls change the underlying document, while
+others change only the selected appearance of it. Read the section label and
+the field name before making a bulk edit.
 
 ## Opening it
 
 Click the left-facing caret on the right edge of the screen, or the double
 left-facing carets in the top right, below the heart icon.
 
-## The sections
+Select one document to inspect it. If several documents are selected, controls
+that support batch editing act on the selection. If nothing is selected, the
+panel may show properties for the active view or dashboard instead.
 
-Four sections are available in novice mode.
+## Sections in both modes
+
+These sections appear in both Novice and Developer modes:
 
 | Section | What it shows |
 | :------ | :------------ |
-| [Other contexts](/guides/properties/othercontexts/) | Other places the selected document also appears |
-| [Linked to](/guides/properties/linkedto/) | Documents linked to the selected one |
-| [Options](/guides/properties/options/) | Display and behaviour settings for the selection |
-| [Fields and tags](/guides/properties/fieldsandtags/) | The document's own key-value fields |
+| [Fields and tags](/guides/properties/fieldsandtags/) | The document's typed data and labels |
+| [Options](/guides/properties/options/) | Appearance and interaction settings for the selection |
+| [Linked to](/guides/properties/linkedto/) | Links connected to the selected document or anchor |
+| [Other contexts](/guides/properties/othercontexts/) | Other collections in which the same document appears |
+| [Filters](/guides/properties/filters/) | Rules that decide which children a collection view displays |
 
-Developer mode adds four more, including
-[layout](/guides/properties/layout/),
-[filters](/guides/properties/filters/), and
-[sharing and permissions](/guides/properties/sharingpermissions/).
+When ink strokes are selected, the panel also substitutes ink appearance and
+transformation controls. While a trail is being edited, it becomes the
+presentation-properties surface.
+
+## What Developer mode adds
+
+Developer mode adds [Sharing and Permissions](/guides/properties/sharingpermissions/)
+and [Layout](/guides/properties/layout/). It also replaces the short novice
+field list with the expanded field editor. The mode changes what the interface
+shows; it does not change the selected document or bypass its permissions.
+
+See [Novice and Developer modes](/getting-started/modes/) for the other tools
+affected by the setting.
+
+## Data properties and view properties
+
+A Dash document has a data prototype and one or more layout delegates. In
+practice:
+
+- title, text, tags, and domain metadata usually belong to the data;
+- width, height, colour, view type, and other presentation choices usually
+  belong to the layout or embedding;
+- a `$`-prefixed field in the interface explicitly targets the data document;
+- an underscore-prefixed field is normally an internal or layout convention.
+
+You do not need those implementation details for ordinary editing. You do need
+them when the same document appears differently in two collections: changing a
+data field should follow it everywhere, while a layout change may stay local to
+one context.
 
 ## Why fields are editable here
 
@@ -37,3 +71,15 @@ the document.
 
 [Documents and fields](/concepts/documents/) explains the model underneath, and
 why collections and links are documents with fields too.
+
+## Safe editing checklist
+
+Before changing an unfamiliar field:
+
+1. Check whether the document appears under **Other Contexts**.
+2. Decide whether the change belongs to its shared data or this appearance.
+3. Confirm you have edit or augment permission if the control does nothing.
+4. Make one change and use undo if the result is broader than expected.
+
+For repeatable changes across many documents, prefer a schema column, filter,
+or saved script over editing opaque internal fields by hand.

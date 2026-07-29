@@ -1,0 +1,95 @@
+---
+title: Where Dash comes from
+description: Dash in the longer history of Brown hypertext research, from HES and FRESS through Intermedia, TAG, NuSys, and the current browser-based system.
+sidebar:
+  order: 2
+---
+
+Dash did not begin as a general-purpose notes application. It is the latest in
+a long sequence of hypertext and hypermedia systems built at Brown around a
+recurring question: what changes when links, annotations, structure, and media
+are part of the working environment rather than features owned by separate
+applications?
+
+Brown CS published a detailed account of that history for the 2019
+[A Half-Century of Hypertext](https://cs.brown.edu/events/halfcenturyofhypertext/)
+symposium. This page gives the shorter route through it and identifies which
+ideas still appear in Dash.
+
+## The line of descent
+
+| System | Period | What matters to Dash |
+| :--- | :--- | :--- |
+| **HES** | 1967–1968 | Brown's first hypertext experiment, built by Andries van Dam, Ted Nelson, and students. It established editing and linking as parts of one environment. |
+| **FRESS** | From 1968 | A multi-user successor used for teaching and collaborative reading. Its long-running classroom use is an early precedent for Dash corpora and asynchronous collaboration. |
+| **Intermedia** | 1980s | Treated linking as a system-level service available across participating applications, rather than something each application implemented differently. |
+| **TAG** | 2010s | A touch-oriented system used for museum and teaching experiences. It emphasized composed multimedia spaces and direct manipulation. |
+| **NuSys** | 2010s | Explored a document-centric integrated environment, but grew too cumbersome for the research group's intended workflows. |
+| **Dash** | From 2018 | Returned to a smaller common document model in a browser-based, collaborative workspace. |
+
+This is an intellectual lineage, not a claim that Dash directly imports code
+from those systems. The useful continuity is in the design problems:
+cross-media links, annotation, compositional documents, trails, shared corpora,
+and the tension between expressive structure and an interface people can learn.
+
+## Why another system
+
+The project name is short for **Dashboard**. In Brown's 2019 account, the group
+described the desktop metaphor as closer to a file cabinet than a physical
+desk: mostly hierarchical, divided by file type, and poor at supporting the
+temporary arrangements people use while thinking.
+
+Dash takes the opposite approach:
+
+- ingest different media into one workspace;
+- represent each item through a common document and field model;
+- let the same document appear in more than one context;
+- link whole documents or precise regions;
+- organize by space, fields, time, hierarchy, or links without duplicating the
+  underlying material;
+- move between authored trails and exploratory navigation.
+
+The [capability catalog](/capabilities/) shows how those commitments appear in
+the current product. The [document model](/architecture/document-model/) shows
+how the implementation supports them.
+
+## Dash 1 and the browser rewrite
+
+The public history distinguishes an earlier Dash implementation from the
+browser-based rewrite that became the current Dash-Web repository. The rewrite
+used TypeScript, React, and Node and reached functional parity with the earlier
+system during 2019. Browser delivery also made shared, synchronous work
+practical without installing a specialized client.
+
+That history explains two otherwise puzzling facts about the repository:
+
+1. Some architectural ideas predate the oldest surviving Dash-Web commits.
+2. The current code mixes mature infrastructure with semester-scale research
+   experiments because the system is both a working application and a research
+   testbed.
+
+## Teaching as part of the project
+
+Dash has also been used in Brown's hypertext and hypermedia course, CSCI 1951V.
+The archived [2021 Dash lab](https://cs.brown.edu/courses/csci1951-v/fall2021/assignments/lab2-1.html)
+asked students to build a corpus, import mixed media, create links and
+relationships, annotate material, and compare freeform, schema, and stack
+views. That is useful evidence of the intended workflow, although its interface
+instructions and mode counts describe the 2021 release rather than the current
+application.
+
+## Reading the historical sources
+
+- [A Half-Century of Hypertext](https://cs.brown.edu/events/halfcenturyofhypertext/)
+  is the best public narrative of the research lineage and the motivation for
+  Dash.
+- [Reflections on a Half-Century of Hypertext](https://cs.brown.edu/news/2019/08/21/andy-van-dams-acm-hypertext-keynote-will-reflect-half-century-hypertext/)
+  places the system alongside FRESS and TAG in Andries van Dam's 2019 ACM
+  Hypertext keynote.
+- [Architecture of Dash](https://hackmd.io/@CS1951V-2023/DashArchitecture),
+  written by Jenny Yu and Bob Zeleznik in 2023, explains the data model and
+  synchronization design. Its terminology has drifted, so pair it with the
+  current [architecture section](/architecture/).
+- [Publications and reports](/research/publications/) collects the longer
+  project papers that can be matched to surviving code and branches.
+

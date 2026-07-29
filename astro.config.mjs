@@ -120,6 +120,7 @@ export default defineConfig({
           items: [
             { slug: 'getting-started/environment' },
             { slug: 'getting-started/using-dash' },
+            { slug: 'getting-started/modes' },
             { slug: 'getting-started/running-dash' },
           ],
         },
@@ -207,6 +208,8 @@ export default defineConfig({
           collapsed: true,
           items: [
             { slug: 'research/projects' },
+            { slug: 'research/lineage' },
+            { slug: 'research/publications' },
             { slug: 'research/cohorts' },
             { slug: 'research/cohorts/2026' },
             { slug: 'research/cohorts/2025' },
@@ -239,6 +242,8 @@ export default defineConfig({
         {
           label: 'Reference',
           items: [
+            { slug: 'reference/configuration' },
+            { slug: 'reference/keyboard-shortcuts' },
             { slug: 'reference/document-types' },
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },

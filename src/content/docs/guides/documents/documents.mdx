@@ -1,101 +1,198 @@
 ---
-title: Documents
-description: 'Creating, selecting, editing, and transforming documents, and the routes that work for every document type.'
+title: Working with documents
+description: Create, import, select, arrange, reuse, link, inspect, and remove any Dash document.
 ---
 
-Dash is a hypermedia system that supports the following documents in the [latest verison of Dash](https://browndash.com/login).
+import SourceSnapshot from '../../../../components/SourceSnapshot.astro';
 
-Everything in Dash is a document (including content primitives such as PDFs and Text notes, as well as collections of documents, thereby allowing nesting).  Documents are stored as a list of arbitrary key/value pairs, which provides a simple data model for novices while also allowing experts to manipulate metadata from a database perspective with scripts. The following sections cover basic functionalities universal to all documents. More document-specific actions please refer to the Table of Contents for documents. 
+<SourceSnapshot />
 
+Everything you handle in Dash is a document: a note, PDF, image, video,
+collection, link, trail, agent message, or specialized research surface.
+Document types choose a renderer and a set of defaults; they do not create
+separate storage systems.
 
+This guide covers operations shared across types. Use the other pages in this
+section for controls specific to text, media, maps, data visualization, and
+other renderers.
 
+## Create or import a document
 
+### Create from the canvas
 
-## Creating Documents
-
-### Import from outside Dash
-1. Works with PDFs, webpages, images, audio, and video
-2. Importing from the internet: click and drag the desired document to the Dash tab, which will bring up the Dash workspace, and finally drop the document onto the Dash canvas
-3. Importing from local files: click and drag the desired document to the Dash canvas, then drop it
-
-### Import through the flyout panel
-1. Under the import flyout panel, single click on the topmost “Import” icon to bring up the file browser, then select all desired documents. Multiple selection can be done by left-clicking on the desired files while holding the command key (for mac). 
-2. All imported documents will be displayed as a scrollable vertical stack within the rectangular box below the “Import” icon. 
-3. From the rectangular box, drag and drop the desired document onto the canvas. 
-
-### Type a colon on the canvas
-1. Begin typing `:` to bring up the document menu, from which you can create a document.
-2. Select the type of document you want to create to make a blank instance of that document.
+With a freeform canvas active, type a colon to open the document menu and choose
+a type. Dash creates a blank instance from that type's prototype.
 
 ![Screen recording: creating a node in Dash.](/assets/gifs/gettingstarted/createnode.gif)
 
-### Create an alias of a document
-1. An alias, which is also a document itself, is a pointer back to its original document; it is typically a different perspective on the same document. This allows multiple users to have their own perspectives of the same document, or to have the same document appear in multiple collections.
-2. Aliases by default have an integer in parenthesis after the title. 
-Changes to the content of an alias, including editing of text or moving or resizing nested component documents of a collection on the canvas, are in effect changes to the original and are immediately reflected in all other aliases.  Other changes, such as title, size, and aspect ratio of the document  are properties of the alias and are not considered content. Therefore, they don’t affect the original document or any other aliases of it. These properties can be changed in the same ways as any other documents.
-1. To create an alias, select the document then click the “create an alias” button in the context-sensitive toolbar. Alternatively, click and drag the same button, and drop it onto the desired location in the canvas to create an alias at a specified location. 
+Developer mode exposes additional factories, including Script and experimental
+document surfaces. See [interface modes](/getting-started/modes/).
 
-### Create one in another view
-Click the “+ New” button in the schema and stacking views.
+### Drop a file or URL
 
+Drag a supported local file or browser item onto a Dash canvas. The import path
+creates a Dash document and stores or references the source according to its
+type. Common routes include PDF, image, audio, video, webpage, text, and CSV.
 
-## Selecting Documents
+A remote URL is not the same as a captured file. Webpage availability,
+authentication, and content can change after the Dash document is created.
+For durable research material, keep a captured or exported source when policy
+allows it.
+
+### Use the Imports panel
+
+Open **Imports**, select the import control, and choose one or more files.
+Imported documents appear in the panel and can be dragged into a working
+collection. The panel is an intake area, not a second copy of each item.
+
+### Create inside a structured view
+
+Schema, stacking, notetaking, and other collection views provide a **+ New**
+route in the view itself. The new document joins the same underlying collection
+and receives whatever grouping or template context that view supplies.
+
+## Select documents
 
 <div class="video">
 <iframe src="https://drive.google.com/file/d/1P0oC6gUnRs79GWN3buydguY3kmRsZP9A/preview" title="Selecting documents in Dash" allow="autoplay" allowfullscreen="allowfullscreen"></iframe>
 </div>
 
-### Single selection
-1. **Description**: selecting a single document to directly edit its contents
-2. **Action**: left-click or right-click on the desired document to bring it into focus. The selected document’s border will turn blue and various editing tools will appear on the chrome (editing tools)
-   * In freeform perspective, click anywhere in the blank area of the canvas to select the current collection
+**Single selection.** Click the document decoration or selectable surface. Its
+decoration and context toolbar become active. Click a blank canvas region to
+return selection to the collection.
 
-### Marquee selection
-1. **Description**: selecting a specified area, which can range from a part of a document to multiple documents, using the marquee tool
-2. **Access**: right-click on the canvas to invoke the rectangular marquee, then drag to manipulate its size. Alternatively, right-click then press the space key to invoke the lasso marquee tool to freely draw a marquee. Finally, release the right-click to create the marquee
-3. **Objects & actions**: 
-* A marquee to select one or more desired documents
-* A floating toolbar to where users can perform actions on the selected documents including create a collection, summarize, delete, change to text, and pin the selected region to a **[presentation trail](/guides/features/trails/)**
-* A temporary bounding box that enables users to move and resize all selected documents at once (transforming documents)
+**Additive selection.** Hold Shift while selecting documents. Dash creates a
+shared selection box so the set can be moved, resized, grouped, collected, or
+removed together.
 
-### Shift-click selection
-1. **Description**: selecting multiple documents using shift-click 
-2. **Objects & actions**:
-  Holding the shift key while left-clicking on multiple desired documents to select them all at once. This will create a temporary bounding box (same as the one created with marquee selection) that enables users to move and resize all selected documents
+**Marquee selection.** Drag a marquee over a canvas region to select documents
+spatially. The marquee menu supplies operations appropriate to the selection,
+including collecting or grouping it. Canvas shortcuts are listed in the
+[keyboard reference](/reference/keyboard-shortcuts/).
 
-### Text selection
-1. **Description**: selecting text intext documents, PDFs, and Webpages (NOT text documents!)
-2. **Objects & actions**:
-* Left-click on a text of your choice, then hold & drag to continue to select the desired portion of text. Finally, release to finish the selection. The selection will be temporarily highlighted in blue. 
+**Content selection.** A text range, PDF region, media interval, or ink region
+can become an anchor. Content selection is different from selecting the whole
+document: links and annotations created from it target the region.
 
-* Once you finish the selection, a floating toolbar will appear that allows you to highlight, annotate, or add hyperlink to the selection.
+## Read the document decoration
 
-## Editing Documents
+When a document is selected, its surrounding decoration supplies the common
+operations. The exact buttons depend on document type, interface mode, access,
+and available space.
 
-### C1 Document Chrome
-1. **Description**: set of tools around the document to access a range of functions and set various properties related to the document
-2. **Access**: left-click or right-click on a document
-3. **Objects & actions**:
- - Header chrome- has buttons for: 
-     - Deleting the document from its current collection
-     - Editable title (left-click on title)
-     - Iconify (turning the document into a button displaying contents on click)
-     - Open document in full screen in a new tile
-     - Border chrome- has corner handles for resizing and moving the document 
- - Bottom toolbar has buttons for:
-     - Creating links
-     - Pinning to a presentation
-     - Bringing up the context menu, which has the same contents as the right-click menu
-     - Syncing with Google Docs for text documents
+Typical controls include:
 
+- an editable title;
+- drag and resize handles;
+- remove from the current collection;
+- open or focus in another tab or tile;
+- create or follow a link;
+- pin to a presentation trail;
+- open the context menu;
+- type-specific actions such as playback, annotation, or text formatting.
 
+The properties panel is the more complete inspection surface. It exposes data
+fields, options, links, other contexts, filters, and—in Developer mode—layout
+and permission controls.
 
+## Data, layout, and contexts
 
-## Why everything here is a document
+A visible document is usually a layout delegate pointing to shared data.
+That separation explains behavior that otherwise looks inconsistent:
 
-The types on this page differ by which fields they carry, not by being
-different kinds of object. That is why a link can point into any of them and
-why a collection can hold a mix.
+| Change | Usually affects |
+| :--- | :--- |
+| Edit note text, source metadata, or a tag | Every context of the shared data |
+| Move or resize an appearance | That context |
+| Change a collection perspective | That collection appearance |
+| Edit a `$`-prefixed field | The data document |
+| Edit an ordinary layout field | The selected delegate or appearance |
 
-[Documents and fields](/concepts/documents/) explains the
-prototype system behind it, and lists the projects that added the newer types.
+Use [Other Contexts](/guides/properties/othercontexts/) to see where the same
+document appears. Use a **copy** when content must diverge, another **context**
+when content must remain shared, and a **link** when two distinct documents
+need an explicit relationship.
+
+The older interface sometimes calls another context an “alias.” In current
+technical documentation, **embedding**, **delegate**, and **context** are more
+precise because the new appearance can carry its own layout fields.
+
+## Edit and arrange
+
+Move a document by dragging its decoration. Resize it from its handles.
+Document content remains live while arranged on a freeform canvas; resizing an
+image, PDF, video, or nested collection changes its presentation box rather
+than rewriting its source.
+
+For many documents:
+
+1. select the set;
+2. choose move, resize, alignment, grouping, or collection behavior from the
+   shared controls;
+3. check whether the operation changed layout only or created a new collection;
+4. undo immediately if the result is broader than intended.
+
+A collection created from the selection is a first-class document with its own
+fields and view type. A visual group is lighter-weight and tied more closely to
+the current canvas arrangement.
+
+## Link or annotate
+
+Link whole documents when the complete items are the endpoints. Select a text
+range, PDF/image/web region, timestamp, or ink stroke first when the
+relationship is more precise.
+
+An annotation is also a document. It keeps an `annotationOn` relationship to
+its source and can itself be titled, tagged, placed in collections, or linked.
+See [Linking](/guides/features/linking/) and
+[Annotation and markup](/guides/features/markup/) for the complete controls.
+
+## Remove, close, or delete
+
+These actions are not interchangeable:
+
+- **Remove from a collection** removes the current embedding from that
+  container.
+- **Close a tab or tile** removes a workspace view, not its underlying
+  document.
+- **Delete a context** can leave other contexts of the data intact.
+- **Delete the underlying document** is broader and can affect links,
+  annotations, and every context.
+
+Check **Other Contexts** and use undo before treating an absent appearance as
+proof that the data is gone. Recently closed material may remain available
+through the Files panel.
+
+## Access and persistence
+
+Visible controls do not override permissions. View access permits reading;
+augment access can permit adding without granting full edits; edit access
+permits ordinary changes; admin access controls sharing. Data and layout can
+have different effective permissions, which is why a collaborator may read
+content but be unable to move its appearance.
+
+Most edits are sent through Dash's document server and grouped by the undo
+manager. Wait for the server connection to recover before assuming a change has
+persisted. A page refresh is not a substitute for checking save/reload behavior
+on a new document type.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| The creation menu lacks an advanced type | Switch to Developer mode and confirm the type has a current factory |
+| A dropped file does nothing | Supported type, upload directory, server connection, file size, and browser console |
+| Editing one appearance changes another | You created another context, not an independent copy |
+| Moving one appearance changes shared content | Confirm which field or nested document the operation targeted |
+| A collaborator can read but not resize | Layout permission may be lower than data permission |
+| A document disappears after filtering | Clear collection filters before assuming it was removed |
+| A removed document still appears elsewhere | It has another embedding; inspect Other Contexts |
+| A document returns blank after reload | Its factory, renderer, field serialization, or external source is incomplete |
+
+## Technical path
+
+`DocumentTypes.ts` declares registered types, `Documents.ts` constructs their
+prototypes and instances, `DocumentContentsView.Init` maps types to renderers,
+and `Doc.ts` supplies fields, prototypes, permissions, serialization hooks, and
+embedding helpers. The [document model](/architecture/document-model/) follows
+that path in source.

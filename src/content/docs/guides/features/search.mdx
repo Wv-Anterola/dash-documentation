@@ -1,44 +1,147 @@
 ---
 title: Search
-description: The search flyout, what it matches, and the boundary between metadata search and searching document contents.
+description: Global and in-document search in Dash, including scope, field matching, exact queries, type filters, link-aware ranking, and known boundaries.
 ---
 
 import ProjectNote from '../../../../components/ProjectNote.astro';
+import SourceSnapshot from '../../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
 
 ![Screen recording: searching for a document by name in the Dash search flyout.](/assets/gifs/features/andy_search.gif)
 
-The search flyout finds documents in the current dashboard by their metadata.
-Each result shows the document's title, type, and the fields that matched.
+Press <kbd>Ctrl/Cmd</kbd> + <kbd>F</kbd>. If exactly one selected document has
+its own search implementation, Dash searches inside that document. Otherwise it
+opens the global search panel.
 
-## Using it
+## Global search
 
-- Click the search icon, or press Ctrl+F, to open and close the flyout.
-- Type a query to match documents whose metadata contains it.
-- Use the dropdown to restrict results to one document type.
-- Hover a result to see the document's full title.
-- Click a result to select it and zoom to it on the canvas.
+Global search walks the current workspace recursively, including documents
+nested in collections, annotations, and collection sidebars. If documents are
+selected when the search begins, those documents become the roots instead of
+the entire docking view.
 
-## What it does not match
+Results update 300 milliseconds after typing stops. Each result shows:
 
-Search reads metadata: titles, types, fields, tags. It does not read the text
-inside a PDF, a web page, or a rich text document.
+- its title;
+- a short document or collection-view type;
+- the field names that matched.
 
-That boundary is worth knowing, because it is not how most people expect search
-to behave, and it is the reason a document you know exists can be hard to find
-by the phrase you remember from inside it.
+Click a result to select and reveal it. If its view supports in-document search,
+Dash also passes the query into that view. <kbd>Shift</kbd>-click passes the
+backward-search flag, which is useful for moving to a previous match in a PDF.
 
-Two things partly close the gap. Within a single PDF, the document's own search
-control finds text on the page; see [PDFs](/guides/documents/pdf/). And the
-chatbot retrieves over chunked document contents, so asking it is closer to
-full-text search than the flyout is; see
-[agents and tools](/concepts/agents/).
+## What a query matches
+
+By default, Dash converts searchable field values to text and performs a
+case-insensitive substring match. Depending on the document, this can include:
+
+- title, author, tags, and user-defined fields;
+- rich-text content stored as a document field;
+- captions, descriptions, transcripts, and other text-valued metadata;
+- fields inherited through document prototypes.
+
+The result's matched-field list is the best explanation of why it appeared.
+
+Prefix the query with `=` for a case-insensitive exact field-value match:
+
+```text
+=reviewed
+```
+
+Choose **Keys** in the type selector to match field names rather than values.
+This is useful when you remember that a corpus has a `reviewStatus` field but
+not which documents carry it.
+
+## Type filtering
+
+The selector can show all results or restrict the visible list to:
+
+- rich text;
+- image;
+- PDF;
+- web;
+- video;
+- audio;
+- collection;
+- field-name matches.
+
+Changing the type does not run the search again. It filters the result set
+already in memory.
+
+## Ranking
+
+Matching documents are not sorted only by title or creation date. Dash builds a
+graph over the result set from the links between those documents and runs a
+small PageRank calculation—at most 25 iterations, with a damping factor of
+0.9. Better-connected matching documents therefore tend to appear first.
+
+This makes explicit links part of retrieval rather than decoration. It also
+means two workspaces containing the same text can order their results
+differently if their link structures differ.
+
+## Boundaries
+
+Global search is field-based. It can match rich text when that text is stored in
+a searchable field, but it does not build a general full-text index over every
+byte of every imported file.
+
+In particular:
+
+- a PDF can search its rendered text internally, but the global panel first
+  needs a matching searchable field to return that PDF;
+- a webpage's live DOM is not crawled as a general search corpus;
+- binary image and video content is not searched visually;
+- script, configuration, key-value, button, font-icon, and presentation-slide
+  document types are deliberately excluded from global results;
+- some internal layout fields are marked non-searchable and removed from the
+  match list.
+
+For questions over document contents, the chatbot's chunking and retrieval path
+is a different system. See [AI and automation](/capabilities/ai-automation/).
+Retrieval can find semantically relevant passages, but its output must be
+checked against the cited source.
+
+## Link-target search
+
+The same search component appears while creating a link. In that mode:
+
+- the type selector is hidden;
+- selecting a result creates the link instead of navigating;
+- destinations already linked from the source are styled differently;
+- the active text or media selection can become the target anchor.
+
+See [links and annotations](/capabilities/connections-and-trails/#links-and-annotations)
+for the complete linking workflow.
+
+## Search versus filters
+
+Use search to locate a document or passage. Use
+[filters](/guides/properties/filters/) to keep a collection view narrowed to a
+repeatable subset.
+
+| Need | Use |
+| :--- | :--- |
+| Find the one document whose title contains “budget” | Global search |
+| Find the previous “budget” occurrence inside a PDF | PDF search |
+| Show only documents where `status = reviewed` | Filter |
+| Ask a question across source text and receive citations | Chatbot retrieval |
+| Find candidates related in meaning but without shared terms | Not available in the shipped search; see the recommendation project below |
 
 <ProjectNote title="Search over document content">
-  The attempt to extend search to document contents, along with an experiment in having a model group documents into collections. None of the branches were merged and the work stopped in December 2024, so the boundary described above is still where it was.
+  A 2024 attempt to broaden search and experiment with AI-created collections. Its branches were not merged, so the shipped behavior remains the field-based path described above.
 </ProjectNote>
 
-## Related
+<ProjectNote title="User-controlled document recommendations">
+  A 2023 lightbox and vector-similarity recommendation system described in an honors thesis. It remains on an unmerged branch; the current search component retains commented scaffolding but renders no recommendations.
+</ProjectNote>
 
-[Filters](/guides/properties/filters/) narrows a view to documents matching
-field values, which is the better tool when you want to see a subset rather than
-find one document.
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| A known document does not appear | Clear the current selection so search scopes the full docking view; then search its title or a stored field. |
+| Too many partial matches | Prefix the query with `=`. |
+| You remember the field, not the value | Choose **Keys**. |
+| Result appears but the passage is not highlighted | The document matched metadata but its view does not implement content search, or that text is not available to the view. |
+| Results look unexpectedly ordered | Ranking uses links among the matching documents. |

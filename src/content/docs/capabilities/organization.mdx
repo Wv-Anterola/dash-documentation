@@ -94,9 +94,10 @@ large or rapidly changing graphs can still be expensive.
 
 ## Data visualization
 
-Data visualization documents render CSV-backed or record-like data as tables
-and charts. The current system includes interactive selection/filtering and an
-AI-assisted generation pipeline.
+Data visualization documents render CSV-backed or record-like data as tables,
+line charts, histograms, pie charts, and scatter plots. The current system
+includes interactive selection/filtering, AI-assisted chart generation, and
+semantic maps derived from mixed documents.
 
 Start with trustworthy structure:
 
@@ -112,12 +113,23 @@ Interactive chart selections persist through document fields. A selected bin
 or row can filter another visualization that identifies the first as its
 parent. This makes coordinated views possible without copying the dataset.
 
+For unstructured material, marquee-select two or more documents and choose
+**Visualize Unstructured Data**. Dash extracts supported text or images,
+creates browser-side CLIP embeddings, reduces them to two PCA dimensions, and
+opens the result as a scatter plot. The map can include text notes, PDFs,
+webpages, and images; unsupported or unreadable documents are skipped.
+
+Semantic distance is exploratory. It is not a category, confidence score, or
+claim that two sources agree. Open the underlying documents before drawing a
+conclusion, and see the [data-visualisation guide](/guides/documents/dataviz/)
+for browser, model-download, CORS, and scanned-PDF limitations.
+
 <MediaPlaceholder
-  title="Linked interactive visualizations"
-  brief="Show a table, histogram, and line chart over the same synthetic dataset. Select a histogram bin and visibly filter the other view."
+  title="Linked charts and a semantic map"
+  brief="Show a table, histogram, and line chart over one synthetic dataset beside a semantic-map scatter plot made from mixed notes, PDFs, and images. Keep a source document open from one selected point."
   filename="interactive-data-visualization.webp"
   ratio="16:9"
-  alt="A selected histogram bin filtering a linked table and line chart in Dash."
+  alt="Linked Dash charts beside a semantic-map scatter plot with one source document open."
 />
 
 <CapabilityProjects capability="data-visualization" />

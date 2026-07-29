@@ -1,53 +1,95 @@
 ---
 title: PDFs
-description: PDF documents, in-document search, the annotation margin, linking into a page, and AI summarisation of a selection.
+description: Import, navigate, search, annotate, crop, and link to precise passages in a PDF document.
 ---
 
 ![Screenshot: a PDF document open on a Dash canvas.](/assets/images/environment/pdf_doc.png)
 
-PDF files brought in from outside Dash.
+PDF documents combine a PDF.js reader with Dash fields, links, annotations, and
+a scroll-synchronized sidebar.
 
-## Creating one
+## Create one
 
-Drag a PDF in from your desktop or another application.
+Drag a PDF from your desktop or another application onto a canvas, or use the
+Imports panel. Dash stores the source path or upload as a document field and
+uses PDF.js to render its pages.
 
 ![Screen recording: opening and scrolling a PDF document in Dash.](/assets/gifs/environment/pdf.gif)
 
-## Reading and navigating
+## Read and navigate
 
-Scroll through the document, read the current page number, or type a page number
-to jump to it.
+Scroll continuously, read or edit the current page number, and use the page
+arrows to move backward or forward. Page Up and Page Down perform the same
+navigation while the PDF is selected.
 
-To search inside the PDF, click the search icon at the bottom right and type a
-query. The first match is highlighted in orange and the rest in yellow; the up
-and down arrows step through them, and the current match stays orange.
+Page and scroll state live on the layout document. Two contexts of the same PDF
+can therefore be arranged at different sizes or places without creating two
+source files.
 
-This in-document search is separate from the
-[search flyout](/guides/features/search/), which matches document metadata
-across the dashboard rather than text inside a file.
+## Search the PDF
 
-## Annotating
+Select the search icon at the lower right, enter a query, and press Enter.
+Shift + Enter searches backward. The active match is orange and other matches
+are yellow.
 
-- Embed highlights, marquee selections, annotations, and ink on the overlay.
-- Click the **Comment** icon to open the annotation margin, which is a place to
-  put annotation documents beside the page rather than on top of it. Drag the
-  icon to resize the margin.
+The magic-wand toggle enables the PDF viewer's fuzzy-search mode. Switching
+modes clears the current result, so run the query again. The annotation arrows
+beside search move to the previous or next annotation in page order.
 
-A highlight or a marquee here is a link anchor, so a link can point at a passage
-on page forty rather than at the file. That is the behaviour
-[links and anchors](/concepts/links/) exists to explain, and PDFs are where most
-people meet it first.
+This is separate from [global search](/guides/features/search/). Global search
+locates documents from searchable fields and can pass a query into the PDF
+view. The PDF viewer is what searches rendered page text and highlights the
+passage.
 
-## Summarising a selection
+## Annotate and link
 
-Select text and click **Summarize with AI** in the menu that appears.
+- Select text to highlight, comment, link, or generate an AI summary.
+- Draw a marquee to create a region anchor.
+- Add ink or a document on the page overlay.
+- Open the annotation margin with **Comment** and resize it by dragging its
+  handle.
+- Follow an annotation link to focus and highlight its source region.
 
-The summary is generated into a document, so it can be linked and annotated like
-anything else; see [generative media](/concepts/generative/).
+Text anchors preserve selected plain text and HTML on the anchor document.
+Region anchors preserve geometry against the rendered page. A link can
+therefore target a passage on page forty instead of only the file.
 
-## Related
+The annotation margin is a nested collection synchronized to PDF scrolling.
+Notes placed there remain ordinary Dash documents: they can have titles,
+fields, links, and their own contexts.
 
-- [Annotation and markup](/guides/features/markup/) for the annotation routes in
-  full.
-- [Your first session](/getting-started/using-dash/#annotate-part-of-a-document)
-  for a worked example of annotating a PDF and keeping the link back.
+## Summarize a selection
+
+Select text and choose **Summarize with AI**. The result is a document rather
+than a replacement for the source. Keep the anchor or link so the generated
+summary remains reviewable against the passage.
+
+Generation requires the configured model service, and a fluent summary can
+still omit or distort material. See [generative media](/concepts/generative/).
+
+## Cropped views
+
+A selected region can produce a cropped view. The crop is a bounded view onto
+the original material, not a rewritten PDF file. Keep the source document and
+link the crop back to it when provenance matters.
+
+## Failure modes
+
+| Symptom | Check |
+| :--- | :--- |
+| PDF remains blank | Source URL/upload, PDF.js worker at `/pdf.worker.min.mjs`, response content type, and browser console |
+| Global search finds it but no passage is highlighted | Open it and run in-document search; the global match may be a metadata field |
+| Search misses scanned pages | The PDF lacks a text layer; OCR is not a general import step |
+| Annotation opens at the wrong place | Source pages or dimensions changed after the anchor was made |
+| Collaborator sees the record but not the file | Upload persistence or access to the remote source |
+| Page count or jump is wrong | Wait for loading to finish and check the stored page count |
+
+## Implementation
+
+`PDFBox.tsx` owns controls, sidebar state, page state, fuzzy search, and anchor
+creation. `PDFViewer.tsx` wraps PDF.js, virtualizes pages, reads the text layer,
+renders annotation overlays, and focuses anchors.
+
+See [Annotation and markup](/guides/features/markup/),
+[Links and anchors](/concepts/links/), and the
+[first-session walkthrough](/getting-started/using-dash/#annotate-part-of-a-document).

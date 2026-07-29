@@ -1,0 +1,61 @@
+---
+title: Novice and Developer modes
+description: What Dash's two interface modes change, what they leave alone, and when to use each one.
+---
+
+Dash has two interface modes. They do not create separate kinds of account and
+they do not change a document's data. The setting only decides how much of the
+interface to expose.
+
+New accounts start in **Novice** mode. Open **Settings**, find **Mode**, and
+choose **Novice** or **Developer** to switch. The choice is stored on your user
+document, so it follows your Dash account rather than an individual collection.
+
+## Novice mode
+
+Novice mode keeps the common document, collection, search, link, annotation,
+ink, and presentation tools visible. It is the sensible place to learn Dash or
+to work on content without the implementation controls getting in the way.
+
+This is a simplified interface, not a restricted data format. A document made
+in Novice mode can still be opened in Developer mode, and changing modes does
+not convert or discard anything.
+
+## Developer mode
+
+Developer mode reveals controls intended for authors who need to work directly
+with Dash's model or experimental surfaces. In the current client, that
+includes:
+
+- the full field editor rather than the curated novice field list;
+- **Sharing and Permissions** and **Layout** in the properties panel;
+- advanced document factories such as Script, screen capture, webcam, slide,
+  and metanote tools;
+- the user document and additional dashboard actions;
+- advanced ink and rich-text controls.
+
+Some of these surfaces are research prototypes. “Developer” means more control,
+not a promise that every exposed control has a polished workflow.
+
+## What does not depend on the mode
+
+The **Filters** section is available in both modes. So are **Fields & Tags**,
+**Options**, **Linked To**, and **Other Contexts**, although Fields & Tags shows
+more detail in Developer mode. Permissions are enforced by the document access
+model; switching modes never grants access you did not already have.
+
+## Which mode should I document or test?
+
+Use Novice mode when checking the first-run experience and ordinary authoring.
+Use Developer mode when documenting fields, layout templates, scripting,
+permission administration, or experimental tools. For a release check, test
+both: a feature can work in Developer mode and still be impossible for a new
+user to discover.
+
+The setting is implemented by `Doc.noviceMode`. `CurrentUserUtils.ts` defaults
+it to `true`, `SettingsManager.tsx` changes it, and menus and panels read it
+when deciding what to render.
+
+See [the properties panel](/guides/properties/properties/) for the exact panel
+differences and [scripting](/guides/features/scripting/) for the principal
+Developer-mode workflow.

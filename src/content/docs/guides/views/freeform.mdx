@@ -10,6 +10,26 @@ import ProjectNote from '../../../../components/ProjectNote.astro';
 An unbounded, pannable, zoomable 2D canvas. This is the default view for a
 collection and the one most Dash work happens in.
 
+Every item remains a live document. A PDF can be read, a video played, a note
+edited, and another collection opened without leaving the spatial arrangement.
+Position and size belong to that appearance of the document, which is why the
+same source can have a different arrangement in another context.
+
+## Core interactions
+
+- Pan and zoom to move through the workspace.
+- Drag documents to position them.
+- Drag a blank region to marquee-select a group.
+- Resize, align, distribute, group, or collect a selection from its controls.
+- Drop material onto the canvas to import or embed it.
+- Open the minimap when a large canvas is difficult to navigate.
+- Use search to focus material by content rather than position.
+
+The precise key combinations are collected in the
+[keyboard shortcut reference](/reference/keyboard-shortcuts/). Shortcuts are
+context-sensitive: a letter pressed while editing text is not the same command
+as the same letter applied to a canvas selection.
+
 ## What it suits
 
 - Arranging documents spatially, in whatever grouping makes sense to you rather
@@ -18,6 +38,9 @@ collection and the one most Dash work happens in.
   and link lines
 - Looking at documents in their own layout, at their own size, rather than as
   rows in a table
+- Building an evidence board where proximity, size, and clusters carry meaning
+- Combining source material, working notes, generated output, and a trail in
+  one place
 
 ## What it does not suit
 
@@ -26,6 +49,36 @@ finding a specific document among a hundred means either remembering where you
 put it or using [search](/guides/features/search/). Switch the same collection
 to [schema view](/guides/views/schema/) when you need a sortable table; nothing
 is converted and nothing is lost.
+
+It is also easy to encode meaning spatially without explaining that meaning.
+If “top right means rejected” matters to other people, add labels, fields, or a
+legend. A schema field survives rearrangement; an undocumented cluster may not.
+
+## Organising a large canvas
+
+Start with broad regions and leave space between them. Use nested collections
+when a cluster has its own internal structure. Title source documents early so
+search results and link menus remain legible.
+
+When the canvas grows:
+
+1. add fields for the categories you have been expressing only by position;
+2. create another perspective for table, graph, calendar, or stack work;
+3. use links when the relationship itself matters;
+4. use another context when the same document belongs in two arrangements;
+5. fit or focus the selection instead of manually hunting at a distant zoom.
+
+Grouping and collecting are different. A visual grouping can organise a
+selection on this canvas; creating a collection gives that group its own
+document, fields, view type, and reusable contexts.
+
+## Performance
+
+An unbounded coordinate space does not make rendering free. Hundreds of rich
+media documents, active web pages, large images, or nested live collections can
+make a canvas expensive. Prefer previews where available, close media that does
+not need to be active, and split a corpus into meaningful nested collections
+before navigation becomes a memory test.
 
 ## Where it came from
 
@@ -36,3 +89,9 @@ is converted and nothing is lost.
 [Collections and views](/concepts/collections/) explains that decision and the
 limits it still imposes, including the fact that views do not compose: a
 calendar of stacks is not expressible.
+
+For implementation details, start with
+`CollectionFreeFormDocumentView.tsx`, the `collectionFreeForm/` views, and the
+freeform layout engines. Marquee operations are undo-batched; creating a
+collection from a selection preserves the active animation frame and places the
+new collection at the selection bounds.

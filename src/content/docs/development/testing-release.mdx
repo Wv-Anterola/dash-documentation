@@ -18,6 +18,21 @@ sidebar:
 Use the lowest layer that proves the contract, then add an end-to-end path for
 user-visible integrations.
 
+## Before testing
+
+Record the exact Dash-Web commit, operating system, browser or Electron build,
+backend configuration, and any optional providers. Use a disposable account or
+workspace for destructive agent and migration tests. A result without its
+environment is difficult to reproduce.
+
+For a branch feature, separate three questions:
+
+1. Does the branch implementation work?
+2. Does it still work after rebasing or merging the current target?
+3. Is there a discoverable entry point in the resulting product?
+
+A clean branch demo proves only the first.
+
 ## Document-type matrix
 
 - Create
@@ -31,6 +46,11 @@ user-visible integrations.
 - Import/export when relevant
 - Loading and external-service failure
 
+Also verify that a new type is declared, constructed, rendered, serialized, and
+offered by the intended creation surface. Missing any one of those steps can
+leave a valid enum value that users cannot create or a factory result that
+cannot render after reload.
+
 ## Collection-view matrix
 
 - Empty, one, typical, and large child sets
@@ -42,6 +62,10 @@ user-visible integrations.
 - Filter/sort
 - Performance/convergence
 
+Switch away from the new view and back again. Then open the same collection in
+a second context. View work often appears correct in its first mounted instance
+while failing to persist its layout fields or leaking state between contexts.
+
 ## Agent-tool matrix
 
 - Schema validation
@@ -52,6 +76,38 @@ user-visible integrations.
 - Undo/redo
 - External failure
 - Adversarial source content
+
+For every write tool, capture the proposed arguments, the bounded target set,
+the resulting batch, and the undo result. Test partial external failures; a
+tool must not leave half a collection changed merely because its final service
+call failed.
+
+## Server and persistence matrix
+
+- New account and returning account
+- Guest and authenticated session
+- Concurrent edits from two clients
+- Reconnect after an interrupted write
+- Save/reload of newly introduced fields
+- Old stored documents with missing new fields
+- Permission inheritance and direct overrides
+- Large payload and upload limits
+- Expected errors without secrets in logs or responses
+
+## Desktop and optional-service matrix
+
+- Clean install on every advertised platform
+- First run without the optional service
+- Configured remote provider
+- Local Ollama service unavailable, starting, and ready
+- Model missing or changed
+- Offline launch where supported
+- Upgrade over the previous build
+- Uninstall or rollback without deleting user data unexpectedly
+
+Do not say that a dependency is bundled merely because the client knows how to
+call it. Inspect the package and test on a machine that did not already have
+the dependency installed.
 
 ## Documentation matrix
 
@@ -67,6 +123,28 @@ npm run links
 Review generated pages at desktop and narrow widths. Placeholders are valid
 during drafting only when they include an exact capture brief, filename, ratio,
 and required alt text.
+
+Also review:
+
+- every new internal link and redirected legacy route;
+- navigation order and page titles;
+- code paths and commit hashes against the named snapshot;
+- screenshots for current UI, legible text, synthetic or non-sensitive data,
+  and useful alt text;
+- status labels against merge ancestry and a reachable product entry point;
+- hard-coded counts against their registries.
+
+## Release gate
+
+A release candidate is ready when the required automated checks pass, the
+relevant manual matrices have named evidence, migration and rollback are known,
+and the documentation describes both the workflow and its limits. “Works on my
+branch” and “the build completed” are useful facts, not release decisions.
+
+Block the release for data loss, permission bypass, unrecoverable writes,
+broken persistence, secrets in output, or an advertised path that cannot be
+reached. Record lower-severity limitations explicitly rather than relying on
+team memory.
 
 ## Release record
 
@@ -84,3 +162,8 @@ For each release or deploy, record:
 Documentation should be updated in the feature pull request. A later project
 summary cannot substitute for the operating and technical documentation needed
 at integration time.
+
+After deployment, test the production URL rather than assuming the hosting
+build matches the local artifact. Check the landing page, navigation, search,
+one page from each major section, redirects from the old site, and the exact
+new route. Preserve the deployment identifier with the release record.

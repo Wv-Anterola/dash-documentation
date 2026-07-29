@@ -3,11 +3,23 @@ title: Other contexts
 description: The properties section listing the other places a document appears, and how to create a second context for it.
 ---
 
-A document can appear in more than one place at once. Each appearance is a
-context, and this section lists the others for the current selection.
+A document can appear in more than one collection at once. Dash calls each
+appearance a **context** or **embedding**. The **Other Contexts** section lists
+the containers of those other appearances.
 
 Contexts are the same document, not copies. Editing it in one context changes it
-in all of them.
+in all of them when the edit targets shared data. Position, size, and other
+layout fields can remain different in each context.
+
+The current container is omitted from the list. Dash also excludes system
+documents and the docking surface, so the section is a useful navigation list
+rather than a dump of every internal embedding.
+
+## Following a context
+
+Open **Other Contexts** and select a collection name. Dash focuses an existing
+view of that collection when possible or opens it and focuses the shared
+document. This is often the quickest way to answer “where else did I use this?”
 
 ## Creating another context
 
@@ -15,13 +27,44 @@ in all of them.
 2. Hold Ctrl while you drag it to where you want the second context.
 3. Release the drag and the Ctrl key together.
 
+The second appearance should now be listed when either context is selected. If
+you need independent content instead, make a copy; a context is deliberately
+still tied to the same data prototype.
+
 ## When this is useful
 
 A source document can sit in the collection it belongs to and also on the canvas
 where you are writing about it, without duplicating it or losing track of which
 copy is current.
 
-This works because a document's position and layout are properties of the
-context rather than of the document, which is the same separation that lets a
-collection change view without converting anything. See
-[collections and views](/concepts/collections/).
+Typical uses include:
+
+- placing one source in a reading list, evidence board, and presentation;
+- showing the same task on a project board and a personal dashboard;
+- arranging one document differently for two audiences;
+- moving from an excerpt or annotation back to the collection where it is
+  being used.
+
+## Context, copy, or link?
+
+| Use | Choose it when |
+| :-- | :------------- |
+| Another context | The content should remain one shared document |
+| A copy | The new item must be editable independently |
+| A link | The documents should remain distinct but their relationship matters |
+
+Deleting one context removes that appearance from its container; it should not
+be treated as a request to erase every appearance of the underlying document.
+Check **Other Contexts** before removing shared material from a workspace.
+
+This works because a document's layout is represented separately from its data,
+the same separation that lets a collection change views without conversion.
+See [documents and fields](/concepts/documents/),
+[collections and views](/concepts/collections/), and
+[links and anchors](/concepts/links/).
+
+### Implementation note
+
+`PropertiesDocContextSelector` starts with `Doc.GetEmbeddings`, resolves the
+containers and their own embeddings, removes the active and system contexts,
+and opens the chosen container through `DocumentView.FocusOrOpen`.

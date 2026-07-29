@@ -3,9 +3,14 @@ title: Notetaking view
 description: The multi-column stacking view, for reading in one column while writing in another.
 ---
 
-Several scrollable stacks of documents shown side by side. It is the
-multi-column form of [stacking view](/guides/views/stacking/), arranged so you
-can read in one column and write in another.
+Notetaking view lays a collection out as named columns of live documents. It
+works like a board: you can add and remove columns, resize them, reorder
+documents, and drag documents between categories without turning them into
+cards or summaries.
+
+The default category field is `tags_notetaking`. A document with no value is
+placed in an **unset** column so it cannot disappear merely because its
+metadata is incomplete.
 
 ## What it suits
 
@@ -13,19 +18,56 @@ can read in one column and write in another.
 - Comparing two or more documents without switching tabs
 - Sorting documents into categories by dragging between columns
 
-## Adding documents and columns
+## Set it up
 
-**+ New** at the bottom of a stack adds a document to that stack.
+1. Open a collection and choose **Notetaking** from the view selector.
+2. Add or rename columns for the categories you need.
+3. Add existing documents to the collection or use **+ New** in a column.
+4. Drag documents within a column to order them or across columns to
+   recategorise them.
 
-**+ New column** at the bottom starts another column.
+**+ New column** starts another category. Dividers between columns can be
+dragged to change their relative widths.
 
-Documents drag between columns, which is also how you recategorise them when the
-columns are grouped by a key.
+The children remain full Dash documents. You can edit text, follow links, play
+media, and inspect fields in place; the view is arranging them, not flattening
+them.
+
+## How categorisation works
+
+Each column heading is stored as a `SchemaHeaderField`. Moving a document to a
+column updates the view's category field on that document. Dash can also create
+columns automatically from the distinct values already present and remove
+empty ones.
+
+This makes the view useful as a light Kanban board, but the category field is
+ordinary document data. The same value is visible in
+[schema view](/guides/views/schema/) and the
+[properties panel](/guides/properties/fieldsandtags/).
+
+## Working efficiently
+
+- Use short, stable category names; they become stored field values.
+- Keep an **unset** column during cleanup so incomplete records stay visible.
+- Resize columns for the material inside them rather than forcing every
+  document to the same shape.
+- Use filters when you need a temporary subset. Moving a document changes its
+  category; filtering does not.
+- Use Ctrl+Enter while editing a text item to create the next item with the
+  relevant layout and grouping context carried forward.
+
+## Notetaking versus stacking
+
+Both are column-based views, but they persist grouping differently.
+Notetaking keeps an explicit header list, supports user-managed column widths,
+and defaults to a dedicated category field. Stacking derives sections from a
+chosen field and is usually quicker for data that is already classified.
+
+If the source data already has a `status`, `author`, or `topic` field, start
+with [stacking view](/guides/views/stacking/). If the board itself is where the
+categories will be created and maintained, Notetaking is usually clearer.
 
 ## Related
-
-If you want the columns to mean something, group them by a field: see
-[stacking view](/guides/views/stacking/) for how grouping works.
 
 For notes that live inside another document rather than beside it, see
 [annotation and markup](/guides/features/markup/), which covers annotating a
@@ -36,3 +78,8 @@ why switching into it converts nothing. See
 [collections and views](/concepts/collections/) for that decision and
 [the founding collection work](/research/cohorts/2019-2020/#collections-and-view-types)
 for where it came from.
+
+The current implementation lives in `CollectionNoteTakingView.tsx`, with
+separate column and divider components. It has no dedicated automated tests, so
+column creation, resizing, cross-column drag, and persistence should all be
+checked manually after changing it.

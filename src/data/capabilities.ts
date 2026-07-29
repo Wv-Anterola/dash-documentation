@@ -12,8 +12,8 @@
 export const verifiedAgainst = {
   repository: 'brown-dash/Dash-Web',
   ref: 'origin/master',
-  commit: '3170124bdbf216156151aa5fe6c0085b17c1a63a',
-  date: '2026-07-08',
+  commit: 'e7473b5d1076d5b77f6e580c4367afd8c4958033',
+  date: '2026-07-22',
 } as const;
 
 export type CapabilityCategory =
@@ -114,7 +114,7 @@ export const capabilities = [
     docs: '/capabilities/documents/#drawing-and-diagrams',
     technical: '/architecture/rendering-lifecycle/#type-specific-views',
     source: [
-      'src/client/views/nodes/InkingStroke.tsx',
+      'src/client/views/InkingStroke.tsx',
       'src/client/views/nodes/DiagramBox.tsx',
     ],
     projects: ['Smart Draw and generative drawing', 'Diagram documents from source code'],
@@ -131,8 +131,8 @@ export const capabilities = [
     technical: '/architecture/document-model/#specialized-document-types',
     source: [
       'src/client/views/nodes/TaskBox.tsx',
-      'src/client/views/nodes/DailyJournal.tsx',
-      'src/client/views/nodes/ScrapbookBox.tsx',
+      'src/client/views/nodes/formattedText/DailyJournal.tsx',
+      'src/client/views/nodes/scrapbook/ScrapbookBox.tsx',
     ],
     projects: ['Task documents', 'Scrapbook documents'],
   },
@@ -147,7 +147,7 @@ export const capabilities = [
     docs: '/capabilities/documents/#policy-analysis',
     technical: '/architecture/agents-ai/#policy-analysis-documents',
     source: [
-      'src/client/views/nodes/PolicyTestimonyBox.tsx',
+      'src/client/views/nodes/formattedText/PolicyTestimony.tsx',
       'src/client/views/nodes/PolicyCheckerBox.tsx',
     ],
     projects: ['Policy testimony and policy checker documents'],
@@ -164,7 +164,7 @@ export const capabilities = [
     technical: '/architecture/rendering-lifecycle/#3d-rendering',
     source: [
       'src/client/views/nodes/Viewer3DBox.tsx',
-      'src/client/views/nodes/Sketch3DBox.tsx',
+      'src/client/views/nodes/sketch3d/sketch3DBox.tsx',
     ],
     projects: ['3D model documents', 'Sketch-to-CAD drawing in 3D', 'Mesh tooling'],
   },
@@ -209,18 +209,23 @@ export const capabilities = [
     technical: '/architecture/collections-views/#graph-view',
     source: [
       'src/client/views/collections/collectionGraph/',
-      'src/client/views/collections/collectionFreeFormLayoutEngines/GraphLayoutEngine.tsx',
+      'src/client/views/collections/collectionFreeForm/collectionFreeFormLayoutEngines/GraphLayoutEngine.tsx',
     ],
     projects: ['Graph view for collections'],
   },
   {
     id: 'data-visualization',
-    title: 'Tables, charts, filtering, and generated visualizations',
+    title: 'Tables, charts, filtering, and semantic maps',
     category: 'Organization',
     availability: 'Core',
     summary:
-      'Turn CSV-backed records into interactive charts, filter linked views, and ask the AI pipeline to propose a visualization.',
-    entryPoints: ['Import CSV', 'Data visualization document', 'AI visualization action'],
+      'Turn CSV-backed records into interactive charts, filter linked views, generate chart proposals, and project mixed documents into an exploratory semantic map.',
+    entryPoints: [
+      'Import CSV',
+      'Data visualization document',
+      'Marquee menu → Visualize Unstructured Data',
+      'AI visualization action',
+    ],
     docs: '/capabilities/organization/#data-visualization',
     technical: '/architecture/collections-views/#data-visualization',
     source: ['src/client/views/nodes/DataVizBox/'],
@@ -241,7 +246,7 @@ export const capabilities = [
     docs: '/capabilities/organization/#maps-and-calendars',
     technical: '/architecture/collections-views/#maps-and-calendars',
     source: [
-      'src/client/views/nodes/MapBox.tsx',
+      'src/client/views/nodes/MapBox/MapBox.tsx',
       'src/client/views/nodes/calendarBox/',
     ],
     projects: ['Calendar collection view and Mapbox documents'],
@@ -258,7 +263,7 @@ export const capabilities = [
     technical: '/architecture/links-trails/#links-and-anchors',
     source: [
       'src/client/views/nodes/LinkBox.tsx',
-      'src/client/util/LinkManager.tsx',
+      'src/client/util/LinkManager.ts',
       'src/client/views/PropertiesDocBacklinksSelector.tsx',
     ],
     projects: ['Linking and annotation'],
@@ -274,8 +279,8 @@ export const capabilities = [
     docs: '/capabilities/connections-and-trails/#trails-and-presentations',
     technical: '/architecture/links-trails/#trails-and-presentation-state',
     source: [
-      'src/client/views/nodes/PresBox.tsx',
-      'src/client/views/nodes/PresSlideBox.tsx',
+      'src/client/views/nodes/trails/PresBox.tsx',
+      'src/client/views/nodes/trails/PresSlideBox.tsx',
     ],
     projects: [
       'Animation remodel for presentation trails',
@@ -295,9 +300,12 @@ export const capabilities = [
     technical: '/architecture/import-export/#search-indexes',
     source: [
       'src/client/util/SearchUtil.ts',
-      'src/client/views/nodes/SearchBox.tsx',
+      'src/client/views/search/SearchBox.tsx',
     ],
-    projects: ['Search over document content'],
+    projects: [
+      'Search over document content',
+      'User-controlled document recommendations',
+    ],
   },
   {
     id: 'import-export',
@@ -372,6 +380,7 @@ export const capabilities = [
       'Smart Draw and generative drawing',
       'Image generation with style and structure references',
       'Selection-aware text formatting actions',
+      'AI-authored interactive HTML documents',
     ],
   },
   {
@@ -401,7 +410,7 @@ export const capabilities = [
     entryPoints: ['Electron build', 'Agent service configuration'],
     docs: '/capabilities/platform/#desktop-and-local-models',
     technical: '/architecture/desktop-local-models/',
-    source: ['electron/', 'src/server/DashSession/'],
+    source: ['electron-main.mjs', 'src/server/DashSession/'],
     projects: ['Desktop build with local model execution'],
   },
   {

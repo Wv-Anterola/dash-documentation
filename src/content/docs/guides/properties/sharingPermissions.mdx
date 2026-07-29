@@ -1,28 +1,104 @@
 ---
 title: Sharing and permissions
-description: The developer-mode properties section showing who can do what with the selected document.
+description: Inspect and change individual, group, guest, data, and layout access from the properties panel.
 ---
 
-:::note[Developer mode]
-This section of the properties panel appears only in developer mode.
-:::
+The **Sharing and Permissions** section lists the owner, individuals, groups,
+and guest access for the selected document. It uses the same access-control
+model as the full Share dialog but keeps it beside the document's other
+properties.
 
-Shows the access level every party has on the selected document: the owner,
-guest users, and each individual and group it has been shared with.
+## Permission levels
 
-Access runs at four levels, and a document can be shared with individuals, with
-groups, or both.
+| Level | Intended access |
+| :--- | :--- |
+| **Admin** | Read, change content and layout, and change sharing entries. |
+| **Edit** | Read and modify the document. |
+| **Augment** | Contribute within the restricted augmentation path without receiving full edit or ACL control. |
+| **View** | Read only. |
+| **Not-Shared** | No access through that individual, group, or guest entry. |
 
-[Collaboration](/guides/features/collaboration/) documents what each level
-permits and how groups are created.
+When a person belongs to several matching groups, the runtime calculates the
+highest applicable level. The author is treated as Admin unless explicit
+runtime state says otherwise.
 
-## A limitation worth knowing
+For user-facing examples of Edit and Augment, see
+[collaboration](/guides/features/collaboration/).
 
-These permissions govern people. They do not govern the agent, which has no
-permission model of its own: a tool that can write can write to anything the
-user can, and the agent decides when to call it.
+## Change access
 
-That gap is described in
-[what Dash currently supports](/overview/current-state/#where-the-implementation-stops),
-and it is what the 2026 oversight study set out to measure; see
-[agents and tools](/concepts/agents/).
+Select the permission beside an individual or group. The change is undoable and
+is distributed through the target according to the sharing rules for nested
+documents, annotations, links, and layouts.
+
+Use the full Share dialog to add a person or group that does not appear in the
+table. The properties section is strongest for auditing and adjusting existing
+entries.
+
+Guest offers only **View** and **Not-Shared** in the sharing interface. Treat
+guest-readable documents as public to anyone who obtains the route; do not put
+secrets in a document and depend on obscurity of its ID.
+
+## Data and layout permissions
+
+The **Layout Permissions** checkbox changes whether the table addresses the
+selected context's layout document rather than the shared data document.
+
+This distinction allows a person to read shared content while having a
+different ability to move or resize one appearance. It also makes permission
+debugging less obvious:
+
+- content can be readable while one layout is inaccessible;
+- a nested document may inherit a stricter parent permission;
+- a document shown in two contexts can have different layout ACLs;
+- sharing only the layout is not a substitute for sharing the data it renders.
+
+When diagnosing access, check both sides.
+
+## Nested documents
+
+Permission distribution walks child documents, annotations, direct links, and
+layout references while keeping a visited list to avoid loops.
+
+The full Share dialog has **Upgrade nested** for deliberately raising child
+access. Without it, distribution avoids silently making an explicitly more
+restricted child less restrictive. See
+[collaboration](/guides/features/collaboration/#nested-documents-and-layout).
+
+## Practical sharing checklist
+
+Before sending a workspace:
+
+1. Share the outer collection with the intended person or group.
+2. Decide whether contributors need View, Augment, Edit, or Admin.
+3. Inspect nested sources that may carry their own ACLs.
+4. Check Layout Permissions for contexts collaborators must arrange.
+5. Test through a non-owner account.
+6. Verify annotations and link destinations, not just the visible top-level
+   documents.
+7. Remove stale group access when a project ends.
+
+## Security boundary
+
+ACLs govern document operations performed through Dash's field proxy and
+server protocol. They are not a complete policy for every external service:
+
+- an AI provider receives whatever content its request includes;
+- exported files leave Dash's ACL system;
+- screenshots and copied text are outside document permissions;
+- the agent acts with the current user's effective access and has no separate
+  per-tool ACL.
+
+See [server, storage, and security](/architecture/server-storage-security/) for
+the full trust boundary and [agent-assisted work](/workflows/agent-assisted/)
+for review practices.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Collaborator sees the collection but not a child | The child has a stricter explicit ACL or its data was not distributed. |
+| Collaborator can read but not move an item | Check the selected context's layout permission. |
+| Permission looks lower than expected | Another entry does not lower access; inspect all matching individual and group entries and confirm the account identity. |
+| Guest cannot open the document | Guest must be View and the route must resolve to a shared document. |
+| Sharing change is unavailable | Only effective Admin access can change ACL fields. |

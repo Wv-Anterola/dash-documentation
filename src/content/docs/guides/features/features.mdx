@@ -3,10 +3,28 @@ title: Detailed feature guides
 description: Interaction-level tutorials for established Dash features, connected to the complete capability catalog.
 ---
 
-These are interaction-level tutorials for linking, annotation and markup, ink,
-presentation trails, search, animation, scripting, collaboration, and
-generative AI. They retain the detailed recordings and control descriptions
-from the original documentation.
+This section explains how to operate Dash's cross-cutting features. A feature
+can work across many document types: a link may connect a PDF region to a video
+interval, a filter may shape a collection in any view, and a script may read or
+change the same fields shown in the properties panel.
+
+## Choose a guide
+
+| Goal | Guide |
+| :--- | :---- |
+| Connect documents or precise regions | [Linking](/guides/features/linking/) |
+| Attach notes to selections and media | [Annotation and markup](/guides/features/markup/) |
+| Draw, highlight, and work with ink | [Ink](/guides/features/ink/) |
+| Build and present a non-linear sequence | [Presentation trails](/guides/features/trails/) |
+| Find documents and match fields | [Search](/guides/features/search/) |
+| Animate documents or recorded states | [Animation](/guides/features/animation/) |
+| Inspect and automate fields | [Scripting](/guides/features/scripting/) |
+| Share a workspace with other people | [Collaboration](/guides/features/collaboration/) |
+| Generate or transform material with models | [Generative AI](/guides/features/generative-ai/) |
+
+The guides describe visible controls and common failure modes. For the model
+underneath them, use [Concepts](/concepts/). For an inventory of what is
+actually present in `master`, use the capability catalog.
 
 For the complete implementation-verified product inventory, use the
 [Capability catalog](/capabilities/). Newer integrated features now have
@@ -20,3 +38,15 @@ canonical coverage there, including:
 The [Workflows](/workflows/) section combines these capabilities into complete
 research and team practices. The [Project index](/research/projects/) records
 who built them and how integration status was verified.
+
+## Availability labels
+
+The capability catalog separates **Core**, **Advanced**, **Prototype**, and
+**Environment-dependent** features. That status is more precise than the age of
+a guide. An older workflow may still be central, while a newer project may
+exist only on a branch or depend on credentials and local services.
+
+When a guide and the running client disagree, record the client commit, the
+route or control you tested, and the result. The
+[documentation maintenance guide](/contributing/documentation/) explains how
+to update the evidence instead of silently rewriting history.

@@ -1,47 +1,122 @@
 ---
 title: Filters
-description: The developer-mode properties section that narrows a view to documents matching chosen field values.
+description: Narrow a collection recursively by text, field value, tag, link state, permissions, or numeric range without removing documents.
 ---
 
-:::note[Developer mode]
-This section of the properties panel appears only in developer mode.
-:::
+Filters change which documents a collection renders. They do not delete,
+detach, or rewrite the documents, and clearing the filter restores the full
+view.
 
-Filtering narrows what a view shows, based on the documents' own fields. It
-hides documents rather than removing them: clearing the filter brings everything
-back.
+Select the collection or dashboard, open the properties panel, and expand
+**Filters**. The panel evaluates the collection's children, nested documents,
+annotations, and sidebar documents.
 
-## Creating a filter
+## Add a filter
 
-Choose a field from the dropdown. The values that field takes across the
-collection appear below it as checkboxes.
+Choose a field from **add a filter**. The list includes document fields and
+several useful derived choices:
 
-Ticking a value keeps the documents that carry it. Documents that do not are
-hidden until you remove the filter.
+- guest access;
+- linked-to state;
+- Star, Heart, Bolt, and Cloud markers;
+- tags and user-defined metadata.
 
-## Collapsing and removing
+The control Dash renders depends on the values it finds.
 
-Two controls sit to the right of each field heading.
+| Field shape | Filter control |
+| :--- | :--- |
+| Text content | Text input |
+| Mostly numeric values | Two-handle range slider |
+| Tags | One membership toggle per tag |
+| Other discrete values | Checkboxes |
 
-**Collapse**, the square, hides that field's options. Any filter you already set
-stays active, and is shown in bold under the heading so a collapsed filter is
-not an invisible one.
+### Text
 
-**Remove**, the circle, takes the field out of the panel and clears any of its
-values you had selected.
+Enter the text and press <kbd>Enter</kbd> or leave the input. An empty value
+removes the text filter.
 
-## Related
+### Discrete values
 
-Filters read the same fields you see in
-[fields and tags](/guides/properties/fieldsandtags/) and as columns in
-[schema view](/guides/views/schema/).
+Select one or more values. The panel also preserves special any/none values
+when the underlying field supports them. Values are gathered recursively, so a
+field used only inside a nested collection can still appear.
 
-For finding a document rather than narrowing a view, use
-[search](/guides/features/search/), which matches metadata across the whole
-dashboard.
+### Numeric range
 
-## Underneath
+Dash classifies a field as numeric when fewer than ten percent of its observed
+non-empty values fail numeric conversion. The slider's initial domain extends
+slightly beyond the minimum and maximum so boundary values remain selectable.
 
-A filter reads document fields, so what you can filter by is exactly what the
-documents carry. [Documents and fields](/concepts/documents/) explains that
-model and its limits.
+Mixed units such as `10 kg`, `12 kg`, and `unknown` will usually force the field
+back to checkbox mode. Store the number and unit in separate fields if the
+range matters.
+
+### Tags
+
+Tag filters check membership in the `tags` list. A document may satisfy several
+tag filters at once.
+
+## Combining filters
+
+The document model supports `AND` and `OR` across different fields, with
+`AND` as the default. The selector for changing that operator is commented out
+in the current panel, so do not rely on the user interface to switch existing
+collections between the two.
+
+Within one discrete field, selected values are represented as filters on that
+field. Test the combination against a small known set before using it as a
+research inclusion rule.
+
+## Collapse or remove
+
+The square control beside a field collapses its inputs. Active values remain in
+force and are summarized under the heading.
+
+The circular remove control clears that field's active value and range filters,
+then removes the heading from the panel.
+
+## Filter hotkeys
+
+The second field selector, **add a hotkey**, creates a reusable filter control.
+Hotkeys are stored in the user's filter-hotkey collection and can be assigned a
+custom icon. They are useful for states applied repeatedly across dashboards,
+such as starred items or a review status.
+
+Because hotkeys are user-level objects, a colleague may not have the same
+control even when both people can see the filtered collection. Document the
+underlying field and value in a shared workflow.
+
+## Saved filter state
+
+Filter expressions are stored on the collection document in child-filter
+fields. The properties implementation can also exchange active filters with a
+filter document through `currentFilter`, preserving ordinary and range filters
+separately.
+
+This is why filters survive view changes and reloads: they belong to the
+collection, not to the temporary panel.
+
+## Search, filters, and views
+
+| Goal | Best tool |
+| :--- | :--- |
+| Locate one document across the workspace | [Search](/guides/features/search/) |
+| Keep one collection narrowed to a subset | Filter |
+| Sort and edit the same fields in rows | [Schema view](/guides/views/schema/) |
+| Group documents by a field | [Stacking view](/guides/views/stacking/) |
+| Ask a semantic question over source content | [Chatbot retrieval](/capabilities/ai-automation/) |
+
+## Reproducible filtering
+
+For a filter used in analysis or review:
+
+1. Normalize the field names and value spellings.
+2. Record whether missing values should count.
+3. Keep units out of numeric fields.
+4. Capture the field, operator, and selected values in a note.
+5. Check the visible count against a hand-verified sample.
+6. Remember that nested and sidebar documents are included.
+
+The interface is designed for interactive narrowing, not as a formal query
+language. If an inclusion rule determines a published result, export or script
+the matching IDs so the exact set can be audited.

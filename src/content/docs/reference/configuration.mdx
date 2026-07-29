@@ -1,0 +1,181 @@
+---
+title: Configuration reference
+description: Environment variables and local files read by Dash-Web, grouped by local development, providers, deployment, and Electron packaging.
+sidebar:
+  order: 1
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+Dash reads a root `.env` file through `dotenv`. Server code sees its keys by
+their literal names. During a web build, `webpack.config.mjs` copies every key
+beginning with `_CLIENT_` into the browser bundle and removes that prefix from
+the client-side name.
+
+For example:
+
+```dotenv
+_CLIENT_OPENAI_API_KEY=...
+```
+
+is read in browser code as:
+
+```ts
+process.env.OPENAI_API_KEY
+```
+
+:::danger[Client variables are public]
+The `_CLIENT_` prefix means “include this in client JavaScript,” not “keep this
+secret.” Anyone who can load the application can inspect a bundled value.
+Do not put a credential there unless its provider and deployment policy permit
+public client use. Prefer a server-side proxy and restricted, revocable
+credentials.
+:::
+
+The checked-in `.env.defaults` contains only the placeholder
+`OPENAI_API_KEY=sk-xxxxx`; it is not a complete inventory. The tables below are
+derived from reads in the pinned source snapshot.
+
+## Minimal local development
+
+A normal source checkout uses MongoDB on its default local address and serves
+Dash at `http://localhost:1050/home`. It does not require an environment
+variable merely to reach the non-provider parts of the interface.
+
+| Variable | Purpose | Notes |
+| :--- | :--- | :--- |
+| `MONGO_URI` | Override the MongoDB connection URI | The Electron launcher supplies this for its managed database. A normal local server can omit it. |
+| `DB=MEM` | Use the in-memory database path | Useful for isolated work; data is not durable. |
+| `OPENAI_API_KEY` | Server-side OpenAI access | Read by `GPTManager`, `AssistantManager`, and server-side utilities. |
+
+MongoDB, the upload directory, and the Node version remain prerequisites even
+when `.env` is empty. See [Running Dash locally](/getting-started/running-dash/).
+
+## Browser-exposed provider settings
+
+These are the names client code reads. To supply one through the root `.env`,
+prefix it with `_CLIENT_`.
+
+| Client name | `.env` name | Consumer |
+| :--- | :--- | :--- |
+| `OPENAI_API_KEY` | `_CLIENT_OPENAI_API_KEY` | Citation extraction, general OpenAI service, and vector-store embedding |
+| `OPENAI_KEY` | `_CLIENT_OPENAI_KEY` | Agent OpenAI service, agent constructor, and image editing |
+| `DESMOS_API` | `_CLIENT_DESMOS_API` | Desmos runtime for function plots |
+| `VITE_API_KEY` | `_CLIENT_VITE_API_KEY` | Unsplash image search |
+| `GITHUB_ACCESS_TOKEN` | `_CLIENT_GITHUB_ACCESS_TOKEN` | In-app report manager |
+
+The two OpenAI names are both present in current code and are not aliases added
+by this documentation. Configuring one does not necessarily configure every AI
+surface.
+
+Because these values are bundled, production deployments should not use an
+unrestricted personal token. Restrict origin, scope, quota, and lifetime where
+the provider supports it. The report manager in particular should not receive
+a broad GitHub token in a public build.
+
+## Server-side integrations
+
+| Variable | Purpose |
+| :--- | :--- |
+| `_CLIENT_GOOGLE_SEARCH_ENGINE_ID` | Google Programmable Search engine identifier used by `AssistantManager` |
+| `_CLIENT_GOOGLE_API_KEY` | Google search API key used by `AssistantManager` |
+| `_CLIENT_FIREFLY_CLIENT_ID` | Adobe Firefly client identifier used by `FireflyManager` |
+| `_CLIENT_FIREFLY_SECRET` | Adobe Firefly client secret used by `FireflyManager` |
+| `FIREFLY_SERVICES_CLIENT_ID` | Preferred Firefly Services client identifier for newer routes |
+| `FIREFLY_SERVICES_CLIENT_SECRET` | Preferred Firefly Services secret for newer routes |
+| `FIREFLY_CLIENT_ID` | Firefly fallback identifier |
+| `FIREFLY_SECRET` | Firefly fallback secret |
+| `_CLIENT_DROPBOX_CLIENT_ID` | Dropbox OAuth client identifier |
+| `_CLIENT_DROPBOX_SECRET` | Dropbox OAuth client secret |
+| `HTTPS_SERVER_URL` | Public HTTPS server URL used when constructing service callbacks |
+| `HTTPS_PUBLIC_URL` | Fallback public HTTPS URL |
+
+The legacy `_CLIENT_` names in this table are read by server code as literal
+names. They may also be copied into the browser bundle because the webpack rule
+has no allowlist or active blacklist. Treat that as an implementation
+constraint, not a recommendation to expose secrets.
+
+Google document access also uses a file named
+`google_project_credentials.json`. In a packaged build,
+`CredentialsLoader.ts` resolves it under `APP_ROOT`; in development it uses the
+repository-side path expected by the server.
+
+### Mapbox
+
+Mapbox is an exception to this environment-variable scheme. The current map
+view and `MapboxApiUtility.ts` contain a public Mapbox token in source. It is
+not configured through `.env`. A deployment that replaces it must update those
+source locations and restrict the replacement token to the intended public
+origins and APIs.
+
+## Server and deployment controls
+
+| Variable | Effect |
+| :--- | :--- |
+| `RELEASE=true` | Enables release behavior, including release URL and caching branches |
+| `serverPort` | Overrides the server port in release mode |
+| `serverName` | Builds the release hostname and locates named certificate files |
+| `PASSWORD` | Guards admin-only release routes when those routes request admin access |
+| `MONITORED` | Starts the monitored multi-process/session path |
+| `session_key` | Authenticates monitored session-manager requests |
+| `pollingRoute` | Health route used by the monitored server worker |
+| `pollingIntervalSeconds` | Worker health-check interval |
+| `pollingFailureTolerance` | Failed health checks tolerated before worker action |
+| `NODE_ENV` | Selects production/development build behavior |
+| `SPAWNED` | Marks a process created by Dash's process manager |
+| `APP_ROOT` | Root for packaged application assets and deploy files |
+| `DASH_DATA_ROOT` | Writable packaged-data root for files, logs, stats, and secrets |
+| `ELECTRON` | Marks Electron server execution |
+
+The lowercase names are intentional because the source reads them that way.
+Environment variables are case-sensitive on common Unix deployments.
+
+Do not set `RELEASE`, `MONITORED`, or packaging paths casually in a developer
+shell. They change process topology, paths, security checks, or URL
+construction rather than merely enabling a button.
+
+## Electron-managed values
+
+`electron-main.mjs` starts a managed MongoDB instance and passes values such as
+`MONGO_URI`, `APP_ROOT`, `DASH_DATA_ROOT`, and Electron state into the child
+server. It also configures `MONGOMS_DOWNLOAD_DIR`, `MONGOMS_VERSION`,
+`MONGOMS_PREFER_GLOBAL_PATH`, and optionally `MONGOMS_SYSTEM_BINARY` for
+`mongodb-memory-server`.
+
+Those MongoMS values are packaging controls. A normal `npm start` workflow
+should use an ordinary `mongod` and should not need to reproduce the Electron
+launcher environment.
+
+## Example development file
+
+Start with the smallest file that enables what you are testing:
+
+```dotenv
+# Server-side only
+OPENAI_API_KEY=replace-me
+
+# Included in the browser bundle; use only a restricted development key
+_CLIENT_OPENAI_API_KEY=replace-me
+_CLIENT_OPENAI_KEY=replace-me
+```
+
+Add another provider only when its feature is in scope. Never commit `.env`,
+credential JSON, access tokens, callback secrets, or a production database URI.
+
+## Diagnosing configuration
+
+| Symptom | First check |
+| :--- | :--- |
+| One AI surface works and another does not | `OPENAI_API_KEY` versus `OPENAI_KEY`, and whether the consumer is client or server |
+| Value exists on the server but is undefined in the browser | The `.env` key lacks `_CLIENT_`, or webpack was not rebuilt |
+| Browser bundle contains a secret | Remove the `_CLIENT_` key, rotate the credential, rebuild, and route the call through the server |
+| Firefly authentication fails | Preferred Services names, then legacy fallback names; verify callback URL |
+| Google search fails | Both search-engine ID and API key are required |
+| Packaged build writes under the source tree | `APP_ROOT` or `DASH_DATA_ROOT` was not supplied by the launcher |
+| Release URL or port is wrong | Exact casing and values of `RELEASE`, `serverName`, and `serverPort` |
+
+Source entry points are `webpack.config.mjs`, `src/server/database.ts`,
+`src/server/server_Initialization.ts`, `electron-main.mjs`, and the manager or
+client named in each table.

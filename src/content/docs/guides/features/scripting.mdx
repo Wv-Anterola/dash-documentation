@@ -1,27 +1,206 @@
 ---
 title: Scripting
-description: The scripting box, which runs TypeScript to change button behaviour and add conditional logic to a dashboard.
+description: How Dash script documents compile and run TypeScript-like code, accept typed parameters, become reusable functions, and interact with document state.
 ---
 
-Dash has a scripting box document that runs TypeScript. It is used to change
-what buttons do and to add conditional behaviour to a dashboard.
+import SourceSnapshot from '../../../../components/SourceSnapshot.astro';
 
-:::caution[This page is a stub]
-The two sentences above are the whole of what has ever been written about
-scripting on this site, and they were written in 2021. We could not find a
-student project in the recovered history that documents the scripting system, so
-there is nothing further to cite here.
+<SourceSnapshot />
 
-If you know how the scripting box works, this is the largest documentation gap
-in the guides section.
-[Working on this documentation](/contributing/documentation/) explains how to
-add a page, and [the project index](/research/projects/) shows the kind of
-evidence other entries record.
+Dash has two built-in programming surfaces:
+
+- a **script document**, for behavior that should live on the canvas, accept
+  inputs, or become a reusable function;
+- a **calculator REPL**, for inspecting values and running one expression at a
+  time.
+
+Both compile through `src/client/util/Scripting.ts`. The editor accepts
+TypeScript syntax, transpiles it in the browser, and executes the result against
+Dash's registered scripting globals. It is an advanced feature, not a sandbox.
+
+## Create and run a script
+
+Create a Script document from the <kbd>:</kbd> document menu. The editor has a
+code area, a parameter field, and three actions:
+
+| Action | What it does |
+| :--- | :--- |
+| **Compile** | Parse and transpile the current source, store the resulting `ScriptField`, and show diagnostics without running the script. |
+| **Apply** | Compile, then replace the code editor with controls for the declared parameters. |
+| **Save** | Compile, then ask for a function name and description so the script can be registered as a reusable global. |
+
+After **Apply**, set the parameter values and choose **Run**. Choose **Edit** to
+return to the source.
+
+A script runs with its own document bound as `this`. A simple script can
+therefore read and write fields directly:
+
+```ts
+this.status = "reviewed";
+this.reviewedAt = new DateField();
+```
+
+Field assignments use the same document proxy as the rest of Dash. Ordinary
+data fields, layout fields, computed fields, permissions, and undo behavior
+still follow their respective runtime rules.
+
+## Parameters
+
+Enter parameters as `name: type`. Multiple declarations may be separated with
+semicolons.
+
+```ts
+source: Doc; label: string; score: number; visible: boolean
+```
+
+The script document supports:
+
+- `Doc`
+- `string`
+- `number`
+- `boolean`
+- literal unions such as `draft | reviewed | published`
+
+Applied parameter controls match the type. Strings and numbers get editable
+fields, booleans and literal unions get selectors, and a `Doc` accepts a Dash
+document dropped onto the parameter control. While a document parameter has
+focus, Dash overlays identifiers such as `d0` and `d1` on visible documents so
+they can also be referred to from code.
+
+Parameter names must be unique. A missing colon produces “must set type of
+parameter”; an unsupported type and a duplicate name produce separate
+diagnostics in the script document.
+
+Example:
+
+```ts
+source.title = label;
+source.priority = score;
+source.hidden = !visible;
+```
+
+## Autocomplete and globals
+
+The editor suggests names registered through `ScriptingGlobals`. The registry
+contains document constructors and field classes as well as workspace
+operations. Current registrations include functions for:
+
+- selecting documents, undo, and redo;
+- creating, opening, sharing, and removing dashboards;
+- changing views, colors, borders, fonts, grouping, and filters;
+- following links and moving through trail keyframes;
+- controlling ink, equations, images, web documents, and video snapshots;
+- starting, pausing, and replaying workspace recordings;
+- resolving a document ID, copying a field, and editing document lists.
+
+The registry is broad and internal-facing. Autocomplete is the authoritative
+list for the running build; names can be added or removed by features without a
+separate API-version boundary.
+
+Some useful primitives visible in the current registry:
+
+```ts
+const selected = selectedDocs(this, false, []);
+setBackgroundColor("#fff4cc");
+setBorderWidth(2);
+undo();
+```
+
+Do not assume a global mutates `this`. Many functions operate on the current
+selection or active dashboard. Test a script in the same context in which its
+button or event will run.
+
+## Save a reusable function
+
+Choose **Save**, enter a function name and description, then choose **Create
+Function**.
+
+Names cannot contain spaces or periods. Dash stores the script document in the
+main script collection and registers a JavaScript function under that name.
+Its description and parameter signature then appear in scripting suggestions.
+
+If a saved function is recreated with the same name, the registry removes the
+old global before adding the new one. Deleting the script through
+`ScriptManager` removes its global registration as well.
+
+:::caution[Saved functions are shared application state]
+Reusable scripts are loaded from Dash's main script document when
+`ScriptManager` initializes. Rename and delete them deliberately: another
+document, button, or event may call the registered name.
 :::
+
+## Attach behavior to a document
+
+Script fields also back event properties such as `onClick` and `onChecked`.
+When a script document is opened for one of these layout fields, **Finish**
+returns the document to its normal layout after editing.
+
+Use event scripts for small, local actions:
+
+- set a field when a button is clicked;
+- switch a collection view;
+- move to a trail item;
+- apply a filter;
+- toggle a display property.
+
+Use a regular document type or shared component when behavior needs its own
+complex state, lifecycle, validation, and tests. A large script hidden in an
+`onClick` field is difficult to discover and maintain.
+
+## Calculator REPL
+
+Open **Toggle a Calculator REPL** from the Tools menu. The REPL:
+
+- compiles one expression when you press <kbd>Enter</kbd>;
+- shows primitive results directly and lets you expand object fields;
+- exposes visible documents as `d0`, `d1`, and so on;
+- keeps command history under the Up and Down arrow keys;
+- wraps successful execution in an undoable batch.
+
+The numbered document labels are assigned from currently mounted views. They
+are convenient for exploration, not durable references. Use `idToDoc()` with a
+stored document ID in anything that must work after the layout changes.
+
+## Execution and security model
+
+The compiler eventually constructs functions with JavaScript's
+`new Function(...)` and passes the registered globals into them. Editable
+scripts run with access to document state. They are not isolated from the
+application like code in a separate worker or restricted iframe.
+
+Practical rules:
+
+1. Treat a script copied from another workspace as executable code.
+2. Read generated scripts before compiling them.
+3. Test mutations against disposable documents.
+4. Keep each logical action inside one undo batch.
+5. Do not place API keys, tokens, or private data in source text.
+6. Prefer explicit `Doc` parameters over assumptions about the current
+   selection.
+
+Compilation is also permissive in several editor paths: missing-name and
+property diagnostics are filtered so Dash globals and dynamic document fields
+can work. A successful compile therefore proves syntactic viability, not that a
+field exists or a mutation is safe.
+
+## Troubleshooting
+
+| Symptom | Check |
+| :--- | :--- |
+| Compile does nothing | The source cannot be empty. Look for the diagnostic text below the editor. |
+| “this type is not supported” | Use `Doc`, `string`, `number`, `boolean`, or a literal union. |
+| Document parameter is `undefined` | Drop a document onto the applied input, or enter an expression that resolves to a `Doc`. |
+| Saved name is rejected | Remove spaces and periods. |
+| Script works in the REPL but not a button | The REPL exposes visible `dN` variables; the event context may not. Pass a document explicitly or resolve its ID. |
+| Mutation cannot be undone cleanly | The script crosses batch boundaries or starts asynchronous work after its initiating batch has ended. |
+| A global is missing | Check autocomplete in the deployed build; scripting globals are registered by loaded features. |
 
 ## Related
 
-The agent is the other route to programmatic behaviour, and it is much better
-documented. It can generate a tool and have it compiled into the running
-application; see [agents and tools](/concepts/agents/) and the
-[agent tools extension point](/architecture/#agent-tools).
+- [Keyboard shortcuts](/reference/keyboard-shortcuts/) for opening Tools and
+  other programmable surfaces.
+- [Document model](/architecture/document-model/) for data fields, layout
+  fields, proxies, and access checks.
+- [Undo and provenance](/architecture/undo-provenance/) for mutation batches.
+- [Add an agent tool](/development/add-agent-tool/) for schema-bound automation
+  callable by the agent.

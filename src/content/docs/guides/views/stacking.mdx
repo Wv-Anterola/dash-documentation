@@ -3,8 +3,9 @@ title: Stacking view
 description: The scrollable-stack view over a collection, and how grouping by a key turns one stack into a column per value.
 ---
 
-One or more scrollable stacks of documents, each showing a live preview rather
-than only a title.
+Stacking view arranges a collection as one or more vertical columns of live
+documents. It is suited to material you need to read, not just scan: text stays
+editable, media stays playable, and links and annotations remain available.
 
 By default every document sits in a single stack. Naming a key splits that into
 several stacks side by side, one per distinct value, with the value shown as an
@@ -21,11 +22,49 @@ editable heading above each.
 Type a key into the "Group by" box beside the view dropdown. The single stack
 becomes one stack per value.
 
-To change a document's value, drag it into a different stack. To rename or
-remove a value, click the heading at the top of its stack.
+If a document has no value for that key, Dash places it under a heading of the
+form **NO _KEY_ VALUE** rather than dropping it from the view.
+
+To change a document's value, drag it into a different stack. A newly encountered
+field value creates another section. To rename or remove a value, use the
+heading controls at the top of its stack.
 
 Dragging a document within a stack changes only its position. It does not touch
 the document's fields.
+
+## A practical board
+
+For a lightweight project board:
+
+1. Give each task a `status` field.
+2. Use values such as `Backlog`, `Doing`, `Blocked`, and `Done`.
+3. Set **Group by** to `status`.
+4. Drag tasks between columns as work changes.
+5. Add a filter for an owner, milestone, or date when you need a narrower
+   working set.
+
+The status is not private to this view. It is a field on the document, so
+schema view, scripts, filters, and other contexts can use the same value.
+
+## Layout behavior
+
+Dash calculates column width from the collection width, the number of groups,
+the configured gap, and optional column-count or column-width fields. The view
+can auto-height to its tallest column or scroll inside a fixed-height
+collection. A scroll-to-end option keeps append-heavy stacks, such as feeds,
+at the newest material.
+
+Hidden documents and link records are not rendered as ordinary cards. Filters
+are applied before sections are built. If an expected document is missing,
+check both its filter state and the exact grouping value.
+
+## Stacking, masonry, and notetaking
+
+Stacking and masonry share much of their rendering implementation, but masonry
+packs documents into a grid rather than making one vertical section per group.
+[Notetaking view](/guides/views/notetaking/) maintains an explicit set of
+columns and user-adjustable dividers, which is preferable when the column
+structure itself is part of the workspace.
 
 ## Related
 
@@ -34,5 +73,9 @@ documents carry; see [documents and fields](/concepts/documents/).
 
 [Schema view](/guides/views/schema/) shows the same fields as a sortable table
 when you want to compare values rather than read contents.
-[Notetaking view](/guides/views/notetaking/) is the multi-column version of this
-one, aimed at reading and writing side by side.
+[Filters](/guides/properties/filters/) explains how to narrow the visible
+children without changing their grouping fields.
+
+The implementation is `CollectionStackingView.tsx`. It also supplies behavior
+used by masonry and several specialized surfaces, so changes to sizing, drag,
+or focus behavior should be checked outside the basic Stacking view as well.

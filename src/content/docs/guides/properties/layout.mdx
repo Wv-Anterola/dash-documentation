@@ -1,22 +1,59 @@
 ---
-title: Layout
-description: The developer-mode properties section showing a live preview of the selected document's layout.
+title: Layout preview
+description: What the properties panel's Layout section renders, how it differs from layout fields, and how context-specific appearances work.
 ---
 
-:::note[Developer mode]
-This section of the properties panel appears only in developer mode.
-:::
+The **Layout** section renders a scaled, non-interactive preview of the selected
+document using its current layout document. It is a confirmation surface, not a
+second editor.
 
-Shows a live preview of the selected document's layout.
+The preview:
 
-A document's layout is a field on the document rather than a fixed part of it,
-which is why the preview updates as you change display settings in
-[options](/guides/properties/options/) and why the same document can be laid out
-differently in two [contexts](/guides/properties/othercontexts/).
+- preserves the selected document's aspect ratio where one is available;
+- uses native media dimensions when appropriate;
+- fits within the properties panel width;
+- caps its height so a large document does not consume the whole panel;
+- switches to a rich-text-specific sizing path for formatted text;
+- displays `-- multiple selected --` instead of guessing when several
+  documents are selected.
 
-:::caution
-This section has never been documented beyond the description above. If you work
-on Dash and know what the controls here do, this is one of the easiest gaps on
-the site to close; see
-[working on this documentation](/contributing/documentation/).
-:::
+Pointer events are disabled in the preview. Edit the document on the canvas or
+use the relevant controls in **Options**, **Appearance**, **Transform**, or
+**Fields & Tags**.
+
+## Layout document versus preview
+
+Every rendered context has layout state: position, size, rotation, the field or
+template being rendered, and view-specific settings. The Layout section takes
+that state and mounts another `DocumentView` at preview scale.
+
+The **Layout Fields** switch in **Fields & Tags** exposes the values themselves.
+Use that switch only when you need to inspect or edit the layout record
+directly. For ordinary resizing, rotation, and view changes, the visual controls
+are safer.
+
+## Context-specific appearance
+
+A single data document can have several layout documents. That lets one source:
+
+- appear large on a research canvas and compact in a stack;
+- use different coordinates in two collections;
+- sit inside a custom template in one place and its default view in another;
+- retain one title and body across all of those appearances.
+
+The preview always reflects the selected context, not every context. Open
+[Other contexts](/guides/properties/othercontexts/) to inspect the others.
+
+## Diagnosing a surprising preview
+
+| Symptom | Check |
+| :--- | :--- |
+| Preview is much shorter than the canvas item | The properties panel caps preview height. |
+| The content is correct but the size or position differs elsewhere | Those appearances use different layout documents. |
+| Preview says multiple selected | Select one document. |
+| An option changes the preview but not the data | The option writes layout or view configuration. |
+| Direct field edits break rendering | Restore the layout field or template used by the document type; internal layout fields are not all independent controls. |
+
+See [rendering lifecycle](/architecture/rendering-lifecycle/) for how the layout
+selects a view component and [document model](/architecture/document-model/)
+for the data/layout split.

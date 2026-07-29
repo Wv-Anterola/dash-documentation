@@ -1,0 +1,101 @@
+---
+title: Publications and project reports
+description: Public papers about Dash, what each one contributed, and whether the described implementation remains in the current system.
+sidebar:
+  order: 3
+---
+
+Dash project papers often describe more than the version that eventually
+reached `master`. This bibliography keeps the research record and the product
+record beside one another: the paper explains the work; the status note says
+what a reader can expect to find in the current application.
+
+The list is deliberately limited to public documents that can be matched to a
+named project, repository branch, or surviving implementation. A slide deck or
+paper is evidence that work happened, not evidence that it shipped.
+
+## 2024
+
+### Integrating Advanced Mapping and Itinerary Planning Features in Dash
+
+**Zaul Tavangar.** [Master's project report, Brown
+CS](https://cs.brown.edu/media/filer_public/26/81/268132aa-2653-4e88-b089-af17fde642ce/zaultavanger.pdf).
+
+The report covers two semesters of work: replacing the original map surface
+with a Mapbox-backed document and building an itinerary recommender using ant
+colony optimization. It documents nine map styles, bearing, pitch, zoom,
+terrain, routes, animation, and travel-mode choices, then describes itinerary
+construction around a root location.
+
+**Current status.** The Mapbox document and calendar view are in `master`. The
+`zaul-itinerary` branch is not merged. See
+[Calendar collection view and Mapbox documents](/research/cohorts/2023/#calendar-collection-view-and-mapbox-documents).
+
+## 2023
+
+### Empowering Storytelling in Dash
+
+**Michael Foiani.** [Honors
+thesis](https://cs.brown.edu/media/filer_public/14/d8/14d897d1-4ddc-44f0-a255-a19df14aaa68/foianimichael_honors_thesis.pdf).
+
+The thesis treats a Dash corpus as a navigable story space and develops three
+extensions to trails: recorded canvas motion, programmatic changes during a
+story, and branching or nested narratives. It is also one of the clearest
+written explanations of how a Dash trail differs from a conventional slide
+deck: a reader can leave the authored route, follow associations, and return.
+
+**Current status.** One branching-trail branch was merged; the larger advanced
+trail branches were not. Recording and replay support survives in the current
+source. See
+[Branching presentation trails](/research/cohorts/2024/#branching-presentation-trails)
+and [connections and trails](/capabilities/connections-and-trails/).
+
+### A User-Controlled Document Recommendation System for Knowledge Workers
+
+**Geireann Lindfield Roberts.** [Honors
+thesis](https://cs.brown.edu/media/filer_public/f3/5f/f35f813d-adf7-404a-a812-3b9a22645932/robertsgeireann_lindfield_honors_thesis.pdf).
+
+The work separates recommendation into an API that ranks documents from text
+and a Dash lightbox interface that lets the user inspect the candidates. The
+paper discusses vector representations, cosine and Euclidean similarity, and
+the importance of keeping the reader in control of discovery.
+
+**Current status.** Implemented on
+`geireann_document_recommendation`, but not merged. The current search
+component contains inactive recommendation scaffolding and renders no
+recommendation list. See
+[User-controlled document recommendations](/research/cohorts/2023/#user-controlled-document-recommendations).
+
+### Physics Simulations in the Dash Hypermedia System
+
+**Brynn Chernosky.** [Master's project report, Brown
+CS](https://cs.brown.edu/media/filer_public/2c/20/2c208c8e-0560-49d3-b43c-6e5136004aab/chernoskybrynn.pdf).
+
+The report describes a simulation document for mechanics education with seven
+simulation types and three interaction modes: open construction, guided
+tutorials, and review questions whose answers drive an animation.
+
+**Current status.** The simulation type existed in an older merged version of
+Dash but has since been removed from `master`. Its historical guide remains at
+[physics simulations](/guides/documents/simulations/) with an archived notice.
+
+## Related technical writing
+
+The 2023 [Architecture of Dash](https://hackmd.io/@CS1951V-2023/DashArchitecture)
+is not a project report, but it is the most substantial public description of
+the client-server and document model. Use it as historical technical context;
+use this site's [implementation snapshot](/reference/implementation-snapshot/)
+for current names, counts, and source paths.
+
+## How this bibliography is maintained
+
+When adding a publication:
+
+1. Link to a stable university, proceedings, or author-controlled copy.
+2. Record the author, title, and publication type without inventing a venue.
+3. Match the work to commits or a branch.
+4. Check that branch against `origin/master`.
+5. Write the product status separately from the paper summary.
+
+That last step prevents a polished report from being mistaken for a shipped
+feature and prevents removed work from disappearing from the history.

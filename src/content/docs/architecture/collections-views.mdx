@@ -73,8 +73,24 @@ stable identity keys, and separating hover from persistent graph state.
 
 ## Data visualization
 
-DataViz components interpret record fields and axes, render charts with D3, and
-store selection/filter state on documents so related views can coordinate.
+DataViz components interpret record fields and axes, render charts with D3,
+and store selection/filter state on documents so related views can
+coordinate. The five persisted views are `table`, `lineChart`, `histogram`,
+`pieChart`, and `scatterPlot`.
+
+The semantic-map path begins in `MarqueeView`. A selection of two or more
+documents is passed to `SemanticMapManager`, which:
+
+1. extracts text from supported text, PDF, and web documents or resolves the
+   original asset for an image;
+2. creates normalized CLIP text or image embeddings in the browser;
+3. caches those vectors on a generated CSV document;
+4. asks the Pyodide worker to compute the first two principal components; and
+5. configures a `DataVizBox` scatter plot over `pc1` and `pc2`.
+
+`ScatterPlot` persists selected point identifiers and can open the Dash
+document named by a row's `docId`. Keep this identity field intact when
+changing the generated CSV path.
 
 Validate:
 
@@ -85,9 +101,19 @@ Validate:
 - Clearing a selection
 - Save/reload of chart configuration
 - Parent/child filtering cycles
+- Scatter plots with fewer or more than two numeric axes
+- Mixed semantic-map selections and unsupported document types
+- First-run model loading, WebGPU failure, and unavailable original images
+- PDF text extraction and webpage fetches through the CORS proxy
+- Embedding-cache reload and point-to-document navigation
 
 AI-generated chart configuration must pass the same validation as manual
 configuration.
+
+The current embedding model is `Xenova/clip-vit-base-patch32`, loaded by
+Transformers.js with WebGPU requested for the text and vision models. PCA runs
+through `/sympy.worker.js`. Both are runtime dependencies of semantic maps,
+not of ordinary CSV tables and charts.
 
 ## Maps and calendars
 
