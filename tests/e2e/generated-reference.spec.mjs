@@ -124,8 +124,8 @@ test('documents field encoding, the wire protocol, and observed security boundar
     has: page.locator('summary code').filter({ hasText: /^Serialize$/ }),
   });
   await serialize.locator('summary').click();
-  await expect(serialize.getByText('Failure semantic:', { exact: false })).toBeVisible();
-  await expect(serialize.getByText(/unregistered object constructor throws/)).toBeVisible();
+  await expect(serialize.getByText('Failure semantic:', { exact: false }).first()).toBeVisible();
+  await expect(serialize.getByText(/unregistered object constructor throws/).first()).toBeVisible();
 });
 
 test('catalogues the HTTP surface and exposes request-supervision contracts', async ({ page }) => {
@@ -214,4 +214,40 @@ test('maps every document type from stored value through factory and renderer', 
   const math = page.locator('.palette-reference tbody tr').filter({ has: page.getByText('Math', { exact: true }) });
   await expect(math).toContainText('EQUATION');
   await expect(math).toContainText('EquationDocument');
+});
+
+test('maps every serialized field tag through storage, hydration, and conversion', async ({ page }) => {
+  await page.goto('/architecture/field-runtime/');
+  await expect(page.getByRole('heading', { name: 'Field runtime and serialization' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Seven-stage lifecycle from a document assignment/ })).toBeVisible();
+  await expect(page.locator('.field-type-summary strong').nth(1)).toHaveText('21');
+  await expect(page.locator('.field-primitives article')).toHaveCount(3);
+
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-field-type-reference]');
+    const filters = document.querySelector('.field-type-filters');
+    if (!root || !filters) throw new Error('Field type reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+
+  const query = page.getByLabel('Find a tag, class, stored member, behavior, or purpose');
+  await query.fill('prefetch_proxy');
+  await expect(page.locator('[data-field-type-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-field-type-count]')).toHaveText('1 registered type shown');
+  const prefetch = page.locator('[data-field-type-row]:visible');
+  await prefetch.locator('summary').click();
+  await expect(prefetch.getByText('fieldId', { exact: true })).toBeVisible();
+  await expect(prefetch.getByText(/prefetchValue/)).toBeVisible();
+  await expect(prefetch.getByText(/ProxyField rather than preserving/)).toBeVisible();
+
+  await query.fill('');
+  await page.getByLabel('Runtime family').selectOption('media');
+  await expect(page.locator('[data-field-type-row]:visible')).toHaveCount(8);
 });

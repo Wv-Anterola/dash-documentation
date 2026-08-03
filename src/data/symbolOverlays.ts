@@ -204,6 +204,7 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
     invariants: ['Primitive values pass through; object values carry one stable __type tag.'],
     failureSemantics: [
       'Undefined and null both serialize as null; an unregistered object constructor throws synchronously.',
+      'If serializr throws after the depth flag is incremented, the current implementation does not restore that flag in a finally block.',
     ],
   },
   'src/client/util/SerializationHelper.ts#Deserialize': {
@@ -213,9 +214,10 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
       obj: 'Primitive, nullish value, or object containing a registered __type tag.',
     },
     returns: 'A promise resolving to the reconstructed runtime value or undefined for nullish/missing-tag input.',
-    postconditions: ['Registered post-deserialization behavior has been invoked before the promise resolves.'],
+    postconditions: ['Registered post-deserialization behavior has been invoked before the promise resolves; a promise returned by that behavior is not awaited.'],
     failureSemantics: [
       'A missing type tag warns and resolves undefined; an unknown type tag throws; null deserializes to undefined.',
+      'The serializr callback error argument is not forwarded, and asynchronous repair rejection is not folded into the returned Deserialize promise.',
     ],
   },
   'src/client/util/SerializationHelper.ts#Deserializable': {
@@ -233,7 +235,60 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
     summary:
       'Creates a serializr property schema that delegates nested field objects to the Dash type registry.',
     returns: 'A custom serializr schema using SerializationHelper.Serialize and Deserialize.',
-    failureSemantics: ['Nested serialization and type-registration errors propagate to the containing document or list.'],
+    failureSemantics: [
+      'Nested serialization errors propagate to the containing operation.',
+      'A rejected nested Deserialize promise is not translated into the serializr callback error channel by the current adapter.',
+    ],
+  },
+  'src/fields/Types.ts#Cast': {
+    summary:
+      'Checks a field against one primitive constructor, runtime class, or List specification without coercing mismatched values.',
+    parameters: {
+      field: 'Immediate field value, waiting reference promise, or undefined.',
+      ctor: 'Primitive name, runtime constructor, or List specification expected by the caller.',
+      defaultVal: 'Optional concrete fallback; null requests undefined on mismatch.',
+    },
+    returns: 'The matching value, a transformed promise when no default is supplied, the concrete default, or undefined.',
+    invariants: ['Primitive matching uses exact typeof equality; List matching checks the List container rather than every member.'],
+    failureSemantics: ['A pending promise is hidden by a concrete or null default instead of being awaited.'],
+  },
+  'src/fields/util.ts#setter': {
+    summary:
+      'Entry point for document and list proxy assignments: enforces property ACLs, routes delegate prefixes, honors computed setters, then invokes the active mutation implementation.',
+    parameters: {
+      target: 'Underlying Doc or ListImpl target.',
+      prop: 'Field key, list index, or internal symbol.',
+      value: 'Candidate runtime field value.',
+      receiver: 'Public Doc or List proxy receiving the assignment.',
+    },
+    returns: 'Whether the JavaScript proxy trap handled the assignment; true can also mean an ACL-denied no-op.',
+    permissions: 'Non-symbol fields require edit, augment, or admin access; ACL fields additionally require admin access and a supported ACL value.',
+    sideEffects: ['May route $ fields to data, _ fields to layout, or execute a ComputedField setter script.'],
+  },
+  'src/fields/util.ts#_setterImpl': {
+    summary:
+      'Normalizes ownership, applies a permitted field replacement, emits a serialized update or caches a local-only edit, and records undo state.',
+    invariants: ['A mutable non-prefetch ObjectField cannot be owned by two different containers at once.'],
+    failureSemantics: ['Reusing an already owned ObjectField throws; denied write policy leaves state unchanged while returning true to the proxy trap.'],
+    sideEffects: ['Installs Parent/FieldChanged, mutates observable field maps, updates ACL caches, and may enqueue server and undo operations.'],
+  },
+  'src/fields/util.ts#getter': {
+    summary:
+      'Resolves one proxy property through privacy checks, layout/data delegate prefixes, ToValue conversion, and prototype fallback.',
+    returns: 'Internal member, immediate field, computed value, resolved reference, waiting promise, inherited field, or undefined.',
+    permissions: 'Private documents hide ordinary fields except author and selected internal sizing behavior; private prototypes are not traversed.',
+  },
+  'src/fields/util.ts#containedFieldChangedHandler': {
+    summary:
+      'Builds the callback that turns an inner ObjectField mutation into list-aware wire intent and whole-field undo/redo snapshots.',
+    parameters: {
+      container: 'Owning document or list.',
+      prop: 'Key or index holding the live ObjectField.',
+      liveContainedField: 'Attached mutable field whose inner state will change.',
+    },
+    returns: 'A callback accepting add, remove, or replace intent for the contained value.',
+    invariants: ['Incremental list operations carry resulting length; other changes serialize the whole contained field.'],
+    undo: 'Captures copied before/after ObjectField states because the outer proxy setter is not invoked for inner mutation.',
   },
   'src/fields/Proxy.ts#ProxyField.value': {
     summary:

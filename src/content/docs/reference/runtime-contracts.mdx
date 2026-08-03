@@ -160,7 +160,9 @@ fields to `serializr` data plus a stable `__type` discriminator.
 runtime behavior. A class name alone is not written as the protocol contract.
 
 **Failure semantic.** Both `undefined` and `null` become serialized `null`. An
-unregistered object constructor throws synchronously.
+unregistered object constructor throws synchronously. If serializr itself throws
+after the serialization-depth flag is incremented, the current implementation
+does not restore that flag in a `finally` block.
 
 **Extension obligation.** Round-trip the new value as a top-level document field
 and as a nested list value. Verify the runtime class, value, parent callback, and
@@ -171,13 +173,14 @@ cold-reload mutation behavior.
 **Responsibility.** Reconstruct a registered runtime value, then run its optional
 post-deserialization repair.
 
-**Postcondition.** The returned promise resolves only after `serializr` has
+**Postcondition.** The returned promise resolves after `serializr` has
 constructed and populated the instance and the registered repair callback has
-been invoked.
+been invoked. A promise returned by that callback is not awaited.
 
 **Failure semantic.** Runtime `null`/`undefined` input resolves to `undefined`.
 An object without `__type` warns and resolves to `undefined`; an unknown type tag
-throws.
+throws. The serializr callback's error argument is not forwarded, and a rejected
+asynchronous repair is not folded into the returned `Deserialize` promise.
 
 **Extension obligation.** Preserve the serialized record and type tag in any
 error evidence. Replacing an unknown value with a default would conceal a schema
@@ -193,7 +196,52 @@ used by documents and lists.
 wire compatibility change even when the TypeScript class name stays the same.
 
 **Failure semantic.** Duplicate registration throws during module loading.
-Nested object errors propagate through the containing serialization operation.
+`autoObject` forwards successful nested deserialization through the serializr
+callback, but it does not translate a rejected `Deserialize` promise into that
+callback's error channel.
+
+### `Cast(field, expected, default?)`
+
+**Responsibility.** Check an immediate or waiting field against one primitive
+kind, runtime class, or `List` specification without coercing it.
+
+**Postcondition.** A matching value is returned. With no default, a waiting
+promise becomes a promise that casts its result. A concrete default or `null`
+returns immediately for a waiting or mismatched value.
+
+**Invariant.** Primitive matching uses exact `typeof` equality. A list
+specification checks the Dash `List` container and does not validate each member.
+
+**Failure semantic.** A convenience cast with a concrete default deliberately
+hides a loading promise; use an asynchronous helper when loading and missing are
+different UI states.
+
+### Document proxy `setter` and `_setterImpl`
+
+**Responsibility.** Enforce ACLs, route `_` and `$` delegate fields, execute a
+computed setter when present, normalize references and ownership, mutate local
+state, emit persistence intent, and register undo state.
+
+**Invariant.** A mutable non-prefetch `ObjectField` has one owning container.
+Direct document assignments become `ProxyField` references.
+
+**Failure semantic.** The proxy trap returns `true` for handled ACL-denied
+assignments even though no state changed. Reusing an already-owned object field
+in another container throws.
+
+**Extension obligation.** Test allowed and denied local writes, server writes,
+playground-only writes, `_`/`$` routing, computed setters, replacement cleanup,
+nested mutation, and undo/redo.
+
+### Document proxy `getter`
+
+**Responsibility.** Apply private-field visibility, route layout/data delegate
+prefixes, call `ToValue`, and follow a readable prototype when the local field is
+absent.
+
+**Failure semantic.** A private target hides ordinary fields; a private
+prototype is not traversed. The result may be an inherited field, computed
+value, waiting reference promise, or `undefined` rather than a local stored value.
 
 ### `ProxyField.value` and `setValue(field)`
 

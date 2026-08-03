@@ -4,6 +4,7 @@ description: How Dash values acquire type, ownership, change propagation, wire r
 ---
 
 import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+import FieldTypeReference from '../../../components/FieldTypeReference.astro';
 
 <SourceSnapshot />
 
@@ -49,6 +50,17 @@ This is a closed serialization set. Adding a TypeScript class does not make it
 persistable. A persistent object type must be registered with
 `@Deserializable(tag)` and declare the fields that `serializr` should retain.
 
+## Complete serialized field catalogue
+
+The catalogue below is generated from every `@Deserializable` decorator under
+`src/fields`. It resolves inherited storage—for example, all eight URL-backed
+classes inherit the one `URLField.url` member—and it reports the concrete wire
+tag, runtime class, base chain, serializr schema, post-hydration hook, conversion
+surface, nested-change methods, and scripting visibility. The build fails if a
+new registration has no reviewed explanation or if a documented tag disappears.
+
+<FieldTypeReference />
+
 ## Assignment and ownership
 
 The `Doc` constructor returns a JavaScript `Proxy`. The proxy's setter validates
@@ -56,6 +68,32 @@ and normalizes a value, records ownership, creates undo information when
 appropriate, updates observable state, and produces a server operation. Code
 outside the field layer therefore uses normal property syntax while the runtime
 retains a precise mutation boundary.
+
+The setter follows this order:
+
+1. Reject an empty property name. Symbol properties and assignments performed
+   while deserializing bypass normal persistence behavior.
+2. Resolve the effective ACL. A denied write returns without changing the field;
+   ACL fields additionally require administrator access and a recognized ACL
+   value.
+3. Route `$name` to the data delegate and `_name` to the layout delegate. The
+   prefix is an addressing instruction and is not stored as part of the target
+   field name.
+4. If the existing value is a `ComputedField` with a setter script, run that
+   script instead of replacing the computation.
+5. Unwrap a proxied `Doc`, then replace a direct `Doc` value with a `ProxyField`.
+   A non-prefetch `ObjectField` already owned by another container is rejected;
+   one mutable field object cannot belong to two documents simultaneously.
+6. Install or remove `Parent` and `FieldChanged`, update the observable field
+   map, and emit `$set` or `$unset` when the write is allowed to reach the server.
+7. Record undo and redo closures unless initialization, the field's undo-ignore
+   list, or a normal server-applied update suppresses them.
+
+Playground write modes can allow a local `writeToDoc` while `writeToServer`
+remains false. In that case `DocServer.registerDocWithCachedUpdate` retains the
+previous value so later policy changes can reconcile the field. A setter's
+boolean return therefore reports that the proxy trap handled the assignment; it
+does not prove that a denied write changed local or remote state.
 
 Object-valued fields receive two internal connections when attached:
 
@@ -133,6 +171,34 @@ duplicate tag. Serialization throws for an unregistered object class.
 The `null`/`undefined` conversion is intentionally documented because the two
 states are not preserved as distinct values across this boundary.
 
+### Registry and callback guarantees
+
+`Deserializable` maintains two process-local maps:
+
+- `serializationTypes[tag]` selects the constructor and optional repair hook
+  during hydration.
+- `reverseMap[constructor.name]` selects the tag during serialization.
+
+If inherited serializr metadata targets another constructor, or a class declares
+constructor fields such as `Doc`'s `id`, registration installs a factory that
+builds the concrete class with those stored arguments. Duplicate tags throw at
+module evaluation time.
+
+The current deserializer resolves the serializr callback's `result` without
+propagating its `err` argument. It then invokes the optional repair callback but
+does not await a promise returned by that callback. This matters for `script`,
+`computed`, and `prefetch_proxy`: `Deserialize` can resolve before asynchronous
+compilation, capture resolution, or prefetching finishes. Consumers that need
+those repaired behaviors must wait on the behavior-specific readiness path, not
+only on object construction.
+
+`SerializationHelper.IsSerializing()` is a depth flag used to prevent hydration
+assignments from being treated as user edits. The serializer decrements the flag
+on success and before the explicit unregistered-type error. A different exception
+thrown from inside serializr is not protected by `finally`, so diagnostics for a
+subsequent suppressed mutation should include the first serialization exception
+and the depth state.
+
 ## Post-deserialization repair
 
 JSON can preserve data but not closures, proxy traps, MobX derivations, or an
@@ -151,6 +217,48 @@ several levels:
 
 Post-deserialization work may be asynchronous. A hydrated object should not be
 treated as fully ready merely because its constructor returned.
+
+## Reading, casting, and converting values
+
+Field access is also mediated by the document proxy. The getter first enforces
+private-document visibility, then routes `_name` and `$name`, reads the local
+field, calls its optional `ToValue` hook, and finally walks `proto` when the local
+field is absent. A private prototype is not traversed. This is why a read may
+return a primitive, object field, document, promise, inherited default, computed
+result, or `undefined` through the same property expression.
+
+`Cast(field, expected, default)` is a type check, not a coercion function:
+
+| Input state | No default | Concrete default | `null` default |
+| :--- | :--- | :--- | :--- |
+| Matching immediate value | Value | Value | Value |
+| Nonmatching immediate value | `undefined` | Default | `undefined` |
+| Waiting promise | Promise that casts its resolution | Default immediately | `undefined` immediately |
+| `ProxyField` whose resolved value matches | Resolved value | Resolved value | Resolved value |
+
+Primitive expectations use exact `typeof` checks. A string containing `42` does
+not become a number. A list specification checks that the runtime value is a
+Dash `List`; it does not validate every member during `Cast`. `DocCast` excludes
+waiting promises, while `DocListCastAsync` waits for all list references and
+`DocListCast` filters out unresolved members. Callers choose these helpers based
+on whether the UI can represent a loading state.
+
+Conversions are symbol-based contracts rather than `toString()` alone:
+
+- `ToValue` dereferences a proxy or evaluates a computed field for a document.
+- `ToScriptString` produces text intended to reconstruct or express the value in
+  Dash's scripting language.
+- `ToJavascriptString` produces JavaScript-oriented source where supported.
+- `ToString` produces a display-oriented plain string.
+- `Copy` defines the value's undo/copy boundary.
+
+The generated cards show the effective conversion methods for every registered
+type, including methods inherited from `URLField`, `ProxyField`, or
+`ScriptField`. An implementation returning `invalid` is an explicit unsupported
+conversion, not evidence that the field itself cannot be persisted.
+`Doc` is the deliberate exception to `ObjectField.Copy`: it is a `RefField`
+identity, so containers retain it through `ProxyField` instead of copying the
+document graph.
 
 ## Lazy references and identity
 
@@ -250,7 +358,10 @@ and editor synchronization can diverge.
 | Unknown `__type` | Deserialization error | Restore the class registration or migrate the record |
 | Missing referenced document | Proxy resolves to `undefined` and records failure | Handle the missing relation; do not dereference blindly |
 | Nested object mutated without notification | Local property may change without durable operation | Use the field's mutator or replace the field through the document proxy |
-| Script fails to compile after load | Deserializer rejects finalization | Preserve source and options in diagnostics; do not silently replace the value |
+| Script fails to compile after load | The unawaited repair promise rejects after the runtime object has been returned | Preserve source and options in diagnostics; do not silently replace the value |
+| Asynchronous repair is still running | Runtime object exists but compiled script, captures, or prefetched target is not ready | Await the behavior-specific readiness signal before use |
+| serializr reports an error through its callback | Current wrapper resolves the callback result without forwarding the error | Capture the original payload and serializr diagnostics at the call site |
+| serializr throws after serialization begins | `IsSerializing()` can remain true because the depth decrement is not in `finally` | Diagnose the first thrown serializer error before investigating later suppressed writes |
 | Unsupported list operation | Synchronous error | Express the edit with supported splice/assignment semantics |
 | Rich-text projections disagree | Editor/search artifacts or update loops | Regenerate both representations from one source of truth |
 

@@ -136,4 +136,7 @@ have runtime meaning:
 | A field is visible only in advanced mode | The simplified view intentionally hides internal and lowercase fields. |
 
 For the implementation model behind these behaviors, see
-[documents and fields](/architecture/document-model/).
+[documents and fields](/architecture/document-model/). For every value that can
+actually survive persistence—including the exact wire tag, stored members,
+copy behavior, and hydration path—use the
+[field runtime catalogue](/architecture/field-runtime/#complete-serialized-field-catalogue).

@@ -1,0 +1,2182 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "registryParser": "TypeScript compiler AST over every @Deserializable registration under src/fields",
+    "inheritanceParser": "Resolved current class ancestry for inherited serializable members and field conversion methods",
+    "callerEvidence": "Resolved static call edges from the source-generated API graph; dynamic calls may not appear",
+    "fieldFiles": 22
+  },
+  "summary": {
+    "primitiveTypes": 3,
+    "registeredTags": 21,
+    "categories": 8,
+    "objectFieldTags": 20,
+    "referenceTags": 3,
+    "repairHooks": 5,
+    "scriptingGlobals": 16
+  },
+  "primitives": [
+    {
+      "type": "string",
+      "storedAs": "JSON string",
+      "behavior": "Passes through serialization unchanged; Cast accepts it only when typeof is string."
+    },
+    {
+      "type": "number",
+      "storedAs": "JSON number",
+      "behavior": "Passes through serialization unchanged; Cast accepts it only when typeof is number."
+    },
+    {
+      "type": "boolean",
+      "storedAs": "JSON boolean",
+      "behavior": "Passes through serialization unchanged; Cast accepts it only when typeof is boolean."
+    }
+  ],
+  "runtimeSources": {
+    "afterDocDeserialize": {
+      "file": "src/client/util/SerializationHelper.ts",
+      "line": 6,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SerializationHelper.ts#L6"
+    },
+    "Serialize": {
+      "file": "src/client/util/SerializationHelper.ts",
+      "line": 20,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SerializationHelper.ts#L20"
+    },
+    "Deserialize": {
+      "file": "src/client/util/SerializationHelper.ts",
+      "line": 41,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SerializationHelper.ts#L41"
+    },
+    "Deserializable": {
+      "file": "src/client/util/SerializationHelper.ts",
+      "line": 71,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SerializationHelper.ts#L71"
+    },
+    "autoObject": {
+      "file": "src/client/util/SerializationHelper.ts",
+      "line": 87,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SerializationHelper.ts#L87"
+    }
+  },
+  "categories": [
+    "collection",
+    "content",
+    "executable",
+    "identity",
+    "interaction",
+    "media",
+    "reference",
+    "scalar"
+  ],
+  "registrations": [
+    {
+      "tag": "list",
+      "className": "ListImpl",
+      "label": "Observable list",
+      "category": "collection",
+      "purpose": "Stores an ordered, observable sequence with incremental add/remove change intent.",
+      "hydration": "Nested values pass through autoObject; document members are represented internally as ProxyField references.",
+      "copy": "Copy recursively invokes Copy for ObjectField members and retains referenced document identity.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/List.ts",
+        "line": 24,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L24"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/List.ts",
+          "line": 24,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L24"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "ListImpl",
+          "name": "__fieldTuples",
+          "type": "inferred",
+          "schema": "alias(ListFieldName, serializrList(autoObject(), { afterDeserialize: afterDocDeserialize }))",
+          "source": {
+            "file": "src/fields/List.ts",
+            "line": 283,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L283"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "__fieldTuples"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 299,
+          "owner": "ListImpl"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 312,
+          "owner": "ListImpl"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 311,
+          "owner": "ListImpl"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 313,
+          "owner": "ListImpl"
+        }
+      ],
+      "mutationMethods": [
+        {
+          "name": "__fieldTuples",
+          "kind": "setter",
+          "callsFieldChanged": true,
+          "line": 288,
+          "owner": "ListImpl"
+        }
+      ],
+      "scriptingGlobal": false,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "html",
+      "className": "HtmlField",
+      "label": "HTML source",
+      "category": "content",
+      "purpose": "Stores authored or imported HTML as a semantically distinct field.",
+      "hydration": "The html member is restored as a primitive string.",
+      "copy": "Copy constructs a new wrapper around the same immutable string.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/HtmlField.ts",
+        "line": 7,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/HtmlField.ts#L7"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/HtmlField.ts",
+          "line": 8,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/HtmlField.ts#L8"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "HtmlField",
+          "name": "html",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/HtmlField.ts",
+            "line": 10,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/HtmlField.ts#L10"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "html"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 18,
+          "owner": "HtmlField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 22,
+          "owner": "HtmlField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 25,
+          "owner": "HtmlField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 28,
+          "owner": "HtmlField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 2,
+        "examples": [
+          {
+            "owner": "src/client/views/nodes/DataVizBox/components/LineChart.tsx#LineChart.updateTooltip",
+            "source": {
+              "file": "src/client/views/nodes/DataVizBox/components/LineChart.tsx",
+              "line": 349,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DataVizBox/components/LineChart.tsx#L349"
+            }
+          },
+          {
+            "owner": "src/client/views/nodes/DataVizBox/components/ScatterPlot.tsx#ScatterPlot.updateTooltip",
+            "source": {
+              "file": "src/client/views/nodes/DataVizBox/components/ScatterPlot.tsx",
+              "line": 209,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DataVizBox/components/ScatterPlot.tsx#L209"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "icon",
+      "className": "IconField",
+      "label": "Icon token",
+      "category": "content",
+      "purpose": "Stores an icon identifier without treating it as ordinary display text.",
+      "hydration": "The icon member is restored as a primitive string.",
+      "copy": "Copy constructs a new wrapper; script and JavaScript conversion intentionally return invalid.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/IconField.ts",
+        "line": 6,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/IconField.ts#L6"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/IconField.ts",
+          "line": 6,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/IconField.ts#L6"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "IconField",
+          "name": "icon",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/IconField.ts",
+            "line": 8,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/IconField.ts#L8"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "icon"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 16,
+          "owner": "IconField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 20,
+          "owner": "IconField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 23,
+          "owner": "IconField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 26,
+          "owner": "IconField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": false,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "RichTextField",
+      "className": "RichTextField",
+      "label": "Formatted text",
+      "category": "content",
+      "purpose": "Keeps ProseMirror-compatible structured content and its plain-text projection together.",
+      "hydration": "Both serialized strings are restored; editor code depends on them describing the same content.",
+      "copy": "Copy constructs a new wrapper around the two immutable string projections.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/RichTextField.ts",
+        "line": 8,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RichTextField.ts#L8"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/RichTextField.ts",
+          "line": 9,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RichTextField.ts#L9"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "RichTextField",
+          "name": "Data",
+          "type": "string",
+          "schema": "true",
+          "source": {
+            "file": "src/fields/RichTextField.ts",
+            "line": 11,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RichTextField.ts#L11"
+          }
+        },
+        {
+          "owner": "RichTextField",
+          "name": "Text",
+          "type": "string",
+          "schema": "true",
+          "source": {
+            "file": "src/fields/RichTextField.ts",
+            "line": 14,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RichTextField.ts#L14"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "Data",
+        "Text"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 32,
+          "owner": "RichTextField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 36,
+          "owner": "RichTextField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "RichTextField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 42,
+          "owner": "RichTextField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 21,
+        "examples": [
+          {
+            "owner": "src/client/documents/Documents.ts#CenteredTextCreator",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 874,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L874"
+            }
+          },
+          {
+            "owner": "src/client/documents/Documents.ts#TextDocument",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 939,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L939"
+            }
+          },
+          {
+            "owner": "src/client/views/FieldsDropdown.tsx#FieldsDropdown.render",
+            "source": {
+              "file": "src/client/views/FieldsDropdown.tsx",
+              "line": 106,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/FieldsDropdown.tsx#L106"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "computed",
+      "className": "ComputedField",
+      "label": "Reactive computation",
+      "category": "executable",
+      "purpose": "Extends ScriptField with MobX-tracked evaluation and an optional persisted cache result.",
+      "hydration": "Uses the ScriptField repair path; evaluation supplies this, _last_, _setCacheResult_, and _readOnly_.",
+      "copy": "Copy returns a new ComputedField and does not recursively copy referenced documents.",
+      "base": "ScriptField",
+      "baseChain": [
+        "ScriptField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 183,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L183"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/ScriptField.ts",
+          "line": 184,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L184"
+        },
+        "repairHook": "(obj: unknown) => deserializeScript(obj as ComputedField)"
+      },
+      "storedMembers": [
+        {
+          "owner": "ScriptField",
+          "name": "rawscript",
+          "type": "string | undefined",
+          "schema": "default",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 89,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L89"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "script",
+          "type": "CompiledScript",
+          "schema": "object(scriptSchema)",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 91,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L91"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "setterscript",
+          "type": "CompiledScript | undefined",
+          "schema": "object(scriptSchema)",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 93,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L93"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "_cachedResult",
+          "type": "FieldResult",
+          "schema": "default",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 95,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L95"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "captures",
+          "type": "List<string>",
+          "schema": "autoObject()",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 103,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L103"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 224,
+          "owner": "ComputedField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 130,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 133,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 136,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToValue",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 223,
+          "owner": "ComputedField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 67,
+        "examples": [
+          {
+            "owner": "src/client/documents/Documents.ts#buildPrototype",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 721,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L721"
+            }
+          },
+          {
+            "owner": "src/client/documents/DocUtils.ts#MakeLink",
+            "source": {
+              "file": "src/client/documents/DocUtils.ts",
+              "line": 221,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L221"
+            }
+          },
+          {
+            "owner": "src/client/documents/DocUtils.ts#MakeLink",
+            "source": {
+              "file": "src/client/documents/DocUtils.ts",
+              "line": 227,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L227"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "script",
+      "className": "ScriptField",
+      "label": "Executable script",
+      "category": "executable",
+      "purpose": "Persists Dash script source, options, captured values, and optional setter behavior.",
+      "hydration": "The asynchronous repair path recompiles source and resolves encoded document captures.",
+      "copy": "Copy retains compiled script objects, setter script, and raw source according to the class implementation.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 86,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L86"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/ScriptField.ts",
+          "line": 87,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L87"
+        },
+        "repairHook": "(obj: unknown) => deserializeScript(obj as ScriptField)"
+      },
+      "storedMembers": [
+        {
+          "owner": "ScriptField",
+          "name": "rawscript",
+          "type": "string | undefined",
+          "schema": "default",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 89,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L89"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "script",
+          "type": "CompiledScript",
+          "schema": "object(scriptSchema)",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 91,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L91"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "setterscript",
+          "type": "CompiledScript | undefined",
+          "schema": "object(scriptSchema)",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 93,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L93"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "_cachedResult",
+          "type": "FieldResult",
+          "schema": "default",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 95,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L95"
+          }
+        },
+        {
+          "owner": "ScriptField",
+          "name": "captures",
+          "type": "List<string>",
+          "schema": "autoObject()",
+          "source": {
+            "file": "src/fields/ScriptField.ts",
+            "line": 103,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L103"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "rawscript",
+        "script",
+        "setterscript",
+        "_cachedResult",
+        "captures"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 123,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 130,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 133,
+          "owner": "ScriptField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 136,
+          "owner": "ScriptField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 363,
+        "examples": [
+          {
+            "owner": "electron-main.mjs#startServer",
+            "source": {
+              "file": "electron-main.mjs",
+              "line": 274,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/electron-main.mjs#L274"
+            }
+          },
+          {
+            "owner": "electron-main.mjs#startServer",
+            "source": {
+              "file": "electron-main.mjs",
+              "line": 283,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/electron-main.mjs#L283"
+            }
+          },
+          {
+            "owner": "src/client/documents/Documents.ts#buildPrototype",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 721,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L721"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "Doc",
+      "className": "Doc",
+      "label": "Document identity",
+      "category": "identity",
+      "purpose": "Stores one persistent Dash document: a stable ID plus its typed field map.",
+      "hydration": "The constructor receives the stored id; nested fields are repaired and ACL caches are refreshed after hydration.",
+      "copy": "Document identity is referenced through ProxyField rather than recursively copied as a nested object.",
+      "base": "RefField",
+      "baseChain": [
+        "RefField"
+      ],
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 202,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L202"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/Doc.ts",
+          "line": 203,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L203"
+        },
+        "repairHook": "(obj: unknown) => updateCachedAcls(obj as Doc)",
+        "constructorArgs": "['id']"
+      },
+      "storedMembers": [
+        {
+          "owner": "RefField",
+          "name": "__id",
+          "type": "FieldId",
+          "schema": "alias('id', primitive({ afterDeserialize: afterDocDeserialize }))",
+          "source": {
+            "file": "src/fields/RefField.ts",
+            "line": 8,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RefField.ts#L8"
+          }
+        },
+        {
+          "owner": "Doc",
+          "name": "__fieldTuples",
+          "type": "any",
+          "schema": "alias('fields', map(autoObject(), { afterDeserialize: afterDocDeserialize }))",
+          "source": {
+            "file": "src/fields/Doc.ts",
+            "line": 370,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L370"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "__fieldTuples"
+      ],
+      "conversions": [
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 19,
+          "owner": "RefField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 20,
+          "owner": "RefField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 21,
+          "owner": "RefField"
+        }
+      ],
+      "mutationMethods": [
+        {
+          "name": "__fieldTuples",
+          "kind": "setter",
+          "callsFieldChanged": true,
+          "line": 376,
+          "owner": "Doc"
+        }
+      ],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 170,
+        "examples": [
+          {
+            "owner": "src/client/documents/Documents.ts#LinkDocument",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 1000,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L1000"
+            }
+          },
+          {
+            "owner": "src/client/documents/DocUtils.ts#matchFieldValue",
+            "source": {
+              "file": "src/client/documents/DocUtils.ts",
+              "line": 55,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L55"
+            }
+          },
+          {
+            "owner": "src/client/documents/DocUtils.ts#FilterDocs",
+            "source": {
+              "file": "src/client/documents/DocUtils.ts",
+              "line": 135,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L135"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "cursor",
+      "className": "CursorField",
+      "label": "Collaborator cursor",
+      "category": "interaction",
+      "purpose": "Stores a collaborator identifier, timestamp, and canvas position as one presence value.",
+      "hydration": "The nested serializr schema reconstructs metadata and position; later position changes must call FieldChanged.",
+      "copy": "Copy constructs another CursorField around the same data object rather than deep-cloning the nested records.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/CursorField.ts",
+        "line": 38,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/CursorField.ts#L38"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/CursorField.ts",
+          "line": 38,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/CursorField.ts#L38"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "CursorField",
+          "name": "data",
+          "type": "CursorData",
+          "schema": "object(CursorSchema)",
+          "source": {
+            "file": "src/fields/CursorField.ts",
+            "line": 40,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/CursorField.ts#L40"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "data"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 54,
+          "owner": "CursorField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 58,
+          "owner": "CursorField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 61,
+          "owner": "CursorField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 64,
+          "owner": "CursorField"
+        }
+      ],
+      "mutationMethods": [
+        {
+          "name": "setPosition",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 48,
+          "owner": "CursorField"
+        }
+      ],
+      "scriptingGlobal": false,
+      "callers": {
+        "count": 2,
+        "examples": [
+          {
+            "owner": "src/client/views/collections/CollectionSubView.tsx#CollectionSubView.CollectionSubViewInternal.setCursorPosition",
+            "source": {
+              "file": "src/client/views/collections/CollectionSubView.tsx",
+              "line": 318,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionSubView.tsx#L318"
+            }
+          },
+          {
+            "owner": "src/client/views/nodes/sketch3d/BabylonScene.tsx#copyViewSettingsFrom",
+            "source": {
+              "file": "src/client/views/nodes/sketch3d/BabylonScene.tsx",
+              "line": 164,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/sketch3d/BabylonScene.tsx#L164"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "ink",
+      "className": "InkField",
+      "label": "Ink geometry",
+      "category": "interaction",
+      "purpose": "Stores sampled stroke points and derived Bezier geometry for drawing, erasing, and hit testing.",
+      "hydration": "A nested point schema restores x, y, pressure, and optional timestamp data.",
+      "copy": "Copy follows the implementation’s InkData construction path; inner mutation must notify FieldChanged.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/InkField.ts",
+        "line": 79,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/InkField.ts#L79"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/InkField.ts",
+          "line": 79,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/InkField.ts#L79"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "InkField",
+          "name": "inkData",
+          "type": "InkData",
+          "schema": "alias(InkDataFieldName, list(object(strokeDataSchema)))",
+          "source": {
+            "file": "src/fields/InkField.ts",
+            "line": 81,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/InkField.ts#L81"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "inkData"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 97,
+          "owner": "InkField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 101,
+          "owner": "InkField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 104,
+          "owner": "InkField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 107,
+          "owner": "InkField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": false,
+      "callers": {
+        "count": 24,
+        "examples": [
+          {
+            "owner": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#CollectionFreeFormView",
+            "source": {
+              "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+              "line": 670,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L670"
+            }
+          },
+          {
+            "owner": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#CollectionFreeFormView",
+            "source": {
+              "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+              "line": 720,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L720"
+            }
+          },
+          {
+            "owner": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#CollectionFreeFormView",
+            "source": {
+              "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+              "line": 854,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L854"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "schemaheader",
+      "className": "SchemaHeaderField",
+      "label": "Schema column header",
+      "category": "interaction",
+      "purpose": "Stores a schema column’s label, color, value kind, width, sorting, and collapsed state.",
+      "hydration": "Primitive members restore directly; all supported mutators call FieldChanged.",
+      "copy": "Copy transfers every serialized configuration member into a new wrapper.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/SchemaHeaderField.ts",
+        "line": 67,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L67"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/SchemaHeaderField.ts",
+          "line": 68,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L68"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "SchemaHeaderField",
+          "name": "heading",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 70,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L70"
+          }
+        },
+        {
+          "owner": "SchemaHeaderField",
+          "name": "color",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 72,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L72"
+          }
+        },
+        {
+          "owner": "SchemaHeaderField",
+          "name": "type",
+          "type": "number",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 74,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L74"
+          }
+        },
+        {
+          "owner": "SchemaHeaderField",
+          "name": "width",
+          "type": "number",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 76,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L76"
+          }
+        },
+        {
+          "owner": "SchemaHeaderField",
+          "name": "collapsed",
+          "type": "boolean | undefined",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 78,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L78"
+          }
+        },
+        {
+          "owner": "SchemaHeaderField",
+          "name": "desc",
+          "type": "boolean | undefined",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/SchemaHeaderField.ts",
+            "line": 80,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L80"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "heading",
+        "color",
+        "type",
+        "width",
+        "collapsed",
+        "desc"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 124,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 128,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 131,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 134,
+          "owner": "SchemaHeaderField"
+        }
+      ],
+      "mutationMethods": [
+        {
+          "name": "setHeading",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 94,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "setColor",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 99,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "setType",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 104,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "setWidth",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 109,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "setDesc",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 114,
+          "owner": "SchemaHeaderField"
+        },
+        {
+          "name": "setCollapsed",
+          "kind": "method",
+          "callsFieldChanged": true,
+          "line": 119,
+          "owner": "SchemaHeaderField"
+        }
+      ],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 13,
+        "examples": [
+          {
+            "owner": "src/client/views/collections/CollectionNoteTakingView.tsx#CollectionNoteTakingView",
+            "source": {
+              "file": "src/client/views/collections/CollectionNoteTakingView.tsx",
+              "line": 321,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L321"
+            }
+          },
+          {
+            "owner": "src/client/views/collections/CollectionNoteTakingView.tsx#CollectionNoteTakingView",
+            "source": {
+              "file": "src/client/views/collections/CollectionNoteTakingView.tsx",
+              "line": 617,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L617"
+            }
+          },
+          {
+            "owner": "src/client/views/collections/CollectionNoteTakingView.tsx#CollectionNoteTakingView",
+            "source": {
+              "file": "src/client/views/collections/CollectionNoteTakingView.tsx",
+              "line": 618,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L618"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "audio",
+      "className": "AudioField",
+      "label": "Audio URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of an audio resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete AudioField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 60,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L60"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 61,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L61"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "csv",
+      "className": "CsvField",
+      "label": "CSV URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a tabular resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete CsvField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 75,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L75"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 76,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L76"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "image",
+      "className": "ImageField",
+      "label": "Image URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of an image resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete ImageField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 63,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L63"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 64,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L64"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "pdf",
+      "className": "PdfField",
+      "label": "PDF URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a PDF resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete PdfField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 69,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L69"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 70,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L70"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "video",
+      "className": "VideoField",
+      "label": "Video URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a video resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete VideoField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 66,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L66"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 67,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L67"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "viewer3d",
+      "className": "Viewer3DField",
+      "label": "3D model URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a 3D model resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete Viewer3DField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 81,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L81"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 82,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L82"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "web",
+      "className": "WebField",
+      "label": "Web URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a web resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete WebField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 72,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L72"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 73,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L73"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "youtube",
+      "className": "YoutubeField",
+      "label": "YouTube URL",
+      "category": "media",
+      "purpose": "Retains the semantic identity of a YouTube resource while sharing URL storage behavior.",
+      "hydration": "Relative paths resolve against the current origin; external and data URLs remain absolute.",
+      "copy": "Inherited URLField copy preserves the concrete YoutubeField constructor.",
+      "base": "URLField",
+      "baseChain": [
+        "URLField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 78,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L78"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/URLField.ts",
+          "line": 79,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L79"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "URLField",
+          "name": "url",
+          "type": "URL",
+          "schema": "url()",
+          "source": {
+            "file": "src/fields/URLField.ts",
+            "line": 18,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L18"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 52,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 39,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 33,
+          "owner": "URLField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 45,
+          "owner": "URLField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "prefetch_proxy",
+      "className": "PrefetchProxy",
+      "label": "Prefetched reference",
+      "category": "reference",
+      "purpose": "Uses ProxyField storage while beginning target hydration immediately after deserialization.",
+      "hydration": "Its repair hook reads value, which triggers the normal cached-or-requested ProxyField resolution path.",
+      "copy": "Inherited ProxyField copy currently produces a ProxyField rather than preserving the PrefetchProxy subclass.",
+      "base": "ProxyField",
+      "baseChain": [
+        "ProxyField",
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/Proxy.ts",
+        "line": 115,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L115"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/Proxy.ts",
+          "line": 116,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L116"
+        },
+        "repairHook": "(obj: unknown) => prefetchValue(obj as PrefetchProxy<Doc>)"
+      },
+      "storedMembers": [
+        {
+          "owner": "ProxyField",
+          "name": "fieldId",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/Proxy.ts",
+            "line": 19,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L19"
+          }
+        }
+      ],
+      "ownStoredMembers": [],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 54,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 58,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 61,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 64,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToValue",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 50,
+          "owner": "ProxyField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 0,
+        "examples": []
+      }
+    },
+    {
+      "tag": "proxy",
+      "className": "ProxyField",
+      "label": "Lazy document reference",
+      "category": "reference",
+      "purpose": "Stores only a target document ID and resolves the shared client identity on demand.",
+      "hydration": "The repair hook reconnects a cached target when available; the first cold read starts one shared request.",
+      "copy": "Copy preserves the resolved target or its fieldId, not a copy of the target document.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/Proxy.ts",
+        "line": 17,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L17"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/Proxy.ts",
+          "line": 17,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L17"
+        },
+        "repairHook": "(obj: unknown) => deserializeProxy(obj as serializedProxyType)"
+      },
+      "storedMembers": [
+        {
+          "owner": "ProxyField",
+          "name": "fieldId",
+          "type": "string",
+          "schema": "primitive()",
+          "source": {
+            "file": "src/fields/Proxy.ts",
+            "line": 19,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L19"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "fieldId"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 54,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 58,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 61,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 64,
+          "owner": "ProxyField"
+        },
+        {
+          "name": "ToValue",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 50,
+          "owner": "ProxyField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": false,
+      "callers": {
+        "count": 4,
+        "examples": [
+          {
+            "owner": "src/fields/List.ts#ListImpl.__realFields",
+            "source": {
+              "file": "src/fields/List.ts",
+              "line": 275,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L275"
+            }
+          },
+          {
+            "owner": "src/fields/List.ts#ListImpl.__realFields",
+            "source": {
+              "file": "src/fields/List.ts",
+              "line": 278,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L278"
+            }
+          },
+          {
+            "owner": "src/fields/Proxy.ts#ProxyField.value",
+            "source": {
+              "file": "src/fields/Proxy.ts",
+              "line": 76,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L76"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "tag": "date",
+      "className": "DateField",
+      "label": "Date and time",
+      "category": "scalar",
+      "purpose": "Preserves JavaScript Date semantics instead of flattening time to an untyped string.",
+      "hydration": "serializr date conversion reconstructs a Date instance.",
+      "copy": "Copy wraps the same Date object; callers needing value isolation must clone the Date explicitly.",
+      "base": "ObjectField",
+      "baseChain": [
+        "ObjectField"
+      ],
+      "source": {
+        "file": "src/fields/DateField.ts",
+        "line": 7,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/DateField.ts#L7"
+      },
+      "registration": {
+        "source": {
+          "file": "src/fields/DateField.ts",
+          "line": 8,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/DateField.ts#L8"
+        }
+      },
+      "storedMembers": [
+        {
+          "owner": "DateField",
+          "name": "date",
+          "type": "Date",
+          "schema": "serializrDate()",
+          "source": {
+            "file": "src/fields/DateField.ts",
+            "line": 10,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/DateField.ts#L10"
+          }
+        }
+      ],
+      "ownStoredMembers": [
+        "date"
+      ],
+      "conversions": [
+        {
+          "name": "Copy",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 18,
+          "owner": "DateField"
+        },
+        {
+          "name": "ToJavascriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 26,
+          "owner": "DateField"
+        },
+        {
+          "name": "ToScriptString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 29,
+          "owner": "DateField"
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "callsFieldChanged": false,
+          "line": 32,
+          "owner": "DateField"
+        }
+      ],
+      "mutationMethods": [],
+      "scriptingGlobal": true,
+      "callers": {
+        "count": 310,
+        "examples": [
+          {
+            "owner": "electron-main.mjs#startServer",
+            "source": {
+              "file": "electron-main.mjs",
+              "line": 274,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/electron-main.mjs#L274"
+            }
+          },
+          {
+            "owner": "electron-main.mjs#startServer",
+            "source": {
+              "file": "electron-main.mjs",
+              "line": 283,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/electron-main.mjs#L283"
+            }
+          },
+          {
+            "owner": "src/client/documents/Documents.ts#InstanceFromProto",
+            "source": {
+              "file": "src/client/documents/Documents.ts",
+              "line": 758,
+              "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L758"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

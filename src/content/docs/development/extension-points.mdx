@@ -10,6 +10,7 @@ sidebar:
 | Requirement | Primary extension point | Start with |
 | :--- | :--- | :--- |
 | New kind of addressable content | Document type | [Add a document type](/development/add-document-type/) |
+| New persistable value inside documents | Serialized field type | [Field runtime extension contract](/architecture/field-runtime/#extension-contract-for-a-new-field-type) |
 | New way to arrange one collection | Collection view | [Add a collection view](/development/add-collection-view/) |
 | New action the model can select | Agent tool | [Add an agent tool](/development/add-agent-tool/) |
 | Multi-document persistent edit | Undo-aware action | [Undo architecture](/architecture/undo-provenance/) |
@@ -31,6 +32,24 @@ Avoid a new type when:
 - Existing fields and a custom layout are sufficient.
 - The distinction is only visual.
 - A configuration document can parameterize an existing renderer.
+
+## Serialized field type contract
+
+A field type should be chosen when one value needs runtime behavior that a
+primitive, `List`, existing `ObjectField`, or document reference cannot provide.
+The extension is a stored-data protocol change: its `@Deserializable` tag,
+serializr members, copy behavior, nested-change callback, conversions, repair
+hook, and historical payload behavior all become compatibility contracts.
+
+Avoid a new field type when:
+
+- a string, number, boolean, existing media wrapper, or typed document is enough;
+- the distinction belongs to a document renderer rather than the value itself;
+- a plain object would need mutation tracking but has no deliberate persistence
+  and copy semantics.
+
+The [complete generated registry](/architecture/field-runtime/#complete-serialized-field-catalogue)
+shows every current pattern and the source-backed implementation checklist.
 
 ## Collection view contract
 

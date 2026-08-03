@@ -95,7 +95,7 @@ call failed.
 - Reconnect after an interrupted write
 - Origin acknowledgement, typed database rejection, and optimistic rollback
 - Save/reload of newly introduced fields
-- Every registered field `__type` through serialize, hydrate, nested mutate, and reload
+- All 21 code-registered field `__type` values through serialize, hydrate, nested mutate, and reload; use the [generated wire-type catalogue](/architecture/field-runtime/#complete-serialized-field-catalogue) as the matrix
 - Missing and unknown type tags, missing references, and failed script recompilation
 - Old stored documents with missing new fields
 - Permission inheritance and direct overrides

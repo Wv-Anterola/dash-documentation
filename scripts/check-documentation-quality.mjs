@@ -110,9 +110,11 @@ const overlaySource = await readFile(path.join(root, 'src', 'data', 'symbolOverl
 const referenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'source-reference.json'), 'utf8');
 const httpReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'http-routes.json'), 'utf8');
 const documentReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'document-types.json'), 'utf8');
+const fieldReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'field-types.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
+const fieldReference = JSON.parse(fieldReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -208,6 +210,71 @@ if (JSON.stringify(documentReference.summary) !== JSON.stringify(recomputedDocum
   errors.push('Document type summary is stale relative to its generated lifecycle rows');
 }
 
+if (fieldReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Field type reference and generated source reference use different baseline revisions');
+}
+const expectedFieldTags = [
+  'Doc', 'RichTextField', 'audio', 'computed', 'csv', 'cursor', 'date', 'html', 'icon', 'image', 'ink',
+  'list', 'pdf', 'prefetch_proxy', 'proxy', 'schemaheader', 'script', 'video', 'viewer3d', 'web', 'youtube',
+].sort();
+const generatedFieldTags = fieldReference.registrations.map((entry) => entry.tag).sort();
+if (JSON.stringify(generatedFieldTags) !== JSON.stringify(expectedFieldTags)) {
+  errors.push(`Serialized field registry changed from the reviewed 21-tag set (${generatedFieldTags.join(', ')})`);
+}
+if (JSON.stringify(fieldReference.primitives.map((entry) => entry.type)) !== JSON.stringify(['string', 'number', 'boolean'])) {
+  errors.push('Primitive field universe changed from string, number, and boolean');
+}
+for (const entry of fieldReference.registrations) {
+  const label = `Serialized field ${entry.tag}`;
+  if (!entry.className || !entry.label || !entry.category || !entry.purpose || !entry.hydration || !entry.copy) {
+    errors.push(`${label}: generated row is missing runtime identity or reviewed behavior`);
+  }
+  if (!sourceModules.has(entry.source.file) || !entry.source.url.includes(fieldReference.repository.baseline)) {
+    errors.push(`${label}: class source is absent or not baseline-pinned`);
+  }
+  if (!entry.registration.source.url.includes(fieldReference.repository.baseline) || !entry.storedMembers.length) {
+    errors.push(`${label}: registration source or effective serialized-member inventory is incomplete`);
+  }
+  for (const member of entry.storedMembers) {
+    if (!member.name || !member.owner || !member.schema || !sourceModules.has(member.source.file) || !member.source.url.includes(fieldReference.repository.baseline)) {
+      errors.push(`${label}: stored member evidence is incomplete or mutable`);
+    }
+  }
+  if (entry.tag !== 'Doc' && !entry.conversions.some((method) => method.name === 'Copy')) errors.push(`${label}: effective Copy contract is missing`);
+}
+
+const repairTags = fieldReference.registrations.filter((entry) => entry.registration.repairHook).map((entry) => entry.tag).sort();
+if (JSON.stringify(repairTags) !== JSON.stringify(['Doc', 'computed', 'prefetch_proxy', 'proxy', 'script'])) {
+  errors.push('Reviewed post-hydration repair paths changed');
+}
+const docWireType = fieldReference.registrations.find((entry) => entry.tag === 'Doc');
+const computedWireType = fieldReference.registrations.find((entry) => entry.tag === 'computed');
+const prefetchWireType = fieldReference.registrations.find((entry) => entry.tag === 'prefetch_proxy');
+if (docWireType?.registration.constructorArgs !== "['id']" || !docWireType.storedMembers.some((member) => member.name === '__fieldTuples')) {
+  errors.push('Doc hydration no longer records its identity constructor argument and serialized field map');
+}
+if (!computedWireType?.baseChain.includes('ScriptField') || !prefetchWireType?.baseChain.includes('ProxyField')) {
+  errors.push('Computed or prefetched field inheritance changed without review');
+}
+for (const tag of ['audio', 'csv', 'image', 'pdf', 'video', 'viewer3d', 'web', 'youtube']) {
+  const mediaType = fieldReference.registrations.find((entry) => entry.tag === tag);
+  if (mediaType?.storedMembers.length !== 1 || mediaType.storedMembers[0].name !== 'url' || mediaType.storedMembers[0].owner !== 'URLField') {
+    errors.push(`Serialized field ${tag}: inherited URL storage contract changed`);
+  }
+}
+const recomputedFieldSummary = {
+  primitiveTypes: fieldReference.primitives.length,
+  registeredTags: fieldReference.registrations.length,
+  categories: new Set(fieldReference.registrations.map((entry) => entry.category)).size,
+  objectFieldTags: fieldReference.registrations.filter((entry) => entry.className !== 'Doc').length,
+  referenceTags: fieldReference.registrations.filter((entry) => entry.category === 'identity' || entry.category === 'reference').length,
+  repairHooks: repairTags.length,
+  scriptingGlobals: fieldReference.registrations.filter((entry) => entry.scriptingGlobal).length,
+};
+if (JSON.stringify(fieldReference.summary) !== JSON.stringify(recomputedFieldSummary)) {
+  errors.push('Field type summary is stale relative to its generated registry rows');
+}
+
 if (httpReference.repository.baseline !== sourceReference.repository.baselineTip) {
   errors.push('HTTP route reference and generated source reference use different baseline revisions');
 }
@@ -290,6 +357,7 @@ if (errors.length) {
     `Documentation quality complete: ${files.length} pages have required metadata and unique titles; ` +
       `${images} inline images have reproducible sources and intentional alt text; ` +
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
-      `${httpReference.routes.length} HTTP route registrations and ${documentReference.types.length} document type lifecycles pass inventory invariants.`
+      `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, and ` +
+      `${fieldReference.registrations.length} serialized field types pass inventory invariants.`
   );
 }
