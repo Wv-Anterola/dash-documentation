@@ -33,10 +33,14 @@ operate on documents.
 
 ## How Dash represents it
 
-`client/documents/DocumentTypes.ts` declares the `DocumentType` enum, currently
-fifty-one entries. `client/documents/Documents.ts` holds a factory per type,
-and each factory calls `InstanceFromProto` with a prototype fetched by
-`Prototypes.get(DocumentType.SOMETHING)`.
+`client/documents/DocumentTypes.ts` declares the 51-value `DocumentType` enum.
+Renderer modules register 50 prototype-backed types in the shared
+`TemplateMap`; `client/documents/Documents.ts` supplies canonical factories and
+prototype accessors. Most instance factories call `InstanceFromProto` with a
+prototype fetched by `Prototypes.get(DocumentType.SOMETHING)`, but system,
+sentinel, data-only, and prototype-resource paths intentionally differ. The
+[complete type/prototype/factory catalogue](/reference/document-types/) records
+every case.
 
 ### Identity and references
 
@@ -96,20 +100,21 @@ Sharing is a field too. `updateCachedAcls` maintains symbol-keyed access-control
 entries on the document, resolved through `HierarchyMapping`, which is why
 permissions travel with a document rather than living in a separate table.
 
-:::note
-`InstanceFromProto` and `Prototypes.get` were written in 2019 and are still
-how every document type is constructed. Adding a type in 2026 means the same
-four steps it meant then: an enum value, a factory, a view component, and a
-case in `DocumentView.tsx`.
+:::note[Integration contract]
+A user-facing type needs a stable serialized value, prototype, factory or other
+construction path, reachable creator/import workflow, layout component,
+`DocumentContentsView` registry entry, persistence behavior, permissions,
+undo, tests, and documentation. An enum member alone is not a feature.
 :::
 
 ## Current limitations
 
-Fifty-one types is a lot, and some of them are narrow. `POLICY_TESTIMONY`,
-`LIFECOACH`, `LCEVENT`, and `SCRAPBOOK` each exist because one project needed
-them. There is no mechanism for a type to be defined outside the enum, so every
-new document type is a change to core files and a merge conflict waiting to
-happen when two cohorts add types in the same term.
+Several types are intentionally domain-specific. `POLICY_TESTIMONY`,
+`LIFECOACH`, `LCEVENT`, and `SCRAPBOOK` represent research workflows while
+remaining compatible with shared document behavior. Types cannot currently be
+declared by an external extension package, so additions touch the central enum,
+prototype/renderer registration, and construction surfaces. Concurrent type
+work therefore needs coordinated integration review.
 
 The prototype system has no migration story. If a prototype's field layout
 changes after documents already exist, those documents keep the old shape.
@@ -122,11 +127,14 @@ the record of what that extension actually looked like.
 <ProjectsForConcept concept="documents" />
 
 <ProjectNote title="Document and field model">
-  The founding work. Worth reading first because it explains why later additions were as cheap as they were: the cost of a new type was paid once, in 2019.
+  Defines the prototype/delegate ownership model that every specialized type
+  continues to use for shared content and contextual layout.
 </ProjectNote>
 
 <ProjectNote title="Physics simulation documents">
-  The counter-example. A full document type with three interaction modes that is no longer in Dash. It shows that being a registered type is not a guarantee of permanence, which is why this site labels status separately from whether code was once merged.
+  Demonstrates why historical implementation evidence and current integration
+  status are tracked separately: a once-complete type may no longer be present
+  in the integrated source.
 </ProjectNote>
 
 ## Related documentation

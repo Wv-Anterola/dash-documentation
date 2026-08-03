@@ -174,3 +174,44 @@ test('catalogues the HTTP surface and exposes request-supervision contracts', as
   await expect(supervisor.getByText(/one-second missing-response timer/)).toBeVisible();
   await expect(supervisor.getByText(/does not replace per-action/)).toBeVisible();
 });
+
+test('maps every document type from stored value through factory and renderer', async ({ page }) => {
+  await page.goto('/reference/document-types/');
+  await expect(page.getByRole('heading', { name: 'Document type, prototype, and factory reference' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Seven-stage lifecycle/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /full 1600 x 900 resolution/ })).toBeVisible();
+  await expect(page.locator('.document-type-summary strong').first()).toHaveText('51');
+
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-document-type-reference]');
+    const filters = document.querySelector('.document-type-filters');
+    if (!root || !filters) throw new Error('Document type reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+
+  const query = page.getByLabel('Find a type, renderer, field, factory, or purpose');
+  await query.fill('ConfigDocument');
+  await expect(page.locator('[data-document-type-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-document-type-count]')).toHaveText('1 type shown');
+  const config = page.locator('[data-document-type-row]:visible');
+  await config.locator('summary').click();
+  await expect(config.getByText('Docs.Create.ConfigDocument')).toBeVisible();
+  await expect(config.getByText('Data-only factory').first()).toBeVisible();
+
+  await query.fill('');
+  await page.getByLabel('Construction path').selectOption('prototype-only');
+  await expect(page.locator('[data-document-type-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-document-type-row]:visible summary code').first()).toHaveText('KVP');
+
+  await expect(page.locator('.collection-view-reference article')).toHaveCount(21);
+  const math = page.locator('.palette-reference tbody tr').filter({ has: page.getByText('Math', { exact: true }) });
+  await expect(math).toContainText('EQUATION');
+  await expect(math).toContainText('EquationDocument');
+});

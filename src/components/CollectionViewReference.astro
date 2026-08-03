@@ -1,0 +1,39 @@
+---
+import reference from '../data/generated/document-types.json';
+
+const collection = (reference.types as any[]).find((type) => type.name === 'COL');
+const factoriesByVariant = new Map<string, any[]>();
+for (const factory of collection.factories) {
+  if (!factory.collectionViewType) continue;
+  const rows = factoriesByVariant.get(factory.collectionViewType) ?? [];
+  rows.push(factory);
+  factoriesByVariant.set(factory.collectionViewType, rows);
+}
+---
+
+<div class="collection-view-reference">
+  {reference.collectionViewTypes.map((view) => {
+    const factories = factoriesByVariant.get(view.name) ?? [];
+    return (
+      <article>
+        <div><code>{view.name}</code><span>{view.value}</span></div>
+        {factories.length ? (
+          <p>Canonical factory: {factories.map((factory, index) => <>{index ? ', ' : ''}<a href={factory.source.url}><code>{factory.name}</code></a></>)}</p>
+        ) : (
+          <p>No dedicated constructor. Runtime code can still select this value through <code>_type_collection</code>.</p>
+        )}
+        <a class="collection-view-source" href={view.source.url}>enum source L{view.source.line}</a>
+      </article>
+    );
+  })}
+</div>
+
+<style>
+  .collection-view-reference { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .65rem; margin-block: 1rem 1.5rem; }
+  .collection-view-reference article { display: grid; align-content: start; border: 1px solid var(--sl-color-gray-5); border-radius: .6rem; padding: .8rem; background: var(--sl-color-gray-7); }
+  .collection-view-reference article > div { display: flex; justify-content: space-between; gap: .6rem; align-items: baseline; }
+  .collection-view-reference article > div code { color: var(--sl-color-accent-high); font-weight: 750; }
+  .collection-view-reference article > div span { color: var(--sl-color-gray-2); font-size: .72rem; }
+  .collection-view-reference p { margin-block: .55rem; font-size: .78rem; }
+  .collection-view-source { align-self: end; font-size: .72rem; }
+</style>

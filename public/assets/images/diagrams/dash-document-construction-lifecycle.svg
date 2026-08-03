@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash document construction, delegation, and rendering lifecycle</title>
+  <desc id="desc">A seven-stage technical flow. A serialized DocumentType selects a module-registered prototype template. Startup hydrates or builds the prototype. A canonical factory splits shared data fields from contextual view fields, creates a data document and normally a view delegate, then DocumentContentsView resolves and parses the inherited layout with the registered renderer. Side notes identify data-only configuration documents, prototype resources, and collection subviews.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7fbff"/><stop offset="1" stop-color="#f2efff"/></linearGradient>
+    <linearGradient id="identity" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e7efff"/><stop offset="1" stop-color="#d7e4ff"/></linearGradient>
+    <linearGradient id="storage" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8f8f1"/><stop offset="1" stop-color="#d4f0e3"/></linearGradient>
+    <linearGradient id="view" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3eaff"/><stop offset="1" stop-color="#e6d8fa"/></linearGradient>
+    <linearGradient id="special" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff7e7"/><stop offset="1" stop-color="#ffecc5"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#193361" flood-opacity=".13"/></filter>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5L0 11Z" fill="#4968b9"/></marker>
+    <marker id="greenArrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5L0 11Z" fill="#2f8b67"/></marker>
+    <style>
+      .title{font:800 42px system-ui,sans-serif;fill:#142344}.subtitle{font:20px system-ui,sans-serif;fill:#52617d}.stage{fill:url(#identity);stroke:#8da5dd;stroke-width:2;rx:18;filter:url(#shadow)}.stage-storage{fill:url(#storage);stroke:#75ba9b;stroke-width:2;rx:18;filter:url(#shadow)}.stage-view{fill:url(#view);stroke:#a98bd3;stroke-width:2;rx:18;filter:url(#shadow)}.special{fill:url(#special);stroke:#d6a24f;stroke-width:2;rx:16}.number{fill:#294d9b}.number-storage{fill:#237455}.number-view{fill:#7652a9}.ntext{font:800 16px system-ui,sans-serif;fill:#fff;text-anchor:middle}.head{font:800 20px system-ui,sans-serif;fill:#1d3569}.body{font:16px system-ui,sans-serif;fill:#465875}.mono{font:14px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#30466e}.arrow{stroke:#4968b9;stroke-width:4;fill:none;marker-end:url(#arrow)}.green-arrow{stroke:#2f8b67;stroke-width:4;fill:none;marker-end:url(#greenArrow)}.lane{font:800 15px system-ui,sans-serif;fill:#52617d;letter-spacing:.08em}.field{fill:#fff;stroke:#b5c7e6;stroke-width:1.5;rx:10}.field-storage{fill:#fff;stroke:#9acdb6;stroke-width:1.5;rx:10}.field-view{fill:#fff;stroke:#c4ade3;stroke-width:1.5;rx:10}.field-head{font:750 15px system-ui,sans-serif;fill:#28426f}.field-body{font:14px system-ui,sans-serif;fill:#51617a}.note-head{font:800 17px system-ui,sans-serif;fill:#805211}.note-body{font:14px system-ui,sans-serif;fill:#6e5a3d}.footer{font:17px system-ui,sans-serif;fill:#43536f}.footer-strong{font-weight:800;fill:#213c75}
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <text class="title" x="70" y="65">One Dash node is a chain of contracts</text>
+  <text class="subtitle" x="70" y="103">Type identity selects defaults; the factory separates shared content from contextual presentation; layout selects the renderer.</text>
+
+  <text class="lane" x="72" y="155">TYPE AND PROTOTYPE REGISTRATION</text>
+  <g transform="translate(70 180)">
+    <rect class="stage" width="205" height="178"/>
+    <circle class="number" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">1</text>
+    <text class="head" x="55" y="35">Serialized identity</text>
+    <text class="mono" x="20" y="76">DocumentType.IMG</text>
+    <text class="mono" x="20" y="100">value: "image"</text>
+    <text class="body" x="20" y="132">Stable type value stored</text>
+    <text class="body" x="20" y="154">with document state</text>
+  </g>
+  <path class="arrow" d="M275 269H323"/>
+
+  <g transform="translate(330 180)">
+    <rect class="stage" width="245" height="178"/>
+    <circle class="number" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">2</text>
+    <text class="head" x="55" y="35">TemplateMap entry</text>
+    <rect class="field" x="18" y="58" width="209" height="42"/><text class="field-head" x="31" y="84">view: ImageBox</text>
+    <rect class="field" x="18" y="109" width="209" height="50"/><text class="field-head" x="31" y="132">dataField: data</text><text class="field-body" x="31" y="151">+ prototype options</text>
+  </g>
+  <path class="arrow" d="M575 269H623"/>
+
+  <g transform="translate(630 180)">
+    <rect class="stage" width="275" height="178"/>
+    <circle class="number" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">3</text>
+    <text class="head" x="55" y="35">Startup initialization</text>
+    <text class="mono" x="20" y="76">GetRefFields(*Proto)</text>
+    <text class="body" x="20" y="105">Hydrate stored prototype</text>
+    <text class="body" x="20" y="128">or build missing defaults</text>
+    <text class="mono" x="20" y="155">PrototypeMap.set(type)</text>
+  </g>
+  <path class="arrow" d="M905 269H953"/>
+
+  <g transform="translate(960 180)">
+    <rect class="stage" width="260" height="178"/>
+    <circle class="number" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">4</text>
+    <text class="head" x="55" y="35">Canonical factory</text>
+    <text class="mono" x="20" y="76">ImageDocument(url, opts)</text>
+    <text class="body" x="20" y="105">Typed value + options</text>
+    <text class="body" x="20" y="128">enter InstanceFromProto</text>
+    <text class="mono" x="20" y="155">OmitKeys(viewKeys, "^_")</text>
+  </g>
+
+  <rect class="special" x="1270" y="180" width="260" height="178"/>
+  <text class="note-head" x="1290" y="216">Not every enum is a button</text>
+  <text class="note-body" x="1290" y="248">NONE: no prototype</text>
+  <text class="note-body" x="1290" y="274">KVP: prototype, no factory</text>
+  <text class="note-body" x="1290" y="300">CONFIG: data only</text>
+  <text class="note-body" x="1290" y="326">SCRIPTDB / GROUPDB: singleton</text>
+
+  <text class="lane" x="72" y="422">DELEGATION AND FIELD OWNERSHIP</text>
+  <path class="green-arrow" d="M1090 358V444H505"/>
+
+  <g transform="translate(330 455)">
+    <rect class="stage-storage" width="350" height="245"/>
+    <circle class="number-storage" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">5</text>
+    <text class="head" x="55" y="35">Shared data document</text>
+    <text class="mono" x="20" y="70">MakeDelegate(type prototype)</text>
+    <rect class="field-storage" x="18" y="90" width="148" height="55"/><text class="field-head" x="30" y="113">content field</text><text class="field-body" x="30" y="133">data / text / items</text>
+    <rect class="field-storage" x="184" y="90" width="148" height="55"/><text class="field-head" x="196" y="113">identity</text><text class="field-body" x="196" y="133">author + date</text>
+    <rect class="field-storage" x="18" y="157" width="148" height="64"/><text class="field-head" x="30" y="180">permissions</text><text class="field-body" x="30" y="200">acl_Guest</text>
+    <rect class="field-storage" x="184" y="157" width="148" height="64"/><text class="field-head" x="196" y="180">companions</text><text class="field-body" x="196" y="200">annotations + sidebar</text>
+  </g>
+  <path class="green-arrow" d="M680 577H748"/>
+
+  <g transform="translate(755 455)">
+    <rect class="stage-view" width="350" height="245"/>
+    <circle class="number-view" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">6</text>
+    <text class="head" x="55" y="35">Contextual view delegate</text>
+    <text class="mono" x="20" y="70">MakeDelegate(data document)</text>
+    <rect class="field-view" x="18" y="90" width="148" height="55"/><text class="field-head" x="30" y="113">placement</text><text class="field-body" x="30" y="133">x, y, zIndex</text>
+    <rect class="field-view" x="184" y="90" width="148" height="55"/><text class="field-head" x="196" y="113">presentation</text><text class="field-body" x="196" y="133">_width, _height, ...</text>
+    <rect class="field-view" x="18" y="157" width="148" height="64"/><text class="field-head" x="30" y="180">context</text><text class="field-body" x="30" y="200">embedContainer</text>
+    <rect class="field-view" x="184" y="157" width="148" height="64"/><text class="field-head" x="196" y="180">local access</text><text class="field-body" x="196" y="200">_acl_Guest</text>
+  </g>
+  <path class="arrow" d="M1105 577H1173"/>
+
+  <g transform="translate(1180 455)">
+    <rect class="stage" width="350" height="245"/>
+    <circle class="number" cx="28" cy="29" r="18"/><text class="ntext" x="28" y="35">7</text>
+    <text class="head" x="55" y="35">Layout-driven rendering</text>
+    <text class="body" x="20" y="72">Resolve inherited layout doc</text>
+    <text class="body" x="20" y="98">Expand template context</text>
+    <text class="body" x="20" y="124">Rewrite scripts + DASHHTML tags</text>
+    <text class="body" x="20" y="150">Parse layout with component map</text>
+    <rect class="field" x="18" y="170" width="314" height="51"/><text class="field-head" x="31" y="193">ObserverJsxParser</text><text class="field-body" x="31" y="212">uses the registered component map</text>
+  </g>
+
+  <rect class="special" x="70" y="455" width="210" height="245"/>
+  <text class="note-head" x="90" y="491">Collection is one type</text>
+  <text class="note-body" x="90" y="523">_type_collection selects</text>
+  <text class="note-body" x="90" y="547">one of 21 view values:</text>
+  <text class="mono" x="90" y="580">Freeform</text>
+  <text class="mono" x="90" y="604">Schema</text>
+  <text class="mono" x="90" y="628">Tree / Calendar</text>
+  <text class="mono" x="90" y="652">Docking / Pile / ...</text>
+  <text class="note-body" x="90" y="681">Members stay the same list.</text>
+
+  <rect x="70" y="755" width="1460" height="82" rx="18" fill="#fff" stroke="#c7d3ea" stroke-width="2"/>
+  <text class="footer" x="800" y="789" text-anchor="middle"><tspan class="footer-strong">Ownership rule:</tspan> content and shared metadata belong on the data document; placement and context-specific appearance belong on the view delegate.</text>
+  <text class="footer" x="800" y="817" text-anchor="middle"><tspan class="footer-strong">Render rule:</tspan> DocumentType does not directly choose React code—the inherited layout string names a component registered at startup.</text>
+</svg>

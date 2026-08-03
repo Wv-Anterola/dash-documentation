@@ -70,7 +70,7 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
   },
   'src/client/documents/Documents.ts#InstanceFromProto': {
     summary:
-      'Internal factory primitive that separates data and view options, creates a typed data document, and returns the contextual document instance used by canonical factories.',
+      'Internal factory primitive that separates shared data options from contextual view options, creates a typed data delegate, and normally creates a view delegate whose prototype is that data document.',
     parameters: {
       proto: 'Registered prototype for the selected document type.',
       data: 'Initial typed content field.',
@@ -81,16 +81,59 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
       placeholderDocIn: 'Optional loading/placeholder document to replace in place.',
       noView: 'Create only the data side when true.',
     },
-    returns: 'A document or document-layout pair initialized for its registered type.',
-    errors: ['Optional services and import-backed factories may fail asynchronously.'],
-    sideEffects: ['Factories can allocate persistent documents and schedule imports or service work.'],
+    returns: 'The contextual view delegate, or the data document itself when noView is true.',
+    preconditions: ['The selected prototype has been registered and loaded into PrototypeMap before the factory runs.'],
+    postconditions: [
+      'The data owner is marked isDataDoc and receives identity, ACL, primary-field, annotation, sidebar, and modification metadata.',
+      'View keys and underscore-prefixed options remain contextual on the view delegate.',
+    ],
+    failureSemantics: ['A missing prototype fails during delegate creation; construction has no fallback type.'],
+    sideEffects: [
+      'Refreshes cached ACLs, sets containers for document-list members, and may link the new view to active audio except for LINK, CONFIG, and LABEL.',
+    ],
     undo: 'Creation from a user action should be grouped with placement in one undo batch.',
+  },
+  'src/client/documents/Documents.ts#initialize': {
+    summary:
+      'Batch-loads every non-NONE <serialized-type>Proto record, builds any absent prototypes from TemplateMap, and fills the runtime PrototypeMap.',
+    preconditions: ['Renderer modules have executed their TemplateMap.set registrations and DocServer reads are initialized.'],
+    postconditions: ['Every registered non-sentinel type has a prototype lookup entry when its template can be built.'],
+    sideEffects: ['May create missing persistent prototype documents and installs the RTF prototype broadcast-message reaction.'],
+    failureSemantics: ['An enum value without a TemplateMap entry is skipped, so later Prototypes.get calls for that type return undefined.'],
+  },
+  'src/client/documents/Documents.ts#buildPrototype': {
+    summary:
+      'Combines common prototype identity/layout defaults with type-specific TemplateMap options and adds only fields absent from an existing stored prototype.',
+    parameters: {
+      type: 'Serialized document type whose template and layout are selected.',
+      prototypeId: 'Persistent <serialized-type>Proto identifier.',
+      existing: 'Previously stored prototype, when one was loaded.',
+    },
+    returns: 'The existing or newly allocated base prototype, or undefined when the type has no template registration.',
+    invariants: ['Existing stored fields are not replaced by source defaults during ordinary initialization.'],
+    failureSemantics: ['Changing a source default is not a migration of already stored prototypes.'],
+  },
+  'src/client/documents/Documents.ts#get': {
+    summary: 'Returns the in-memory prototype registered for a DocumentType after startup initialization.',
+    parameters: { type: 'DocumentType key used in PrototypeMap.' },
+    returns: 'The registered prototype; the non-null assertion does not add a runtime fallback.',
+    preconditions: ['Prototypes.initialize has completed and the type had a TemplateMap entry.'],
+    failureSemantics: ['A missing entry yields undefined at runtime and causes downstream factory/delegation failures.'],
   },
   'src/client/views/nodes/DocumentContentsView.tsx#DocumentContentsView.Init': {
     summary:
       'Initializes the runtime document renderer registry before document contents are dispatched.',
     sideEffects: ['Populates global renderer mappings used by every DocumentContentsView instance.'],
     permissions: 'Renderer registration itself does not bypass document read permissions.',
+  },
+  'src/client/views/nodes/DocumentContentsView.tsx#DocumentContentsView.renderData': {
+    summary:
+      'Transforms the effective layout string into parser input by evaluating supported document expressions, rewriting DASHHTML tags, extracting event scripts, and building document bindings.',
+    returns: 'The JSX parser bindings and transformed layoutFrame string.',
+    preconditions: ['The effective layout string and document context are available.'],
+    sideEffects: ['Compiles embedded expressions and onClick/onInput script fields while resolving the computed render data.'],
+    failureSemantics: ['Malformed layout expressions or event delimiters can fail before the final parser error callback runs.'],
+    permissions: 'The subsequent render guard suppresses private layout documents; embedded components must still enforce access to the data they read.',
   },
   'src/client/views/collections/CollectionView.tsx#CollectionView.renderSubView': {
     summary:

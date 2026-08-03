@@ -277,7 +277,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { slug: 'reference/keyboard-shortcuts' },
-            { slug: 'reference/document-types' },
+            { slug: 'reference/document-types', label: 'Document types and schemas' },
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },
             { slug: 'reference/configuration' },

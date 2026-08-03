@@ -1,83 +1,409 @@
 ---
-title: Document type reference
-description: The complete current DocumentType inventory, classified by user-facing role and linked to its implementation.
+title: Document type, prototype, and factory reference
+description: The complete source-generated contract for every Dash document type, prototype default, canonical factory, creator template, collection layout, and renderer path.
 sidebar:
   order: 1
 ---
 
+import CollectionViewReference from '../../../components/CollectionViewReference.astro';
+import DocumentPaletteReference from '../../../components/DocumentPaletteReference.astro';
+import DocumentTypeReference from '../../../components/DocumentTypeReference.astro';
 import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
-The verified `DocumentType` enum contains 51 entries. This table classifies
-them instead of presenting the enum count as “51 user features.”
+Dash does not have fifty-one unrelated node implementations. It has one
+document/delegation model, fifty-one serialized `DocumentType` values, fifty
+prototype-backed types, and a layout registry that composes shared behavior
+with specialized renderers. A type becomes usable only when those layers meet.
 
-## User-facing content and workspace types
+This page is the canonical map of that meeting point. It is generated from the
+integrated TypeScript source: the enums, every `TemplateMap` registration,
+every canonical factory call, the creator-palette templates, resolved static
+call edges, and the component registry supplied to `DocumentContentsView`.
+The prose explains the runtime behavior and the reason for each layer.
 
-| Enum | Serialized value | Role |
+![Seven-stage lifecycle from a serialized document type through prototype registration, startup initialization, factory field splitting, shared data and contextual view delegates, and layout-driven rendering](/assets/images/diagrams/dash-document-construction-lifecycle.svg)
+
+[Open the construction diagram at full 1600 x 900 resolution.](/assets/images/diagrams/dash-document-construction-lifecycle.svg)
+
+## The simple mental model
+
+Think of a Dash node as four connected things:
+
+1. **Type:** a stored label such as `image` or `collection`.
+2. **Prototype:** inherited defaults, including the layout string that names a
+   renderer.
+3. **Data document:** the shared content, author, permissions, annotations, and
+   other fields that should be the same everywhere the content appears.
+4. **View document:** one contextual appearance of that data: position, size,
+   overlay state, containing collection, and underscore-prefixed layout fields.
+
+The renderer reads those documents and turns them into the visible interface.
+The enum does not directly instantiate a React component, and a React component
+does not define the durable schema by itself.
+
+That distinction is why one PDF can appear at different sizes in two boards,
+why one collection can switch from freeform to schema without copying its
+children, and why a project-specific node can still be linked, shared, searched,
+embedded, and undone like other Dash documents.
+
+## Source-derived lifecycle summary
+
+| Layer | Current integrated source | What it proves |
+| :--- | ---: | :--- |
+| Serialized `DocumentType` values | 51 | Stable type discriminators that may appear in stored documents |
+| Prototype-backed types | 50 | Every value except `NONE` has a `TemplateMap` registration |
+| Prototype registrations | 51 | DataViz is registered twice in one module; the later write is effective |
+| Canonical factories and prototype accessors | 65 | Construction paths in `Docs.Create` plus the global database accessors |
+| Instance-backed types | 46 | Types with a factory that creates a data document and, normally, a view delegate |
+| Creator-palette templates | 36 | Stored empty templates used by create/drag controls |
+| JSX parser components | 54 | Components available to layout strings at runtime |
+| `CollectionViewType` values | 21 | Layout modes that reinterpret one `COL` child list |
+
+These counts are not interchangeable. `NONE` is a sentinel. `KVP` is a
+registered view type without a canonical standalone factory. `CONFIG` creates
+only the data side. `SCRIPTDB`, `GROUPDB`, and `PRESSLIDE` expose prototype
+resources instead of constructing ordinary instances. Conversely, several
+visible creator buttons are configurations of one underlying type: Flashcard
+uses `COMPARISON`, and all collection layouts use `COL`.
+
+## Startup: how prototypes come into existence
+
+Prototype registration is distributed deliberately. `Documents.ts` defines
+the shared `TemplateMap` and its system entries; renderer modules add their own
+entry with `Docs.Prototypes.TemplateMap.set(...)` at module evaluation time.
+This keeps each component's layout and defaults beside its implementation.
+
+Client startup then follows this sequence:
+
+1. Imports evaluate the renderer modules, filling `TemplateMap`.
+2. The identity handshake initializes `DocServer` and the document cache.
+3. `CurrentUserUtils.loadUserDocument` awaits `Docs.Prototypes.initialize()`.
+4. `initialize` converts every enum value except `NONE` into the persistent ID
+   `<serialized value>Proto` and batch-loads those IDs with
+   `DocServer.GetRefFields`.
+5. `buildPrototype` retains an existing prototype or creates the missing one,
+   adds defaults that are not already stored, and places the result in the
+   in-memory `PrototypeMap`.
+6. Canonical factories can now call `Prototypes.get(type)`.
+
+The default prototype shape built by `buildPrototype` is:
+
+| Field | Default | Why it exists |
 | :--- | :--- | :--- |
-| `RTF` | `rich text` | Formatted text document |
-| `IMG` | `image` | Image document |
-| `WEB` | `web` | Webpage document |
-| `HTML` | `html` | HTML content |
-| `COL` | `collection` | Collection/container |
-| `VID` | `video` | Video document |
-| `AUDIO` | `audio` | Audio document |
-| `REC` | `recording` | Recording document |
-| `PDF` | `pdf` | PDF document |
-| `INK` | `ink` | Ink/vector stroke |
-| `DIAGRAM` | `diagram` | Source-driven diagram |
-| `SCREENSHOT` | `screenshot` | Captured screen image |
-| `LABEL` | `label` | Simple label |
-| `BUTTON` | `button` | Action button |
-| `WEBCAM` | `webcam` | Webcam surface |
-| `SCRIPTING` | `script` | Script editor/document |
-| `CHAT` | `chat` | Retrieval chat |
-| `EQUATION` | `equation` | Equation editor/solver |
-| `FUNCPLOT` | `function plot` | Function plot |
-| `MAP` | `map` | Mapbox-backed map |
-| `VIEWER3D` | `3d viewer` | 3D model viewer |
-| `SKETCH3D` | `3d sketch` | 3D sketch surface |
-| `DATAVIZ` | `dataviz` | Data visualization |
-| `JOURNAL` | `journal` | Daily journal |
-| `TASK` | `task` | Task document |
-| `SCRAPBOOK` | `scrapbook` | Scrapbook |
-| `LIFECOACH` | `lifecoach` | Life-coach workspace |
-| `LCEVENT` | `life event` | Life-coach event |
-| `POLICY_TESTIMONY` | `policy-testimony` | Policy testimony source |
-| `POLICY_CHECKER` | `policy-checker` | Policy analysis/checker |
-| `VIDGEN` | `vidgen` | Scene-based video generator |
-| `AGENT` | `agent` | Acting agent surface |
+| `isSystem` | `true` | Marks the prototype as system infrastructure rather than ordinary user content |
+| `layout_fieldKey` | `layout` | Tells layout resolution which field holds the layout template |
+| `title` | derived from `<type>Proto` | Gives the prototype a deterministic inspectable name |
+| `type` | current `DocumentType` | Makes delegated instances inherit the serialized type |
+| `isBaseProto` | `true` | Terminates and identifies the base of the prototype chain |
+| `_width` | `300` | Supplies a general initial layout width unless the template overrides it |
+| `acl_Guest` | `View` | Provides the default guest access inherited from the base prototype |
+| `layout` | `view.LayoutString(dataField)` | Connects the type to a renderer through a stored layout string |
+| template `options` | type-specific | Defines only the fields required by that renderer or workflow |
 
-## Structural and supporting types
+Existing stored prototype fields win over newly supplied defaults. That
+preserves deployments that intentionally customized prototypes, but it also
+means changing a source default is not a migration of existing prototype data.
+Schema changes that must affect stored prototypes need an explicit migration or
+repair path.
 
-| Enum | Serialized value | Purpose |
+The module-side-effect design has another consequence: removing an import can
+remove a registration even when the renderer file still exists. A production
+bundle test must exercise initialization, not only compile the component.
+
+## Factory primitive: exactly where fields go
+
+Most canonical factories call:
+
+```ts
+InstanceFromProto(Prototypes.get(DocumentType.X), data, options, ...)
+```
+
+`InstanceFromProto` first separates options into two ownership groups.
+`x`, `y`, `isSystem`, `overlayX`, `overlayY`, `zIndex`, `embedContainer`, and
+every underscore-prefixed key become view properties. All other supplied
+options begin on the data document.
+
+### Fields added to the shared data document
+
+| Field | Behavior and rationale |
+| :--- | :--- |
+| `acl_Guest` | Uses the factory's data ACL, or the global private/public default |
+| `isSystem` | Copies the system marker from the view-option split |
+| `isDataDoc` | Explicitly marks the shared data owner |
+| `author` | Records the current user email at creation |
+| `author_date` | Records creation time as a `DateField` |
+| `<field>_modificationDate` | Initializes the primary content field's modification timestamp |
+| `<field>` | Stores the factory's typed value under `data`, `text`, `items`, or another selected key |
+| `<field>_annotations` | Pre-creates an observable annotation list |
+| `<field>_sidebar` | Pre-creates the field's sidebar list |
+
+The annotation list is created even when empty for a permission reason: a user
+with AddOnly access may append to an existing list but may not be allowed to
+create the missing field that would contain that list.
+
+The data document delegates to the selected type prototype. If a loading
+placeholder is supplied, its existing prototype identity is reused and then
+repointed to the final type prototype so an asynchronous import can complete in
+place.
+
+### Fields added to the contextual view document
+
+Unless `noView` is true, the factory creates another delegate whose prototype
+is the data document. It receives:
+
+- its own `author`;
+- a view ACL from `_acl_Guest` or the global default;
+- position, overlay, z-index, embedding, and underscore-prefixed options; and
+- the inherited data fields reachable through the delegate chain.
+
+Both sides have their effective ACL caches refreshed. A list used as the
+primary value also has each child document's container set to the new view
+delegate. Every normal type except `LINK`, `CONFIG`, and `LABEL` may additionally
+link the created view to the currently active audio document.
+
+`ConfigDocument` passes an empty primary-field key and `noView: true`. It
+therefore omits `<field>` and its companion lists, creates no contextual view,
+and returns the data document. That is the intended shape for non-rendered view
+configuration.
+
+## Complete type and construction catalogue
+
+Use the filters for a short answer, then expand a row for the exact prototype,
+renderer, primary field, defaults, factory signature, collection variant,
+resolved caller count, representative callers, palette entry, and immutable
+source links. A zero caller count means the static call graph did not resolve a
+direct invocation; stored scripts, function references, template cloning, and
+other dynamic paths can still use the function.
+
+<DocumentTypeReference />
+
+## Worked construction traces
+
+### Image: typed media plus a contextual view
+
+`ImageDocument` accepts either a URL or an existing `ImageField`. A URL becomes
+an `ImageField`; the basename becomes the default title. The factory uses the
+`IMG` prototype, whose layout names `ImageBox` and whose primary field is
+`data`. The returned document is the view delegate. Reading `data` follows the
+delegate to the shared data owner; reading `_width` normally resolves on the
+view.
+
+### Formatted text: one type, selectable primary key
+
+`RTFDocument` and `TextDocument` both use the `RTF` prototype. Their default
+primary key is `text`, but the `fieldKey` parameter can select another key.
+Companion fields are named from that key, so `summary` would create
+`summary_modificationDate`, `summary_annotations`, and `summary_sidebar`.
+The layout's own data field and the factory's primary key must agree with the
+renderer path being used.
+
+### Link: relationship fields plus link registration
+
+`LinkDocument` stores `link_anchor_1` and `link_anchor_2` in its data options,
+uses `link` as the primary key, then calls `Doc.AddLink` after construction.
+Creating the document shape is therefore only the first half of link
+integration; the link database/index side effect makes the relationship
+discoverable. See [link identity and traversal](/concepts/links/).
+
+### Collection: one stored type, many layouts
+
+`FreeformDocument`, `SchemaDocument`, `TreeDocument`, `CalendarDocument`,
+`PileDocument`, and the other collection factories all select `DocumentType.COL`
+and store children in a `List`. The distinguishing value is
+`_type_collection`, which belongs to contextual layout state. Changing it asks
+another collection renderer to interpret the same member list; it does not
+convert or duplicate those members.
+
+### Flashcard: a configured comparison, not another enum
+
+`FlashcardDocument` creates a `COMPARISON` document with `data_front`,
+`data_back`, and `_layout_flashcardType: 'flashcard'`. This is the preferred
+integration pattern when an existing type and renderer can express a new
+research interaction. A project can become a visible feature without adding a
+new serialized type.
+
+### Global databases and presentation slides
+
+`MainScriptDocument`, `MainGroupDocument`, and `PresSlideDocument` return their
+registered prototypes directly. They are prototype resources, not ordinary
+factory-created data/view pairs. Code mutating them is changing shared or
+template infrastructure and must be reviewed accordingly.
+
+## Collection layouts are not document types
+
+`CollectionViewType` answers **how one collection displays its existing child
+list**. It does not identify the content stored by those children. Twenty-one
+values are declared; only some have dedicated constructors because a runtime
+appearance change can set `_type_collection` directly.
+
+The cards below link to the enum and show which values have canonical factory
+helpers. A missing helper is not automatically a missing renderer. Dispatch
+coverage and normal appearance-menu exposure are tracked separately in the
+[collection view reference](/reference/collection-views/).
+
+<CollectionViewReference />
+
+## What every creator button actually creates
+
+The creator controls do not construct arbitrary objects in the click handler.
+`CurrentUserUtils` defines `emptyThings`: reusable empty documents with a
+factory and type-specific defaults. `AssignDocField` installs each template on
+the user document under an `empty<Key>` field when needed. Creator descriptors
+then point their drag/click behavior at those stored templates.
+
+The common template options add an `Untitled <key>` title, `isSystem: true`, a
+drag-factory counter, and a clone filter for the system marker. Per-template
+options set practical initial dimensions and workflow fields. A click or drag
+therefore clones a fully configured starting document, not merely an enum value.
+
+This also explains labels that do not match types one-to-one:
+
+- **Math** uses the `EQUATION` factory.
+- **Col**, **Notes**, **Tab**, and several custom templates use `COL` with
+  different layout configuration.
+- **Flashcard** uses `COMPARISON`.
+- **Recording** and **Audio** both use `AudioDocument` with different initial
+  dimensions and behavior.
+- **Mermaids**, **Plotly**, **MetaNote**, and **ViewSlide** are compositions of
+  lower-level document factories rather than extra enum values.
+
+The complete source-derived mapping follows. Scroll inside the table on a
+narrow screen.
+
+<DocumentPaletteReference />
+
+## Renderer resolution is layout-driven
+
+`Main.tsx` calls `DocumentContentsView.Init` with a default key-value layout, 54
+layout-available components, and a smaller set of auxiliary JSX components.
+Prototype renderers such as `ImageBox`, `PDFBox`, and `AgentBox` are present in
+that component map. Ten additional registered components are layout-only
+building blocks rather than `DocumentType` renderers:
+
+- `LifeCoachSpreadsheetView`
+- `FieldView`
+- `CollectionFreeFormView`
+- `CollectionDockingView`
+- `CollectionSchemaView`
+- `GraphNodeBox`
+- `DASHHTMLtag`
+- `CalendarBox`
+- `SchemaRowBox`
+- `ImportElementBox`
+
+At render time, `DocumentContentsView` does not switch directly on
+`DocumentType`. It resolves a layout in this order:
+
+1. caller-supplied `LayoutTemplateString`;
+2. an explicit template or layout-field context;
+3. `Doc.LayoutDoc(...)` and expanded template layout;
+4. the selected layout field, normally `layout`; and
+5. a field-view or default key/value layout when specialized layout is absent.
+
+`renderData` then:
+
+1. evaluates supported brace expressions through `ScriptField.MakeFunction`;
+2. rewrites `DASHHTML<tag>` elements to the registered `DASHHTMLtag` component;
+3. extracts `onClick` and `onInput` script bodies into document bindings; and
+4. passes the resulting layout string, component map, and bindings to
+   `ObserverJsxParser`.
+
+Rendering returns `null` when nesting exceeds depth 12, the layout frame is
+empty, the layout document cannot be resolved, or the effective layout ACL is
+private. Parser failures are currently reported through the console callback;
+type-specific components should still provide visible empty, loading,
+unsupported, and provider-error states for failures they own.
+
+See [rendering and interaction lifecycle](/architecture/rendering-lifecycle/)
+for the surrounding `DocumentView`, MobX, collection, and disposal contracts.
+
+## Important asymmetries and compatibility rules
+
+### DataViz has two registrations
+
+The DataViz module writes `TemplateMap.set(DocumentType.DATAVIZ, ...)` twice.
+Both select `DataVizBox` and the `data` field. The second object is the effective
+module-level registration and does not include the earlier `acl: ''` option.
+The generated catalogue preserves both sites instead of silently
+deduplicating them.
+
+Because existing stored prototypes retain fields that source defaults do not
+overwrite, two deployments can also carry different historical prototype
+fields while running the same current renderer. Diagnose the stored prototype
+alongside the current registration before treating a default mismatch as a
+rendering bug.
+
+### Serialized values are compatibility contracts
+
+The enum member name is a TypeScript convenience; the string value is stored
+identity. Renaming `IMG` in source may be manageable if every reference changes.
+Changing `image` in stored data requires an explicit migration and compatibility
+plan.
+
+### A prototype default is not an instance schema lock
+
+Dash documents have an open field namespace and inherit through delegates.
+The prototype table identifies required defaults and the factory identifies
+initial fields, but later features, scripts, importers, and users may add more
+fields. Readers must use the established cast/default behavior for optional or
+legacy fields.
+
+### A source registration is necessary, not sufficient
+
+A complete user-facing integration also needs a reachable creation or import
+path, usable empty state, persistence round trip, permission behavior, undo,
+copy/alias semantics, renderer cleanup, tests, and user documentation. The
+catalogue reports what static source proves; it does not convert an experimental
+or provider-dependent path into a production guarantee.
+
+Branch-only types and factories remain visible in the
+[implementation archive](/reference/branch-audit/) but are not merged into this
+current catalogue until their code is reachable from the integrated source
+baseline.
+
+## Failure diagnosis by lifecycle stage
+
+| Symptom | First contract to inspect | Typical cause |
 | :--- | :--- | :--- |
-| `KVP` | `kvp` | Key-value layout/content |
-| `FONTICON` | `fonticonbox` | Icon renderer |
-| `SEARCH` | `search` | Persistent search query |
-| `IMAGEGROUPER` | `imagegrouper` | Image grouping workflow |
-| `FACECOLLECTION` | `facecollection` | Face collection |
-| `UFACE` | `uniqueface` | Unique-face document |
-| `CONFIG` | `config` | Reconstructable configuration/view state |
-| `CHATMSG` | `message` | Chat message |
-| `ANNOPALETTE` | `annopalette` | Annotation palette |
-| `LINK` | `link` | First-class link |
-| `PRES` | `presentation` | Presentation/trail |
-| `PRESSLIDE` | `presslide` | Presentation slide |
-| `COMPARISON` | `comparison` | Comparison wrapper |
-| `PUSHPIN` | `pushpin` | Map pushpin |
-| `MAPROUTE` | `maproute` | Map route |
-| `SCRIPTDB` | `scriptdb` | Script database |
-| `GROUPDB` | `groupdb` | Group database |
+| Factory receives `undefined` prototype | `TemplateMap` registration and startup imports | Module registration did not execute before `initialize`, or the type is not registered |
+| New node appears but loses fields after reload | Factory value type, serializer, and server write path | Non-serializable field, write before initialization, or failed persistence |
+| Content changes in every embedding unexpectedly | Data/view ownership split | A contextual field was written to the shared data owner |
+| One embedding changes but the shared content does not | `Doc.SetInPlace` owner selection | A durable content field shadows the data value on the view delegate |
+| Document has the correct type but wrong UI | Effective layout document and layout string | Layout override or inherited prototype points at another component |
+| Layout names a component but renders nothing | `DocumentContentsView.Init` map, ACL, and depth guard | Component missing, private layout, unresolved layout doc, or excessive nesting |
+| Annotation cannot be added with restricted access | `<field>_annotations` initialization | A noncanonical constructor omitted the pre-created list |
+| Collection contains correct children in wrong arrangement | `_type_collection` and `renderSubView` | View value is missing, unsupported, or overridden contextually |
+| Creator button makes a surprising type | `emptyThings` template and descriptor | Button is intentionally a configured lower-level type, or the template is stale |
+| New source default does not appear on old workspaces | Stored `<type>Proto` document | Prototype initialization fills absent fields; it is not a migration |
 
-## Sentinel
+The operational diagnostic sequence is in
+[troubleshooting](/development/troubleshooting/#type-exists-but-renderer-does-not).
 
-`NONE` represents the absence of a document type. `LOADING` represents a
-loading state. Neither is a user capability.
+## Verification contract for a document-type change
 
-## Integration note
+For a new or modified type, verify all of the following from a cold client and
+after reload:
 
-A usable document type requires more than this enum: prototype, factory,
-renderer registration, creation or import path, persistence, undo, tests, and
-documentation. See [Add a document type](/development/add-document-type/).
+1. The serialized type value is stable and round-trips.
+2. Its module registers the prototype before `Prototypes.initialize` runs.
+3. The stored prototype has the intended layout, data field, and defaults.
+4. The canonical factory puts shared and contextual fields on the correct
+   owners and initializes annotation/sidebar companions.
+5. The layout component is present in the parser registry.
+6. A real creator, import, parent workflow, or agent action can reach it.
+7. Empty, loading, malformed, private, and provider-failure states are visible.
+8. Creation and multi-field edits form coherent undo batches.
+9. Copying, aliasing, linking, embedding twice, and removal preserve identity
+   semantics.
+10. Private nested content does not become visible through a shared layout.
+11. Type-specific subscriptions, media handles, and engines dispose on unmount.
+12. The generated catalogue, technical guide, user workflow, and visual evidence
+    are updated together.
+
+Implementation instructions are in
+[Add a document type](/development/add-document-type/). The underlying ownership
+model is specified in [Document and field model](/architecture/document-model/),
+and exact field wire formats are in
+[Field runtime and serialization](/architecture/field-runtime/).

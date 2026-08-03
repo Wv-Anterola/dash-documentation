@@ -90,7 +90,7 @@ const manual = {
   '/reference/agent-tools': '/assets/gifs/ai/ai-template-csv-1.gif',
   '/reference/collection-views': '/assets/images/environment/views/schema_view.png',
   '/reference/configuration': '/assets/gifs/gettingstarted/dash-properties-pane.gif',
-  '/reference/document-types': '/assets/gifs/gettingstarted/dash-context-menu.gif',
+  '/reference/document-types': '/assets/images/diagrams/dash-document-construction-lifecycle.svg',
   '/reference/glossary': '/assets/gifs/gettingstarted/dash-edit-link.gif',
   '/reference/implementation-snapshot': '/assets/images/diagrams/source-evidence-flow.svg',
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
@@ -115,6 +115,8 @@ const manual = {
 };
 
 const manualAlt = {
+  '/reference/document-types':
+    'Document construction lifecycle from serialized type through prototypes, data and view delegates, and layout-driven rendering.',
   '/reference/implementation-snapshot':
     'Evidence flow from observed Dash behavior and source code through research records to published documentation.',
 };

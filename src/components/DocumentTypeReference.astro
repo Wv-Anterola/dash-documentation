@@ -1,0 +1,259 @@
+---
+import reference from '../data/generated/document-types.json';
+
+const types = reference.types as any[];
+const categories = [...new Set(types.map((type) => type.category))].sort();
+const lifecycleLabels: Record<string, string> = {
+  'factory-backed': 'Data + view factory',
+  'data-only-factory': 'Data-only factory',
+  'prototype-resource': 'Prototype resource',
+  'prototype-only': 'Prototype only',
+  sentinel: 'Sentinel',
+  'missing-prototype': 'Missing prototype',
+};
+const audienceLabels: Record<string, string> = {
+  surface: 'User-visible surface',
+  supporting: 'Supporting type',
+  system: 'System record',
+  sentinel: 'Sentinel',
+};
+---
+
+<section class="document-type-reference" data-document-type-reference>
+  <div class="document-type-summary" aria-label="Document type inventory summary">
+    <div><strong>{reference.summary.enumTypes}</strong><span>serialized types</span></div>
+    <div><strong>{reference.summary.prototypeTypes}</strong><span>prototype-backed</span></div>
+    <div><strong>{reference.summary.factoryBackedTypes}</strong><span>instance-backed</span></div>
+    <div><strong>{reference.summary.paletteTemplates}</strong><span>creator templates</span></div>
+    <div><strong>{reference.summary.collectionViewTypes}</strong><span>collection layouts</span></div>
+  </div>
+
+  <div class="document-type-filters" aria-label="Filter document types">
+    <label for="document-type-query">
+      Find a type, renderer, field, factory, or purpose
+      <input id="document-type-query" type="search" placeholder="Try image, annotation, CollectionView, or text" data-document-type-query />
+    </label>
+    <label for="document-type-category">
+      Technical family
+      <select id="document-type-category" data-document-type-category>
+        <option value="">All families</option>
+        {categories.map((category) => <option value={category}>{category}</option>)}
+      </select>
+    </label>
+    <label for="document-type-lifecycle">
+      Construction path
+      <select id="document-type-lifecycle" data-document-type-lifecycle>
+        <option value="">All construction paths</option>
+        {Object.entries(lifecycleLabels).map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </label>
+    <label for="document-type-audience">
+      Runtime role
+      <select id="document-type-audience" data-document-type-audience>
+        <option value="">All runtime roles</option>
+        {Object.entries(audienceLabels).map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <p class="document-type-count" aria-live="polite" data-document-type-count>{types.length} types shown</p>
+
+  <div class="document-type-list">
+    {types.map((type) => {
+      const factoryNames = type.factories.map((factory: any) => factory.name);
+      const prototype = type.prototype;
+      const searchText = [
+        type.name,
+        type.value,
+        type.category,
+        type.audience,
+        type.plainMeaning,
+        type.technicalRole,
+        prototype?.renderer,
+        prototype?.dataField,
+        ...factoryNames,
+        ...type.paletteEntries,
+      ].filter(Boolean).join(' ').toLowerCase();
+      return (
+        <details
+          class="document-type-card"
+          data-document-type-row
+          data-category={type.category}
+          data-lifecycle={type.lifecycle}
+          data-audience={type.audience}
+          data-search={searchText}
+        >
+          <summary>
+            <span class="document-type-identity">
+              <code>{type.name}</code>
+              <span>{type.plainMeaning}</span>
+            </span>
+            <span class="document-type-serialized"><small>stored as</small><code>{type.value}</code></span>
+            <span class={`document-type-badge document-type-badge--${type.lifecycle}`}>{lifecycleLabels[type.lifecycle]}</span>
+            <span class="document-type-chevron" aria-hidden="true">⌄</span>
+          </summary>
+
+          <div class="document-type-detail">
+            <div class="document-type-explanation">
+              <p>{type.technicalRole}</p>
+              <div class="document-type-tags">
+                <span>{type.category}</span>
+                <span>{audienceLabels[type.audience]}</span>
+              </div>
+              {type.paletteEntries.length > 0 && (
+                <p><strong>Creator palette:</strong> {type.paletteEntries.join(', ')}</p>
+              )}
+              <p><a href={type.source.url}>enum definition, line {type.source.line}</a></p>
+            </div>
+
+            <div>
+              <h3>Prototype and renderer</h3>
+              {prototype ? (
+                <>
+                  <dl class="document-type-facts">
+                    <div><dt>Layout component</dt><dd><code>{prototype.renderer}</code></dd></div>
+                    <div><dt>Primary layout field</dt><dd><code>{prototype.dataField}</code></dd></div>
+                    <div><dt>Parser registry</dt><dd>{prototype.rendererRegistered ? 'Registered or intentionally empty' : 'Not registered'}</dd></div>
+                    {prototype.prototypeData && <div><dt>Prototype seed data</dt><dd><code>{prototype.prototypeData}</code></dd></div>}
+                  </dl>
+                  <p><a href={prototype.source.url}>prototype registration, line {prototype.source.line}</a></p>
+                  {prototype.options.length > 0 && (
+                    <div class="document-type-defaults" aria-label={`${type.name} prototype defaults`}>
+                      {prototype.options.map((option: any) => <span><code>{option.key}</code> = <code>{option.value}</code></span>)}
+                    </div>
+                  )}
+                  {prototype.registrations.length > 1 && (
+                    <p class="document-type-note">
+                      This type has {prototype.registrations.length} source registrations. JavaScript module evaluation applies them in order; the later registration in the same module is the effective template.
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p>No prototype is expected. `NONE` is filtered out before prototype IDs are loaded.</p>
+              )}
+            </div>
+
+            <div class="document-type-factories">
+              <h3>Construction and call evidence</h3>
+              {type.factories.length > 0 ? type.factories.map((factory: any) => (
+                <article>
+                  <h4><code>{factory.namespace}.{factory.name}</code></h4>
+                  <p class="document-type-signature"><code>{factory.signature}</code></p>
+                  <dl class="document-type-facts">
+                    <div><dt>Mode</dt><dd>{lifecycleLabels[type.lifecycle]}</dd></div>
+                    <div><dt>Primary field</dt><dd>{factory.primaryField ? <code>{factory.primaryField}</code> : 'none'}</dd></div>
+                    {factory.dataExpression && <div><dt>Initial value</dt><dd><code>{factory.dataExpression}</code></dd></div>}
+                    {factory.collectionViewType && <div><dt>Collection variant</dt><dd><code>{factory.collectionViewType}</code></dd></div>}
+                    <div><dt>Indexed callers</dt><dd>{factory.indexedCallers}</dd></div>
+                  </dl>
+                  {factory.optionFields.length > 0 && (
+                    <p><strong>Factory-supplied fields:</strong>{' '}{factory.optionFields.map((field: any) => <code>{field.key}</code>).reduce((all: any[], item: any, index: number) => [...all, index ? ', ' : '', item], [])}</p>
+                  )}
+                  {factory.callerExamples.length > 0 && (
+                    <p><strong>Representative callers:</strong>{' '}{factory.callerExamples.map((caller: any, index: number) => <>{index ? ', ' : ''}<a href={caller.source.url}>{caller.owner}</a></>)}</p>
+                  )}
+                  <p><a href={factory.source.url}>factory source, line {factory.source.line}</a></p>
+                </article>
+              )) : (
+                <p>No canonical factory calls this prototype. It is selected through another runtime path or used as a view/prototype resource.</p>
+              )}
+            </div>
+          </div>
+        </details>
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  for (const root of document.querySelectorAll('[data-document-type-reference]')) {
+    const query = root.querySelector<HTMLInputElement>('[data-document-type-query]');
+    const category = root.querySelector<HTMLSelectElement>('[data-document-type-category]');
+    const lifecycle = root.querySelector<HTMLSelectElement>('[data-document-type-lifecycle]');
+    const audience = root.querySelector<HTMLSelectElement>('[data-document-type-audience]');
+    const count = root.querySelector('[data-document-type-count]');
+    const rows = [...root.querySelectorAll<HTMLDetailsElement>('[data-document-type-row]')];
+    if (!query || !category || !lifecycle || !audience || !count) continue;
+    const update = () => {
+      const needle = query.value.trim().toLowerCase();
+      let visible = 0;
+      for (const row of rows) {
+        const show =
+          (!needle || row.dataset.search?.includes(needle)) &&
+          (!category.value || row.dataset.category === category.value) &&
+          (!lifecycle.value || row.dataset.lifecycle === lifecycle.value) &&
+          (!audience.value || row.dataset.audience === audience.value);
+        row.hidden = !show;
+        if (show) visible++;
+      }
+      count.textContent = `${visible} type${visible === 1 ? '' : 's'} shown`;
+    };
+    query.addEventListener('input', update);
+    category.addEventListener('change', update);
+    lifecycle.addEventListener('change', update);
+    audience.addEventListener('change', update);
+  }
+</script>
+
+<style>
+  .document-type-reference { container-type: inline-size; margin-block: 1.25rem 2rem; }
+  .document-type-summary { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .65rem; margin-block: 1rem 1.25rem; }
+  .document-type-summary div { border: 1px solid var(--sl-color-gray-5); border-radius: .65rem; padding: .8rem; background: var(--sl-color-gray-7); }
+  .document-type-summary strong { display: block; color: var(--sl-color-accent-high); font-size: 1.45rem; line-height: 1; }
+  .document-type-summary span { display: block; margin-top: .35rem; color: var(--sl-color-gray-2); font-size: .78rem; }
+  .document-type-filters { display: grid; grid-template-columns: minmax(15rem, 2fr) repeat(3, minmax(8.5rem, 1fr)); gap: .75rem; align-items: end; }
+  .document-type-filters label { min-width: 0; color: var(--sl-color-gray-2); font-size: .78rem; font-weight: 650; }
+  .document-type-filters :is(input, select) { width: 100%; min-width: 0; min-height: 2.6rem; margin-top: .3rem; border: 1px solid var(--sl-color-gray-4); border-radius: .5rem; padding: .5rem .65rem; background: var(--sl-color-bg); color: var(--sl-color-white); font: inherit; font-weight: 450; }
+  .document-type-count { margin-block: .85rem; color: var(--sl-color-gray-2); font-size: .85rem; }
+  .document-type-list { display: grid; gap: .55rem; }
+  .document-type-card { overflow: clip; border: 1px solid var(--sl-color-gray-5); border-radius: .7rem; background: var(--sl-color-gray-7); }
+  .document-type-card[open] { border-color: var(--sl-color-accent); background: var(--sl-color-bg); }
+  .document-type-card summary { display: grid; grid-template-columns: minmax(10rem, 1.15fr) minmax(8rem, .8fr) minmax(9rem, .75fr) auto; gap: .8rem; align-items: center; padding: .8rem 1rem; cursor: pointer; list-style: none; }
+  .document-type-card summary::-webkit-details-marker { display: none; }
+  .document-type-card summary::marker { content: ''; font-size: 0; }
+  .document-type-card summary::before { display: none !important; }
+  .document-type-identity { display: grid; grid-template-columns: minmax(3rem, auto) 1fr; gap: .7rem; align-items: baseline; min-width: 0; }
+  .document-type-identity > span { color: var(--sl-color-white); font-weight: 650; }
+  .document-type-serialized { display: flex; gap: .45rem; align-items: baseline; min-width: 0; color: var(--sl-color-gray-2); }
+  .document-type-serialized small { white-space: nowrap; }
+  .document-type-serialized code { overflow-wrap: anywhere; }
+  .document-type-badge { justify-self: start; border-radius: 999px; padding: .25rem .55rem; background: var(--sl-color-blue-low); color: var(--sl-color-blue-high); font-size: .7rem; font-weight: 750; }
+  .document-type-badge--sentinel, .document-type-badge--prototype-only { background: var(--sl-color-gray-6); color: var(--sl-color-gray-1); }
+  .document-type-badge--data-only-factory, .document-type-badge--prototype-resource { background: var(--sl-color-orange-low); color: var(--sl-color-orange-high); }
+  .document-type-chevron { transition: transform .15s ease; }
+  details[open] .document-type-chevron { transform: rotate(180deg); }
+  .document-type-detail { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr) minmax(0, 1.25fr); gap: 1rem; border-top: 1px solid var(--sl-color-gray-5); padding: 1rem; }
+  .document-type-detail > div { min-width: 0; }
+  .document-type-detail h3 { margin: 0 0 .65rem; font-size: .95rem; }
+  .document-type-detail h4 { margin: 0 0 .35rem; font-size: .85rem; }
+  .document-type-detail p { margin-block: .45rem; font-size: .82rem; }
+  .document-type-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .document-type-tags span { border: 1px solid var(--sl-color-gray-5); border-radius: 999px; padding: .15rem .45rem; color: var(--sl-color-gray-2); font-size: .68rem; }
+  .document-type-facts { display: grid; gap: .35rem; margin: 0; font-size: .78rem; }
+  .document-type-facts div { display: grid; grid-template-columns: 7.3rem minmax(0, 1fr); gap: .45rem; }
+  .document-type-facts dt { color: var(--sl-color-gray-2); font-weight: 700; }
+  .document-type-facts dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+  .document-type-defaults { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .7rem; }
+  .document-type-defaults span { max-width: 100%; border-radius: .35rem; padding: .25rem .4rem; background: var(--sl-color-gray-6); font-size: .68rem; overflow-wrap: anywhere; }
+  .document-type-note { border-left: 3px solid var(--sl-color-orange); padding-left: .6rem; color: var(--sl-color-gray-2); }
+  .document-type-factories article + article { margin-top: .8rem; border-top: 1px dashed var(--sl-color-gray-5); padding-top: .8rem; }
+  .document-type-signature code { white-space: normal; overflow-wrap: anywhere; }
+  @container (max-width: 800px) {
+    .document-type-detail { grid-template-columns: 1fr; }
+  }
+  @container (max-width: 680px) {
+    .document-type-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .document-type-filters { grid-template-columns: 1fr 1fr; }
+    .document-type-filters label:first-child { grid-column: 1 / -1; }
+  }
+  @container (max-width: 540px) {
+    .document-type-card summary { grid-template-columns: minmax(0, 1fr) auto; }
+    .document-type-serialized, .document-type-badge { grid-column: 1; }
+    .document-type-chevron { grid-column: 2; grid-row: 1 / span 3; }
+  }
+  @container (max-width: 430px) {
+    .document-type-summary, .document-type-filters { grid-template-columns: 1fr; }
+    .document-type-filters label:first-child { grid-column: auto; }
+    .document-type-identity { grid-template-columns: 1fr; gap: .2rem; }
+  }
+</style>

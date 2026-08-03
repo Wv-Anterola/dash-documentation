@@ -37,6 +37,11 @@ Define defaults through the prototype system and add a factory in
 - Produce a valid empty document
 - Use shared defaults rather than copying unrelated prototypes
 
+Run `npm run audit:documents` in the documentation repository and inspect the
+[generated type catalogue](/reference/document-types/) to confirm that the new
+serialized value, prototype, factory, primary field, renderer, and creation
+surface resolve to one lifecycle.
+
 ## 4. Build the renderer
 
 Implement the type-specific view under `src/client/views/nodes/` or the closest

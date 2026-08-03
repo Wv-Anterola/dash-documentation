@@ -83,9 +83,11 @@ webpack.config.mjs  client bundle configuration
 
 The two files you will edit most often when adding anything are
 `client/documents/DocumentTypes.ts`, which declares the `DocumentType` and
-`CollectionViewType` enums, and `client/documents/Documents.ts`, which holds a
-factory per type. [Architecture](/architecture/) explains why those two files
-are the bottleneck and what the alternatives would cost.
+`CollectionViewType` enums, and `client/documents/Documents.ts`, which owns the
+prototype map and canonical factory primitive. Type-specific prototype
+registrations live beside their renderers. The
+[source-generated document type reference](/reference/document-types/) maps the
+complete path before you edit it.
 
 ## How a document reaches the screen
 
@@ -96,8 +98,9 @@ Worth tracing once, because most debugging ends up somewhere on this path.
 2. The resulting document is a set of typed fields from `src/fields/`.
 3. `DocServer.ts` syncs those fields with the server, which persists them to
    MongoDB through `database.ts`.
-4. `DocumentView.tsx` switches on the document's type and renders the matching
-   component from `views/nodes/`.
+4. `DocumentContentsView` resolves the inherited layout string and parses it
+   with the component registry initialized in `Main.tsx`; specialized
+   collection dispatch may select another subview.
 5. MobX observability on the fields is what re-renders the view when anything
    changes.
 

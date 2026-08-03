@@ -109,8 +109,10 @@ for (const [title, owners] of titles) {
 const overlaySource = await readFile(path.join(root, 'src', 'data', 'symbolOverlays.ts'), 'utf8');
 const referenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'source-reference.json'), 'utf8');
 const httpReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'http-routes.json'), 'utf8');
+const documentReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'document-types.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
+const documentReference = JSON.parse(documentReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -131,6 +133,80 @@ const allowedAccess = new Set([
 const routeKeys = new Map();
 const completeRegistrations = new Set();
 const sourceModules = new Set(sourceReference.modules.map((module) => module.path));
+
+if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Document type reference and generated source reference use different baseline revisions');
+}
+if (documentReference.types.length !== 51 || documentReference.summary.enumTypes !== 51) {
+  errors.push(`Document type inventory changed from the reviewed 51-value enum (${documentReference.types.length} rows)`);
+}
+if (documentReference.summary.prototypeTypes !== 50 || documentReference.summary.prototypeRegistrations !== 51) {
+  errors.push('Document prototype inventory no longer matches the reviewed 50-type / 51-registration model');
+}
+if (documentReference.summary.factoryFunctions < 65 || documentReference.summary.paletteTemplates < 36) {
+  errors.push('Document construction or creator-template coverage fell below the reviewed baseline');
+}
+if (documentReference.summary.rendererComponents < 54 || documentReference.summary.collectionViewTypes !== 21) {
+  errors.push('Renderer or CollectionViewType coverage fell below the reviewed baseline');
+}
+if (documentReference.missingPrototypeTypes.length || documentReference.unregisteredRendererTypes.length) {
+  errors.push('A non-sentinel document type lost its prototype or registered renderer path');
+}
+if (JSON.stringify(documentReference.duplicatePrototypeTypes) !== JSON.stringify([{ type: 'DATAVIZ', registrations: 2 }])) {
+  errors.push('Reviewed duplicate prototype-registration evidence changed');
+}
+
+const documentTypeNames = new Set(documentReference.types.map((type) => type.name));
+for (const type of documentReference.types) {
+  const label = `DocumentType.${type.name}`;
+  if (!type.name || !type.value || !type.category || !type.audience || !type.plainMeaning || !type.technicalRole) {
+    errors.push(`${label}: generated lifecycle row is missing required identity or reviewed explanation`);
+  }
+  if (!sourceModules.has(type.source.file) || !type.source.url.includes(documentReference.repository.baseline) || !type.source.url.endsWith(`#L${type.source.line}`)) {
+    errors.push(`${label}: enum source is absent, mutable, or not line-addressed`);
+  }
+  if (type.name === 'NONE') {
+    if (type.prototype || type.lifecycle !== 'sentinel') errors.push(`${label}: NONE must remain a prototype-free sentinel`);
+    continue;
+  }
+  if (!type.prototype) {
+    errors.push(`${label}: non-sentinel type has no prototype registration`);
+    continue;
+  }
+  if (!type.prototype.rendererRegistered) errors.push(`${label}: prototype renderer is unavailable to the layout parser`);
+  for (const registration of type.prototype.registrations) {
+    if (!sourceModules.has(registration.source.file) || !registration.source.url.includes(documentReference.repository.baseline)) {
+      errors.push(`${label}: prototype registration source is absent or not baseline-pinned`);
+    }
+  }
+  for (const factory of type.factories) {
+    if (!sourceModules.has(factory.source.file) || !factory.source.url.includes(documentReference.repository.baseline)) {
+      errors.push(`${label}: factory source is absent or not baseline-pinned`);
+    }
+    if (factory.primaryField === 'undefined') errors.push(`${label}: explicit JavaScript undefined was misclassified as a field name`);
+  }
+}
+
+for (const template of documentReference.paletteTemplates) {
+  if (!template.title || !template.factory || !template.source?.url) errors.push(`Creator template ${template.key}: incomplete generated mapping`);
+  if (template.documentTypes.some((type) => !documentTypeNames.has(type))) errors.push(`Creator template ${template.key}: references an unknown document type`);
+}
+
+const recomputedDocumentSummary = {
+  enumTypes: documentReference.types.length,
+  prototypeRegistrations: documentReference.types.reduce((count, type) => count + (type.prototype?.registrations.length ?? 0), 0),
+  prototypeTypes: documentReference.types.filter((type) => type.prototype).length,
+  factoryFunctions: documentReference.types.reduce((count, type) => count + type.factories.length, 0),
+  factoryBackedTypes: documentReference.types.filter((type) => type.lifecycle === 'factory-backed' || type.lifecycle === 'data-only-factory').length,
+  paletteTemplates: documentReference.paletteTemplates.length,
+  rendererComponents: documentReference.rendererRegistry.length,
+  layoutOnlyComponents: documentReference.layoutOnlyComponents.length,
+  collectionViewTypes: documentReference.collectionViewTypes.length,
+  duplicatePrototypeTypes: documentReference.duplicatePrototypeTypes.length,
+};
+if (JSON.stringify(documentReference.summary) !== JSON.stringify(recomputedDocumentSummary)) {
+  errors.push('Document type summary is stale relative to its generated lifecycle rows');
+}
 
 if (httpReference.repository.baseline !== sourceReference.repository.baselineTip) {
   errors.push('HTTP route reference and generated source reference use different baseline revisions');
@@ -214,6 +290,6 @@ if (errors.length) {
     `Documentation quality complete: ${files.length} pages have required metadata and unique titles; ` +
       `${images} inline images have reproducible sources and intentional alt text; ` +
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
-      `${httpReference.routes.length} HTTP route registrations pass inventory invariants.`
+      `${httpReference.routes.length} HTTP route registrations and ${documentReference.types.length} document type lifecycles pass inventory invariants.`
   );
 }

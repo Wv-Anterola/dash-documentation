@@ -87,10 +87,12 @@ A PDF is a document. So is a collection of PDFs. So is the link between two of
 them, and so is a presentation trail, and so is a chat message. They differ by
 their type and the fields they carry, not by being different kinds of object.
 
-Documents are created from prototypes. `client/documents/Documents.ts` holds a
-factory function per type, each one calling `InstanceFromProto` with the
-prototype fetched by `Prototypes.get(DocumentType.SOMETHING)`. Those two
-functions have been the way you make a document since 2019.
+Documents are created from prototypes. Renderer modules populate the shared
+prototype template map, and canonical factories in
+`client/documents/Documents.ts` normally call `InstanceFromProto` with the
+prototype fetched by `Prototypes.get(DocumentType.SOMETHING)`. System stores,
+configuration records, and presentation resources use explicit special paths.
+The [document type reference](/reference/document-types/) maps all of them.
 
 This is why linking works the way it does. If a link only had to connect two
 documents, it could be a row in a table. Because a link is itself a document, it
@@ -105,9 +107,10 @@ large share of how independent projects became product capabilities.
 
 ### Document types
 
-`client/documents/DocumentTypes.ts` declares the `DocumentType` enum;
-`Documents.ts` registers a factory for each. Adding a type means an enum value,
-a factory, a view component, and a case in `DocumentView.tsx`.
+`client/documents/DocumentTypes.ts` declares the `DocumentType` enum. A complete
+addition also needs a prototype registration, a construction path, a layout
+component reachable from `DocumentContentsView`, persistence and permission
+behavior, a product entry point, tests, and documentation.
 
 There are fifty-one entries. They run from the core types (rich text, image,
 web, PDF, collection, video, audio, ink) through to types added by recent
@@ -115,14 +118,14 @@ cohorts: the 3D viewer and sketch canvas, the data visualisation box, the video
 generator, the life coach workspace and its events, policy testimony and policy
 checker, journals, tasks, scrapbooks, and the agent itself.
 
-This is the most-used extension point and the cheapest, which is why ten of the
-forty-two recorded projects are new document types. It is also where the
-[registry's limits](/concepts/documents/) show: every
-addition edits the same two core files, so two cohorts adding types in the same
-term will conflict.
+This is a frequently used extension point: ten of the forty-two recorded
+projects introduced document types. The centralized enum and startup registries
+are also shared integration surfaces, so concurrent additions require explicit
+coordination and full lifecycle verification.
 
 <ProjectNote title="Document and field model">
-  Built the prototype system these factories use. `InstanceFromProto` and `Prototypes.get` have not changed since.
+  Supplies the prototype, data-document, and view-delegate ownership contracts
+  used by every later type.
 </ProjectNote>
 
 ### Collection view types

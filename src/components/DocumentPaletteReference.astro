@@ -1,0 +1,38 @@
+---
+import reference from '../data/generated/document-types.json';
+
+const templates = reference.paletteTemplates as any[];
+const factorySources = new Map(
+  (reference.types as any[]).flatMap((type) => type.factories.map((factory: any) => [factory.name, factory.source]))
+);
+const optionNames = (template: any) => template.optionFields.map((field: any) => field.key).filter((key: string) => !key.startsWith('...'));
+---
+
+<div class="palette-reference table-scroll" tabindex="0" aria-label="Creator palette templates; scroll horizontally for all columns">
+  <table>
+    <thead><tr><th scope="col">Button</th><th scope="col">What it creates</th><th scope="col">Underlying code path</th><th scope="col">Template defaults</th><th scope="col">Source</th></tr></thead>
+    <tbody>
+      {templates.map((template) => {
+        const factorySource = factorySources.get(template.factory) as any;
+        return (
+          <tr>
+            <th scope="row"><strong>{template.title}</strong><small>{template.key !== template.title ? `template key: ${template.key}` : ''}</small></th>
+            <td>{template.tooltip ?? `Creates the ${template.key} template.`}<small>{template.documentTypes.length ? `Stored type: ${template.documentTypes.join(', ')}` : 'Custom composition of lower-level document types'}</small></td>
+            <td><code>{template.factory}</code>{factorySource && <small><a href={factorySource.url}>factory definition</a></small>}</td>
+            <td>{optionNames(template).length ? optionNames(template).map((name: string) => <code>{name}</code>) : 'No type-specific options in the palette template'}</td>
+            <td><a href={template.source.url}>template L{template.source.line}</a></td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .palette-reference { margin-block: 1rem 1.5rem; }
+  .palette-reference table { min-width: 72rem; font-size: .78rem; }
+  .palette-reference th, .palette-reference td { vertical-align: top; }
+  .palette-reference small { display: block; margin-top: .3rem; color: var(--sl-color-gray-2); }
+  .palette-reference td:nth-child(4) { max-width: 25rem; }
+  .palette-reference td:nth-child(4) code { display: inline-block; margin: 0 .25rem .25rem 0; }
+</style>
