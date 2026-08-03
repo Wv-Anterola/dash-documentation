@@ -86,13 +86,29 @@ call failed.
 
 - New account and returning account
 - Guest and authenticated session
+- Socket identity that disagrees with the HTTP session
+- Unauthenticated and lower-privilege reads by known document ID
+- Unauthorized create, update, single delete, batch delete, and administrative event
 - Concurrent edits from two clients
+- Same-document ordering and cross-document partial visibility
+- Concurrent list append/removal with matching and mismatching expected lengths
 - Reconnect after an interrupted write
+- Origin acknowledgement, typed database rejection, and optimistic rollback
 - Save/reload of newly introduced fields
+- Every registered field `__type` through serialize, hydrate, nested mutate, and reload
+- Missing and unknown type tags, missing references, and failed script recompilation
 - Old stored documents with missing new fields
 - Permission inheritance and direct overrides
 - Large payload and upload limits
+- Iframe source/origin checks and malformed `postMessage` payloads
+- WebSocket certificate verification in the deployed TLS topology
+- Destructive protocol events absent or server-authorized
 - Expected errors without secrets in logs or responses
+
+Use the [synchronization protocol](/reference/synchronization-protocol/) as the
+wire-level oracle and the
+[security enforcement matrix](/architecture/server-storage-security/#observed-enforcement-matrix)
+as the negative-test inventory.
 
 ## Desktop and optional-service matrix
 

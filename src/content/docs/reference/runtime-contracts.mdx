@@ -41,12 +41,18 @@ only by updating its callers and stored-state assumptions together.
 | `Doc.SetInPlace` | Document model | Document, key, value, ownership default | Write on delegate or data owner | Foundational internal |
 | `Doc.GetLayoutDataDocPair` | Document model | Container context and child | Resolved layout/data pair | Foundational internal |
 | `Documents.Prototypes` and factories | Creation registry | `DocumentType` and initial values | Initialized document shape | Supported extension seam |
+| `SerializationHelper.Serialize`/`Deserialize` | Field runtime | Primitive or registered object | Type-tagged wire value or reconstructed runtime value | Foundational internal |
+| `Deserializable`/`autoObject` | Field runtime | Wire tag, constructor, nested value | Registered object schema | Supported field extension seam |
+| `ProxyField.value`/`setValue` | Reference runtime | Document ID and cache state | Cached document, waiting promise, or missing state | Foundational internal |
+| `ListImpl` proxy and real-value projection | Collection field runtime | Typed members | Observable list with lazy reference batching | Foundational internal |
 | `DocumentContentsView.Init` | Render registry | Renderer map | Global content dispatch table | Supported extension seam |
 | `CollectionView.renderSubView` | Collection renderer | `CollectionViewType` and shared props | Concrete collection view | Supported extension seam |
 | `DocServer.init` | Client synchronization | Protocol, host, port, user ID | Socket, cache, handlers | Internal runtime |
 | `DocServer.GetRefField(s)` | Client synchronization | Document IDs | Identity-preserving hydrated documents | Internal runtime |
 | `DocServer.UpdateField` | Client synchronization | ID and serialized diff | Best-effort outgoing operation | Internal runtime |
-| `WebSocket.UpdateField` | Server synchronization | Authenticated socket and diff | Ordered DB operation and peer broadcast | Internal runtime |
+| `Message.Message` | Shared protocol | Readable message name | Deterministic UUIDv5 wire event | Wire compatibility boundary |
+| `WebSocket.initialize` | Server synchronization | Release mode and TLS credentials | Listening Socket.IO handlers | Security boundary |
+| `WebSocket.UpdateField` | Server synchronization | Identifier-registered socket and diff | Ordered DB operation and peer broadcast | Internal runtime |
 | `Database.update` | Persistence | ID, Mongo update, callback, upsert policy | Serialized write for that ID | Internal runtime |
 | `UndoManager.StartBatch`/`AddEvent` | Reversibility | Name and inverse events | One undo/redo unit | Supported action seam |
 | `LinkFollower.FollowLink` | Navigation | Link endpoint and context | Target selection/navigation | Internal runtime |
@@ -135,6 +141,91 @@ template/context relationship requires it.
 **Failure semantic.** A missing or still-pending child produces a warning and a
 pair containing the unresolved child. A renderer must handle a loading or
 missing value rather than dereference it as complete state.
+
+## Field serialization and lazy-reference contracts
+
+### `SerializationHelper.Serialize(obj)`
+
+**Responsibility.** Preserve primitives directly and convert registered object
+fields to `serializr` data plus a stable `__type` discriminator.
+
+**Precondition.** Every object constructor has been registered through
+`@Deserializable` and every durable member has a schema.
+
+**Invariant.** The wire tag identifies the constructor needed to rebuild the
+runtime behavior. A class name alone is not written as the protocol contract.
+
+**Failure semantic.** Both `undefined` and `null` become serialized `null`. An
+unregistered object constructor throws synchronously.
+
+**Extension obligation.** Round-trip the new value as a top-level document field
+and as a nested list value. Verify the runtime class, value, parent callback, and
+cold-reload mutation behavior.
+
+### `SerializationHelper.Deserialize(obj)`
+
+**Responsibility.** Reconstruct a registered runtime value, then run its optional
+post-deserialization repair.
+
+**Postcondition.** The returned promise resolves only after `serializr` has
+constructed and populated the instance and the registered repair callback has
+been invoked.
+
+**Failure semantic.** Runtime `null`/`undefined` input resolves to `undefined`.
+An object without `__type` warns and resolves to `undefined`; an unknown type tag
+throws.
+
+**Extension obligation.** Preserve the serialized record and type tag in any
+error evidence. Replacing an unknown value with a default would conceal a schema
+or migration failure.
+
+### `Deserializable(tag, repair?, constructorArgs?)` and `autoObject()`
+
+**Responsibility.** Bind one stable wire tag to a constructor, optionally define
+how constructor arguments are recovered, and provide the nested-object schema
+used by documents and lists.
+
+**Invariant.** Each tag is globally unique. Renaming the tag is a stored-data and
+wire compatibility change even when the TypeScript class name stays the same.
+
+**Failure semantic.** Duplicate registration throws during module loading.
+Nested object errors propagate through the containing serialization operation.
+
+### `ProxyField.value` and `setValue(field)`
+
+**Responsibility.** Represent a relationship as a document ID, lazily hydrate
+that identity, and share the client cache with every other reference to the same
+document.
+
+**Postcondition.** A successful resolution clears the waiting promise and exposes
+the cached document. An undefined result clears the promise and marks the proxy
+failed.
+
+**Invariant.** The reference does not embed or clone the target document.
+
+**Failure semantic.** A failed proxy instance does not automatically issue
+another read. Recovery requires a new proxy, a direct forced read, or explicit
+retry behavior at a higher layer.
+
+### `new ListImpl(fields?)` and `ListImpl.__realFields`
+
+**Responsibility.** Return an array-like proxy, attach parent/change callbacks to
+object members, store document members as `ProxyField` identities, and hydrate
+all unresolved members in one batch before real-value iteration.
+
+**Invariant.** All newly discovered unresolved proxies share the same batch read
+and one MobX action for result installation.
+
+**Failure semantic.** `copyWithin` and `Object.defineProperty` are unsupported;
+`fill` rejects `RefField` values. Individual list entries can resolve to
+undefined when their document record is missing.
+
+**Extension obligation.** Test append, removal, replacement, reorder, nested
+mutation, duplicate values, missing references, concurrent edits, copy, undo,
+serialization, and cold reload.
+
+The complete value catalogue and mutation sequence are in
+[field runtime and serialization](/architecture/field-runtime/).
 
 ## Rendering contracts
 
@@ -230,6 +321,42 @@ an authenticated editable user. Seeing the field change in the initiating
 window is insufficient evidence.
 
 ## Server ordering and persistence contracts
+
+### `Message.Message`
+
+**Responsibility.** Derive the actual Socket.IO event identifier as UUIDv5 of
+the readable message name under the URL namespace.
+
+**Invariant.** Client and server using the same readable name derive the same
+wire event without sharing a separately generated constant.
+
+**Failure semantic.** Changing punctuation, capitalization, or wording changes
+the UUID and silently separates mixed-version peers unless compatibility is
+provided.
+
+**Extension obligation.** Treat message names as protocol identifiers. Test the
+derived UUID, direction, payload, callback, origin behavior, and peer behavior.
+
+### `WebSocket.initialize(isRelease, credentials)`
+
+**Responsibility.** Start the Socket.IO listener, install connection and message
+handlers, emit the handshake/statistics, and expose the server termination
+helper.
+
+**Postcondition.** Connections on the resolved socket port can invoke the
+registered read, write, delete, gesture, utility, and statistics paths.
+
+**Security precondition.** A production implementation must attach a trusted
+server identity to each socket and authorize every operation before database
+access. The current initializer does not establish those controls itself.
+
+**Failure semantic.** The termination helper emits literal
+`connection_terminated` with a timestamp; the client alert handler listens on
+the deterministic UUID for `Connection Terminated` and expects a reason string.
+The two paths do not currently interoperate.
+
+The full event and acknowledgement catalogue is in the
+[synchronization protocol reference](/reference/synchronization-protocol/).
 
 ### `WebSocket.UpdateField(socket, diff)`
 

@@ -99,3 +99,31 @@ test('shows availability and source evidence without exposing revision hashes', 
   await expect(page.getByText(reference.repository.baselineTip.slice(0, 12))).toHaveCount(0);
   await expect(page.getByText(/immutable source link/).first()).toBeVisible();
 });
+
+test('documents field encoding, the wire protocol, and observed security boundaries', async ({ page }) => {
+  await page.goto('/architecture/field-runtime/');
+  await expect(page.getByRole('heading', { name: 'Field runtime and serialization' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Seven-stage lifecycle/ })).toBeVisible();
+  await expect(page.locator('li').filter({ hasText: 'become serialized' })).toContainText(
+    'undefined and null become serialized null'
+  );
+
+  await page.goto('/reference/synchronization-protocol/');
+  await expect(page.getByRole('heading', { name: 'Synchronization protocol reference' })).toBeVisible();
+  await expect(page.getByText('85ff0b5e-3e4c-5f4a-8434-50c8b8782bfe')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Consistency model' })).toBeVisible();
+  await expect(page.getByText('None for ordinary create/update/delete')).toBeVisible();
+
+  await page.goto('/architecture/server-storage-security/');
+  await expect(page.getByRole('heading', { name: 'Observed enforcement matrix' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Trust-boundary map/ })).toBeVisible();
+  await expect(page.getByText('Current destructive protocol surface')).toBeVisible();
+
+  await page.goto(`/technical/api/modules/${slug('src/client/util/SerializationHelper.ts')}/`);
+  const serialize = page.locator('details').filter({
+    has: page.locator('summary code').filter({ hasText: /^Serialize$/ }),
+  });
+  await serialize.locator('summary').click();
+  await expect(serialize.getByText('Failure semantic:', { exact: false })).toBeVisible();
+  await expect(serialize.getByText(/unregistered object constructor throws/)).toBeVisible();
+});

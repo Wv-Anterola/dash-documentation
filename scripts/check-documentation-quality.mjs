@@ -85,6 +85,10 @@ for (const filename of files) {
     errors.push(`${relative}: duplicate section heading creates an ambiguous anchor (${heading})`);
   }
 
+  if (/\uFFFD|\u00C3.|\u00E2[^\s]/u.test(source)) {
+    errors.push(`${relative}: probable mojibake or replacement character in authored text`);
+  }
+
   if (!relative.includes('/contributing/') && !relative.includes('/research/release-history')) {
     const metaPatterns = [
       /when checked on \d{1,2}\s+[A-Z][a-z]+\s+20\d{2}/i,

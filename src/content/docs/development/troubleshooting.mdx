@@ -164,14 +164,19 @@ Check:
 After reconnecting, reload before editing important data. Local changes made
 while disconnected are not proven durable.
 
-### A server restart alert appears repeatedly
+### Server disconnects but no reason-specific alert appears
 
 **Boundary:** explicit server termination path.
 
-The client handles `ConnectionTerminated` reasons `crash`, `temporary`, and
-`exit`, then reloads. An unknown reason is logged and still reloads. Repeated
-alerts indicate the server or monitor continues terminating sessions; inspect
-the server/monitor process rather than the browser reload loop.
+The client registers the UUID-derived `Connection Terminated` message and expects
+a `crash`, `temporary`, or `exit` reason. The current server `_disconnect`
+helper instead broadcasts literal `connection_terminated` with a timestamp and
+then closes the socket. Those event names and payloads do not match.
+
+Capture the event name on both sides. If repairing the path, test each reason,
+the unknown-reason fallback, reload behavior, and reconnect behavior with the
+actual Socket.IO event identifier. Do not treat a generic transport disconnect
+as proof that the reason-specific handler ran.
 
 ### One client updates but another does not
 
@@ -188,6 +193,22 @@ Test both cases:
 2. target first opened after the initiating edit.
 
 The first checks broadcast/cache handling; the second checks persistence.
+
+### A private document can be read by a direct protocol request
+
+**Boundary:** server authorization, not rendering.
+
+The current WebSocket read callbacks query by document ID without receiving a
+trusted session identity or evaluating the document ACL in that handler.
+Client-side ACL rendering and hidden controls do not prevent a modified client
+from emitting the wire event.
+
+Treat this as a security defect, not a cache defect. Preserve the requesting
+identity, document ID, event UUID, response shape, and deployment topology as
+evidence without copying private content into logs. Then restrict network
+exposure and implement server-side authentication and per-resource
+authorization before relying on the channel for sensitive data. See the
+[security enforcement matrix](/architecture/server-storage-security/#observed-enforcement-matrix).
 
 ## An edit appears, then disappears after reload
 

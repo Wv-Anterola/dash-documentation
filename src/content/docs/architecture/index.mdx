@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: A source-verified map of Dash's document runtime, rendering, collections, links, agents, persistence, desktop packaging, and extension points.
+description: A source-verified map of Dash's document and field runtimes, rendering, collections, links, agents, synchronization, persistence, desktop packaging, and extension points.
 ---
 
 import ProjectNote from '../../../components/ProjectNote.astro';
@@ -25,11 +25,12 @@ matches the question you are trying to answer:
 - [Architecture decisions and tradeoffs](/architecture/decisions-tradeoffs/) —
   the pressure, mechanism, contract, cost, and reconsideration signal behind
   each major design choice.
-
 - [System map](/architecture/system-map/) — client, server, persistence,
   external services, and desktop runtime at a glance.
 - [Document model](/architecture/document-model/) — fields, prototypes,
   layout/data separation, delegation, and identity.
+- [Field runtime and serialization](/architecture/field-runtime/) — typed
+  values, parent/change wiring, type tags, lazy references, lists, and hydration.
 - [Rendering lifecycle](/architecture/rendering-lifecycle/) — factory to
   `DocumentView` dispatch to reactive view updates.
 - [Collections and views](/architecture/collections-views/) — the collection
@@ -39,7 +40,10 @@ matches the question you are trying to answer:
 - [Agents and AI](/architecture/agents-ai/) — retrieval, agent loops, tool
   execution, model adapters, and trust boundaries.
 - [Server, storage, and security](/architecture/server-storage-security/) —
-  Express routes, MongoDB, files, authentication, and deployment boundaries.
+  Express routes, MongoDB, files, authentication, observed enforcement, and
+  deployment boundaries. Use the
+  [synchronization protocol](/reference/synchronization-protocol/) for the exact
+  Socket.IO event and consistency contract.
 - [Import and export](/architecture/import-export/) — ingestion, conversion,
   external APIs, and portability limits.
 - [Desktop and local models](/architecture/desktop-local-models/) — Electron

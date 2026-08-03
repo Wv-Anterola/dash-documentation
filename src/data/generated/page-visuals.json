@@ -39,10 +39,6 @@
     "src": "/assets/gifs/environment/dash-flyout.gif",
     "alt": "Dash demonstration of Flyout."
   },
-  "/architecture/server-storage-security": {
-    "src": "/assets/gifs/gettingstarted/dash-pin-doc.gif",
-    "alt": "Dash demonstration of Pin Doc."
-  },
   "/architecture/system-map": {
     "src": "/assets/gifs/environment/menu-panel.gif",
     "alt": "Dash demonstration of Menu Panel."

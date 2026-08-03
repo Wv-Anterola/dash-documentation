@@ -1,6 +1,6 @@
 ---
 title: Server, storage, identity, and security
-description: Express responsibilities, MongoDB persistence, sessions, access control, external-service boundaries, and operational review.
+description: Current persistence, session, WebSocket authorization, ACL, embedded-content, provider, and operational trust boundaries.
 sidebar:
   order: 8
 ---
@@ -8,6 +8,8 @@ sidebar:
 import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
+
+![Trust-boundary map separating browser safeguards, HTTP authentication, Socket.IO mutation handlers, persistence, embedded content, and external services](/assets/images/diagrams/dash-trust-boundaries.svg)
 
 ## Why persistence is an operation stream over an object graph
 
@@ -19,7 +21,9 @@ the database retains serialized document records.
 
 This is a pragmatic synchronization model rather than a claim of conflict-free
 offline collaboration. Server list operations contain additional merge handling;
-features with concurrent structural edits still need explicit tests.
+features with concurrent structural edits still need explicit tests. The exact
+event identifiers, payloads, callback behavior, and ordering rules are listed in
+the [synchronization protocol reference](/reference/synchronization-protocol/).
 
 ## Write protocol
 
@@ -64,25 +68,123 @@ Server-side checks remain necessary for:
 - Dynamic tool storage
 - External service credentials
 
+## Observed enforcement matrix
+
+This table separates behavior present in the canonical server from controls that
+a production deployment must add or verify. A browser restriction is a usability
+safeguard, not authorization.
+
+| Surface | Enforcement observed in source | Not established by that enforcement |
+| :--- | :--- | :--- |
+| Password login | User passwords are salted and hashed with `bcrypt`; Passport and session components serve HTTP authentication | This does not automatically authenticate a separate Socket.IO connection |
+| Guest writes | `DocServer` suppresses create, update, and delete emits when the client email is `guest` | A modified client can emit the same wire event directly |
+| Read-only mode | The browser swaps create/update implementations for cache-only/no-op behavior | Delete helpers do not check read-only mode; no server policy is created |
+| Socket registration | `Foo`/`Bar` maps a socket to the identifier supplied by the client | The WebSocket initializer does not bind that identifier to an HTTP session or signed credential |
+| Document reads | Callback handlers query MongoDB by requested document ID | The handlers do not receive an authorization context or test a document ACL |
+| Create/update/delete | The update path requires a registered socket before queueing; database handlers persist and broadcast operations | Create and delete handlers do not require registration; none of these handlers performs a per-document ACL decision |
+| Client ACL behavior | Document and rendering code carries effective-ACL concepts and hides inaccessible values in client paths | Client filtering cannot protect database records from direct protocol access |
+| Database deletion utility | A `Delete All` message and `doDelete(false)` path exist | The registered handler has no role or administrator check in this WebSocket layer |
+| WebSocket TLS | The client selects `wss` for HTTPS pages | The Socket.IO client sets `rejectUnauthorized: false`, so certificate verification is not asserted here |
+| Embedded HTML | The iframe is sandboxed | It combines `allow-scripts` with `allow-same-origin`, and its state messages use wildcard target origins |
+| Browser provider settings | Configuration labels distinguish browser-exposed values from server settings | Any value bundled into the browser must be treated as public and separately restricted |
+
+The matrix is implementation-specific. It does not claim that an upstream proxy
+or private deployment supplies none of these controls; it states what this
+application layer proves on its own.
+
+## WebSocket authorization boundary
+
+The document channel is a separate security boundary from HTTP routes.
+`WebSocket.initialize` creates a Socket.IO server and installs its handlers
+directly. The readable handshake names are converted to deterministic UUID event
+identifiers, but event-name obscurity is not access control.
+
+The current update path checks whether the socket has a `socketMap` entry. That
+entry is created from the client's `Bar` payload. Read, create, and delete
+handlers do not use that check, and no handler loads an authenticated session or
+evaluates the requested document's ACL before reaching the database.
+
+Consequences for deployment and testing:
+
+- Knowing a document ID can be sufficient to request its serialized record on
+  this channel unless another network layer prevents access.
+- Hiding a command in the React interface does not prevent a direct event emit.
+- A shared parent does not authorize every referenced child.
+- A test that only clicks the interface cannot establish server authorization.
+- A negative protocol test must attempt each read and mutation as a different,
+  unauthenticated, and lower-privilege identity.
+
+:::danger[Current destructive protocol surface]
+When `isRelease` is true, the server registers the `Delete All` message and its
+handler calls `doDelete(false)`, which drops schemas and recreates the guest user.
+The handler performs no administrator check in this layer. Do not expose this
+channel to untrusted clients until the event is removed or protected by
+server-verified authorization.
+:::
+
+## Security remediation order
+
+### P0: establish server authority
+
+1. Authenticate Socket.IO during connection middleware with the same trusted
+   identity model as HTTP sessions; ignore client-asserted identity strings.
+2. Authorize every read, create, update, delete, batch delete, and administrative
+   operation on the server.
+3. Remove `Delete All` from network-reachable production registration or require
+   a separately audited administrator capability.
+4. Validate operation paths and serialized values before passing them to MongoDB.
+5. Return typed success/error acknowledgements so the origin can reconcile or
+   roll back optimistic state.
+
+### P1: constrain content and transport
+
+1. Restore certificate verification and document the trusted development
+   certificate strategy.
+2. Restrict iframe messaging by expected source and origin; reconsider the
+   combined same-origin/script sandbox capabilities.
+3. Enforce upload size, MIME/content agreement, storage path, and access policy
+   at the server.
+4. Scope browser-visible provider keys by origin, API, quota, and least
+   privilege; keep privileged credentials server-side.
+
+### P2: make enforcement observable
+
+1. Record authorization decisions without logging document content or secrets.
+2. Correlate a mutation from user action through socket, database result, peer
+   broadcast, and cold reload.
+3. Alert on denied administrative events, repeated unknown document reads, and
+   malformed serialized types.
+4. Add dependency, session, backup, retention, and incident-response review to
+   the release evidence.
+
 ## Sessions and identity
 
+The user model stores an email, a bcrypt-hashed password, password-reset state,
+provider tokens, and IDs for the user's account, sharing, link, and cache
+documents. Mongoose timestamps the record. The guest initializer creates the
+reserved guest user and document IDs.
+
 Session state is stored through the server session layer, with Mongo-backed
-storage in the current implementation. Treat session identifiers and
-serialized session content as secrets.
+storage in the current implementation. Treat session identifiers and serialized
+session content as secrets.
 
 Review session behavior for:
 
 - Expiration
-- Logout/invalidation
+- Logout and invalidation
+- Cookie `Secure`, `HttpOnly`, and `SameSite` policy
 - Encryption configuration
 - Error handling during store access
 - Multiple device/browser sessions
+- Socket invalidation when the session ends
 
 ## Document persistence
 
 Dash persists an object graph containing typed fields and document references.
 Persistence must preserve identity and must not recursively duplicate a shared
-document simply because several parents reference it.
+document simply because several parents reference it. The
+[field runtime](/architecture/field-runtime/) describes the exact type-tag and
+post-deserialization contract.
 
 Test save/reload for:
 
@@ -103,14 +205,26 @@ Nested access requires explicit review:
 
 ```text
 shared collection
-  ├─ readable child
-  ├─ private child
-  └─ alias of a document shared elsewhere
+  |-- readable child
+  |-- private child
+  `-- alias of a document shared elsewhere
 ```
 
 The parent being readable does not automatically authorize every child. Search,
 backlinks, agent discovery, and export must filter inaccessible documents as
 well as direct rendering.
+
+An authorization decision should define:
+
+- Subject: authenticated user or service identity
+- Action: read, create, update, delete, share, export, or administer
+- Resource: exact document, file, group, tool, or provider operation
+- Context: ownership, group membership, link traversal, and requested fields
+- Result: allow or deny with a stable reason code
+
+The server should make that decision before reading sensitive fields or applying
+a database operation. The browser may repeat it for responsive UX, but it cannot
+replace it.
 
 ## External services
 
@@ -119,17 +233,19 @@ Features may connect to:
 - Model APIs
 - Local Ollama through the agent service
 - Mapbox
-- Web scraping/search targets
+- Web scraping and search targets
+- Calendar and identity providers
 - Media-generation providers
 
 For each integration, document:
 
 - Data sent
-- Credential location
-- Timeout and retry behavior
+- Credential location and scope
+- Timeout, retry, and rate-limit behavior
 - User-visible error state
-- Logging/redaction policy
+- Logging and redaction policy
 - Whether results are persisted
+- Data retention and provider training policy
 - Offline behavior
 
 Never render a secret into client-accessible documentation or store it as an
@@ -142,17 +258,39 @@ adversarial. Apply type, size, and access checks at the server boundary where
 possible. Treat document text used by an agent as untrusted even when the file
 format itself is valid.
 
+An upload pipeline should validate the claimed and detected media type, maximum
+bytes and dimensions, filename/path handling, decompression limits, parser
+timeouts, storage ACL, malware policy, and deletion/retention path. A successful
+client preview is not evidence that the server stored safe content.
+
+## Embedded content boundary
+
+`HTMLBox` renders generated or imported HTML through `iframe.srcdoc`. The iframe
+uses `sandbox="allow-scripts allow-same-origin"`; the parent and iframe exchange
+`save`, `save_state`, `load_state`, `doc_height`, and `iframe_rendered` messages.
+The parent verifies that incoming messages came from the iframe window, but
+outgoing messages use `"*"` as the target origin.
+
+For untrusted HTML, review this as an active-code boundary rather than a media
+preview. A hardened design should use a distinct origin where practical,
+validate message schemas, require the expected origin in both directions, and
+minimize data exposed to the frame.
+
 ## Operational checklist
 
 - Production secrets are provided through environment configuration.
-- MongoDB and session stores have backups and retention policy.
+- MongoDB and session stores have backups and a tested restore procedure.
 - Logs redact credentials and sensitive document content.
 - CORS, cookies, and transport security match the deployment.
 - External providers and model versions are recorded.
 - Lower-privilege permission tests cover nested documents.
 - Dynamic tool endpoints are restricted and audited.
 - Error responses do not expose stack traces or filesystem paths.
+- Socket identities are derived from trusted server authentication state.
+- Every document protocol operation has a negative authorization test.
+- Destructive administrative events are absent or separately authorized.
+- The initiating client receives a typed persistence result.
 
-This page documents architecture, not a deployment security certification.
-Review the active environment before handling regulated or highly sensitive
-data.
+This page documents architecture and observed controls, not a deployment
+security certification. Review the active environment before handling regulated
+or highly sensitive data.

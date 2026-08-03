@@ -1,0 +1,275 @@
+---
+title: Field runtime and serialization
+description: How Dash values acquire type, ownership, change propagation, wire representation, lazy references, and identity-preserving hydration.
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+![Seven-stage lifecycle from a document assignment through a typed field, change propagation, serialization, storage, hydration, and the identity cache](/assets/images/diagrams/dash-field-runtime.svg)
+
+## Why Dash has a field runtime
+
+A Dash document is not a plain JavaScript object that happens to be saved. Its
+fields must support several behaviors at once:
+
+- Primitive values must remain easy to read and write.
+- References must preserve identity instead of recursively copying documents.
+- Nested objects and lists must report mutations to their owning document.
+- Specialized values must survive a JSON/MongoDB round trip with their runtime
+  class restored.
+- Cold references must load asynchronously without issuing the same request for
+  every consumer.
+- Computed values must participate in MobX dependency tracking without being
+  confused with durable state.
+
+The field runtime is the layer that provides those behaviors. It sits between
+document-facing code such as `doc.title = "Idea"` and the serialized operation
+sent by `DocServer`.
+
+## Runtime value universe
+
+`FieldType` admits three primitive kinds plus `ObjectField` and `RefField`.
+Concrete classes refine the last two categories.
+
+| Runtime family | Examples | Stored payload | Important behavior |
+| :--- | :--- | :--- | :--- |
+| Primitive | `number`, `string`, `boolean` | JSON primitive | Assigned and compared directly |
+| Identity-bearing reference | `Doc` | `id`, `fields`, `__type: "Doc"` | One persistent identity; constructor returns a proxy |
+| Lazy document reference | `ProxyField`, `PrefetchProxy` | `fieldId`, type tag | Resolves from the cache or requests the target by ID |
+| Observable collection | `List` | `fields[]`, type tag | Array-like proxy, nested callbacks, batched reference hydration |
+| Media/URL value | `ImageField`, `PdfField`, `AudioField`, `VideoField`, `WebField`, `CsvField`, `YoutubeField`, `Viewer3DField` | URL plus a distinct type tag | Reconstructs the semantic media type, not just a string |
+| Rich text | `RichTextField` | ProseMirror JSON string and plain text | Preserves formatted structure and a searchable text projection |
+| Executable value | `ScriptField`, `ComputedField` | Source/options/captures/cache | Recompiles after deserialization; computed reads use MobX |
+| Structured interaction value | `InkField`, `CursorField`, `SchemaHeaderField` | Typed nested fields | Mutator methods explicitly notify the parent |
+| Scalar wrapper | `DateField`, `HtmlField`, `IconField` | Date or string payload | Preserves meaning and conversion behavior across persistence |
+
+This is a closed serialization set. Adding a TypeScript class does not make it
+persistable. A persistent object type must be registered with
+`@Deserializable(tag)` and declare the fields that `serializr` should retain.
+
+## Assignment and ownership
+
+The `Doc` constructor returns a JavaScript `Proxy`. The proxy's setter validates
+and normalizes a value, records ownership, creates undo information when
+appropriate, updates observable state, and produces a server operation. Code
+outside the field layer therefore uses normal property syntax while the runtime
+retains a precise mutation boundary.
+
+Object-valued fields receive two internal connections when attached:
+
+1. `Parent` points to the containing `Doc` or `List`.
+2. `FieldChanged` points to a callback that can translate an inner mutation
+   into a document-level operation.
+
+This is why a value such as `SchemaHeaderField` calls `FieldChanged` from
+`setHeading`, `setColor`, and its other mutators. Replacing the whole field goes
+through the document proxy automatically; changing a property inside the field
+must explicitly notify its parent.
+
+:::caution[Plain nested objects are not persistent fields]
+Mutating an arbitrary property on an unregistered plain object does not provide
+type restoration, parent wiring, or a server operation. Use a registered
+`ObjectField`, a `List`, or a separate `Doc` when nested state must be durable.
+:::
+
+## Document storage shape
+
+`Doc` inherits its stable `id` from `RefField`. Its serializable field map is
+written under `fields`; the serializer adds the type discriminator.
+
+```json
+{
+  "id": "document-guid",
+  "fields": {
+    "title": "Research question",
+    "proto": {
+      "fieldId": "prototype-guid",
+      "__type": "proxy"
+    },
+    "data": {
+      "fields": ["alpha", "beta"],
+      "__type": "list"
+    }
+  },
+  "__type": "Doc"
+}
+```
+
+The exact fields depend on the document. The structural rules do not:
+
+- The MongoDB record is keyed by document identity.
+- The field map contains primitives or registered serialized objects.
+- A relationship to another document is represented by its ID, not by an
+  embedded copy of the target graph.
+- Layout delegates and data documents remain separate records when they have
+  separate identities.
+
+## Serialization registry
+
+`SerializationHelper.Serialize` applies this decision sequence:
+
+1. `undefined` and `null` become serialized `null`.
+2. Non-object primitives pass through unchanged.
+3. An object constructor must exist in the decorator-created reverse registry.
+4. `serializr` emits the class's declared properties.
+5. Dash adds the registered name as `__type`.
+
+The reverse registry is keyed by JavaScript constructor name, while the wire
+registry is keyed by the explicit `@Deserializable` tag. Registration rejects a
+duplicate tag. Serialization throws for an unregistered object class.
+
+`Deserialize` applies the inverse decision sequence:
+
+1. `undefined` or `null` resolves to runtime `undefined`.
+2. A primitive passes through unchanged.
+3. An object without `__type` logs a warning and resolves to `undefined`.
+4. An unknown type tag throws.
+5. `serializr` constructs the registered class and populates its declared data.
+6. The optional class-specific post-deserializer restores behavior that cannot
+   be represented as JSON.
+
+The `null`/`undefined` conversion is intentionally documented because the two
+states are not preserved as distinct values across this boundary.
+
+## Post-deserialization repair
+
+JSON can preserve data but not closures, proxy traps, MobX derivations, or an
+object's place in the client identity cache. Dash repairs those concerns at
+several levels:
+
+- `Doc` and `List` field-map setters reinstall `Parent` and `FieldChanged` on
+  nested `ObjectField` values.
+- `ProxyField` reconnects its `fieldId` to an existing cached document when one
+  is available.
+- `ScriptField` recompiles stored source and reconstructs captured document
+  references.
+- `Doc` refreshes cached access-control information after construction.
+- `afterDocDeserialize` marks nested callbacks as serialization work so normal
+  mutation effects are not confused with a user edit.
+
+Post-deserialization work may be asynchronous. A hydrated object should not be
+treated as fully ready merely because its constructor returned.
+
+## Lazy references and identity
+
+`ProxyField.value` has three observable outcomes:
+
+| State | Returned value | Next action |
+| :--- | :--- | :--- |
+| Target already cached | The cached `Doc` | No network request |
+| Target absent and not requested | A waiting promise | `GetRefField(fieldId)` starts once |
+| Prior resolution failed | `undefined` | No automatic repeat from that proxy |
+
+On a successful request, `setValue` replaces the waiting state with the document.
+On a missing result, it marks the proxy failed. `GetRefField` itself stores either
+the hydrated document or an in-flight promise under the ID, so concurrent callers
+share one request and converge on one object identity.
+
+`GetRefField(id, true)` is different: it refreshes an existing cached `Doc` in
+place. Replacing the object's properties while retaining the object instance is
+what keeps MobX observers and other references attached to the same identity.
+
+## List semantics
+
+`List` is a `ListImpl` returned through a JavaScript proxy. It presents familiar
+array access while storing `Doc` members as `ProxyField` instances internally.
+
+### Mutation classes
+
+| Operation | Emitted intent | Notes |
+| :--- | :--- | :--- |
+| `push(...)` | `$addToSet` with items and resulting length | Sets parent callbacks on object items |
+| Pure deletion `splice(start, count)` | `$remFromSet` with items, resulting length, and positional hint | Server reconciles against its current list |
+| Append-only `splice(...)` | `$addToSet` | Only when insertion is at the current end |
+| Replacement/reorder/general splice | Whole-field update | Used when the mutation cannot be represented safely as append/remove intent |
+| `fill` with `RefField` | Throws | Explicitly unsupported |
+| `copyWithin` | Throws | Explicitly unsupported |
+
+The protocol names `$addToSet` and `$remFromSet` describe Dash list intent; they
+are not forwarded as MongoDB set operators for structured lists. The server
+reads its current list, constructs a composite result, rewrites the operation to
+`$set`, and persists that result.
+
+### Batched hydration
+
+Reading an iteration method or the internal real-value projection identifies all
+unrequested `ProxyField` members. The list sends one `GetRefFields` request,
+installs the results in one MobX action, and gives each proxy the shared promise.
+The purpose is both network efficiency and one coherent render invalidation.
+
+### Copy behavior
+
+`List[Copy]` creates a new list and calls `Copy` on contained `ObjectField`
+values. Primitive values pass through. A contained document is stored as a
+proxy reference, so copying the list does not recursively clone the referenced
+document graph.
+
+## Script and computed fields
+
+`ScriptField` stores compiled-script metadata, original source, an optional
+setter script, an optional cached result, and serialized captures. Captured
+documents are encoded as `ID-><document-id>` and resolved again during
+deserialization. Booleans and numbers are parsed back into their primitive
+types; remaining values stay strings.
+
+`ComputedField.value(doc)` runs through `computedFn`. It supplies:
+
+- `this`: the owning document
+- `_last_`: the prior computed result
+- `_setCacheResult_`: the controlled cache setter
+- `_readOnly_`: a signal used by scripts that must avoid write side effects
+
+A JavaScript array result is converted into a Dash `List`. A cached result wins
+over recomputation. `ComputedField.DisableCompute` temporarily prevents field
+conversion from evaluating a computation.
+
+The persisted script is active content. Loading it recompiles code; executing it
+may reach any mutation or external capability exposed through scripting globals.
+Treat script provenance and global registration as security boundaries.
+
+## Media and rich-text fields
+
+URL-backed fields share one `URLField` implementation but retain distinct type
+tags. Relative same-origin URLs serialize as paths; external and data URLs retain
+their full form. Deserialization resolves relative paths against the current
+origin.
+
+`RichTextField` stores both the ProseMirror JSON representation and a plain-text
+projection. The constructor requires those values to agree semantically. If the
+plain text does not reflect the formatted representation, search, rendering,
+and editor synchronization can diverge.
+
+## Failure matrix
+
+| Failure | Observable result | Correct response |
+| :--- | :--- | :--- |
+| Unregistered object serialized | Synchronous error naming the constructor | Register an intentional type or replace it with a supported field |
+| Missing `__type` during hydration | Warning and `undefined` | Inspect the stored record or migration path |
+| Unknown `__type` | Deserialization error | Restore the class registration or migrate the record |
+| Missing referenced document | Proxy resolves to `undefined` and records failure | Handle the missing relation; do not dereference blindly |
+| Nested object mutated without notification | Local property may change without durable operation | Use the field's mutator or replace the field through the document proxy |
+| Script fails to compile after load | Deserializer rejects finalization | Preserve source and options in diagnostics; do not silently replace the value |
+| Unsupported list operation | Synchronous error | Express the edit with supported splice/assignment semantics |
+| Rich-text projections disagree | Editor/search artifacts or update loops | Regenerate both representations from one source of truth |
+
+## Extension contract for a new field type
+
+A persistent field class is complete only when all of these are true:
+
+1. It extends the appropriate `ObjectField` or `RefField` base.
+2. It has a unique, stable `@Deserializable` tag.
+3. Every durable member has an explicit `serializr` schema.
+4. Nested mutations invoke `FieldChanged`.
+5. `Copy`, JavaScript conversion, script conversion, and plain-string conversion
+   have deliberate semantics.
+6. Deserialization restores every non-data invariant.
+7. A document round trip reproduces its runtime class and value.
+8. A nested mutation persists after a cold reload.
+9. Undo and redo restore the previous and next values.
+10. Missing, malformed, and historical payloads fail visibly and recoverably.
+
+Continue with the [document model](/architecture/document-model/), the
+[synchronization protocol](/reference/synchronization-protocol/), and the
+[generated source reference](/technical/api/).

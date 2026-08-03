@@ -1,0 +1,300 @@
+---
+title: Synchronization protocol reference
+description: Exact Dash Socket.IO events, payloads, callbacks, ordering, reconciliation, failure semantics, and current trust-boundary behavior.
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+![Sequence diagram separating callback-confirmed reads from optimistic writes, per-document server queues, database callbacks, peer broadcasts, and list reconciliation](/assets/images/diagrams/dash-sync-wire-protocol.svg)
+
+## Scope
+
+This reference describes the document synchronization channel implemented by
+`DocServer`, `Message`, `WebSocket`, and `Database`. It is a description of the
+current protocol, including its limitations. It is not a compatibility promise
+for third-party clients.
+
+Dash uses Socket.IO with WebSocket transport for this channel. Most application
+events are not emitted under their readable names. `Message<T>` derives a UUIDv5
+from each readable name using the standard URL namespace; the UUID is the actual
+Socket.IO event identifier.
+
+## Connection state machine
+
+```text
+DISCONNECTED
+  │ Socket.IO transport connects
+  ▼
+CONNECTED, UNIDENTIFIED
+  │ server emits Foo UUID with "handshooken"
+  ▼
+CLIENT IDENTIFICATION
+  │ client emits Bar UUID with USER_ID
+  ▼
+REGISTERED
+  │ server adds socket → "<identifier> at <time>" to socketMap
+  ├─ callback reads are accepted
+  ├─ creates, updates, and deletes are accepted
+  └─ disconnect records logout statistics
+```
+
+The `Bar` payload is called a GUID in older source comments, but the current
+caller supplies the `identifier` passed to `DocServer.init`. Registration proves
+that the handshake ran. It does not, by itself, cryptographically bind the socket
+to an authenticated HTTP session.
+
+## Typed event catalogue
+
+| Readable message | Wire event UUID | Direction | Payload | Reply or fan-out |
+| :--- | :--- | :--- | :--- | :--- |
+| `Foo` | `3af9ab63-03af-510d-b84e-d7214b4d424f` | Server → connecting client | `"handshooken"` | Client responds with `Bar` |
+| `Bar` | `e7d52d0a-0a44-5143-bde2-d0f8a4b9b492` | Client → server | User identifier string | No callback; server registers socket |
+| `Get Ref Field` | `92863e74-b379-5e3e-a3ce-5cf127975bcd` | Client → server | Document ID plus Socket.IO callback | Callback receives one serialized record or no record |
+| `Get Ref Fields` | `927accae-1881-52e2-86b3-f0fbce9c5b54` | Client → server | Document ID array plus callback | Callback receives serialized records found for those IDs |
+| `Create Ref Field` | `14e06390-24ea-53b1-9e76-3ac444692cf1` | Client → server | Serialized `Doc` record | Insert is started; no client callback and no peer broadcast |
+| `Update Ref Field` | `85ff0b5e-3e4c-5f4a-8434-50c8b8782bfe` | Client → server | `{ id, diff }` | After persistence, normally broadcast to peers only |
+| `Delete field` | `7e30ef46-00f7-5281-996a-baaba23d5605` | Client → server | Document ID | After delete promise resolves, broadcast to peers only |
+| `Delete fields` | `5afe7294-67ae-5220-a698-779510978af4` | Client → server | Document ID array | After delete promise resolves, broadcast to peers only |
+| `Gesture Points` | `76e53981-87e7-5694-b97b-7837e203b92f` | Client → server | Points, bounds, optional width/color | Broadcast as literal `receiveGesturePoints` to peers |
+| `updatestats` | `a2cf757f-abd7-537b-953e-ef2f4f798f7e` | Server → clients | Current statistics bundle | Sent on connection and at the sampling interval |
+| `Delete All` | `816302d8-ac83-5192-a1a1-94419ad95542` | Client → server | Ignored payload | Registered when `isRelease` is true; drops database schemas through `doDelete(false)` |
+| `Connection Terminated` | `5c71073e-3175-5f3c-b953-e39edd29b913` | Intended server → client | Reason string | Client registers this UUID, but the server termination helper emits a different literal event |
+
+`Get Document` also has a declared UUID
+(`289175dc-4c49-59ea-84fa-1361666f6214`) but no handler in the current WebSocket
+initializer.
+
+## Literal Socket.IO events
+
+These events bypass `Message<T>` and therefore use their literal strings.
+
+| Event | Direction | Behavior |
+| :--- | :--- | :--- |
+| `message` | Client → room peers | Logs the payload and relays it to the named room |
+| `ipaddr` | Client request, server response | Attempts to emit non-loopback IPv4 addresses |
+| `bye` | Client → server | Logs receipt |
+| `disconnect` | Socket.IO internal → server | Records logout statistics and removes timing data |
+| `receiveGesturePoints` | Server → peers | Carries transient gesture content; it is not a durable document operation |
+| `connection_terminated` | Server → peers from `_disconnect` | Sends a timestamp, then force-disconnects the selected socket |
+
+The client listens for the UUID of `Connection Terminated`, while `_disconnect`
+emits literal `connection_terminated`. Those names and payloads do not match.
+The reason-specific alert/reload path in `DocServer.alertUser` therefore is not
+reached by that server helper in the current implementation. Treat this as an
+observed protocol defect and cover any repair with a two-sided integration test.
+
+## Read operations
+
+### Single-document read
+
+`GetRefField(id, force=false)` first examines the client cache:
+
+1. A cached `Doc` resolves immediately.
+2. An in-flight promise is reused.
+3. A cold ID emits `Get Ref Field` with a Socket.IO callback.
+4. The reply is deserialized and replaces the promise in the cache.
+5. A missing or invalid result removes the cache entry and resolves undefined.
+
+With `force=true`, a returned document is copied field-by-field into the existing
+cached object under the `UpdatingFromServer` guard. The object identity remains
+stable and the refresh does not echo normal field writes back to the server.
+
+### Batch read
+
+`GetRefFields(ids)` creates placeholders only for uncached IDs, emits one callback
+request, deserializes the returned records, and resolves every waiting caller
+after the batch is settled. Returned data is a map over all requested IDs;
+records absent from the response map to `undefined`.
+
+The server uses database callbacks for both read forms. There is no application
+timeout or typed error payload in these message contracts. A connection that
+never invokes the callback leaves the caller waiting unless a surrounding layer
+adds its own timeout.
+
+## Write operation shape
+
+The update payload is:
+
+```ts
+interface Diff {
+  id: string;
+  diff: {
+    $set?: Record<string, SerializedField>;
+    $unset?: Record<string, unknown>;
+    $addToSet?: Record<string, unknown> & {
+      length: number;
+    };
+    $remFromSet?: Record<string, unknown> & {
+      length: number;
+      hint?: { start: number; deleteCount: number };
+    };
+  };
+}
+```
+
+A concrete operation normally addresses a path under `fields`, for example:
+
+```json
+{
+  "id": "document-guid",
+  "diff": {
+    "$set": {
+      "fields.title": "Updated title"
+    }
+  }
+}
+```
+
+The client mutates local observable state before sending this payload. It does
+not attach a normal success or error callback to create, update, or delete
+events.
+
+## Server ordering
+
+`WebSocket.UpdateField` rejects an update when its socket has not completed the
+identifier handshake. For a registered socket it:
+
+1. Increments the user's operation count.
+2. Appends the operation and originating socket to `pendingOps[id]`.
+3. Dispatches only the head operation for that document ID.
+4. Starts the next operation from the persistence callback.
+5. Deletes the empty queue.
+
+`Database.update` also serializes its update work for one ID. These mechanisms
+produce an order for writes targeting the same record through this server
+process.
+
+They do not produce:
+
+- A total order across different document IDs
+- A distributed order across multiple independent server processes
+- An offline operation log
+- Conflict-free replicated data type semantics
+- A revision number or compare-and-swap precondition
+- A durable acknowledgement to the initiating client
+
+A user action that changes several documents can therefore be observed in
+partial states unless the application gives that workflow an additional commit
+protocol. An undo batch groups local reversibility; it is not a database
+transaction.
+
+## Ordinary field updates
+
+For `$set`, `$unset`, and whole-field updates, the server passes the operation to
+`Database.update(id, diff, callback, false)`. The database callback broadcasts
+the accepted diff to every socket except the origin and advances the per-ID
+queue.
+
+The origin already applied the optimistic change. A peer receiving the broadcast
+is evidence that the database callback executed. The origin receives no
+equivalent ordinary message, so it cannot infer durability merely from its own
+screen state.
+
+## List reconciliation
+
+Dash treats list append and removal as semantic operations that must be
+reconciled against the current server copy.
+
+### Append
+
+1. Read the current document.
+2. Extract the stored list at the target path.
+3. Append the incoming serialized items.
+4. Rewrite `$addToSet` to a complete `$set` of the composite list.
+5. Compare the incoming expected `length` with the composite length.
+6. Persist the result.
+7. Broadcast to peers when lengths agree; emit back to the origin when they do
+   not.
+
+### Removal
+
+With a positional `hint`, the server first tries the hinted range. When a value
+does not match there, it searches for the closest equal value not already marked
+for deletion. Without a hint it removes every matching item. The operation is
+then rewritten to `$set`.
+
+As with append, a length mismatch selects the origin as the reconciliation
+target. That return is a corrected state diff, not a general write
+acknowledgement.
+
+:::caution[Equality limitation]
+The closest-index helper tests candidate list elements with strict identity in
+one branch, while other reconciliation paths use deep or field-ID comparisons.
+Concurrent removal of structurally equal serialized objects requires explicit
+tests; do not assume value-equality behavior from the method name alone.
+:::
+
+## Create and delete semantics
+
+`Create Ref Field` calls `Database.insert` without a Socket.IO callback or peer
+broadcast in this path. A subsequent field/reference update is what normally
+makes the new identity reachable from other state.
+
+Single and batch delete handlers wait for the database delete promise and then
+broadcast the deleted ID or IDs to peers. The originating client's cache is not
+cleared by an incoming delete event because the server excludes that socket; the
+caller must already have removed or stopped using the local object.
+
+The client suppresses create, update, and delete emits for the `guest` email.
+Read-only mode replaces create/update implementations locally, but the delete
+helpers check only the guest condition. Neither browser-side condition is an
+authorization boundary because a modified client can emit protocol events
+directly.
+
+## Consistency model
+
+| Property | Current behavior |
+| :--- | :--- |
+| Local interaction | Optimistic: observable state changes before persistence |
+| Read identity | One hydrated client object per document ID |
+| Same-ID server order | Serialized through per-document queues in one process |
+| Cross-ID atomicity | None |
+| Peer visibility | Broadcast after database callback for updates/deletes |
+| Origin write confirmation | None for ordinary create/update/delete |
+| Concurrent list repair | Server constructs a composite list and may return it to the origin |
+| Reconnect replay | No application-owned durable operation journal |
+| Version/conflict metadata | None in the document update payload |
+| Server-side document ACL check | Not present in these WebSocket mutation handlers |
+
+This model is suitable for collaborative research prototypes whose conflicts are
+bounded and tested. Features that require auditable transactions, offline-first
+editing, or hostile-client security need additional protocol mechanisms.
+
+## Failure and recovery semantics
+
+| Failure point | What the protocol currently exposes | Required diagnostic evidence |
+| :--- | :--- | :--- |
+| Initial connection | Browser `connect_error` log | URL, scheme, port, browser log, server listener |
+| Read callback absent | Waiting promise | Event ID, requested IDs, socket state, server/database logs |
+| Deserialization failure | Rejected/undefined hydration path | Stored payload and `__type`, registered type, stack trace |
+| Guest write | No outgoing event | Current user identity and cold reload result |
+| Read-only update | No outgoing update | `Control.isReadOnly()` and action path |
+| Unregistered socket update | Server returns false internally | Handshake event order and `socketMap` entry |
+| Database update error | Server log; queue progress can stop for that ID | Document ID, operation, database error, later queue behavior |
+| Origin/server divergence | Usually no origin notification | Cold reload or forced read, peer observation, exact diff |
+| Concurrent list mismatch | Corrected composite diff sent to origin | Expected length, stored list, incoming items/hint |
+| Server termination helper | Literal/UUID event mismatch | Emitted name and payload; registered client handler |
+
+## Compatibility rules for changing the protocol
+
+Changing any readable `Message` name changes its UUID and is therefore a wire
+breaking change. Renaming a constant without changing the string does not.
+
+A protocol change should ship with:
+
+1. A version or capability negotiation strategy.
+2. Shared payload types or a runtime schema on both sides.
+3. Tests using the actual UUID event identifier.
+4. Origin, peer, and cold-reload assertions.
+5. Timeout and typed error behavior for callbacks.
+6. Authentication and per-document authorization at the server handler.
+7. A migration or compatibility window when stored payloads also change.
+8. Updated entries in this catalogue and the
+   [runtime contracts](/reference/runtime-contracts/).
+
+For design rationale and trust boundaries, continue with
+[server, storage, identity, and security](/architecture/server-storage-security/).
+For value encoding, continue with
+[field runtime and serialization](/architecture/field-runtime/).

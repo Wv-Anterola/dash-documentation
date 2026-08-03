@@ -150,6 +150,134 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
     ],
     sideEffects: ['May emit MessageStore.UpdateField over Socket.IO.'],
   },
+  'src/client/util/SerializationHelper.ts#Serialize': {
+    summary:
+      'Converts a supported field value into its wire representation and adds the registered __type discriminator for object values.',
+    parameters: {
+      obj: 'Primitive, nullish value, or object registered through Deserializable.',
+    },
+    returns: 'A JSON-compatible primitive, null, or type-tagged object.',
+    preconditions: ['Every object constructor has a registered serialization tag and serializr schema.'],
+    invariants: ['Primitive values pass through; object values carry one stable __type tag.'],
+    failureSemantics: [
+      'Undefined and null both serialize as null; an unregistered object constructor throws synchronously.',
+    ],
+  },
+  'src/client/util/SerializationHelper.ts#Deserialize': {
+    summary:
+      'Reconstructs a primitive or registered field object from its serialized representation and invokes optional post-hydration repair.',
+    parameters: {
+      obj: 'Primitive, nullish value, or object containing a registered __type tag.',
+    },
+    returns: 'A promise resolving to the reconstructed runtime value or undefined for nullish/missing-tag input.',
+    postconditions: ['Registered post-deserialization behavior has been invoked before the promise resolves.'],
+    failureSemantics: [
+      'A missing type tag warns and resolves undefined; an unknown type tag throws; null deserializes to undefined.',
+    ],
+  },
+  'src/client/util/SerializationHelper.ts#Deserializable': {
+    summary:
+      'Class decorator that binds one stable wire tag to a constructor and optional post-deserialization repair function.',
+    parameters: {
+      classNameForSerializer: 'Stable __type value written on the wire.',
+      afterDeserialize: 'Optional behavior repair invoked after serializr populates the instance.',
+      constructorArgs: 'Optional serialized property names passed to the constructor factory.',
+    },
+    postconditions: ['Both wire-tag-to-constructor and constructor-name-to-wire-tag registries contain the class.'],
+    failureSemantics: ['Registering the same wire tag twice throws during module initialization.'],
+  },
+  'src/client/util/SerializationHelper.ts#autoObject': {
+    summary:
+      'Creates a serializr property schema that delegates nested field objects to the Dash type registry.',
+    returns: 'A custom serializr schema using SerializationHelper.Serialize and Deserialize.',
+    failureSemantics: ['Nested serialization and type-registration errors propagate to the containing document or list.'],
+  },
+  'src/fields/Proxy.ts#ProxyField.value': {
+    summary:
+      'Lazily resolves a referenced document by preserving its field ID, consulting the identity cache, and sharing one in-flight request.',
+    returns: 'The cached document, a waiting promise, or undefined after a failed resolution.',
+    invariants: ['The proxy stores an identity, not an embedded copy of the target document.'],
+    failureSemantics: ['After a request resolves undefined, the proxy marks itself failed and does not automatically request again.'],
+    sideEffects: ['May start DocServer.GetRefField and update observable cache state.'],
+  },
+  'src/fields/Proxy.ts#ProxyField.setValue': {
+    summary:
+      'Completes a lazy reference resolution by replacing its waiting state and recording whether the target was missing.',
+    parameters: {
+      field: 'Resolved document or undefined when the referenced record was not found.',
+    },
+    returns: 'The supplied document or undefined value.',
+    postconditions: ['The in-flight promise is cleared; undefined permanently marks this proxy instance failed.'],
+  },
+  'src/fields/List.ts#ListImpl.constructor': {
+    summary:
+      'Creates an observable, serializable list and returns the JavaScript proxy that supplies indexed access and controlled array methods.',
+    parameters: {
+      fields: 'Optional initial values; document values are stored as ProxyField references.',
+    },
+    returns: 'The List proxy rather than the underlying ListImpl target.',
+    invariants: ['Object members receive parent/change callbacks; document members retain reference identity.'],
+    failureSemantics: [
+      'Object.defineProperty and copyWithin are unsupported; filling a list with RefField values throws.',
+    ],
+  },
+  'src/fields/List.ts#ListImpl.__realFields': {
+    summary:
+      'Projects stored list members to runtime values and batch-requests every unresolved document proxy before iteration.',
+    returns: 'The current real-value array, which can temporarily include waiting promises or undefined references.',
+    postconditions: ['All newly discovered proxies share one batch request and one MobX action for result installation.'],
+    sideEffects: ['May call ObjGetRefFields and attach an external promise to each unresolved proxy.'],
+  },
+  'src/server/Message.ts#Message.Message': {
+    summary:
+      'Returns the deterministic UUIDv5 Socket.IO event identifier derived from the readable message name.',
+    returns: 'The wire event string used by client and server emit/on calls.',
+    invariants: ['The same readable name and UUID URL namespace produce the same event ID.'],
+    failureSemantics: ['Changing the readable name changes the wire ID and breaks peers that have not changed with it.'],
+  },
+  'src/server/websocket.ts#initialize': {
+    summary:
+      'Starts the Socket.IO server, emits the handshake and statistics, and registers document, gesture, utility, and lifecycle handlers.',
+    parameters: {
+      isRelease: 'Chooses HTTPS server setup and also controls registration of the destructive Delete All handler.',
+      credentials: 'TLS server credentials used by the release HTTPS server.',
+    },
+    postconditions: ['The configured socket port is listening and connection handlers can reach the database.'],
+    failureSemantics: [
+      'The initializer does not attach HTTP-session authentication or per-document authorization to its handlers.',
+      'Its termination helper emits a literal event that does not match the client registered MessageStore UUID.',
+    ],
+    permissions: 'Production use requires server-authenticated sockets and authorization on every read and mutation event.',
+  },
+  'src/server/websocket.ts#UpdateField': {
+    summary:
+      'Queues one serialized update under its document ID after the socket identifier handshake and dispatches same-ID operations in order.',
+    parameters: {
+      socket: 'Originating Socket.IO connection.',
+      diff: 'Persistent document ID plus $set, $unset, append, or removal operation.',
+    },
+    returns: 'True when queued for a registered socket; false when the socket has no identity mapping.',
+    invariants: ['Only one operation for a given document ID is dispatched at a time in this server process.'],
+    failureSemantics: [
+      'The handler does not acknowledge ordinary writes to the origin and does not perform a document ACL decision.',
+    ],
+    permissions: 'A trusted server identity and per-document authorization must precede queue admission in production.',
+  },
+  'src/server/database.ts#Database.update': {
+    summary:
+      'Serializes database updates for one record ID and invokes the caller callback after MongoDB reports the update result.',
+    parameters: {
+      id: 'Document record identifier.',
+      value: 'MongoDB update expression.',
+      callback: 'Continuation used to broadcast and advance synchronization queues.',
+      upsert: 'Whether a missing record may be created; false for normal WebSocket field updates.',
+      collectionName: 'Target MongoDB collection, defaulting to document fields.',
+    },
+    postconditions: ['On success, the update callback runs before the next queued same-ID database operation.'],
+    failureSemantics: [
+      'The current updateOne error branch logs the error but does not resolve the surrounding queue promise or invoke the callback, so later work for that ID can remain blocked.',
+    ],
+  },
   'src/client/util/UndoManager.ts#RunInBatch': {
     summary:
       'Runs related persistent changes as one named undo/redo unit.',
