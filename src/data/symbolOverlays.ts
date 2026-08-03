@@ -278,6 +278,85 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
       'The current updateOne error branch logs the error but does not resolve the surrounding queue promise or invoke the callback, so later work for that ID can remain blocked.',
     ],
   },
+  'src/server/RouteManager.ts#RouteManager.addSupervisedRoute': {
+    summary:
+      'Registers one or more Express routes behind Dash’s shared identity selection, conditional release-admin handoff, handler exception translation, and missing-response check.',
+    parameters: {
+      initializer:
+        'Method, literal or composed subscription, required secure handler, and optional public handler, error handler, or release-admin flag.',
+    },
+    preconditions: [
+      'Each composed path satisfies the RouteManager path grammar and each supervised method/path pair is unique.',
+    ],
+    postconditions: [
+      'Accepted subscriptions are registered with the matching Express method and recorded for startup diagnostics.',
+    ],
+    invariants: [
+      'A request with req.user uses the secure branch; a request without it uses only an explicit public branch or redirects to login.',
+    ],
+    failureSemantics: [
+      'Malformed and duplicate supervised registrations are accumulated and make logRegistrationOutcome exit the process.',
+      'The one-second missing-response timer is scheduled after the awaited handler returns, so it does not recover a promise that never settles.',
+    ],
+    permissions:
+      'The wrapper selects an identity branch but does not replace per-action, per-resource authorization inside the service.',
+  },
+  'src/server/RouteManager.ts#_error': {
+    summary:
+      'Logs a route failure, sets the HTTP status message, and sends the supplied error value with status 500.',
+    parameters: {
+      res: 'Express response being completed.',
+      message: 'Operator-facing failure context also assigned to statusMessage.',
+      error: 'Optional value sent as the response body.',
+    },
+    postconditions: ['The response is completed with HTTP 500.'],
+    failureSemantics: [
+      'Sending a raw error can expose stack, provider, or filesystem details; callers must sanitize externally visible failures.',
+    ],
+  },
+  'src/server/RouteManager.ts#_success': {
+    summary: 'Completes an Express response with HTTP 200 and the supplied body.',
+    parameters: {
+      res: 'Express response being completed.',
+      body: 'Route-specific success payload; no shared envelope is added.',
+    },
+    postconditions: ['The response is completed with HTTP 200.'],
+  },
+  'src/server/RouteManager.ts#_invalid': {
+    summary: 'Completes an Express response with HTTP 400 and a route-provided text message.',
+    parameters: {
+      res: 'Express response being completed.',
+      message: 'Human-readable invalid-request explanation.',
+    },
+    failureSemantics: ['The helper does not supply a stable machine-readable validation code or field-error schema.'],
+  },
+  'src/server/RouteManager.ts#_permissionDenied': {
+    summary: 'Completes an Express response with HTTP 403 and an optional permission explanation.',
+    parameters: {
+      res: 'Express response being completed.',
+      message: 'Optional explanation appended to the fixed permission-denied text.',
+    },
+    permissions:
+      'This helper reports a decision; the route must first derive that decision from a trusted subject, action, resource, and context.',
+  },
+  'src/server/api/dynamicTools.ts#setupDynamicToolsAPI': {
+    summary:
+      'Creates the dynamic-tool source directory and directly registers endpoints that save, enumerate, and read generated TypeScript tool files.',
+    parameters: {
+      app: 'Express application that receives the three direct route registrations.',
+    },
+    postconditions: [
+      'The dynamic directory exists when creation succeeds; saveDynamicTool, getDynamicTools, and getDynamicTool routes are registered.',
+    ],
+    sideEffects: [
+      'May create a directory, write a TypeScript source file, enumerate filenames, or return stored tool source.',
+    ],
+    failureSemantics: [
+      'Directory creation failures are logged but registration continues; route catches return JSON errors with status 500.',
+    ],
+    permissions:
+      'The local handlers do not perform an identity or role check and bypass RouteManager; production exposure requires explicit server authentication, authorization, bounds, isolation, audit, and rollback.',
+  },
   'src/client/util/UndoManager.ts#RunInBatch': {
     summary:
       'Runs related persistent changes as one named undo/redo unit.',

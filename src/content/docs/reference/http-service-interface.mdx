@@ -1,0 +1,366 @@
+---
+title: HTTP and service interface reference
+description: A source-generated catalogue of Dash HTTP routes with request supervision, access paths, inputs, responses, side effects, failure behavior, and review obligations.
+---
+
+import HttpRouteReference from '../../../components/HttpRouteReference.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+Dash's browser, authentication flow, ingestion tools, model features, media
+pipelines, Google integrations, and research services all meet the server
+through this interface. This page explains both **what is registered** and
+**what happens after a request arrives**.
+
+![Two-lane lifecycle comparing RouteManager-supervised requests with direct Express registrations and showing identity, admin, handler, response, error, redirect, and fallback behavior](/assets/images/diagrams/dash-http-route-lifecycle.svg)
+
+[Open the lifecycle diagram at its full 1600 × 900 resolution.](/assets/images/diagrams/dash-http-route-lifecycle.svg)
+
+## Scope and stability
+
+This is the complete HTTP registration inventory for the pinned integrated
+Dash-Web source tree. It is generated from TypeScript syntax rather than copied
+from comments or commit messages. Each row links to the exact registration
+site. Candidate files containing `app.<method>` or `server.<method>` are
+discovered from the pinned tree rather than maintained as a fixed filename
+list. The inventory includes:
+
+- routes registered through `RouteManager.addSupervisedRoute`;
+- direct `app.get`, `app.post`, `app.patch`, and `app.delete` registrations in
+  the server initialization and dynamic-tool modules;
+- paths constructed with `RouteSubscriber`, including named parameters;
+- statically observed body, path, query, header, multipart, and upload inputs;
+- response operations reachable from the registered handler; and
+- duplicate method/path pairs across registration layers.
+
+It does **not** claim that these routes are a stable third-party REST API. They
+are an internal application boundary. Most lack a version prefix, published
+request schema, negotiated media type, idempotency contract, or formal
+deprecation policy. A source row proves registration; it does not prove that a
+provider is configured, a request is authorized for a specific resource, or a
+workflow succeeds at runtime.
+
+Branch-only implementations remain in the
+[implementation archive](/reference/branch-audit/). They do not enter this
+current-route table until their registration is reachable from the integrated
+baseline. This distinction prevents experimental endpoints from being
+presented as deployed product behavior.
+
+## Why Dash has a route supervisor
+
+Most feature services need the same outer control flow: identify the requester,
+select an authenticated or public behavior, translate exceptions into a
+response, and detect a handler that returns without responding. `RouteManager`
+centralizes that flow so every manager does not reimplement it differently.
+
+The manager does not provide a complete security or API framework. It supplies
+a common dispatcher around a route-specific handler. Validation, per-resource
+authorization, rate limits, provider policy, transactionality, and response
+schema still belong to the route or a deeper service boundary.
+
+### Registration phase
+
+`addSupervisedRoute` accepts a `RouteInitializer` with these fields:
+
+| Field | Meaning | Why it exists |
+| :--- | :--- | :--- |
+| `method` | `GET`, `POST`, `PATCH`, or `DELETE` | Selects the Express registration function |
+| `subscription` | A literal path, `RouteSubscriber`, or array of either | Lets managers share one named route root and compose path parameters |
+| `secureHandler` | Handler receiving `req`, `res`, `isRelease`, and `user` | Keeps the authenticated path explicit |
+| `publicHandler` | Optional handler without a user | Allows a deliberately unauthenticated behavior without duplicating the route |
+| `errorHandler` | Optional exception handler | Lets a route translate expected provider or validation failures itself |
+| `requireAdminInRelease` | Optional literal `true` | Adds the current release-only admin handoff |
+
+The registration tracker rejects a malformed supervised path or the same
+method/path pair registered twice **through RouteManager**. `logRegistrationOutcome`
+prints every accepted route and exits the process when it recorded a duplicate
+or malformed registration. Direct Express registrations do not participate in
+that tracker, which is why the generated inventory can see cross-layer
+duplicates that the supervisor cannot.
+
+`RouteSubscriber` stores a root such as `/resetPassword` and appends named
+segments such as `/:token`. It is a path builder, not a schema or permission
+object. Parameter names still have to be read and validated by the handler.
+
+### Request phase
+
+For a supervised request, execution is:
+
+1. Read `req.user`, which Passport/session middleware may have populated.
+2. When `DB=MEM` and no user exists, fabricate the in-memory guest identity
+   with the guest document ID.
+3. If a user exists, evaluate the conditional admin handoff when requested,
+   then await `secureHandler`.
+4. If no user exists but `publicHandler` exists, await that handler.
+5. If neither path is available, redirect to `/login`.
+6. Translate a thrown exception through the route's `errorHandler`, or use the
+   shared `_error` helper.
+7. After the selected handler has returned, schedule a one-second check. If no
+   headers have been sent, return a fallback warning object.
+
+The last detail matters. The timer is scheduled **after** the awaited handler
+returns. It catches a handler that completes without responding; it cannot
+rescue a handler whose awaited promise never settles, because execution never
+reaches the timer setup.
+
+### Conditional admin behavior
+
+`requireAdminInRelease` is narrower than its name can suggest. The extra check
+runs only when all three conditions are true:
+
+```text
+route requests admin handling
+AND isRelease is true
+AND process.env.PASSWORD is set
+```
+
+When those conditions hold, the user ID must be present in `AdminPrivileges`.
+The successful check deletes that entry, making the privilege one-shot. A
+missing entry redirects to `/admin/<encoded-target>`. In development, or in a
+release without `PASSWORD`, the flag does not add this gate. The two deletion
+utility routes use this mechanism, so deployment review must not interpret the
+inventory label as unconditional role-based authorization.
+
+### Shared response helpers
+
+| Helper | Status | Body and behavior | Failure concern |
+| :--- | :---: | :--- | :--- |
+| `_success(res, body)` | 200 | Sends the supplied body | No common success envelope |
+| `_invalid(res, message)` | 400 | Sends the message | Message format is route-defined text |
+| `_permissionDenied(res, message?)` | 403 | Sends `Permission Denied!` plus the optional message | No stable machine-readable reason code |
+| `_error(res, message, error?)` | 500 | Sets `statusMessage`, logs the error, and sends the supplied error value | Can expose provider, filesystem, or stack details unless callers sanitize them |
+
+The catalogue's **Response operations** column records calls such as `send`,
+`json`, `redirect`, `render`, `download`, `status`, and these helpers. It does
+not infer a response schema from those calls. A row containing `status` and
+`json`, for example, can still have several status/body variants.
+
+## Direct Express routes
+
+Some routes register directly with Express. The pinned tree uses this path for
+authentication and shell/assets, and for dynamic agent tools. Direct
+registration means only that the handler does not inherit the `RouteManager`
+identity branch, conditional admin handoff, shared error translation, duplicate
+tracker, or one-second fallback.
+
+It does **not**, by itself, prove that the route is anonymous: global Express
+middleware can still run before it. The correct review question is whether a
+trusted authentication and authorization decision is visible in global
+middleware or the route-local handler.
+
+The authentication pages are intentionally reachable before a session exists.
+Static shell and source-map routes likewise serve browser boot resources. Those
+are different risk classes from a direct route that reads or writes application
+source.
+
+## Service groups and ownership
+
+The route manager classes are organized around external or operational owners,
+not around document types. This keeps provider credentials, upload mechanics,
+and session management on the server while the browser remains responsible for
+turning results into Dash documents.
+
+| Group | Server responsibility | Why it is separate |
+| :--- | :--- | :--- |
+| Shell and diagnostics | Home/admin flows, server state, ports, logs, and diagnostics | Boot and operator behavior exists before a document view renders |
+| Authentication and assets | Login, signup, password reset, logout, shell files, and fallback assets | Session creation and browser boot have intentionally public entry points |
+| User and activity | User records, sharing-related user lookup, activity views, and events | User identity has a different lifecycle from workspace content |
+| Monitored-session operations | Create, read, update, and delete monitored research sessions | Research session state is administered independently of ordinary documents |
+| Adobe and video generation | Job submission, polling, cancellation, uploads, and generated media | Long-running provider jobs need explicit IDs and progress states |
+| Assistant and ingestion | Web extraction, conversion, search, text processing, and assistant services | Untrusted external content crosses into Dash through this boundary |
+| Uploads and media | Multipart data, remote media, YouTube, URI, and file operations | Byte streams, filenames, storage, and retention need server enforcement |
+| Data and visualization | Visualization-oriented data conversion | Server conversion isolates a specialized dependency from the canvas |
+| Deletion utilities | Broad data and schema deletion | Destructive administration requires a visibly separate review boundary |
+| Dynamic agent tools | Save, enumerate, and read generated TypeScript tools | Runtime extensibility crosses from model output into executable source |
+| Google services | OAuth-backed Google APIs and related service calls | Provider identity and tokens remain server concerns |
+| Model services | Model requests, embeddings, transcription, and related transforms | Secrets, quotas, payload size, and provider failure need one adapter boundary |
+| Flashcard labeling | Model-assisted flashcard categorization | A focused research service has its own input/output contract |
+| Repository utilities | Repository-oriented maintenance operations | Source/repository effects should not be mixed with document persistence |
+| Video stitching | Start, query, and retrieve a stitching workflow | Multi-stage media processing has job state rather than a single response |
+
+## How a feature request becomes a document
+
+An HTTP route usually performs only the server-owned part of a feature. A
+typical integrated path is:
+
+```text
+button or node action
+  -> client view/controller validates immediate UI state
+  -> fetches an internal Dash route with the session cookie
+  -> RouteManager selects secure/public behavior
+  -> manager validates inputs and calls storage/provider/processor
+  -> route returns bytes, JSON, text, job ID, or an error
+  -> client converts the result into typed Dash fields/documents
+  -> document mutation enters undo and synchronization paths
+  -> MongoDB persistence occurs through the document protocol
+```
+
+That separation explains why a route returning generated text does not itself
+prove that a visible document was created. The client may still need to parse
+the result, choose a prototype, assign typed fields, and insert the document
+into a collection. Conversely, a document can remain visible locally even when
+a later provider or persistence step fails. Trace both sides when documenting
+or debugging a feature.
+
+Long-running media routes split the flow into submit, status/poll, cancel, and
+result retrieval because a provider cannot hold one browser request open for
+the whole job reliably. Upload routes split metadata and byte handling because
+filenames and storage identifiers are part of the server contract. Model and
+Google routes exist server-side so credentials and provider-specific libraries
+do not have to become browser authority.
+
+## Reading the generated catalogue
+
+<HttpRouteReference />
+
+### What each column proves
+
+| Column | Evidence | What it does not prove |
+| :--- | :--- | :--- |
+| Method and path | Exact Express or RouteManager registration | That the route is reachable through a visible UI control |
+| Service | Owning source manager/module | A stable public product boundary |
+| Access path | Registration form and supervisor flags | Per-resource authorization or deployed global middleware behavior |
+| Observed inputs | Named reads found in the registered handler and local helper bodies | Required/optional status, type, maximum size, or semantic validation |
+| Response operations | Statically reachable `res.*` and shared helper calls | Complete status/body variants or streaming semantics |
+| Source | Immutable line link in the pinned tree | Runtime provider availability or successful integration testing |
+
+“No named fields statically observed” is not the same as “no input.” A handler
+may consume a raw stream, pass the request to middleware, use a computed
+property, or call a helper in another module. Multipart field names are listed
+separately. `file(s)` means a route reads `req.file` or `req.files`; it does not
+state the accepted media types or size limit.
+
+The three duplicate method/path pairs are preserved rather than collapsed.
+Express evaluates matching registrations in order and later handlers are only
+reached when earlier middleware calls `next()`. Review the server initialization
+order before changing `/`, `/home`, or `/login`.
+
+## High-impact interfaces
+
+### Dynamic tool source writes
+
+`POST /saveDynamicTool` accepts `toolName` and `toolCode`. The handler requires
+a PascalCase alphanumeric name, constructs `<dynamic-tools>/<toolName>.ts`, and
+writes the supplied source when it differs from the existing file. The two GET
+routes enumerate tool files and return one tool's source.
+
+These three registrations are direct Express routes. Their local handlers do
+not call the route supervisor or make a user/role decision. The name regex
+constrains the filename, but the body remains executable TypeScript source.
+Before production exposure, require a server-authenticated, narrowly authorized
+principal; bound request bytes; validate the generated tool contract; compile
+in isolation; record author, source, hash, and approval; avoid source-tree writes
+in immutable deployments; and define activation, rollback, and deletion. Treat
+model-generated code as untrusted code, not as ordinary document text.
+
+### Broad deletion
+
+`GET /delete` and `GET /delete/:target` are supervised and request the
+conditional release admin handoff described above. Their effects can include
+database/file/schema deletion. They should use a non-GET method, explicit
+resource scope, reauthentication, CSRF protection, a dry-run summary,
+confirmation bound to the exact target, audit logging, and tested recovery.
+
+### URL fetching and scraping
+
+`POST /proxyFetch` and `POST /scrapeWebsite` accept a body `url` and perform
+server-side network work. Session routing is not an SSRF defense. Validate the
+scheme, resolved IP on every redirect, port, DNS rebinding behavior, response
+size/type, timeouts, decompression, and private/link-local/loopback ranges. Do
+not forward caller-controlled authorization headers to arbitrary hosts.
+
+### Upload and remote-media routes
+
+Multipart, URI, remote-image, YouTube, document-path, and reference-frame routes
+cross distinct trust boundaries. Validate the detected media type rather than
+only the extension, cap compressed and expanded bytes, normalize names, prevent
+path escape, assign server-side identifiers, scan or sandbox parsers where
+appropriate, and define retention/deletion. A client-supplied `filesize` is a
+claim, not an enforcement mechanism.
+
+### Provider and model operations
+
+Google, model, Adobe, and video routes may transmit document content to an
+external service. Every integration needs a declared credential source,
+provider/model version, data categories sent, retention/training policy,
+timeout, cancellation, retry/backoff rule, quota behavior, redaction policy,
+and persisted-result owner. Never infer these properties from a successful
+`200` response.
+
+## Failure model
+
+| Failure | Observable result in the current interface | State question to answer |
+| :--- | :--- | :--- |
+| No session and no public handler | Redirect to `/login` | Did the browser follow a redirect and then parse HTML as JSON? |
+| Admin handoff required but privilege absent | Redirect to `/admin/<target>` | Was any destructive work started before the check? |
+| Handler throws | Route error handler, or `_error` with status 500 | Did the handler partially write files, provider jobs, or database state first? |
+| Handler returns without sending headers | Warning response after about one second | Is the handler missing `return`, `await`, or a response call? |
+| Handler's awaited promise never settles | Request can remain pending; fallback setup is not reached | Which dependency lacks a timeout or cancellation path? |
+| Provider rejects or times out | Route-specific status/body or generic 500 | Is retry safe, and is the provider job still running? |
+| Client disconnects | Express/provider work may continue unless the handler observes abort | Can abandoned work consume quota or create an orphan result? |
+| Response succeeds but client document write fails | Service result exists without durable canvas state | Can the result be re-fetched or reconciled without repeating the provider call? |
+| Direct route throws outside its own catch | Express error behavior applies | Is there centralized sanitization and structured logging? |
+
+HTTP success and document durability are separate acknowledgements. A `200`
+from a provider route confirms only that route's response path. It does not
+confirm the subsequent client-side typed-field write, Socket.IO operation, or
+MongoDB callback. Use the [synchronization protocol](/reference/synchronization-protocol/)
+for the second half of that lifecycle.
+
+## Compatibility and change contract
+
+When adding or changing a route:
+
+1. Name its owner and whether the interface is internal, research-only, or
+   intended for external callers.
+2. Choose supervised or direct registration deliberately. State which common
+   behaviors the route inherits.
+3. Define request fields with type, required/optional status, bounds, examples,
+   and validation errors. Use a runtime schema at the boundary.
+4. Define every response status and a machine-readable body schema. Do not send
+   raw exception objects.
+5. Make authentication, action, resource, and authorization decision explicit.
+6. State side effects, their order, and whether the operation is idempotent.
+7. Put external calls behind timeouts and cancellation; define retry safety.
+8. Define client-disconnect behavior and cleanup of jobs, files, and temporary
+   state.
+9. Add negative tests for missing identity, wrong owner/group, malformed body,
+   oversized payload, provider timeout, and partial failure.
+10. Regenerate this catalogue and review the semantic diff before merge.
+
+A route change is breaking when an existing caller can no longer construct a
+valid request, interpret a response, preserve a side-effect invariant, or
+distinguish a failure it previously handled. Adding a required field, changing
+a default, renaming a JSON property, returning HTML where JSON was expected,
+or moving a write before validation all qualify even if the TypeScript build
+passes.
+
+## Verification procedure
+
+Regenerate the reference after updating the pinned source baseline:
+
+```bash
+npm run audit:http
+```
+
+Then verify:
+
+- every expected registration appears once at the intended layer;
+- the access label matches the initializer and visible middleware path;
+- extracted inputs agree with a hand review of validation and deeper helpers;
+- all status/body branches have contract tests;
+- direct routes have an explicit reason for bypassing the supervisor;
+- destructive, source-writing, upload, URL-fetching, and provider routes have
+  negative authorization and bounds tests;
+- frontend call sites send the documented shape and handle every documented
+  failure;
+- successful service output survives the document serialization and reload
+  path where the feature promises persistence; and
+- immutable source links and the route baseline agree with the generated API.
+
+Continue with [server, storage, and security](/architecture/server-storage-security/)
+for trust boundaries, [configuration](/reference/configuration/) for deployed
+dependencies, [runtime contracts](/reference/runtime-contracts/) for core
+symbol obligations, and [troubleshooting](/development/troubleshooting/) for
+symptom-first diagnosis.

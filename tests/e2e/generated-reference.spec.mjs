@@ -127,3 +127,50 @@ test('documents field encoding, the wire protocol, and observed security boundar
   await expect(serialize.getByText('Failure semantic:', { exact: false })).toBeVisible();
   await expect(serialize.getByText(/unregistered object constructor throws/)).toBeVisible();
 });
+
+test('catalogues the HTTP surface and exposes request-supervision contracts', async ({ page }) => {
+  await page.goto('/reference/http-service-interface/');
+  await expect(page.getByRole('heading', { name: 'HTTP and service interface reference' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Two-lane lifecycle/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /full 1600 × 900 resolution/ })).toBeVisible();
+  await expect(page.getByText('109', { exact: true }).first()).toBeVisible();
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-http-route-reference]');
+    const filters = document.querySelector('.http-route-filters');
+    const scroller = document.querySelector('.http-route-scroll');
+    if (!root || !filters || !scroller) throw new Error('HTTP reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+      tableViewport: scroller.clientWidth,
+      tableContent: scroller.scrollWidth,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+  expect(geometry.tableContent).toBeGreaterThan(geometry.tableViewport);
+
+  const query = page.getByLabel('Find a path, input, response, or service');
+  await query.fill('saveDynamicTool');
+  await expect(page.locator('[data-route-row]:visible')).toHaveCount(1);
+  await expect(
+    page.locator('[data-route-row]:visible').getByText('Direct Express; no route supervisor')
+  ).toBeVisible();
+  await expect(page.locator('[data-route-count]')).toHaveText('1 registration shown');
+
+  await query.fill('');
+  await page.getByLabel('Access path').selectOption('admin-in-release');
+  await expect(page.locator('[data-route-row]:visible')).toHaveCount(2);
+  await expect(page.locator('[data-route-count]')).toHaveText('2 registrations shown');
+  await expect(page.getByText('Multiple registration layers:')).toBeVisible();
+
+  await page.goto(`/technical/api/modules/${slug('src/server/RouteManager.ts')}/`);
+  const supervisor = page.locator('details').filter({
+    has: page.locator('summary code').filter({ hasText: /addSupervisedRoute$/ }),
+  });
+  await supervisor.locator('summary').click();
+  await expect(supervisor.getByText(/one-second missing-response timer/)).toBeVisible();
+  await expect(supervisor.getByText(/does not replace per-action/)).toBeVisible();
+});

@@ -1696,7 +1696,275 @@
   color: var(--sl-color-gray-2);
 }
 
+/* Source-generated HTTP and service interface reference. */
+.http-route-reference {
+  container-type: inline-size;
+  margin-block: var(--dash-space-5) var(--dash-space-7);
+}
+
+.http-route-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--dash-space-3);
+  margin-block: var(--dash-space-4);
+}
+
+.http-route-summary > div {
+  display: flex;
+  min-height: 6rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--dash-space-1);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--dash-rule);
+  border-top: 0.25rem solid var(--sl-color-accent);
+  border-radius: var(--dash-radius-sm);
+  background: var(--sl-color-gray-7);
+}
+
+.http-route-summary strong {
+  color: var(--sl-color-accent-high);
+  font-size: clamp(1.55rem, 4vw, 2.35rem);
+  line-height: 1;
+}
+
+.http-route-summary span {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  font-weight: 700;
+}
+
+.http-route-filters {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1.5fr) repeat(3, minmax(10rem, 1fr));
+  gap: var(--dash-space-3);
+  align-items: end;
+  padding: var(--dash-space-4);
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-sm);
+  background: var(--sl-color-gray-7);
+}
+
+.http-route-filters label {
+  display: grid;
+  gap: var(--dash-space-1);
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  font-weight: 800;
+}
+
+.http-route-filters :is(input, select) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--dash-rule);
+  border-radius: 0.45rem;
+  background: var(--sl-color-black);
+  color: var(--sl-color-text);
+  font: inherit;
+  font-weight: 500;
+}
+
+.http-route-filters :is(input, select):focus-visible {
+  outline: 0.2rem solid var(--sl-color-accent);
+  outline-offset: 0.1rem;
+}
+
+.http-route-count {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  font-weight: 700;
+}
+
+.http-route-hint {
+  margin-top: calc(-1 * var(--dash-space-2));
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+}
+
+.http-route-scroll {
+  max-height: 52rem;
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-sm);
+  overflow: auto;
+}
+
+.http-route-table {
+  width: 100%;
+  min-width: 72rem;
+  margin: 0 !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.78rem;
+}
+
+.http-route-table thead {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+}
+
+.http-route-table th,
+.http-route-table td {
+  padding: 0.65rem 0.7rem !important;
+  border-right: 1px solid var(--dash-rule-soft);
+  border-bottom: 1px solid var(--dash-rule-soft);
+  vertical-align: top;
+  text-align: left;
+}
+
+.http-route-table thead th {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-text);
+  font-size: 0.68rem;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.http-route-table tbody th {
+  min-width: 16rem;
+  background: var(--sl-color-gray-7);
+  font-weight: 500;
+}
+
+.http-route-table tbody tr:nth-child(even) :is(th, td) {
+  background: color-mix(in srgb, var(--sl-color-gray-7) 72%, transparent);
+}
+
+.http-route-table tbody tr:hover :is(th, td) {
+  background: var(--sl-color-gray-6);
+}
+
+.http-route-table tr[hidden] {
+  display: none;
+}
+
+.http-route-table td:nth-child(2) {
+  min-width: 10rem;
+}
+
+.http-route-table td:nth-child(3) {
+  min-width: 14rem;
+}
+
+.http-route-table td:nth-child(4) {
+  min-width: 17rem;
+  overflow-wrap: anywhere;
+}
+
+.http-route-table td:nth-child(5) {
+  min-width: 10rem;
+}
+
+.http-route-table td:nth-child(5) code {
+  display: inline-block;
+  margin: 0 0.2rem 0.2rem 0;
+}
+
+.http-route-table td:last-child {
+  white-space: nowrap;
+}
+
+.http-route-table tbody th > code {
+  display: inline;
+  margin-left: 0.45rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.http-method,
+.http-access {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.http-method {
+  min-width: 3.2rem;
+  justify-content: center;
+  padding: 0.2rem 0.45rem;
+  background: #dbe8ff;
+  color: #214c9a;
+}
+
+.http-method--post {
+  background: #dcf5e8;
+  color: #17613e;
+}
+
+.http-method--patch {
+  background: #fff0c7;
+  color: #744600;
+}
+
+.http-method--delete {
+  background: #ffe2e1;
+  color: #8a2624;
+}
+
+.http-access {
+  padding: 0.22rem 0.52rem;
+  border: 1px solid var(--dash-rule);
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-text);
+  white-space: normal;
+}
+
+.http-access--admin-in-release,
+.http-access--direct-no-route-manager {
+  border-color: #dd9d45;
+  background: #fff2df;
+  color: #75450b;
+}
+
+.http-route-table td:nth-child(3) small {
+  display: block;
+  margin-top: var(--dash-space-1);
+  color: var(--dash-muted);
+}
+
+.http-route-duplicates {
+  margin-top: var(--dash-space-3);
+  padding: 0.8rem 1rem;
+  border: 1px solid #dd9d45;
+  border-left-width: 0.3rem;
+  border-radius: var(--dash-radius-sm);
+  background: #fff7e9;
+  color: #67411a;
+  font-size: var(--dash-text-xs);
+}
+
+:root[data-theme='dark'] .http-route-duplicates,
+:root[data-theme='dark'] .http-access--admin-in-release,
+:root[data-theme='dark'] .http-access--direct-no-route-manager {
+  background: #322817;
+  color: #ffd798;
+}
+
+@container (max-width: 52rem) {
+  .http-route-summary,
+  .http-route-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (max-width: 32rem) {
+  .http-route-summary,
+  .http-route-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 64rem) {
+  .http-route-summary,
+  .http-route-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .project-workflow__steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1728,6 +1996,8 @@
 }
 
 @media (max-width: 34rem) {
+  .http-route-summary,
+  .http-route-filters,
   .project-workflow__steps,
   .audit-summary,
   .branch-audit__body dl {

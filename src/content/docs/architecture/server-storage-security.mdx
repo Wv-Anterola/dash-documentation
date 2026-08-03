@@ -59,6 +59,12 @@ The server supplies session, persistence, file, and service behavior needed by
 the client. A React view should not embed credentials or become the authority
 for access control merely because it hides a control.
 
+The [HTTP and service interface reference](/reference/http-service-interface/)
+lists every current registration and explains which requests inherit
+`RouteManager` identity/error behavior and which register directly with
+Express. Use its access labels as routing evidence, not as proof of
+resource-level authorization.
+
 Server-side checks remain necessary for:
 
 - Authentication
@@ -285,6 +291,8 @@ minimize data exposed to the frame.
 - External providers and model versions are recorded.
 - Lower-privilege permission tests cover nested documents.
 - Dynamic tool endpoints are restricted and audited.
+- Direct HTTP routes have an explicit middleware and route-local authorization
+  review; source-writing routes are not merely network-hidden.
 - Error responses do not expose stack traces or filesystem paths.
 - Socket identities are derived from trusted server authentication state.
 - Every document protocol operation has a negative authorization test.

@@ -1,0 +1,138 @@
+---
+import reference from '../data/generated/http-routes.json';
+
+const groups = [...new Set(reference.routes.map((route) => route.group))].sort();
+const methods = [...new Set(reference.routes.map((route) => route.method))].sort();
+const accessLabels: Record<string, string> = {
+  'session': 'Session, or the in-memory guest',
+  'session-or-public-handler': 'Session or explicit public branch',
+  'admin-in-release': 'Conditional release admin handoff',
+  'direct-no-route-manager': 'Direct Express; no route supervisor',
+  'public-auth-flow': 'Public authentication flow',
+  'public-shell-or-asset': 'Public shell or asset',
+};
+
+const inputText = (inputs: Record<string, string[] | undefined>) => {
+  const rows = Object.entries(inputs).filter((entry): entry is [string, string[]] => Array.isArray(entry[1]));
+  return rows.length
+    ? rows.map(([channel, fields]) => `${channel}: ${fields.join(', ')}`).join('; ')
+    : 'No named fields statically observed';
+};
+---
+
+<section class="http-route-reference" data-http-route-reference>
+  <div class="http-route-summary" aria-label="HTTP route inventory summary">
+    <div><strong>{reference.summary.routes}</strong><span>registrations</span></div>
+    <div><strong>{reference.summary.supervised}</strong><span>RouteManager-supervised</span></div>
+    <div><strong>{reference.summary.direct}</strong><span>direct Express</span></div>
+    <div><strong>{groups.length}</strong><span>service groups</span></div>
+  </div>
+
+  <div class="http-route-filters" aria-label="Filter HTTP routes">
+    <label for="http-route-query">
+      Find a path, input, response, or service
+      <input id="http-route-query" type="search" placeholder="Try upload, toolName, Google, or redirect" data-route-query />
+    </label>
+    <label for="http-route-method">
+      Method
+      <select id="http-route-method" data-route-method>
+        <option value="">All methods</option>
+        {methods.map((method) => <option value={method}>{method}</option>)}
+      </select>
+    </label>
+    <label for="http-route-group">
+      Service group
+      <select id="http-route-group" data-route-group>
+        <option value="">All groups</option>
+        {groups.map((group) => <option value={group}>{group}</option>)}
+      </select>
+    </label>
+    <label for="http-route-access">
+      Access path
+      <select id="http-route-access" data-route-access>
+        <option value="">All access paths</option>
+        {Object.entries(accessLabels).map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <p class="http-route-count" aria-live="polite" data-route-count>{reference.routes.length} registrations shown</p>
+  <p class="http-route-hint">Scroll sideways inside the table to inspect inputs, response operations, and source links.</p>
+
+  <div class="table-scroll http-route-scroll" tabindex="0" aria-label="HTTP route inventory; scroll horizontally for all columns">
+    <table class="http-route-table">
+      <thead>
+        <tr>
+          <th scope="col">Method and path</th>
+          <th scope="col">Service</th>
+          <th scope="col">Access path</th>
+          <th scope="col">Observed inputs</th>
+          <th scope="col">Response operations</th>
+          <th scope="col">Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {reference.routes.map((route) => (
+          <tr
+            data-route-row
+            data-method={route.method}
+            data-group={route.group}
+            data-access={route.access}
+            data-search={`${route.method} ${route.path} ${route.group} ${route.access} ${inputText(route.inputs)} ${route.responses.join(' ')}`.toLowerCase()}
+          >
+            <th scope="row">
+              <span class={`http-method http-method--${route.method.toLowerCase()}`}>{route.method}</span>
+              <code>{route.path}</code>
+            </th>
+            <td>{route.group}</td>
+            <td>
+              <span class={`http-access http-access--${route.access}`}>{accessLabels[route.access]}</span>
+              <small>{route.layer === 'supervised' ? 'RouteManager' : 'Express'}</small>
+            </td>
+            <td>{inputText(route.inputs)}</td>
+            <td>{route.responses.length ? route.responses.map((response) => <code>{response}</code>) : 'No response call statically observed'}</td>
+            <td><a href={route.source.url}>source L{route.source.line}</a></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {reference.duplicateMethodPaths.length > 0 && (
+    <aside class="http-route-duplicates" aria-label="Duplicate route registrations">
+      <strong>Multiple registration layers:</strong>{' '}
+      {reference.duplicateMethodPaths.map((route, index) => <>{index ? ', ' : ''}<code>{route}</code></>)}.
+      Express evaluates these in registration order; the inventory preserves every observed registration instead of silently deduplicating them.
+    </aside>
+  )}
+</section>
+
+<script>
+  for (const root of document.querySelectorAll('[data-http-route-reference]')) {
+    const query = root.querySelector<HTMLInputElement>('[data-route-query]');
+    const method = root.querySelector<HTMLSelectElement>('[data-route-method]');
+    const group = root.querySelector<HTMLSelectElement>('[data-route-group]');
+    const access = root.querySelector<HTMLSelectElement>('[data-route-access]');
+    const count = root.querySelector('[data-route-count]');
+    const rows = [...root.querySelectorAll<HTMLTableRowElement>('[data-route-row]')];
+    if (!query || !method || !group || !access || !count) continue;
+    const update = () => {
+      const needle = query.value.trim().toLowerCase();
+      let visible = 0;
+      for (const row of rows) {
+        const show =
+          (!needle || row.dataset.search?.includes(needle)) &&
+          (!method.value || row.dataset.method === method.value) &&
+          (!group.value || row.dataset.group === group.value) &&
+          (!access.value || row.dataset.access === access.value);
+        row.hidden = !show;
+        if (show) visible++;
+      }
+      count.textContent = `${visible} registration${visible === 1 ? '' : 's'} shown`;
+    };
+    query.addEventListener('input', update);
+    method.addEventListener('change', update);
+    group.addEventListener('change', update);
+    access.addEventListener('change', update);
+  }
+</script>

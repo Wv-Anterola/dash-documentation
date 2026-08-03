@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash HTTP request supervision and direct Express route paths</title>
+  <desc id="desc">A two-lane flow diagram. The upper RouteManager lane validates registration, resolves session or in-memory guest identity, applies the conditional release admin handoff, runs secure or public handlers, and produces a response, error, redirect, or one-second fallback. The lower lane shows direct Express routes bypassing that supervisor and relying on their own handlers and middleware.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8efff"/><stop offset="1" stop-color="#d8e5ff"/></linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff7e7"/><stop offset="1" stop-color="#ffedc6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#18366c" flood-opacity=".12"/></filter>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5L0 11Z" fill="#395db8"/></marker>
+    <marker id="warnArrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0L11 5.5L0 11Z" fill="#c47615"/></marker>
+    <style>
+      .title{font:800 42px system-ui,sans-serif;fill:#132243}.sub{font:21px system-ui,sans-serif;fill:#4c5d7f}.lane{fill:#fff;stroke:#c8d5f1;stroke-width:2;rx:24;filter:url(#shadow)}.lane-direct{fill:#fffaf0;stroke:#e4bc78;stroke-width:2;rx:24;filter:url(#shadow)}.lane-label{font:800 23px system-ui,sans-serif;fill:#1e376b}.lane-sub{font:17px system-ui,sans-serif;fill:#596985}.box{fill:url(#blue);stroke:#8fa9df;stroke-width:2;rx:16}.box-warn{fill:url(#amber);stroke:#dca458;stroke-width:2;rx:16}.box-ok{fill:#e8f6ef;stroke:#7ebd9d;stroke-width:2;rx:16}.bh{font:750 19px system-ui,sans-serif;fill:#203969}.bt{font:16px system-ui,sans-serif;fill:#435474}.mono{font:15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#34496f}.arrow{stroke:#395db8;stroke-width:4;fill:none;marker-end:url(#arrow)}.warn-arrow{stroke:#c47615;stroke-width:4;fill:none;stroke-dasharray:9 7;marker-end:url(#warnArrow)}.decision{fill:#fff;stroke:#7692ce;stroke-width:2}.decision-warn{fill:#fff8ea;stroke:#d59a48;stroke-width:2}.dt{font:700 17px system-ui,sans-serif;fill:#263d6c;text-anchor:middle}.tiny{font:700 14px system-ui,sans-serif;fill:#53627c}.tag{fill:#263f79;rx:10}.tag-warn{fill:#9b5d0b;rx:10}.tag-text{font:800 13px system-ui,sans-serif;fill:#fff;letter-spacing:.04em}.foot{font:18px system-ui,sans-serif;fill:#405170}.foot-strong{font-weight:800;fill:#213a70}
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text class="title" x="70" y="65">One server, two HTTP registration paths</text>
+  <text class="sub" x="70" y="104">RouteManager supplies a shared control flow. Direct Express routes do not inherit that supervision automatically.</text>
+
+  <rect class="lane" x="55" y="145" width="1490" height="420"/>
+  <rect class="tag" x="85" y="172" width="132" height="28"/><text class="tag-text" x="103" y="191">SUPERVISED</text>
+  <text class="lane-label" x="85" y="230">RouteManager registration and request lifecycle</text>
+  <text class="lane-sub" x="85" y="258">Used by the manager classes and the supervised routes declared in the server entry point.</text>
+
+  <g transform="translate(85 302)"><rect class="box" width="185" height="112"/><text class="bh" x="18" y="34">1. Register</text><text class="mono" x="18" y="62">method + path</text><text class="bt" x="18" y="87">Reject malformed or</text><text class="bt" x="18" y="107">duplicate pairs</text></g>
+  <line class="arrow" x1="270" y1="358" x2="324" y2="358"/>
+  <g transform="translate(330 302)"><rect class="box" width="190" height="112"/><text class="bh" x="18" y="34">2. Resolve identity</text><text class="mono" x="18" y="62">req.user</text><text class="bt" x="18" y="87">or guest identity</text><text class="bt" x="18" y="107">when DB=MEM</text></g>
+  <line class="arrow" x1="520" y1="358" x2="566" y2="358"/>
+
+  <g transform="translate(625 358)"><path class="decision" d="M0-67L78 0L0 67L-78 0Z"/><text class="dt" x="0" y="-7">user?</text><text class="tiny" x="0" y="17" text-anchor="middle">yes / no</text></g>
+  <path class="arrow" d="M703 358H756"/><text class="tiny" x="718" y="333">yes</text>
+  <path class="warn-arrow" d="M625 425V499H780"/><text class="tiny" x="642" y="451">no</text>
+
+  <g transform="translate(760 302)"><rect class="box-warn" width="240" height="112"/><text class="bh" x="18" y="34">3. Admin handoff?</text><text class="mono" x="18" y="61">flag + release + PASSWORD</text><text class="bt" x="18" y="84">missing → /admin redirect</text><text class="bt" x="18" y="106">pass consumes privilege</text></g>
+  <line class="arrow" x1="1000" y1="358" x2="1016" y2="358"/>
+  <g transform="translate(1020 302)"><rect class="box-ok" width="205" height="112"/><text class="bh" x="18" y="34">4. Run handler</text><text class="mono" x="18" y="62">secureHandler</text><text class="bt" x="18" y="87">awaited inside</text><text class="bt" x="18" y="107">try / catch</text></g>
+  <line class="arrow" x1="1225" y1="358" x2="1271" y2="358"/>
+  <g transform="translate(1275 286)"><rect class="box" width="230" height="144"/><text class="bh" x="18" y="34">5. Complete request</text><text class="mono" x="18" y="61">200 / 400 / 403 / 500</text><text class="bt" x="18" y="87">handler response, redirect,</text><text class="bt" x="18" y="108">custom error handler, or</text><text class="bt" x="18" y="129">raw error via _error</text></g>
+
+  <g transform="translate(790 465)"><rect class="box-warn" width="250" height="68"/><text class="bh" x="16" y="28">3b. No session</text><text class="bt" x="16" y="51">publicHandler or /login</text></g>
+  <path class="warn-arrow" d="M1040 499H1060"/>
+  <path class="warn-arrow" d="M1122 414V455"/>
+  <g transform="translate(1070 465)"><rect class="box-warn" width="180" height="68"/><text class="bh" x="16" y="28">4b. Header check</text><text class="mono" x="16" y="52">none → 1 s warning</text></g>
+  <path class="warn-arrow" d="M1250 499H1275V438"/>
+
+  <rect class="lane-direct" x="55" y="600" width="1490" height="205"/>
+  <rect class="tag-warn" x="85" y="627" width="108" height="28"/><text class="tag-text" x="103" y="646">DIRECT</text>
+  <text class="lane-label" x="85" y="687">Express registration path</text>
+  <text class="lane-sub" x="85" y="715">Direct routes own their route-local controls.</text>
+  <g transform="translate(610 636)"><rect class="box-warn" width="220" height="118"/><text class="bh" x="18" y="34">Express route match</text><text class="mono" x="18" y="61">app.get / app.post</text><text class="bt" x="18" y="87">Global middleware still</text><text class="bt" x="18" y="107">applies if configured</text></g>
+  <line class="warn-arrow" x1="830" y1="695" x2="880" y2="695"/>
+  <g transform="translate(890 636)"><rect class="box-warn" width="260" height="118"/><text class="bh" x="18" y="34">Route-local controls</text><text class="bt" x="18" y="62">Handler must enforce</text><text class="bt" x="18" y="84">authentication, validation,</text><text class="bt" x="18" y="106">authorization, and errors</text></g>
+  <line class="warn-arrow" x1="1150" y1="695" x2="1200" y2="695"/>
+  <g transform="translate(1210 636)"><rect class="box-warn" width="250" height="118"/><text class="bh" x="18" y="34">Direct response</text><text class="mono" x="18" y="61">res.json / sendFile / …</text><text class="bt" x="18" y="87">No RouteManager timeout</text><text class="bt" x="18" y="107">or helper contract</text></g>
+
+  <text class="foot" x="800" y="853" text-anchor="middle"><tspan class="foot-strong">Review rule:</tspan> registration style describes inherited control flow; authorization must still be proven at the route and middleware boundary.</text>
+</svg>

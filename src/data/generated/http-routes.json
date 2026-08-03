@@ -1,0 +1,2174 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "supervisedCandidateFiles": 14,
+    "directCandidateFiles": 3,
+    "directOwnerNames": [
+      "app",
+      "server"
+    ]
+  },
+  "summary": {
+    "routes": 109,
+    "supervised": 88,
+    "direct": 21,
+    "public": 25,
+    "admin": 2,
+    "duplicateMethodPaths": 3
+  },
+  "duplicateMethodPaths": [
+    "GET /",
+    "GET /home",
+    "GET /login"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 119,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L119"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 567,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L567"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/activity",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "render"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 145,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L145"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/admin/:previous_target",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "redirect",
+        "render"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 161,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L161"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/admin/:previous_target",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "password"
+        ],
+        "params": [
+          "previous_target"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 172,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L172"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/backup/:session_key",
+      "group": "Monitored-session operations",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "permissionDenied",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/SessionManager.ts",
+        "line": 46,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/SessionManager.ts#L46"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/bundle.js",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "status",
+        "type"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 612,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L612"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cancelFireflyVideo",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "jobId",
+          "requestId"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2173,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2173"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cancelVideoGeneration",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "jobId",
+          "requestId"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2448,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2448"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/captureWebScreenshot",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "fullPage",
+          "height",
+          "url",
+          "width"
+        ]
+      },
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 864,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L864"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/checkVideoStatus",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "videoId"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2424,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2424"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/concatVideos",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 31,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L31"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/createCSV",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "data",
+          "filename"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 825,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L825"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/createDocument",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "doc_id",
+          "file_path"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 695,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L695"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/css/main.css",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "type"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 649,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L649"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/csvData",
+      "group": "Data and visualization",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "query": [
+          "uri"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/DataVizManager.ts",
+        "line": 9,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/DataVizManager.ts#L9"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/DashPing",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 23,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L23"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/debug/:session_key",
+      "group": "Monitored-session operations",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "permissionDenied",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/SessionManager.ts",
+        "line": 27,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/SessionManager.ts#L27"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/debug/:session_key/:to",
+      "group": "Monitored-session operations",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "permissionDenied",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/SessionManager.ts",
+        "line": 36,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/SessionManager.ts#L36"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/delete",
+      "group": "Deletion utilities",
+      "layer": "supervised",
+      "access": "admin-in-release",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/DeleteManager.ts",
+        "line": 13,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/DeleteManager.ts#L13"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/delete/:target",
+      "group": "Deletion utilities",
+      "layer": "supervised",
+      "access": "admin-in-release",
+      "inputs": {
+        "params": [
+          "target"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/DeleteManager.ts",
+        "line": 22,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/DeleteManager.ts#L22"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/deleteSession/:session_key",
+      "group": "Monitored-session operations",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "permissionDenied",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/SessionManager.ts",
+        "line": 64,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/SessionManager.ts#L64"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/doc/:docId",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {
+        "headers": [
+          "user-agent"
+        ]
+      },
+      "responses": [
+        "redirect",
+        "sendFile"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 194,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L194"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/downloadAndSaveVideo",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "filename",
+          "name",
+          "nosuffix",
+          "videoUrl"
+        ]
+      },
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 328,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L328"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/extractVideoFrame",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "jobId",
+          "requestId",
+          "videoUrl"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2226,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2226"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/forgotPassword",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {},
+      "responses": [
+        "render"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 503,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L503"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/forgotPassword",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {
+        "headers": [
+          "host"
+        ],
+        "body": [
+          "email"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 504,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L504"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/formatChunks",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "relevantChunks"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 769,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L769"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/generateImage",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "image_prompt"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 559,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L559"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/generateVideo",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "aspectRatio",
+          "duration",
+          "height",
+          "jobId",
+          "prompt",
+          "promptStyle",
+          "quality",
+          "referenceImage",
+          "requestId",
+          "width"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2398,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2398"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getCurrentUser",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 72,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L72"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getDynamicTool/:toolName",
+      "group": "Dynamic agent tools",
+      "layer": "direct-express",
+      "access": "direct-no-route-manager",
+      "inputs": {
+        "params": [
+          "toolName"
+        ]
+      },
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/api/dynamicTools.ts",
+        "line": 129,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/api/dynamicTools.ts#L129"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getDynamicTools",
+      "group": "Dynamic agent tools",
+      "layer": "direct-express",
+      "access": "direct-no-route-manager",
+      "inputs": {},
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/api/dynamicTools.ts",
+        "line": 128,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/api/dynamicTools.ts#L128"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getFileContent",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "filepath"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 139,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L139"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getFileNames",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 126,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L126"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getFileSummaries",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 101,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L101"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getLinkDatabaseId",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 65,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L65"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getProgress/:jobId",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "jobId"
+        ]
+      },
+      "responses": [
+        "json"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 726,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L726"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getRawFileContent",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "filepath"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 985,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L985"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getResult/:jobId",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "jobId"
+        ]
+      },
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 746,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L746"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getSharingDocumentId",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 58,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L58"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getUserDocumentIds",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 51,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L51"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/getUsers",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 19,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L19"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getWebSearchResults",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "max_results",
+          "query"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 255,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L255"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/getWikipediaSummary",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "title"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 227,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L227"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/googleDocs/:sector/:action",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "action",
+          "sector"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 45,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L45"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/googleTasks/:create",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "completed",
+          "deleted",
+          "due",
+          "notes",
+          "status",
+          "title"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 67,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L67"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/googleTasks/:taskId",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "taskId"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 127,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L127"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/googleTasks/:taskId",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "taskId"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 172,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L172"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/googleTasks/:taskId",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "taskId"
+        ],
+        "body": [
+          "completed",
+          "deleted",
+          "due",
+          "notes",
+          "status",
+          "title"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 95,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L95"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptApiCall",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "callType",
+          "inputTextIn",
+          "prompt"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 463,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L463"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptDescribeImage",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "autoEnhance",
+          "autoPrompt",
+          "url",
+          "userTitle"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 488,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L488"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptDrawingColor",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "coords",
+          "image"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 493,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L493"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptGetEmbedding",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "src"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 473,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L473"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptHandwriting",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "src"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 483,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L483"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptImageCall",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "n",
+          "prompt"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 468,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L468"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/gptImageLabel",
+      "group": "Model services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "prompt",
+          "src"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GPTManager.ts",
+        "line": 478,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GPTManager.ts#L478"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/home",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {
+        "headers": [
+          "user-agent"
+        ]
+      },
+      "responses": [
+        "redirect",
+        "sendFile"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 194,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L194"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/home",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "sendFile"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 687,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L687"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/inspectImage",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "source"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 249,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L249"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/internalResetPassword",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "curr_pass",
+          "new_pass"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 90,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L90"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/kill/:session_key",
+      "group": "Monitored-session operations",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "permissionDenied",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/SessionManager.ts",
+        "line": 55,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/SessionManager.ts#L55"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/labels",
+      "group": "Flashcard labeling",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "drag",
+          "file",
+          "smart"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FlashcardManager.ts",
+        "line": 147,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FlashcardManager.ts#L147"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/login",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {},
+      "responses": [
+        "redirect",
+        "render"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 498,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L498"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/login",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {},
+      "responses": [
+        "sendFile"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 687,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L687"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/login",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {
+        "body": [
+          "email",
+          "password"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 499,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L499"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/logout",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 501,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L501"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/outpaintImage",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "halignment",
+          "imageUrl",
+          "newDimensions",
+          "originalDimensions",
+          "prompt",
+          "valignment"
+        ]
+      },
+      "responses": [
+        "error",
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2041,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2041"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/processMediaFile",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "fileName"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 383,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L383"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/proxyFetch",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "url"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 588,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L588"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/pull",
+      "group": "Repository utilities",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "redirect",
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UtilManager.ts",
+        "line": 33,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UtilManager.ts#L33"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyImage",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "height",
+          "prompt",
+          "seed",
+          "width"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2130,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2130"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyImageFillWithMask",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2019,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2019"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyImageFromStructure",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "height",
+          "presets",
+          "prompt",
+          "strength",
+          "structureUrl",
+          "styleUrl",
+          "width"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 1984,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L1984"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyImageText",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "file"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2259,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2259"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyVideo",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "aspectRatio",
+          "duration",
+          "jobId",
+          "prompt",
+          "quality",
+          "referenceImage",
+          "requestId"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2144,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2144"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryFireflyVideoStatus",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "videoId"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2167,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2167"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/queryYoutubeProgress",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "videoId"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 115,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L115"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/readGoogleAccessToken",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 16,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L16"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/refreshDropbox",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "query": [
+          "code"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2363,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2363"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/refreshGoogle",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "query": [
+          "code"
+        ]
+      },
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 156,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L156"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/resetPassword/:token",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {
+        "params": [
+          "token"
+        ]
+      },
+      "responses": [
+        "redirect",
+        "render"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 507,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L507"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/resetPassword/:token",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {
+        "params": [
+          "token"
+        ],
+        "body": [
+          "password"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 508,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L508"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/resolvedPorts",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session-or-public-handler",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 143,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L143"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/revokeGoogleAccessToken",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 36,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L36"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/saveDynamicTool",
+      "group": "Dynamic agent tools",
+      "layer": "direct-express",
+      "access": "direct-no-route-manager",
+      "inputs": {
+        "body": [
+          "toolCode",
+          "toolName"
+        ]
+      },
+      "responses": [
+        "json",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/api/dynamicTools.ts",
+        "line": 127,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/api/dynamicTools.ts#L127"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/scrapeWebsite",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "url"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 613,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L613"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/searchFileSummaries",
+      "group": "Assistant and ingestion",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "query"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/AssistantManager.ts",
+        "line": 208,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/AssistantManager.ts#L208"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/serverHeartbeat",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 125,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L125"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/setCacheDocumentIds",
+      "group": "User and activity",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "cacheDocumentIds"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UserManager.ts",
+        "line": 30,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UserManager.ts#L30"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/signup",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {},
+      "responses": [
+        "redirect",
+        "render"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 495,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L495"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/signup",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-auth-flow",
+      "inputs": {
+        "body": [
+          "email",
+          "password"
+        ]
+      },
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 496,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L496"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/stats",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 131,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L131"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/statsview",
+      "group": "Shell and diagnostics",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [],
+      "source": {
+        "file": "src/server/index.ts",
+        "line": 137,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/index.ts#L137"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/stitchstatus/:jobId",
+      "group": "Video stitching",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "params": [
+          "jobId"
+        ]
+      },
+      "responses": [
+        "error",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/VideoStitcherManager.ts",
+        "line": 73,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/VideoStitcherManager.ts#L73"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/stitchvideos",
+      "group": "Video stitching",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "firstVideoUrl",
+          "outputFormat",
+          "quality",
+          "secondVideoUrl"
+        ]
+      },
+      "responses": [
+        "error",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/VideoStitcherManager.ts",
+        "line": 26,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/VideoStitcherManager.ts#L26"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/sympy.worker.js",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 599,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L599"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadDoc",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "path"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 141,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L141"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadFormData",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "multipart": [
+          "fileguids",
+          "filesize"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 40,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L40"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadReferenceFrame",
+      "group": "Adobe and video generation",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "dataURL",
+          "filename"
+        ]
+      },
+      "responses": [
+        "invalid",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/FireflyManager.ts",
+        "line": 2276,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/FireflyManager.ts#L2276"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadRemoteImage",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "sources"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 127,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L127"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadURI",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "name",
+          "nosuffix",
+          "replaceRootFilename",
+          "uri"
+        ]
+      },
+      "responses": [
+        "send",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 260,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L260"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/uploadYoutubeVideo",
+      "group": "Uploads and media",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "overwriteId",
+          "videoId"
+        ]
+      },
+      "responses": [
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UploadManager.ts",
+        "line": 99,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UploadManager.ts#L99"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/version",
+      "group": "Repository utilities",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/UtilManager.ts",
+        "line": 49,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/UtilManager.ts#L49"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/videohealth",
+      "group": "Video stitching",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {},
+      "responses": [
+        "error",
+        "success"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/VideoStitcherManager.ts",
+        "line": 97,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/VideoStitcherManager.ts#L97"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/writeGoogleAccessToken",
+      "group": "Google services",
+      "layer": "supervised",
+      "access": "session",
+      "inputs": {
+        "body": [
+          "authenticationCode"
+        ]
+      },
+      "responses": [
+        "send"
+      ],
+      "source": {
+        "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
+        "line": 28,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/ApiManagers/GeneralGoogleManager.ts#L28"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "<pattern: /[^(.*)]/>",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "sendFile",
+        "status"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 702,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L702"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "<pattern: /\\.map$/>",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "status"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 692,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L692"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "<pattern: /^\\/+$/>",
+      "group": "Authentication and assets",
+      "layer": "direct-express",
+      "access": "public-shell-or-asset",
+      "inputs": {},
+      "responses": [
+        "redirect"
+      ],
+      "source": {
+        "file": "src/server/server_Initialization.ts",
+        "line": 568,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/server_Initialization.ts#L568"
+      }
+    }
+  ]
+}

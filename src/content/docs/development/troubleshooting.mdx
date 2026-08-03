@@ -99,6 +99,27 @@ confirm `APP_ROOT` resolves packaged assets and `DASH_DATA_ROOT` resolves a
 writable runtime directory. Capture the route status and server path error;
 do not move user data until the resolved target is known.
 
+### An API request redirects, hangs, or returns a fallback warning
+
+**Boundary:** HTTP route supervision and handler completion.
+
+Find the exact method/path in the
+[HTTP and service interface reference](/reference/http-service-interface/).
+A supervised route without `req.user` runs its explicit public handler or
+redirects to `/login`; a client expecting JSON can therefore fail while parsing
+an HTML login response. A warning containing “fell through” means the selected
+handler returned without sending headers and the one-second fallback fired.
+
+If the request remains pending, inspect the awaited provider, filesystem, or
+database promise. The fallback timer is installed only after that handler
+returns, so it cannot resolve a promise that never settles. For a 500 response,
+capture the status, response content type, sanitized body, first server error,
+and whether a file, provider job, or other side effect was already created.
+
+Direct Express routes do not inherit this supervisor. In particular, dynamic
+tool routes own their route-local validation and error handling. Do not diagnose
+their access behavior from the presence or absence of a login-page redirect.
+
 ## The page shell loads but Dash never appears
 
 ### “Fatal Error: user not found in database”

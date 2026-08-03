@@ -4,6 +4,7 @@ dist/
 node_modules/
 playwright-report/
 test-results/
+debug.log
 
 # Ruby (previous Jekyll stack, removed 2026)
 _site/

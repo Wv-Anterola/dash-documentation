@@ -108,10 +108,100 @@ for (const [title, owners] of titles) {
 
 const overlaySource = await readFile(path.join(root, 'src', 'data', 'symbolOverlays.ts'), 'utf8');
 const referenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'source-reference.json'), 'utf8');
+const httpReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'http-routes.json'), 'utf8');
+const sourceReference = JSON.parse(referenceSource);
+const httpReference = JSON.parse(httpReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
     errors.push(`Runtime contract overlay has no matching source symbol: ${id}`);
+  }
+}
+
+const allowedMethods = new Set(['GET', 'POST', 'PATCH', 'DELETE']);
+const allowedLayers = new Set(['supervised', 'direct-express']);
+const allowedAccess = new Set([
+  'session',
+  'session-or-public-handler',
+  'admin-in-release',
+  'direct-no-route-manager',
+  'public-auth-flow',
+  'public-shell-or-asset',
+]);
+const routeKeys = new Map();
+const completeRegistrations = new Set();
+const sourceModules = new Set(sourceReference.modules.map((module) => module.path));
+
+if (httpReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('HTTP route reference and generated source reference use different baseline revisions');
+}
+if (httpReference.routes.length < 100) {
+  errors.push(`HTTP route inventory fell below its reviewed coverage floor (found ${httpReference.routes.length}, expected at least 100)`);
+}
+if (new Set(httpReference.routes.map((route) => route.group)).size < 15) {
+  errors.push('HTTP route inventory no longer covers the 15 reviewed service ownership groups');
+}
+if (httpReference.methodology.supervisedCandidateFiles < 1 || httpReference.methodology.directCandidateFiles < 1) {
+  errors.push('HTTP route inventory did not record both supervised and direct-registration candidate files');
+}
+if (JSON.stringify(httpReference.methodology.directOwnerNames) !== JSON.stringify(['app', 'server'])) {
+  errors.push('HTTP route inventory direct Express owner-name grammar changed without review');
+}
+
+for (const route of httpReference.routes) {
+  const label = `${route.method} ${route.path}`;
+  if (!allowedMethods.has(route.method)) errors.push(`${label}: unsupported HTTP method in generated inventory`);
+  if (!allowedLayers.has(route.layer)) errors.push(`${label}: unknown registration layer ${route.layer}`);
+  if (!allowedAccess.has(route.access)) errors.push(`${label}: unknown access classification ${route.access}`);
+  if (!route.path || !route.group) errors.push(`${label}: route path and service group are required`);
+  if (!sourceModules.has(route.source.file)) errors.push(`${label}: source module is absent from the generated source API (${route.source.file})`);
+  if (!route.source.url.includes(httpReference.repository.baseline) || !route.source.url.endsWith(`#L${route.source.line}`)) {
+    errors.push(`${label}: source URL is not pinned to its recorded baseline and line`);
+  }
+  const completeKey = `${label}|${route.source.file}|${route.source.line}`;
+  if (completeRegistrations.has(completeKey)) errors.push(`${label}: identical registration was emitted more than once`);
+  completeRegistrations.add(completeKey);
+  routeKeys.set(label, (routeKeys.get(label) ?? 0) + 1);
+  for (const [channel, fields] of Object.entries(route.inputs)) {
+    if (!channel || !Array.isArray(fields) || fields.some((field) => typeof field !== 'string')) {
+      errors.push(`${label}: malformed observed-input entry`);
+    }
+    if (new Set(fields).size !== fields.length) errors.push(`${label}: duplicate observed ${channel} input`);
+  }
+  if (new Set(route.responses).size !== route.responses.length) errors.push(`${label}: duplicate response operation`);
+}
+
+const calculatedDuplicates = [...routeKeys]
+  .filter(([, count]) => count > 1)
+  .map(([key]) => key)
+  .sort();
+const recordedDuplicates = [...httpReference.duplicateMethodPaths].sort();
+if (JSON.stringify(calculatedDuplicates) !== JSON.stringify(recordedDuplicates)) {
+  errors.push('HTTP duplicate method/path summary disagrees with generated route registrations');
+}
+
+const calculatedSummary = {
+  routes: httpReference.routes.length,
+  supervised: httpReference.routes.filter((route) => route.layer === 'supervised').length,
+  direct: httpReference.routes.filter((route) => route.layer === 'direct-express').length,
+  public: httpReference.routes.filter((route) => route.access.includes('public')).length,
+  admin: httpReference.routes.filter((route) => route.access === 'admin-in-release').length,
+  duplicateMethodPaths: calculatedDuplicates.length,
+};
+for (const [key, value] of Object.entries(calculatedSummary)) {
+  if (httpReference.summary[key] !== value) errors.push(`HTTP route summary ${key} is stale (${httpReference.summary[key]} versus ${value})`);
+}
+
+const expectedCriticalRoutes = [
+  ['POST', '/saveDynamicTool', 'direct-no-route-manager'],
+  ['GET', '/getDynamicTools', 'direct-no-route-manager'],
+  ['GET', '/getDynamicTool/:toolName', 'direct-no-route-manager'],
+  ['GET', '/delete', 'admin-in-release'],
+  ['GET', '/delete/:target', 'admin-in-release'],
+];
+for (const [method, routePath, access] of expectedCriticalRoutes) {
+  if (!httpReference.routes.some((route) => route.method === method && route.path === routePath && route.access === access)) {
+    errors.push(`Critical HTTP boundary is missing or reclassified without review: ${method} ${routePath}`);
   }
 }
 
@@ -123,6 +213,7 @@ if (errors.length) {
   console.log(
     `Documentation quality complete: ${files.length} pages have required metadata and unique titles; ` +
       `${images} inline images have reproducible sources and intentional alt text; ` +
-      `${overlayIds.length} runtime contract overlays resolve to source symbols.`
+      `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
+      `${httpReference.routes.length} HTTP route registrations pass inventory invariants.`
   );
 }

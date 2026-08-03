@@ -282,6 +282,7 @@ export default defineConfig({
             { slug: 'reference/agent-tools' },
             { slug: 'reference/configuration' },
             { slug: 'reference/runtime-contracts' },
+            { slug: 'reference/http-service-interface' },
             { slug: 'reference/synchronization-protocol' },
             { slug: 'reference/implementation-snapshot', label: 'Source coverage' },
             { slug: 'reference/status-taxonomy' },

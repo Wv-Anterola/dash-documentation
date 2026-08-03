@@ -11,6 +11,7 @@ Dash-Web working tree.
 ```sh
 npm run audit:branches
 npm run audit:source
+npm run audit:http
 npm run audit:typedoc
 npm run verify
 ```
@@ -18,6 +19,9 @@ npm run verify
 `audit:source` walks every object reachable from local and origin refs,
 classifies every blob, parses supported source by Git SHA, and writes the
 canonical API, semantic branch deltas, and removed-symbol index.
+`audit:http` reads the same pinned tree and emits the method/path, registration
+layer, access-path classification, observed inputs, response operations, and
+immutable registration source for the complete integrated HTTP surface.
 `audit:typedoc` creates an immutable temporary archive and emits TypeDoc JSON.
 Neither command checks out or edits Dash-Web.
 

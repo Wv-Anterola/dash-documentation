@@ -22,7 +22,11 @@ const exportedWithDocs = exported.map((symbol) => ({
   overlay: overlayForSymbol(symbol.id),
 }));
 const internal = module.symbols.filter((symbol) => !symbol.exported);
-const documented = exported.filter((symbol) => symbol.documentation).length;
+const internalWithDocs = internal.map((symbol) => ({
+  symbol,
+  overlay: overlayForSymbol(symbol.id),
+}));
+const documented = module.symbols.filter((symbol) => symbol.documentation || overlayForSymbol(symbol.id)).length;
 const anchorCounts = new Map<string, number>();
 const symbolAnchors = new Map<Module['symbols'][number], string>();
 for (const symbol of module.symbols) {
@@ -50,7 +54,7 @@ for (const call of module.calls) {
   <div class="audit-summary" aria-label="Module totals">
     <div><strong>{module.symbols.length}</strong><span>named declarations</span></div>
     <div><strong>{exported.length}</strong><span>exported declarations</span></div>
-    <div><strong>{documented}</strong><span>documented exports</span></div>
+    <div><strong>{documented}</strong><span>documented contracts</span></div>
     <div><strong>{module.calls.length}</strong><span>syntax-resolved calls</span></div>
   </div>
 
@@ -79,7 +83,7 @@ for (const call of module.calls) {
             <pre><code>{symbol.signature}</code></pre>
             {symbol.documentation || overlay
               ? <>
-                  <p>{symbol.documentation || overlay?.summary}</p>
+                  <p>{overlay?.summary || symbol.documentation}</p>
                   {overlay?.parameters && (
                     <dl class="source-contract">
                       {Object.entries(overlay.parameters).map(([name, description]) => (
@@ -113,15 +117,38 @@ for (const call of module.calls) {
     does not make them a supported extension contract.
   </p>
   <div class="symbol-reference">
-    {internal.map((symbol) => (
+    {internalWithDocs.map(({ symbol, overlay }) => (
       <details id={symbolAnchors.get(symbol)}>
         <summary>
           <span><code>{symbol.qualifiedName}</code><small>{symbol.kind} · {symbol.visibility}</small></span>
-          <a href={symbol.sourceUrl}>source</a>
+          <a href={symbol.sourceUrl}>source L{symbol.lineStart}–L{symbol.lineEnd}</a>
         </summary>
         <div>
           <pre><code>{symbol.signature}</code></pre>
-          {symbol.documentation && <p>{symbol.documentation}</p>}
+          {symbol.documentation || overlay
+            ? <>
+                <p>{overlay?.summary || symbol.documentation}</p>
+                {overlay?.parameters && (
+                  <dl class="source-contract">
+                    {Object.entries(overlay.parameters).map(([name, description]) => (
+                      <div><dt><code>{name}</code></dt><dd>{description}</dd></div>
+                    ))}
+                  </dl>
+                )}
+                {overlay?.returns && <p><strong>Returns:</strong> {overlay.returns}</p>}
+                {overlay?.preconditions?.map((condition) => <p><strong>Precondition:</strong> {condition}</p>)}
+                {overlay?.postconditions?.map((condition) => <p><strong>Postcondition:</strong> {condition}</p>)}
+                {overlay?.invariants?.map((invariant) => <p><strong>Invariant:</strong> {invariant}</p>)}
+                {overlay?.failureSemantics?.map((failure) => <p><strong>Failure semantic:</strong> {failure}</p>)}
+                {overlay?.errors?.map((error) => <p><strong>Error:</strong> {error}</p>)}
+                {overlay?.sideEffects?.map((effect) => <p><strong>Side effect:</strong> {effect}</p>)}
+                {overlay?.permissions && <p><strong>Permissions:</strong> {overlay.permissions}</p>}
+                {overlay?.undo && <p><strong>Undo:</strong> {overlay.undo}</p>}
+              </>
+            : <p class="source-undocumented">No source documentation recorded.</p>}
+          {callers.has(symbol.name) && (
+            <p><strong>Called by:</strong> {callers.get(symbol.name)?.join(', ')}</p>
+          )}
         </div>
       </details>
     ))}
