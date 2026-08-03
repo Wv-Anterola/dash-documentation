@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash engineering model</title>
+  <desc id="desc">A layered diagram centered on the document graph, with user and agent inputs above, rendering and synchronization on either side, and durable storage below.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071425"/><stop offset="1" stop-color="#102b46"/></linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#20c7d9"/><stop offset="1" stop-color="#3f78ff"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-opacity=".28"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 12 6 0 12Z" fill="#83a8cc"/></marker>
+  </defs>
+  <rect width="1600" height="900" rx="32" fill="url(#bg)"/>
+  <text x="90" y="82" fill="#f4f8fc" font-family="Inter,Segoe UI,sans-serif" font-size="42" font-weight="700">Dash is a document-graph runtime</text>
+  <text x="90" y="124" fill="#a9c2d9" font-family="Inter,Segoe UI,sans-serif" font-size="22">Every interface path converges on shared identity, fields, layout, and lifecycle contracts.</text>
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,sans-serif">
+    <rect x="90" y="190" width="390" height="150" rx="22" fill="#162f49" stroke="#315372"/>
+    <text x="125" y="235" fill="#76dff0" font-size="18" font-weight="700">INTENT</text><text x="125" y="278" fill="#f4f8fc" font-size="28" font-weight="650">Human interaction</text><text x="125" y="315" fill="#b9cddd" font-size="19">pointer · keyboard · import · script</text>
+    <rect x="1120" y="190" width="390" height="150" rx="22" fill="#162f49" stroke="#315372"/>
+    <text x="1155" y="235" fill="#c29aff" font-size="18" font-weight="700">INTENT</text><text x="1155" y="278" fill="#f4f8fc" font-size="28" font-weight="650">Agent tool execution</text><text x="1155" y="315" fill="#b9cddd" font-size="19">scope · validate · execute · observe</text>
+    <rect x="500" y="185" width="600" height="270" rx="30" fill="url(#core)"/>
+    <text x="800" y="242" text-anchor="middle" fill="#eefcff" font-size="18" font-weight="700">SEMANTIC CENTER</text><text x="800" y="300" text-anchor="middle" fill="white" font-size="38" font-weight="750">Document + field graph</text><text x="800" y="346" text-anchor="middle" fill="#e6f7ff" font-size="22">identity · prototypes · typed fields · references</text>
+    <rect x="560" y="378" width="220" height="48" rx="14" fill="#0a3357" fill-opacity=".72"/><text x="670" y="409" text-anchor="middle" fill="white" font-size="19">data document</text>
+    <rect x="820" y="378" width="220" height="48" rx="14" fill="#0a3357" fill-opacity=".72"/><text x="930" y="409" text-anchor="middle" fill="white" font-size="19">layout delegate</text>
+    <rect x="90" y="505" width="440" height="190" rx="24" fill="#162f49" stroke="#315372"/>
+    <text x="125" y="550" fill="#76dff0" font-size="18" font-weight="700">INTERPRETATION</text><text x="125" y="596" fill="#f4f8fc" font-size="29" font-weight="650">Reactive rendering</text><text x="125" y="636" fill="#b9cddd" font-size="19">DocumentView · layout parser</text><text x="125" y="670" fill="#b9cddd" font-size="19">collection dispatch · MobX dependencies</text>
+    <rect x="1070" y="505" width="440" height="190" rx="24" fill="#162f49" stroke="#315372"/>
+    <text x="1105" y="550" fill="#ffbe68" font-size="18" font-weight="700">COORDINATION</text><text x="1105" y="596" fill="#f4f8fc" font-size="29" font-weight="650">Undo + synchronization</text><text x="1105" y="636" fill="#b9cddd" font-size="19">semantic batches · serialized diffs</text><text x="1105" y="670" fill="#b9cddd" font-size="19">Socket.IO · remote application</text>
+    <rect x="500" y="575" width="600" height="220" rx="28" fill="#11263c" stroke="#3e607e"/>
+    <text x="800" y="625" text-anchor="middle" fill="#79d8a9" font-size="18" font-weight="700">DURABILITY + TRUST</text><text x="800" y="676" text-anchor="middle" fill="#f4f8fc" font-size="30" font-weight="650">Server boundaries and storage</text><text x="800" y="718" text-anchor="middle" fill="#b9cddd" font-size="19">session · authorization · files · services</text><text x="800" y="754" text-anchor="middle" fill="#b9cddd" font-size="19">WebSocket handlers · MongoDB · external providers</text>
+  </g>
+  <g fill="none" stroke="#83a8cc" stroke-width="4" marker-end="url(#arrow)"><path d="M480 265H500"/><path d="M1120 265H1100"/><path d="M620 455 500 535"/><path d="M980 455 1100 535"/><path d="M530 620H500"/><path d="M1070 620H1100"/><path d="M800 455V575"/></g>
+  <text x="800" y="852" text-anchor="middle" fill="#91acc3" font-family="Inter,Segoe UI,sans-serif" font-size="18">A feature is integrated only when its state, rendering, reversibility, persistence, permissions, and failure behavior agree.</text>
+</svg>

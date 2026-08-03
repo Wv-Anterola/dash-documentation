@@ -316,6 +316,40 @@ Do not upgrade a lower evidence level into a stronger claim. A screenshot can
 show that an interface existed; it cannot establish that the feature is present
 in the current product.
 
+### Technical completeness standard
+
+Naming a class, file, registry entry, or dependency is not a technical
+explanation. Architecture and implementation pages must make the causal model
+recoverable without requiring the reader to infer it from source.
+
+For every subsystem or substantial feature, document:
+
+1. **Design pressure:** the user, research, or system constraint that requires
+   this layer rather than a simpler isolated component.
+2. **State ownership:** which data document, layout delegate, prototype,
+   runtime manager, service, or component owns each important value.
+3. **Entry and exit points:** what invokes the subsystem and what observable
+   state, document, artifact, or error it produces.
+4. **Execution path:** an ordered trace through the actual factories,
+   registries, managers, dispatch functions, persistence calls, and views.
+5. **Invariants:** properties that must remain true across reload, another
+   embedding, another user, undo/redo, and missing dependencies.
+6. **Tradeoffs:** what the chosen abstraction makes easy and what complexity it
+   introduces elsewhere.
+7. **Failure semantics:** partial state, retry/recovery, cleanup, authorization,
+   and user-visible errors.
+8. **Integration proof:** the current entry point and reachable call path, not
+   only the existence of a component or historical source file.
+9. **Extension consequences:** which shared contracts a new implementation must
+   honor and which tests demonstrate that it does.
+
+Use a concrete end-to-end trace whenever a subsystem crosses three or more
+layers. For example, do not write only “documents persist in MongoDB.” Follow a
+field assignment through undo recording, serialized diff creation, Socket.IO,
+the server update handler, the database operation, peer broadcast, and remote
+reactive update. [How Dash actually works](/architecture/engineering-model/)
+is the reference implementation of this standard.
+
 Reference assets from `/assets/...`, which resolves against the configured base.
 
 Write alt text on every content image. Most images here are screen recordings,

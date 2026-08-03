@@ -9,6 +9,46 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why persistence is an operation stream over an object graph
+
+Dash documents refer to other documents and can appear in several contexts.
+Recursively posting a whole workspace after each gesture would duplicate shared
+objects, overwrite concurrent edits, and make small canvas movements expensive.
+The client instead emits operations against one identified document/field, while
+the database retains serialized document records.
+
+This is a pragmatic synchronization model rather than a claim of conflict-free
+offline collaboration. Server list operations contain additional merge handling;
+features with concurrent structural edits still need explicit tests.
+
+## Write protocol
+
+```text
+Doc field assignment
+  -> serialized $set / $unset / list operation
+  -> DocServer.UpdateField(id, diff)
+  -> Socket.IO MessageStore.UpdateField
+  -> server websocket UpdateField
+  -> Database.Instance.update(id, diff, upsert=false)
+  -> broadcast accepted diff to peer sockets
+  -> peer field HandleUpdate
+```
+
+The initiating UI updates optimistically before this round trip. A production
+feature must therefore expose or recover from server rejection/disconnection;
+local MobX state alone is not a durability acknowledgement.
+
+## Read protocol
+
+`ProxyField` checks the client cache before requesting a reference. `GetRefField`
+and `GetRefFields` use Socket.IO callbacks to retrieve serialized records. The
+client deserializes them, invokes post-deserialization identity handling, installs
+them in the cache, and resolves waiting proxies. Batch reads prevent repeated
+network calls while preserving document identity within the client.
+
+Cold-cache, missing-record, malformed-record, and unauthorized-record tests are
+more credible than tests that begin with a fully materialized in-memory graph.
+
 ## Responsibility boundary
 
 The server supplies session, persistence, file, and service behavior needed by

@@ -9,6 +9,28 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why these boundaries exist
+
+Dash combines a reactive spatial editor, a shared object graph, asynchronous
+media, external services, and executable agent tools. Putting all of that in a
+single client state layer would make three questions indistinguishable: what the
+user sees now, what other clients should see, and what is durably authorized and
+stored.
+
+The runtime is divided so each boundary answers one question:
+
+| Boundary | Question it answers | Failure if bypassed |
+| :--- | :--- | :--- |
+| Document graph | What is the durable semantic object? | Features become isolated component state |
+| Layout/view layer | How is that object presented in this context? | Moving or resizing one embedding changes all embeddings |
+| Undo layer | Which low-level mutations form one user intent? | Undo exposes implementation details or restores partial state |
+| Synchronization layer | Which serialized operation should other clients apply? | Collaboration disagrees with local state |
+| Server/storage layer | Is the operation authorized and durable? | A local success is mistaken for persisted success |
+| Service/Electron boundary | Which privileged or external capability is being invoked? | Secrets and host privileges leak into ordinary renderer code |
+
+The [engineering model](/architecture/engineering-model/) follows complete
+create, read, write, render, link, and agent paths through these boundaries.
+
 ## Runtime at a glance
 
 ```text

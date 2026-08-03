@@ -1,0 +1,226 @@
+---
+import type { Project } from '../data/dash';
+import type { SourceEvidence } from '../data/researchArchive';
+
+interface Props {
+  project: Project;
+  evidence: SourceEvidence[];
+}
+
+interface Contract {
+  slot: string;
+  stateOwner: string;
+  entry: string;
+  boundary: string;
+  risk: string;
+  architecture: string;
+  architectureHref: string;
+  flow: string[];
+}
+
+const contracts: Record<string, Contract> = {
+  'Document model': {
+    slot: 'First-class document type or an extension of an existing document renderer',
+    stateOwner: 'Typed fields on a data document; context-specific display fields on a layout delegate',
+    entry: 'Creator, import path, document factory, or an action on an existing document',
+    boundary: 'Prototype/factory registration and DocumentView-compatible rendering',
+    risk: 'A standalone component can appear to work while bypassing identity, aliases, links, ACLs, undo, and reload',
+    architecture: 'Document and field model',
+    architectureHref: '/architecture/document-model/',
+    flow: [
+      'A user, importer, or tool invokes the type factory or an extension action.',
+      'The factory chooses a prototype, primary data field, defaults, and data/layout ownership.',
+      'The document or existing type reaches DocumentView through its registered creation and render paths.',
+      'The specialized component reads typed data fields and writes context state to the layout delegate.',
+      'Shared document services provide linking, collections, permissions, undo, synchronization, and reload.',
+    ],
+  },
+  'Collections and views': {
+    slot: 'Collection perspective or layout/analysis engine over a shared child list',
+    stateOwner: 'Children on collection data; perspective selection and configuration on the effective layout',
+    entry: 'Collection appearance action, selection workflow, or DataViz document configuration',
+    boundary: 'CollectionView dispatch and the CollectionSubView operation contract',
+    risk: 'View-specific copies, identities, or per-frame persistent writes can break switching, linking, and performance',
+    architecture: 'Collections and view architecture',
+    architectureHref: '/architecture/collections-views/',
+    flow: [
+      'The collection retains its existing document references.',
+      'A layout field or workflow selects the perspective or analysis mode.',
+      'CollectionView dispatches to a subview with shared add, move, remove, selection, and transform operations.',
+      'The implementation derives positions, records, edges, or visual marks without replacing child identity.',
+      'View-specific configuration persists separately and the same children remain available to other perspectives.',
+    ],
+  },
+  'Agent system': {
+    slot: 'Scoped agent tool, retrieval component, execution control, or oversight instrumentation',
+    stateOwner: 'Agent/chat documents for durable interaction; manager/service state for execution; provenance records when enabled',
+    entry: 'ChatBox initializes AgentDocumentManager and the Agent tool registry',
+    boundary: 'Agent.processAction validation followed by BaseTool.execute and ordinary Dash APIs',
+    risk: 'Incorrect document scope or effect handling can turn plausible model output into unauthorized or irrecoverable workspace changes',
+    architecture: 'Agents, retrieval, and generation',
+    architectureHref: '/architecture/agents-ai/',
+    flow: [
+      'AgentDocumentManager constructs the document scope and summaries available to the model.',
+      'The model returns a named action and structured inputs.',
+      'Agent.processAction resolves the static/dynamic registry entry and validates parameters.',
+      'The tool performs a bounded read, external call, or document mutation through Dash services.',
+      'Observations return to the loop; writes enter undo, persistence, and optional provenance paths.',
+    ],
+  },
+  'Generative media': {
+    slot: 'Provider adapter and document-producing workflow attached to an existing or new media document',
+    stateOwner: 'Prompts, accepted results, and source relationships on documents; requests and provider handles outside durable state',
+    entry: 'Document action, creation surface, selected canvas context, or agent tool',
+    boundary: 'External generation response validation before native document creation or field replacement',
+    risk: 'Provider-specific state can leak into the object model, and failed requests can leave half-valid documents or sever source provenance',
+    architecture: 'Agents, retrieval, and generation',
+    architectureHref: '/architecture/agents-ai/#generation-services',
+    flow: [
+      'The interface identifies source documents, prompt text, and generation options.',
+      'An adapter translates that context into a provider request without exposing credentials to document state.',
+      'The response is validated and converted into a supported media field or document factory input.',
+      'The result is inserted or replaces content inside one undo-aware operation.',
+      'Source relationships and accepted output persist; request/runtime handles are discarded.',
+    ],
+  },
+  '3D': {
+    slot: 'Document renderer that hosts an imperative 3D engine and serializable scene/model state',
+    stateOwner: 'Serializable model, drawing, dimensions, and accepted edits on documents; Babylon objects and frame state in the mounted runtime',
+    entry: '3D document factory/import path or an action inside the 3D renderer',
+    boundary: 'DocumentView lifecycle around Babylon scene creation, interaction, export, and disposal',
+    risk: 'Persisting engine handles or high-frequency frame state creates reload failures, leaks, and broad MobX invalidation',
+    architecture: 'Rendering and interaction lifecycle',
+    architectureHref: '/architecture/rendering-lifecycle/#3d-rendering',
+    flow: [
+      'A registered 3D document provides serializable input and layout context.',
+      'The renderer constructs Babylon runtime objects from that state.',
+      'Pointer tools modify temporary geometry and commit accepted edits through document fields or exported assets.',
+      'Undo groups each modeling intent rather than every frame or pointer sample.',
+      'Unmount disposes scene, listeners, buffers, and other engine-owned resources.',
+    ],
+  },
+  Infrastructure: {
+    slot: 'Shared package, build/runtime boundary, persistence service, or cross-cutting platform mechanism',
+    stateOwner: 'The subsystem contract itself; product document meaning remains in the Dash object model',
+    entry: 'Application initialization, package import, server startup, or platform adapter',
+    boundary: 'A stable interface consumed by multiple document and view implementations',
+    risk: 'A platform change can appear local while changing every renderer, build, or serialized record that depends on it',
+    architecture: 'System map',
+    architectureHref: '/architecture/system-map/',
+    flow: [
+      'The application or build initializes the shared subsystem.',
+      'Feature code consumes its documented public contract rather than implementation internals.',
+      'The subsystem performs presentation, storage, build, or platform work without taking ownership of document semantics.',
+      'Errors cross the boundary in a form callers can handle and present.',
+      'Compatibility is verified across existing consumers, not only a new demonstration.',
+    ],
+  },
+  Interface: {
+    slot: 'Shared interaction or presentation layer over existing document operations',
+    stateOwner: 'Transient interaction state in the component; durable user choices on the relevant data or layout document',
+    entry: 'DocumentView chrome, context menu, property panel, selection, or shared component callback',
+    boundary: 'The UI translates intent into existing document, collection, link, or undo operations',
+    risk: 'A polished control can duplicate domain logic, write the wrong document layer, or become inaccessible to keyboard and alternate contexts',
+    architecture: 'Rendering and interaction lifecycle',
+    architectureHref: '/architecture/rendering-lifecycle/',
+    flow: [
+      'The mounted view derives available controls from selection, document type, permissions, and context.',
+      'The control retains gesture-only state locally.',
+      'Activation calls a shared operation or writes the correctly owned field inside an undo boundary.',
+      'MobX updates every embedding that observed the changed state.',
+      'Keyboard, pointer, remount, permission, and reduced-motion behavior remain consistent.',
+    ],
+  },
+  Linking: {
+    slot: 'Link/anchor creation, visualization, traversal, or relationship-management behavior',
+    stateOwner: 'First-class link documents and type-specific anchor documents',
+    entry: 'Linking gesture, annotation action, backlink surface, graph action, or agent link tool',
+    boundary: 'LinkManager registration and LinkFollower navigation over ordinary document references',
+    risk: 'Assuming synchronous or whole-document endpoints breaks region links, private targets, cold loads, and deleted anchors',
+    architecture: 'Links, anchors, and trails',
+    architectureHref: '/architecture/links-trails/',
+    flow: [
+      'The source and target are resolved to whole-document or region-specific anchor documents.',
+      'Docs.Create.LinkDocument stores both anchor references on a LINK document.',
+      'LinkManager indexes the relationship for endpoint and backlink queries.',
+      'Views render or summarize the link without creating a second relationship store.',
+      'LinkFollower resolves the opposite endpoint and restores its supported view state.',
+    ],
+  },
+  'Search and discovery': {
+    slot: 'Indexing, retrieval, recommendation, or source-navigation layer over documents',
+    stateOwner: 'Document identity and searchable fields remain canonical; indexes, chunks, vectors, and rankings are derived state',
+    entry: 'Search UI, agent retrieval, recommendation request, or document-ingestion update',
+    boundary: 'Derived result identifiers must resolve back to authorized Dash documents or anchors',
+    risk: 'Stale indexes and detached chunk/vector ids can return deleted, private, or unnavigable evidence',
+    architecture: 'Import, export, and search pipelines',
+    architectureHref: '/architecture/import-export/#search-indexes',
+    flow: [
+      'A supported document exposes searchable text and metadata with stable identity.',
+      'The indexing path derives tokens, chunks, vectors, or ranking features.',
+      'A query selects and ranks derived records under the request scope.',
+      'Results retain source document or anchor ids for authorization and navigation.',
+      'Create, edit, delete, and permission changes invalidate or filter derived state.',
+    ],
+  },
+  Trails: {
+    slot: 'Ordered or branching presentation structure over documents, links, and saved view state',
+    stateOwner: 'Trail/pin/slide documents for order and presentation; source content remains on the referenced documents',
+    entry: 'Pin creation, trail editor, presentation controls, or link-derived navigation',
+    boundary: 'Presentation state restores a view without rewriting the referenced source document',
+    risk: 'Mixing source, layout, pin, and transition state makes edits leak across ordinary and presentation contexts',
+    architecture: 'Links, anchors, and trails',
+    architectureHref: '/architecture/links-trails/#trails-and-presentation-state',
+    flow: [
+      'The author selects a source document or region and creates a pin/slide reference.',
+      'The trail records order or branches separately from source content.',
+      'Optional saved view state captures the presentation context.',
+      'Navigation resolves the referenced document and applies deterministic transition state.',
+      'Interruption, reduced motion, missing sources, and reload still reach a valid end state.',
+    ],
+  },
+};
+
+const { project, evidence } = Astro.props;
+const contract = contracts[project.area] ?? contracts.Infrastructure;
+const paths = [...new Set(evidence.map((record) => record.path).filter((path): path is string => Boolean(path)))];
+const integrationConclusion: Record<Project['status'], string> = {
+  integrated: 'The current application contains a reachable implementation path. Review still has to confirm runtime, failure, and cross-context behavior; source presence alone is not the entire integration claim.',
+  implemented: 'The implementation path exists outside the current application. Its architecture can be reviewed, but current registries and entry points do not complete the product path.',
+  prototype: 'The artifact exercises part of the contract. Missing product entry, lifecycle, evaluation, or hardening work must remain explicit.',
+  archived: 'This path is historical. Its engineering choices explain lineage but must not be presented as a current runtime contract.',
+  'docs-only': 'The surviving record explains intent without establishing an executable implementation path.',
+  unclear: 'The available evidence is insufficient to place the implementation confidently in the current runtime.',
+};
+---
+
+<section class="project-engineering" aria-label={`Engineering placement for ${project.title}`}>
+  <h2>Engineering placement</h2>
+  <p>
+    <strong>Why this work belongs here:</strong>{' '}
+    {project.relation ?? `${project.title} addresses its research problem through Dash's ${project.area.toLowerCase()} boundary.`}
+  </p>
+  {project.approach && <p><strong>Mechanism:</strong> {project.approach}</p>}
+
+  <dl class="source-module-meta">
+    <div><dt>Architectural slot</dt><dd>{contract.slot}</dd></div>
+    <div><dt>Durable state owner</dt><dd>{contract.stateOwner}</dd></div>
+    <div><dt>Runtime entry</dt><dd>{contract.entry}</dd></div>
+    <div><dt>Integration boundary</dt><dd>{contract.boundary}</dd></div>
+    <div><dt>Primary engineering risk</dt><dd>{contract.risk}</dd></div>
+    <div><dt>Shared contract</dt><dd><a href={contract.architectureHref}>{contract.architecture}</a></dd></div>
+  </dl>
+
+  <h3>Expected execution path</h3>
+  <ol>{contract.flow.map((step) => <li>{step}</li>)}</ol>
+
+  <h3>Current integration conclusion</h3>
+  <p>{integrationConclusion[project.status]}</p>
+
+  {paths.length > 0 && (
+    <details>
+      <summary>Implementation locations represented by the evidence record</summary>
+      <ul>{paths.map((path) => <li><code>{path}</code></li>)}</ul>
+    </details>
+  )}
+</section>

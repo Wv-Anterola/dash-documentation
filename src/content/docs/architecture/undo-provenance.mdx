@@ -9,6 +9,24 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why undo is a semantic layer
+
+One user action can write many fields and documents: moving a group changes
+several layouts; creating a link creates or resolves anchors and registers a
+link document; an agent tool can tag a selection. Recording only the last field
+assignment would restore an internally inconsistent state.
+
+`UndoManager` therefore stores low-level `UndoEvent` records inside a higher-level
+batch. `StartBatch` opens or nests a batch, `AddEvent` records mutations while
+the manager is not itself replaying, and ending the outermost non-empty batch
+pushes it to `undoStack`. Undo applies recorded setters in reverse order and
+constructs the corresponding redo information; redo replays that inverse.
+
+Decorators and wrappers provide entry points, but they cannot infer intent. The
+feature author still decides whether several mutations are one action, whether
+an asynchronous result belongs to the initiating action, and how failure cancels
+or completes the batch.
+
 ## Undo batches
 
 `UndoManager` groups mutations into a named conceptual action. Users expect one

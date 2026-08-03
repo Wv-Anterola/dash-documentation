@@ -214,6 +214,7 @@ export default defineConfig({
               label: 'How it is built',
               collapsed: true,
               items: [
+                { slug: 'architecture/engineering-model', label: 'How Dash actually works' },
                 { slug: 'architecture/system-map' },
                 { slug: 'architecture/document-model' },
                 { slug: 'architecture/rendering-lifecycle' },

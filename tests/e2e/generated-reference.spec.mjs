@@ -34,6 +34,9 @@ test('connects project and publication archive records', async ({ page }) => {
   const projectLink = page.locator('main .project-atlas h3 a').first();
   await expect(projectLink).toBeVisible();
   await projectLink.click();
+  await expect(page.getByRole('heading', { name: 'Engineering placement' })).toBeVisible();
+  await expect(page.getByText('Durable state owner')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Expected execution path' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Implementation evidence' })).toBeVisible();
 
   await page.goto('/research/publications/');
@@ -41,6 +44,15 @@ test('connects project and publication archive records', async ({ page }) => {
   await expect(publicationLink).toBeVisible();
   await publicationLink.click();
   await expect(page.getByRole('heading', { name: 'Current implementation status' })).toBeVisible();
+});
+
+test('explains the causal engineering model instead of only listing components', async ({ page }) => {
+  await page.goto('/architecture/engineering-model/');
+  await expect(page.getByRole('heading', { name: 'How Dash actually works' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'The design pressures behind the architecture' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Write path: from gesture to every client' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'System invariants' })).toBeVisible();
+  await expect(page.locator('img[src*="dash-action-lifecycle"]')).toBeVisible();
 });
 
 test('keeps basics and reference navigation usable on mobile', async ({ page }) => {

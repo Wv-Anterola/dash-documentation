@@ -9,6 +9,22 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why rendering is indirect
+
+Dash cannot map one enum directly to one fixed component and stop there. The
+same data may use different layout documents, a layout may embed other Dash
+documents, and collection perspectives must reinterpret one child list without
+converting it. The layout-string and component registry is the indirection that
+allows those combinations.
+
+That flexibility creates a two-stage integration contract:
+
+1. a factory/prototype creates valid document state; and
+2. a registered renderer interprets that state inside `DocumentView`.
+
+A component that renders correctly in isolation is not proof that either stage
+is connected to the product.
+
 ## From document to component
 
 The main client initializes `DocumentContentsView` with a default layout string
@@ -29,6 +45,25 @@ DocumentView
 The registry contains content renderers, collection views, interface helpers,
 and supporting components. Registration makes a component available to layout
 strings; the document factory and creation UI remain separate responsibilities.
+
+### Worked trace: render one embedded PDF
+
+1. The parent collection resolves the child's layout/data pair and supplies
+   panel dimensions, transforms, selection state, and collection operations.
+2. `DocumentView` checks the data document ACL, computes common chrome from the
+   layout document, and establishes drag, resize, title, link, and script behavior.
+3. `DocumentContentsView` resolves the effective layout field. If no specialized
+   layout exists, it uses the default field layout initialized by `Main.tsx`.
+4. Layout bindings expose both the data and layout documents to the parsed JSX.
+5. The registered PDF component reads the media field from the data document
+   and context state—dimensions, page or view options—from the layout side.
+6. MobX records those reads. A page-state write invalidates the PDF view; moving
+   the embedding invalidates layout/chrome without changing PDF content.
+7. Unmount must dispose PDF listeners, observers, rendering tasks, and any media
+   handles owned by that component instance.
+
+This trace is the minimum model to use when diagnosing “the right component
+exists but the document still renders incorrectly.”
 
 ## Layout resolution
 

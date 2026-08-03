@@ -9,6 +9,20 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why one model carries so many kinds of object
+
+Dash needs generic operations—link, arrange, share, search, script, persist,
+undo—to work across media that have different internal behavior. `Doc` is the
+common semantic and identity boundary; a type-specific renderer is only the
+interpretation of its fields. This makes new media composable immediately, but
+it also means a renderer must not create a private parallel data model that the
+rest of Dash cannot address.
+
+The important abstraction is not “everything is JSON.” Fields retain runtime
+types, observability, reference semantics, and serialization behavior. The open
+key space supports research extensions; schemas and cast helpers protect the
+keys on which core code depends.
+
 ## Identity first
 
 `Doc` is the common addressable object in Dash. A view receives a document and
@@ -46,6 +60,24 @@ Use the narrowest field representation that preserves the requirement:
 Do not store serialized JSON in a string merely to avoid defining observable
 fields. That hides dependencies from MobX and makes partial updates,
 permissions, and migration harder.
+
+### What a field assignment actually does
+
+`Doc` is exposed through a proxy. Setting a field does more than mutate an
+object property: the implementation records an undo event, updates the
+observable value, serializes the operation into a server diff, and sends it
+through `DocServer.UpdateField`. Incoming diffs are applied through the field's
+`HandleUpdate` path so remote and local state use the same representation.
+
+Lists require operation-aware updates. Adding or removing a child is not safely
+equivalent to replacing an arbitrary stale array, particularly when several
+clients edit a collection. Use the document/list helpers so identity, undo,
+serialization, and server-side list handling stay aligned.
+
+`Doc.SetInPlace` is the ownership-aware write path. It checks whether a key is
+already defined on the delegate or data document and uses `defaultProto` to
+choose the destination when neither owns it. This prevents a convenience write
+from accidentally changing shared data or only shadowing it in one context.
 
 ## Prototypes and delegation
 
@@ -116,6 +148,12 @@ to delete the underlying document from every context.
 Nested references also affect sharing and serialization. A container may be
 readable while a referenced child is not; a persistence operation may need to
 walk a graph rather than a tree.
+
+On a cold read, `ProxyField.value` first checks the `DocServer` cache. If the
+target is absent it starts one fetch, retains the promise, and updates its
+observable cache after deserialization. Callers must therefore handle resolved,
+loading, missing, and inaccessible references. Testing only after the workspace
+has warmed the cache misses this behavior.
 
 ## Invariants to test
 

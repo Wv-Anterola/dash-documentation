@@ -9,6 +9,22 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why an agent action is a tool call
+
+Natural-language output is not a mutation protocol. Dash inserts a typed tool
+boundary so model output must name an allowed operation and satisfy its declared
+inputs before application code runs. The tool then uses the same document,
+collection, link, service, and undo APIs as manual interaction.
+
+This structure separates four kinds of correctness:
+
+- the model selected the intended operation;
+- the arguments match the tool contract;
+- the tool affected the intended document scope; and
+- the resulting Dash mutation is reversible, persistent, and authorized.
+
+Successful model output proves only the first two.
+
 ## Two execution models
 
 The chatbot and agent share model-facing infrastructure but have different
@@ -38,6 +54,24 @@ results return observations that are appended to the model interaction.
 
 The registry contains 22 startup tools when `createNewTool` is included.
 Use [Agent tool reference](/reference/agent-tools/) for the current inventory.
+
+### One execution cycle
+
+`Agent.processAction` first rejects names outside the static and dynamic
+registries. It normalizes structured inputs used by metadata and generated-tool
+paths, checks required parameters, parses array parameters, verifies primitive
+types, and calls any tool-specific validator. The tool's returned `Observation`
+objects become input to the next model step.
+
+On the post-hoc oversight research line, the final call is wrapped by
+`runWithProvenance` so a write can retain its action and triggering-source
+record. That wrapper is not in the current application source; it is the
+branch-level intervention evaluated by that project.
+
+The document set presented to this loop comes from `AgentDocumentManager`, not
+from an assumption that every loaded or visible object is in scope. Canvas,
+linked-document, lightbox, hidden, container, system, duplicate, and ACL cases
+must be handled by that discovery boundary.
 
 ## Read and write tools
 

@@ -9,6 +9,18 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why desktop is a host, not a second Dash
+
+Electron changes process and capability boundaries; it should not change the
+meaning of a document. The renderer still uses the same factories, fields,
+views, undo, and persistence contracts. Main-process or preload code exists only
+for capabilities a browser cannot safely provide, such as controlled filesystem,
+window, packaging, or local-service integration.
+
+Keeping host integration outside document semantics allows a workspace created
+in the browser to remain intelligible on desktop and prevents a research feature
+from becoming dependent on unrestricted Node access in a renderer component.
+
 ## Desktop boundary
 
 Electron packages the web application into a desktop shell. Keep browser,

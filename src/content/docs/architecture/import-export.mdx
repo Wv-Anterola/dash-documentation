@@ -9,6 +9,19 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why import ends in native document state
+
+An imported asset becomes useful to Dash only after its content, identity,
+metadata, layout, and source reference enter the normal document lifecycle. A
+custom preview that retains a browser `File`, object URL, or private parser state
+may look complete but cannot reliably survive reload, linking, sharing, export,
+or agent discovery.
+
+Import is therefore a boundary adapter: detect external representation, validate
+it, convert it into typed fields and a registered document factory, then add the
+result through the same collection and undo operations as manual creation.
+Provider/parser handles remain outside the durable graph.
+
 ## Import pipeline
 
 Import begins with a file, URL, text payload, or structured record source. The

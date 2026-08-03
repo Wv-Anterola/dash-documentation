@@ -9,6 +9,17 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why a collection is not its view
+
+A collection answers **which documents belong together**. A perspective answers
+**how those same references should be interpreted and arranged here**. Keeping
+those questions separate permits freeform, schema, graph, calendar, stacking,
+and other views to operate on one child list without producing converted copies.
+
+The tradeoff is that a view may not invent its own child identity or ownership
+rules. Selection, filtering, ordering, position, and view-specific configuration
+must map back to shared collection operations and explicit layout fields.
+
 ## Dispatch
 
 `CollectionView` reads `_type_collection` from the effective layout document
@@ -23,6 +34,19 @@ The verified implementation has:
 Do not use “21 views” to imply that all 21 are user-selectable:
 `Invalid` is a sentinel, `StackedTimeline` is not currently dispatched, and
 docking, linear, pile-up, and card serve specialized contexts.
+
+### What switching a perspective does
+
+1. The appearance action changes `_type_collection` on the effective layout.
+2. MobX invalidates `CollectionView.collectionViewType` and the render path.
+3. `renderSubView` selects a `CollectionSubView` implementation.
+4. The new subview receives the same document, child field, transforms, and
+   add/move/remove callbacks.
+5. It reads or initializes only its perspective-specific fields.
+
+The child list should be unchanged. If switching views rewrites child documents
+into view-specific records, the implementation has crossed the data/perspective
+boundary and will not compose safely with another view.
 
 ## Shared subview contract
 

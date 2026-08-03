@@ -1,0 +1,319 @@
+---
+title: How Dash actually works
+description: The engineering rationale, object model, execution paths, state ownership rules, and invariants behind Dash.
+sidebar:
+  order: 1
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+Dash is not a collection of unrelated canvas widgets. It is an object runtime
+for composing heterogeneous media, spatial arrangements, links, presentations,
+and executable tools around one shared graph of documents. A feature belongs in
+Dash when it participates in that graph and its lifecycle, not merely when a
+React component can display it.
+
+This page explains the causal model: **which problem each layer solves, how an
+operation crosses the layers, and which properties must remain true**. The
+subsystem pages provide narrower implementation details.
+
+<SourceSnapshot />
+
+![Dash engineering model: interfaces and tools act on document and layout state, which renders reactively and persists through the synchronization boundary.](/assets/images/diagrams/dash-engineering-model.svg)
+
+*The document graph is the center of the system. User interfaces, collection
+views, links, scripts, and agents are different ways to read or mutate it.*
+
+## The design pressures behind the architecture
+
+Dash was built for research work in which a paragraph, PDF region, image,
+recording timestamp, collection, link, and presentation step must remain
+individually addressable and recombinable. A conventional file tree plus one
+component state object per screen would not preserve those relationships.
+
+| Design pressure | Dash decision | Engineering consequence |
+| :--- | :--- | :--- |
+| Heterogeneous content must compose | Represent content and structural objects as `Doc` instances with typed `Field` values | Generic systems can link, share, arrange, search, and persist new document types |
+| The same content must appear in several places | Give every document stable identity and store references instead of recursively copying objects | An edit can propagate across embeddings; deletion and access control must be graph-aware |
+| Presentation context must not rewrite content | Resolve a data document separately from a layout/delegate document | One PDF or collection can have different position, size, view, and presentation state in each context |
+| Research prototypes must join the system quickly | Use prototype-backed factories and renderer/view registries | Integration is inexpensive, but central enums and switch registries create merge pressure |
+| Spatial interactions must stay responsive | Keep persistent graph state observable with MobX and gesture-frame state local where possible | Broad computed reads or per-frame persistent writes can invalidate large subtrees |
+| Visible actions must be reversible | Record mutations as `UndoManager` events inside conceptual batches | A feature must choose transaction boundaries, including asynchronous completion and partial failure |
+| Multiple clients must share durable state | Serialize field-level diffs over Socket.IO and apply them to MongoDB | Local render success is not proof of durable success; remote diffs must preserve field semantics |
+| AI actions must remain ordinary Dash actions | Put model-selected operations behind typed tools that use existing document APIs | Tool schemas, scope, permissions, undo, and provenance become part of the feature contract |
+| Browser and desktop builds must share behavior | Keep Electron, server, model, and renderer privileges behind explicit boundaries | Desktop packaging cannot become an alternate document model or an unrestricted renderer escape hatch |
+
+These decisions are coupled. Removing identity breaks links and aliases.
+Combining data and layout breaks multiple contexts. Writing around `Doc` makes
+undo, synchronization, and permissions incomplete. A locally convincing UI can
+therefore still be architecturally incompatible with Dash.
+
+## The five runtime objects to keep separate
+
+![A Dash data document delegates defaults through a prototype, receives context-specific layout through a layout document, and is rendered by a view while other documents refer to it by identity.](/assets/images/diagrams/dash-document-resolution.svg)
+
+### 1. Data document
+
+The data document owns durable content: rich text, media fields, collection
+children, link endpoints, chart data, or domain-specific fields. `Doc.GetDataDoc`
+walks delegation to the root data owner. A renderer writes here when an edit
+changes what the document *is* in every context.
+
+### 2. Prototype
+
+A prototype supplies defaults and behavior to instances. Factories call
+`InstanceFromProto(Prototypes.get(type), ...)`; the resulting document does not
+need to duplicate every inherited field. This is why a new type can reuse
+persistence, linking, sharing, and collection behavior.
+
+A visible value may be owned by the instance, inherited from an intermediate
+delegate, inherited from the data root, or returned as a cast default.
+`Doc.SetInPlace` inspects the delegate and data documents before choosing where
+to write. A mutation that ignores that distinction can silently change every
+embedding or fail to change the shared content.
+
+### 3. Layout or delegate document
+
+A layout document records how data appears in one embedding: position, size,
+view type, zoom, title visibility, or saved presentation state. It delegates to
+the data document for content. `Doc.GetLayoutDataDocPair` resolves the effective
+pair for a child inside a container.
+
+This separation is why a collection can switch from freeform to schema or graph
+without converting its children, and why the same document can be large in one
+board and compact in another.
+
+### 4. Reference or proxy
+
+`Doc` extends `RefField` and carries an identifier. References serialize that
+identity. `ProxyField` retains the target id, a MobX-observable cache, and at
+most one load in flight. Reading an unresolved proxy asks `DocServer` for the
+target and exposes a waiting value until deserialization completes.
+
+The graph is loaded by demand instead of recursively materializing every
+referenced document. Code that assumes a reference is always synchronous can
+therefore pass against a warm cache and fail after a clean reload.
+
+### 5. View component
+
+A React view is an adapter over documents, not the durable owner of their
+meaning. `DocumentView` supplies common selection, drag, decoration, sizing,
+link, permission, and context behavior. `DocumentContentsView` resolves a layout
+string, creates bindings, and parses it against the component registry initialized
+by `Main.tsx`.
+
+Component-local state is appropriate for hover, pointer capture, an open menu,
+or an animation frame. A value belongs on a document when it must survive
+remount, reload, another embedding, collaboration, undo, or presentation restore.
+
+## Write path: from gesture to every client
+
+![A Dash action flows from input validation through an undo batch and document mutation to MobX rendering, serialized Socket.IO diffs, MongoDB, and remote-client updates.](/assets/images/diagrams/dash-action-lifecycle.svg)
+
+Consider dragging a document inside a freeform collection.
+
+1. `DocumentView` and the active collection subview interpret pointer input.
+   The collection's screen-to-local `Transform` converts viewport coordinates
+   into the collection coordinate system.
+2. The gesture begins an `undoable` operation or `@undoBatch`. Nested operations
+   share the open batch counter so one visible gesture becomes one stack item.
+3. The move writes layout position fields, not shared data fields.
+4. The `Doc` proxy records the old/new field operation with
+   `UndoManager.AddEvent` and constructs a serialized server diff.
+5. `DocServer.UpdateField` emits `MessageStore.UpdateField` through Socket.IO
+   unless the client is read-only or the current user is a guest.
+6. The WebSocket handler normalizes list operations where necessary, calls
+   `Database.Instance.update(id, diff, ..., false)`, and broadcasts the accepted
+   diff to other clients.
+7. Receiving clients apply the diff through the field update handler. MobX
+   invalidates computations that observed the changed values, and React renders
+   the affected views.
+8. Ending the outer batch pushes its events onto the undo stack and invalidates
+   the redo stack when appropriate.
+
+Two outcomes must be distinguished:
+
+- **optimistic local state**: the initiating client has mutated and re-rendered;
+- **durable synchronized state**: the server accepted the diff and other clients
+  can receive the same operation.
+
+Field updates are not a general offline-first conflict-free data type. Features
+that produce concurrent structural edits must test the actual list-diff and
+broadcast behavior rather than assuming arbitrary merges.
+
+## Read path: from an id to a reactive document
+
+References do not embed an entire target graph. The cold-cache path is:
+
+```text
+ProxyField.value
+  -> DocServer.GetCachedRefField(id)
+  -> DocServer.GetRefField(id) when absent
+  -> Socket.IO GetRefField callback
+  -> server Database.getDocument(id)
+  -> serialized field payload
+  -> SerializationHelper.Deserialize(payload)
+  -> afterDocDeserialize(id)
+  -> DocServer cache replacement
+  -> ProxyField observable cache update
+  -> dependent MobX computations rerun
+```
+
+`GetRefFields` batches ids and resolves only after the requested documents have
+been deserialized and installed in the cache. This path explains why a reference
+can be known while its target is still unavailable, why rendering need not load
+the entire transitive graph, and why save/reload tests must begin cold.
+
+Missing, private, loading, and malformed targets are different states. A view
+that collapses all four to `undefined` cannot give the user an accurate recovery
+path and can accidentally disclose inaccessible metadata.
+
+## Creation path: from a command to a native Dash object
+
+Creating a text document is representative:
+
+```text
+creator / double-click / import / agent tool
+  -> Docs.Create.TextDocument(...)
+  -> convert string to RichTextField
+  -> Prototypes.get(DocumentType.RTF)
+  -> InstanceFromProto(...)
+  -> data delegate with content and durable options
+  -> view/layout delegate with contextual options when required
+  -> add reference to the target collection list
+  -> DocumentView + DocumentContentsView render it
+```
+
+The factory chooses the prototype, primary data field, native dimensions,
+data/layout split, and defaults. Bypassing it can produce a `Doc` that serializes
+but is not reachable from creation UI, does not dispatch to the intended
+renderer, or stores view state on the wrong object.
+
+## Rendering path: from fields to pixels
+
+`Main.tsx` initializes `DocumentContentsView` with the default key-value layout
+and component map. For each embedding:
+
+1. `DocumentView` resolves the document and layout context.
+2. Common chrome enforces ACL visibility and supplies selection, drag, resize,
+   title, link, script, and decoration behavior.
+3. `DocumentContentsView` selects the requested layout field, follows a layout
+   document if referenced, or uses the default field view.
+4. It creates data/layout bindings and expands Dash-specific layout markup.
+5. The JSX parser resolves registered names to React components.
+6. A collection renderer reads `_type_collection` and dispatches to a
+   `CollectionSubView` implementation.
+7. MobX records the fields read during render and computed evaluation; later
+   writes schedule the corresponding reactive work.
+
+The factory and renderer registries solve different problems: one creates
+state, the other interprets it. A feature is incomplete if only one side exists.
+
+## Link path: from a region to navigation
+
+`Docs.Create.LinkDocument` creates a `LINK` document with `link_anchor_1` and
+`link_anchor_2`, then registers it through `Doc.AddLink`, which `LinkManager`
+supplies at initialization. An anchor may be a source document or an annotation
+document representing a PDF region, text selection, image marquee, or media time.
+
+`LinkFollower.FollowLink` opens an undo batch, resolves the opposite endpoint
+while accounting for prototypes and annotation ownership, finds or opens a
+compatible target view, restores anchor state, and coordinates highlighting.
+Graph view reads these same link documents; it is not a second link store.
+
+Links are documents so metadata, permissions, collections, undo, persistence,
+and agent creation reuse existing machinery. The cost is that broken references,
+private endpoints, and high density must be handled as graph conditions.
+
+## Agent path: from model output to a Dash mutation
+
+The agent does not receive arbitrary direct access to the document graph.
+
+```text
+request + scoped document summaries
+  -> model emits action and inputs
+  -> static or dynamic registry lookup
+  -> required-parameter and runtime-type validation
+  -> tool-specific validation
+  -> tool reads or mutates through Dash APIs
+  -> observations return to the next model step
+```
+
+`AgentDocumentManager` defines discoverable scope. `Agent.processAction` rejects
+unknown actions, normalizes selected structured inputs, validates declared
+parameters, and only then calls the tool. Write tools use the same document,
+link, collection, persistence, and undo paths as manual UI.
+
+The post-hoc oversight research line inserts
+`runWithProvenance(action, execute)` around that final tool call. That wrapper is
+branch-only instrumentation, not part of the current application path. Keeping
+it distinct is necessary when reasoning about which provenance records a normal
+Dash session can actually produce.
+
+A tool therefore cannot be evaluated only by successful invocation. Scope,
+effect class, undo boundary, permission checks, external disclosure, result
+summary, and failure atomicity are part of its contract.
+
+## State ownership decision table
+
+| State | Owner | Why |
+| :--- | :--- | :--- |
+| PDF bytes, text, collection children | Data document or file-backed field | Must remain stable across embeddings and reload |
+| Position, size, perspective, saved zoom | Layout/delegate document | Belongs to one context rather than shared content |
+| Type defaults and common behavior | Prototype | Avoids copying defaults into every instance |
+| Hover, pointer capture, open menu | React component | Ephemeral and local to one mounted view |
+| Cross-component non-durable interaction | MobX controller or manager | Coordinates runtime behavior without changing the record |
+| Reference to another document | `ProxyField` or document field | Preserves identity and supports lazy resolution |
+| One reversible user intent | `UndoManager` batch | Gives undo a boundary larger than one field write |
+| Credential, session, authorization decision | Server or service boundary | Must not become ordinary client-visible document data |
+| Model/provider runtime handle | Service adapter or component runtime | Is not serializable and may not exist elsewhere |
+
+When ownership is unclear, ask what must happen after remount, reload, another
+embedding, another user, undo, export, and service failure. Those answers identify
+the correct layer.
+
+## System invariants
+
+A subsystem change is compatible with Dash only if it preserves the invariants
+that apply to it:
+
+1. **Identity:** a reference resolves to the same logical document after reload.
+2. **Delegation:** inherited defaults do not silently overwrite instance data.
+3. **Context separation:** layout changes do not mutate shared content.
+4. **Reachability:** creation, import, and rendering registries agree on the type.
+5. **Reactivity:** durable writes invalidate intended views without turning
+   gesture-frame state into global work.
+6. **Reversibility:** one visible action has a coherent undo/redo result.
+7. **Persistence:** serializable fields survive a cold-cache save/reload cycle.
+8. **Synchronization:** remote application preserves the initiating operation.
+9. **Authorization:** nested references, search, backlinks, export, and tools do
+   not reveal inaccessible documents.
+10. **Degradation:** unavailable media, models, parsers, and services leave source
+    content intact and produce an actionable error.
+11. **Cleanup:** reactions, listeners, workers, media, and rendering engines are
+    disposed when their runtime owner ends.
+12. **Composability:** a specialized feature remains linkable, arrangeable,
+    searchable, shareable, scriptable, and documentable through common contracts.
+
+## How to read a feature technically
+
+Do not stop at the component that draws it. Trace these questions in order:
+
+1. What user or research problem requires the feature?
+2. Which Dash abstraction owns its durable meaning?
+3. Which factory, prototype, and field keys create its state?
+4. Which data/layout pair does the renderer receive?
+5. Which registry or dispatch case makes it reachable?
+6. Which manager or service performs its domain behavior?
+7. Which fields change, and which computations observe them?
+8. Where does the undo batch begin and end?
+9. What serializes, what remains runtime-only, and how is it rehydrated?
+10. Which permissions and external data boundaries apply?
+11. What happens when dependencies are missing or work is interrupted?
+12. Which tests prove integration rather than isolated rendering?
+
+Use the [generated API and registry reference](/technical/api/) to follow exact
+symbols. Continue with [System map](/architecture/system-map/) for runtime
+boundaries, [Document model](/architecture/document-model/) for field ownership,
+and [Rendering lifecycle](/architecture/rendering-lifecycle/) for dispatch and
+reactivity.

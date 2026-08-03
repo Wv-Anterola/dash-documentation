@@ -9,6 +9,18 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
+## Why the relationship is a document
+
+Dash must address relationships between regions, not only between files. Making
+the link and its anchors part of the document graph lets the existing identity,
+metadata, access, persistence, undo, collection, and agent mechanisms operate on
+relationships without a parallel edge database.
+
+The cost is explicit lifecycle work: endpoints can load asynchronously, become
+private, be deleted, or refer through annotation/prototype layers. Link code
+must resolve those states rather than treating an endpoint id as a guaranteed
+DOM target.
+
 ## Links and anchors
 
 A link is represented as a document rather than an edge stored only on one
@@ -32,6 +44,13 @@ not assume every anchor is a rectangle in canvas coordinates.
 
 `LinkFollower` and link/view utilities resolve an endpoint, open the target in
 the requested context, and restore anchor state when supported.
+
+The concrete traversal begins in `LinkFollower.FollowLink`. It opens a named
+undo batch, compares the current source with both anchors—including prototype
+and annotation ownership—selects the opposite endpoint, locates or opens a
+compatible `DocumentView`, applies target-view state, and schedules highlight
+cleanup. Following a link can therefore change workspace/navigation state even
+when it does not change the linked source content.
 
 Navigation tests should cover:
 

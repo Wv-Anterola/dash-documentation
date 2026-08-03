@@ -5,6 +5,7 @@ import { capabilitiesForProject } from '../../../data/capabilities';
 import { projectHref, projects, withBase } from '../../../data/dash';
 import { visualForProject } from '../../../data/visuals';
 import VisualEvidence from '../../../components/VisualEvidence.astro';
+import ProjectEngineering from '../../../components/ProjectEngineering.astro';
 
 export function getStaticPaths() {
   return projectRecords.map((project) => ({ params: { project: project.id }, props: { project } }));
@@ -43,6 +44,8 @@ const label = (value: string) => value.replaceAll('-', ' ').replace(/^./, (chara
 
   <h2>System contribution and result</h2>
   <p>{project.results ?? 'No result is recorded in the surviving project materials.'}</p>
+
+  <ProjectEngineering project={projectSource} evidence={project.sourceEvidence} />
 
   <h2>People and roles</h2>
   {project.people.length ? (
