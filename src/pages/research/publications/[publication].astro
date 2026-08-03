@@ -1,0 +1,26 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { publicationRecords } from '../../../data/researchArchive';
+export function getStaticPaths() {
+  return publicationRecords.map((publication) => ({ params: { publication: publication.id }, props: { publication } }));
+}
+type Record = (typeof publicationRecords)[number];
+interface Props { publication: Record }
+const { publication } = Astro.props;
+---
+<StarlightPage frontmatter={{ title: publication.title, description: publication.citation }}>
+  <p><a href="/research/publications/">Publications</a> / structured record</p>
+  <p>{publication.citation}</p>
+  <p><a href={publication.stableUrl}>Stable paper or report</a></p>
+  <dl>
+    <div><dt>DOI</dt><dd>{publication.doi ?? 'not recorded'}</dd></div>
+    <div><dt>Abstract</dt><dd>{publication.abstract ?? 'not recorded'}</dd></div>
+    <div><dt>BibTeX</dt><dd>{publication.bibtex ?? 'not recorded'}</dd></div>
+    <div><dt>RIS</dt><dd>{publication.ris ?? 'not recorded'}</dd></div>
+  </dl>
+  <h2>Associated projects</h2>
+  {publication.associatedProjects.length ? <ul>{publication.associatedProjects.map((project) => <li>{project}</li>)}</ul> : <p>Not recorded.</p>}
+  <h2>Current implementation status</h2><p>{publication.currentImplementationStatus}</p>
+  <h2>Code evidence</h2>
+  {publication.code.length ? <ul>{publication.code.map((evidence) => <li><a href={evidence.sourceUrl}>{evidence.path}</a></li>)}</ul> : <p>Not recorded.</p>}
+</StarlightPage>

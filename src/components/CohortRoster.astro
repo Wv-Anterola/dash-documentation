@@ -1,6 +1,6 @@
 ---
 /**
- * The student roster for one cohort, drawn from commit authorship.
+ * The provisional student roster for one cohort.
  */
 import { cohortOf, type CohortId } from '../data/dash';
 
@@ -17,7 +17,7 @@ const c = cohortOf(cohort);
 </ul>
 
 <p class="roster__note">
-  Taken from commit authorship in the Dash-Web repository over this period and
-  cross-checked against the group's own team list. If you contributed and are
-  not here, it is an omission rather than a judgement.
+  Compiled from repository authorship records and the group's historical team
+  lists. Contributors whose identities could not be verified are listed
+  separately on the People page.
 </p>

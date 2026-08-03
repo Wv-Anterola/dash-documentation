@@ -112,7 +112,7 @@ export const statuses: Status[] = [
     key: 'docs-only',
     label: 'Documentation only',
     blurb:
-      'Described in documentation or a report, but we could not find the corresponding implementation to confirm it.',
+      'Described in documentation or a report, but no corresponding implementation was identified during the source audit.',
   },
   {
     key: 'unclear',
@@ -395,9 +395,9 @@ export function withBase(path: string): string {
   return base + path;
 }
 
-/** Href for a project's write-up on its cohort page. */
+/** Href for a project's first-class structured archive record. */
 export function projectHref(p: Project): string {
-  return withBase(`/research/cohorts/${p.cohort}/#${projectSlug(p.title)}`);
+  return withBase(`/research/projects/${projectSlug(p.title)}/`);
 }
 
 /** Href for a concept page. */

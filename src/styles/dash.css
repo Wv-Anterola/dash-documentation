@@ -522,20 +522,27 @@
 /* ---------------------------------------------------------- capabilities */
 
 .source-snapshot {
-  align-items: flex-start;
   border-left: 3px solid var(--sl-color-accent);
-  display: flex;
-  flex-direction: column;
+  display: block;
   font-size: var(--dash-text-sm);
-  gap: var(--dash-space-1);
   margin: var(--dash-space-6) 0;
   max-width: var(--dash-measure);
   padding: var(--dash-space-3) var(--dash-space-4);
 }
 
+.source-snapshot summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
 .source-snapshot span,
 .capability-snapshot {
   color: var(--dash-muted);
+}
+
+.source-snapshot span {
+  display: block;
+  margin-top: var(--dash-space-2);
 }
 
 .capability-snapshot {
@@ -1280,6 +1287,11 @@
   padding: var(--dash-space-3) var(--dash-space-4);
 }
 
+.project-workflow__branches > summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
 .sl-markdown-content .project-workflow__branches :is(p, ul) {
   margin: var(--dash-space-2) 0 0;
 }
@@ -1520,6 +1532,145 @@
   overflow-wrap: anywhere;
 }
 
+/* Source-generated API and registry reference. */
+.source-method,
+.source-warning {
+  margin-block: var(--dash-space-4);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--dash-rule);
+  border-left: 0.3rem solid var(--sl-color-accent);
+  border-radius: var(--dash-radius-sm);
+  background: var(--sl-color-gray-7);
+}
+
+.source-warning {
+  border-left-color: var(--sl-color-red-high);
+}
+
+.registry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--dash-space-3);
+  margin-block: var(--dash-space-4) var(--dash-space-6);
+}
+
+.registry-grid a,
+.source-module,
+.source-rows a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-space-1);
+  padding: 0.8rem;
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-sm);
+  color: var(--sl-color-text);
+  text-decoration: none;
+}
+
+.source-module[hidden] {
+  display: none;
+}
+
+.registry-grid a:hover,
+.source-module:hover,
+.source-rows a:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-gray-6);
+}
+
+.registry-grid strong {
+  color: var(--sl-color-accent-high);
+  font-size: var(--dash-text-xl);
+}
+
+.registry-grid span,
+.source-module span,
+.source-rows span {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+}
+
+.source-modules,
+.source-rows {
+  display: grid;
+  gap: var(--dash-space-2);
+  margin-block: var(--dash-space-4) var(--dash-space-6);
+}
+
+.source-modules {
+  max-height: 34rem;
+  overflow: auto;
+  padding-right: var(--dash-space-1);
+}
+
+.source-module-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--dash-space-2);
+  margin-block: var(--dash-space-4) var(--dash-space-6);
+}
+
+.source-module-meta div {
+  padding: 0.7rem;
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-sm);
+}
+
+.source-module-meta dt {
+  color: var(--dash-muted);
+  font-size: var(--dash-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.source-module-meta dd {
+  margin: var(--dash-space-1) 0 0;
+  overflow-wrap: anywhere;
+}
+
+.symbol-reference {
+  display: grid;
+  gap: var(--dash-space-2);
+  margin-block: var(--dash-space-4) var(--dash-space-6);
+}
+
+.symbol-reference > details {
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-sm);
+  overflow: hidden;
+}
+
+.symbol-reference > details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dash-space-4);
+  padding: 0.75rem 0.9rem;
+  cursor: pointer;
+}
+
+.symbol-reference > details > summary span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.symbol-reference > details > summary small,
+.source-undocumented,
+.source-breadcrumb {
+  color: var(--dash-muted);
+}
+
+.symbol-reference > details > div {
+  padding: 0.1rem 0.9rem 0.9rem;
+  border-top: 1px solid var(--dash-rule);
+}
+
+.symbol-reference pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
 @media (max-width: 64rem) {
   .project-workflow__steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1568,5 +1719,10 @@
 
   .project-workflow__steps > li::after {
     display: none !important;
+  }
+
+  .symbol-reference > details > summary {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

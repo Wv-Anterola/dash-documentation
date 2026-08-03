@@ -1,0 +1,167 @@
+---
+import { moduleHref, reference, registryCounts } from '../data/sourceReference';
+import { coreExtensionApiIds } from '../data/symbolOverlays';
+
+const counts = registryCounts();
+const modules = reference.modules.map((module) => ({
+  ...module,
+  exported: module.symbols.filter((symbol) => symbol.exported).length,
+  documented: module.symbols.filter((symbol) => symbol.exported && symbol.documentation).length,
+}));
+const removedCount = reference.methodology.historicalRemovedSymbols;
+const coverage = (100 * reference.methodology.exportedDocumentationCoverage).toFixed(1);
+const parserFailures = reference.parserFailures as Array<{ path: string; message: string }>;
+---
+
+<div class="audit-summary" aria-label="Semantic source reference totals">
+  <div><strong>{reference.methodology.canonicalTrackedFiles.toLocaleString()}</strong><span>tracked files classified</span></div>
+  <div><strong>{reference.methodology.symbolCount.toLocaleString()}</strong><span>current named symbols</span></div>
+  <div><strong>{reference.methodology.exportedSymbolCount.toLocaleString()}</strong><span>exported declarations</span></div>
+  <div><strong>{coverage}%</strong><span>exported API documentation</span></div>
+  <div><strong>{coreExtensionApiIds.length}/{coreExtensionApiIds.length}</strong><span>core extension contracts overlaid</span></div>
+</div>
+
+<div class="source-method">
+  <p>
+    Generated from a reproducible Dash-Web source snapshot. The generator classified{' '}
+    {reference.methodology.reachableBlobs.toLocaleString()} reachable blobs and parsed each supported
+    source file once. Exact revision metadata is kept in the{' '}
+    <a href="/reference/implementation-snapshot/">source coverage note</a>.
+  </p>
+</div>
+
+<h2 id="generated-registries">Runtime and platform registries</h2>
+
+<div class="registry-grid">
+  <a href="#document-types"><strong>{counts.documentTypes}</strong><span>document type values</span></a>
+  <a href="#collection-views"><strong>{counts.collectionViews}</strong><span>collection view values</span></a>
+  <a href="#renderers"><strong>{counts.renderers}</strong><span>render registrations</span></a>
+  <a href="#agent-tools"><strong>{counts.agentTools}</strong><span>agent tool exports</span></a>
+  <a href="#routes"><strong>{counts.routes}</strong><span>server routes</span></a>
+  <a href="#components"><strong>{counts.components}</strong><span>component exports</span></a>
+  <a href="#configuration"><strong>{counts.environmentVariables}</strong><span>environment variables</span></a>
+  <a href="#history"><strong>{removedCount.toLocaleString()}</strong><span>removed historical symbols</span></a>
+</div>
+
+<h2 id="modules">Modules</h2>
+
+<div class="filter-bar">
+  <div>
+    <label class="dash-label" for="module-query">Find a module or symbol</label>
+    <input id="module-query" type="search" placeholder="Try DocumentType, agent, routes, or packages/components" />
+  </div>
+</div>
+<p class="filter-count" id="module-count" role="status"></p>
+
+<div class="source-modules" id="source-modules">
+  {modules.map((module) => (
+    <a
+      class="source-module"
+      href={moduleHref(module.path)}
+      data-search={`${module.path} ${module.symbols.map((symbol) => symbol.qualifiedName).join(' ')}`.toLowerCase()}
+    >
+      <code>{module.path}</code>
+      <span>{module.symbols.length} symbols · {module.exported} exported · {module.documented} documented</span>
+    </a>
+  ))}
+</div>
+
+<h2 id="document-types">Document types</h2>
+<div class="source-rows">
+  {reference.registries.documentTypes.map((row) => (
+    <a href={row.sourceUrl}>
+      <strong>{row.name}</strong>
+      <span>{row.value ?? 'document type'} · {row.path}</span>
+    </a>
+  ))}
+</div>
+
+<h2 id="collection-views">Collection views</h2>
+<div class="source-rows">
+  {reference.registries.collectionViews.map((row) => (
+    <a href={row.sourceUrl}>
+      <strong>{row.name}</strong>
+      <span>{row.value ?? 'collection view'} · {row.path}</span>
+    </a>
+  ))}
+</div>
+
+<h2 id="renderers">Render registrations</h2>
+<div class="source-rows">
+  {reference.registries.renderers.map((row) => (
+    <a href={row.sourceUrl}><strong>{row.documentType} → {row.renderer}</strong><span>{row.path}</span></a>
+  ))}
+</div>
+
+<h2 id="agent-tools">Agent tools</h2>
+<div class="source-rows">
+  {reference.registries.agentTools.map((row) => (
+    <a href={row.sourceUrl}><strong>{row.name} ({row.kind})</strong><span>{row.path}</span></a>
+  ))}
+</div>
+
+<h2 id="routes">Server routes</h2>
+<div class="source-rows">
+  {reference.registries.routes.map((row) => (
+    <a href={row.sourceUrl}><strong>{row.method} {row.route}</strong><span>{row.path}</span></a>
+  ))}
+</div>
+
+<h2 id="components">Component library exports</h2>
+<div class="source-rows">
+  {reference.registries.components.map((row) => (
+    <a href={row.sourceUrl}><strong>{row.name} ({row.kind})</strong><span>{row.path}</span></a>
+  ))}
+</div>
+
+<h2 id="configuration">Configuration and process boundaries</h2>
+<div class="source-rows">
+  {reference.registries.environmentVariables.map((row) => (
+    <a href={row.sourceUrl}><strong>{row.name}</strong><span>{row.path}</span></a>
+  ))}
+</div>
+<p>
+  The inventory also records {reference.registries.workers.length} workers and{' '}
+  {reference.registries.electronBoundaries.length} Electron-boundary modules.
+</p>
+
+<h2 id="history">Removed and archived code</h2>
+<p>
+  {removedCount.toLocaleString()} named declarations occur in reachable source blobs but not in the
+  pinned canonical tree. They remain searchable in the generated historical index and are labeled
+  <strong> removed</strong>; their presence does not establish current behavior.
+</p>
+
+{parserFailures.length > 0 && (
+  <>
+    <h2 id="parser-failures">Parser failures</h2>
+    <p class="source-warning">
+      Completeness validation fails while any supported canonical source or structured configuration
+      file cannot be parsed.
+    </p>
+    <ul>
+      {parserFailures.map((failure) => (
+        <li><code>{failure.path}</code>: {failure.message}</li>
+      ))}
+    </ul>
+  </>
+)}
+
+<p class="audit-digest">Generated {reference.generatedAt.slice(0, 10)}</p>
+
+<script>
+  const query = document.getElementById('module-query') as HTMLInputElement | null;
+  const count = document.getElementById('module-count');
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('.source-module'));
+  const apply = () => {
+    const needle = query?.value.trim().toLowerCase() ?? '';
+    let shown = 0;
+    for (const row of rows) {
+      row.hidden = Boolean(needle && !row.dataset.search?.includes(needle));
+      if (!row.hidden) shown++;
+    }
+    if (count) count.textContent = `Showing ${shown} of ${rows.length} modules.`;
+  };
+  query?.addEventListener('input', apply);
+  apply();
+</script>

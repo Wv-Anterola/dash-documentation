@@ -9,11 +9,18 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
     "check": "astro check",
     "visuals": "node scripts/build-visual-posters.mjs && node scripts/build-page-visual-registry.mjs",
     "audit:branches": "node scripts/build-branch-audit.mjs",
+    "audit:source": "node --expose-gc scripts/build-source-reference.mjs",
+    "audit:typedoc": "node scripts/build-typedoc-reference.mjs",
+    "audit:all": "npm run audit:branches && npm run audit:source && npm run audit:typedoc",
     "coverage": "node scripts/check-capability-coverage.mjs",
-    "links": "node scripts/check-links.mjs"
+    "encoding": "node scripts/check-encoding.mjs",
+    "links": "node scripts/check-links.mjs",
+    "verify": "npm test && npm run encoding && npm run coverage && npm run check && npm run build && npm run links && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",
@@ -23,6 +30,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@playwright/test": "^1.61.0",
+    "typedoc": "^0.28.0",
     "typescript": "^5.8.3"
   }
 }

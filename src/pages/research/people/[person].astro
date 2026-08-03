@@ -1,0 +1,18 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { personRecords } from '../../../data/researchArchive';
+export function getStaticPaths() {
+  return personRecords.map((person) => ({ params: { person: person.id }, props: { person } }));
+}
+type Record = (typeof personRecords)[number];
+interface Props { person: Record }
+const { person } = Astro.props;
+---
+<StarlightPage frontmatter={{ title: person.name, description: 'Structured Dash research person record.' }}>
+  <p><a href="/research/people/">People</a> / structured record</p>
+  <p><strong>Identity verification:</strong> {person.identityState}</p>
+  <h2>Roles and cohorts</h2><p>{person.roles.join(', ')} · {person.cohorts.join(', ')}</p>
+  <h2>Projects</h2><ul>{person.projects.map((project) => <li>{project}</li>)}</ul>
+  <h2>Publications</h2><p>{person.publications.length ? person.publications.join(', ') : 'Not recorded.'}</p>
+  <h2>Code attribution</h2><p><strong>{person.codeAttribution.state}.</strong> {person.codeAttribution.note}</p>
+</StarlightPage>

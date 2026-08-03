@@ -1,0 +1,51 @@
+---
+title: Reproducibility and artifact packages
+description: How to reproduce the source ledger, cite a result, and package Dash research without overstating the evidence.
+---
+
+## Rebuild the source record
+
+The deployed reference is generated from a fixed Dash-Web source revision; it never reads the
+Dash-Web working tree.
+
+```sh
+npm run audit:branches
+npm run audit:source
+npm run audit:typedoc
+npm run verify
+```
+
+`audit:source` walks every object reachable from local and origin refs,
+classifies every blob, parses supported source by Git SHA, and writes the
+canonical API, semantic branch deltas, and removed-symbol index.
+`audit:typedoc` creates an immutable temporary archive and emits TypeDoc JSON.
+Neither command checks out or edits Dash-Web.
+
+## Minimum research package
+
+A reproducible project record should contain:
+
+1. the research question, dates, people, and explicitly verified roles;
+2. method and evaluation metadata, with participant count and ethics/IRB state
+   only when publicly recorded;
+3. an immutable code or artifact link;
+4. environment, dependency, data, and execution instructions;
+5. tests or runtime captures and the expected result;
+6. known limitations and integration state;
+7. a stable publication link plus BibTeX or RIS when available.
+
+Use **not recorded**, **team confirmation needed**, and **not applicable** as
+distinct states. Do not infer study results, authorship, or code attribution
+from Git commits.
+
+## Citation
+
+The repository root contains `CITATION.cff`. Cite the specific project or
+publication record as well as the exact source commit used by a technical
+claim. A branch name alone is mutable and is not a reproducibility identifier.
+
+## Team-review queue
+
+Records remain in the queue when identity, authorship, evaluation, ethics,
+dataset, or artifact claims need confirmation. Resolving an item requires a
+public source or direct team confirmation; a plausible inference is not enough.

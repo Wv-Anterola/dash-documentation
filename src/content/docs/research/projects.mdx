@@ -16,12 +16,11 @@ lives on its [cohort page](/research/cohorts/). Current product behavior lives
 in the [capability catalog](/capabilities/), where integrated projects are
 mapped to the features they introduced or changed.
 
-Every cohort write-up now includes the complete four-frame workflow—from the
-first human action, through the visible interface and internal code path, to
-the artifact left in Dash. It also names the exact branch-tip commit recovered
-for that project. The searchable [all-branch evidence
-ledger](/reference/branch-audit/) covers every local and origin branch tip and every
-unique code version under their `src/` trees.
+Every cohort write-up includes the complete workflow—from the first human
+action, through the visible interface and internal code path, to the artifact
+left in Dash. Reproducibility identifiers and semantic source differences live
+in the searchable [implementation archive](/reference/branch-audit/) instead of
+interrupting the project explanation.
 
 ## Integrated projects now update capabilities
 
@@ -68,10 +67,10 @@ it. That is the expected documentation path for every integrated project.
 
 ## How to read the status column
 
-A project counts as integrated only if it can be pointed at in the current
-`master` branch of Dash-Web: a document type registered in `Documents.ts`, an
-entry in `CollectionViewType`, a tool constructed in the agent registry, or
-code one of those calls.
+A project counts as integrated only if its behavior is reachable in the current
+application: a document type registered in `Documents.ts`, an entry in
+`CollectionViewType`, a tool constructed in the agent registry, or code one of
+those paths calls.
 
 A merged branch does not qualify on its own, and neither does a demo recording,
 a screenshot, or a finished report. Several projects below have all three and
@@ -129,7 +128,6 @@ of it arrived in 2025 and 2026, on top of the tool registry.
   <thead>
     <tr>
       <th scope="col">Cohort</th>
-      <th scope="col">Commits</th>
       <th scope="col">Projects</th>
       <th scope="col">Integrated</th>
     </tr>
@@ -143,7 +141,6 @@ of it arrived in 2025 and 2026, on top of the tool registry.
           <th scope="row">
             <a href={`/research/cohorts/${c.id}/`}>{c.title}</a>
           </th>
-          <td>{c.commits.toLocaleString('en-US')}</td>
           <td>{inCohort.length}</td>
           <td>{integ}</td>
         </tr>
@@ -152,6 +149,5 @@ of it arrived in 2025 and 2026, on top of the tool registry.
   </tbody>
 </table>
 
-Commit counts cover the whole repository including merges, so treat them as a
-rough measure of activity. The 2019 to 2020 figure is not a mistake: more than
-half of every commit ever made to Dash-Web was made in those two years.
+Counts describe documented projects and their present integration status. They
+do not measure research quality, contributor effort, or project impact.

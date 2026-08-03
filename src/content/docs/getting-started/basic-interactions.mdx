@@ -1,0 +1,123 @@
+---
+title: Move, order, select, and resize things
+description: "The everyday Dash gestures that are easy to miss: dragging, reordering, selecting, resizing, panning, zooming, copying, grouping, removing, and undoing."
+sidebar:
+  order: 3
+---
+
+Dash is a direct-manipulation workspace. Many basic actions do not begin in a
+menu: they appear when you point at a document, its title decoration, a resize
+handle, a tab, or empty canvas space.
+
+## The short version
+
+| You want to… | Start here | What changes |
+|---|---|---|
+| Move one document | Drag its outer decoration or title area | Its position in this context |
+| Resize it | Drag a resize handle on the selected document | Its size in this context |
+| Select several | Shift-click, or drag a marquee across empty canvas | The active selection |
+| Move several | Move the shared selection box | Every selected context together |
+| Reorder tabs | Drag a tab left or right | Tab order |
+| Move a tab elsewhere | Drag it into another tile or pane | Which workspace tile contains it |
+| Reorder a column or stack | Drag the document within that view | Its order in that collection view |
+| Move between columns | Drag it across columns in Notetaking view | Its group/category and order |
+| Pan a freeform board | Drag empty canvas space when the canvas is active | The visible region |
+| Zoom | Use the wheel/trackpad on the active canvas | The visible scale |
+| Group a selection | Open the marquee/selection menu and choose a group or collection action | A group or collection around the selected contexts |
+| Undo a change | Use Undo in the top bar or the documented shortcut | The most recent named action batch |
+
+If a drag edits the content inside a document instead of moving the document,
+you activated its content. Click its outer decoration, title, or selection
+border first.
+
+## Move and resize a document
+
+1. Click the document once so its outer controls appear.
+2. Drag the decoration/title region to move it.
+3. Drag a visible resize handle to change width or height.
+4. Click empty canvas space when you are done.
+
+Position and size usually belong to the document’s **context**—the way it is
+shown here—not to every appearance of the underlying data. The same data can
+appear elsewhere with a different position and size.
+
+## Select more than one thing
+
+Use the method that matches the layout:
+
+- **Shift-click** adds or removes individual documents from the selection.
+- **Marquee selection** starts on empty freeform space and sweeps across a
+  region.
+- A shared selection box lets you move or resize the selected set together.
+- The marquee menu exposes actions such as grouping or collecting the set.
+
+Selection is temporary. Grouping or creating a collection makes a persistent
+structure.
+
+## Reordering means different things in different views
+
+Dash does not have one global “order.” The active view decides what ordering
+means.
+
+- **Tabs:** drag horizontally to reorder, or drag into another tile/pane.
+- **Notetaking:** drag within a column to reorder; drag across columns to change
+  category.
+- **Trails:** reorder pinned steps in the Trails panel.
+- **Freeform:** position is spatial, so moving a document is usually more
+  meaningful than assigning it a list index.
+- **Schema, stacking, grid, and other collection views:** sorting, grouping,
+  or field values can determine the visible order.
+
+If a document jumps back after reload, check whether the view is controlled by
+a sort/group rule rather than manual order.
+
+## Pan and zoom without editing content
+
+Freeform collections have their own viewport. Activate the canvas, then use
+empty-space drag and wheel/trackpad gestures to move around it.
+
+Some media documents—maps, images, PDFs, and videos—also have internal pan,
+zoom, scroll, or playback controls. The active surface receives the gesture:
+
+- outer canvas active → move around the board;
+- media content active → navigate inside that document.
+
+This distinction explains many “the wrong thing moved” moments.
+
+## Copy, embed, group, or collect?
+
+These actions look similar but preserve different relationships:
+
+- **Another context/embedding** shows the same underlying data somewhere else
+  with independent layout state.
+- **Copy/duplicate** creates separate data.
+- **Visual group** keeps nearby contexts together without necessarily becoming
+  a reusable data collection.
+- **Collection** creates a document whose contents can be shown through
+  different collection views.
+
+When you only want the same note visible in two places, prefer another context.
+Duplicate only when later edits should diverge.
+
+## Remove, close, and delete are not synonyms
+
+- Closing a tab removes that open workspace view.
+- Removing a context from a collection can leave the same data available
+  elsewhere.
+- Deleting the underlying document is broader and can affect links,
+  annotations, trails, and collaborators.
+
+Read the wording in the confirmation or context menu before choosing the
+broader action. If the result was an ordinary persistent edit, Undo should
+reverse its named batch.
+
+## What to learn next
+
+- [Documents in depth](/guides/documents/documents/) explains contexts,
+  selection, grouping, deletion, persistence, and permissions.
+- [Collection views](/guides/views/views/) explains why ordering changes from
+  one view to another.
+- [Interface controls](/reference/interface-controls/) identifies the visible
+  buttons, panels, and handles.
+- [Keyboard shortcuts](/reference/keyboard-shortcuts/) lists faster forms of
+  common actions.

@@ -122,6 +122,13 @@ const visuals = {
   },
 } satisfies Record<string, PageVisual>;
 
+const pageCopy = {
+  '/reference/implementation-snapshot': {
+    label: 'Evidence flow',
+    plain: 'Behavior, source code, and research artifacts support different kinds of documentation claims.',
+  },
+} satisfies Partial<Record<keyof typeof assignments, Partial<PageVisual>>>;
+
 function baseVisualForPath(pathname: string): PageVisual {
   const path = pathname.toLowerCase();
 
@@ -154,5 +161,6 @@ export function pageVisualForPath(pathname: string): PageVisual | undefined {
   return {
     ...baseVisualForPath(pathname),
     ...assigned,
+    ...pageCopy[route as keyof typeof pageCopy],
   };
 }

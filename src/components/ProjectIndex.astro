@@ -12,6 +12,7 @@ import {
   areas,
   cohortOf,
   projectHref,
+  projectSlug,
   withBase,
 } from '../data/dash';
 import { capabilitiesForProject } from '../data/capabilities';
@@ -59,13 +60,14 @@ const allAreas = areas();
       >
         <VisualEvidence evidence={visualForProject(p.title)} compact />
         <div class="project-atlas__body">
-          <h3><a href={projectHref(p)}>{p.title}</a></h3>
+          <h3><a href={withBase(`/research/projects/${projectSlug(p.title)}/`)}>{p.title}</a></h3>
           <p class="project-atlas__meta">
             <StatusBadge status={p.status} />
             <span>{cohortOf(p.cohort).short}</span>
             <span>{p.area}</span>
           </p>
           {p.people && <p class="project-atlas__people">{p.people.join(', ')}</p>}
+          <p class="project-atlas__people"><a href={projectHref(p)}>Cohort narrative and full workflow</a></p>
           <p class="project-atlas__capabilities">
             <span class="dash-label">Product capabilities</span>
             {capabilitiesForProject(p.title).length > 0

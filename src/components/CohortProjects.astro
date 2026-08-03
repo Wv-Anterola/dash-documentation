@@ -2,9 +2,9 @@
 /**
  * The case studies for one cohort.
  *
- * Each study shows its title, one line of metadata, and the problem it set out
- * to solve. Approach, outcome, evidence, and implementation sit in a details
- * panel underneath.
+ * Each study shows its title, one line of metadata, and its research or design
+ * problem. Method, contribution, integration, evidence, and implementation sit
+ * in a structured details panel underneath.
  *
  * The earlier version rendered eight uppercase-labelled fields per project.
  * Every project record populates every field, so nothing ever varied: thirteen
@@ -52,10 +52,6 @@ const md = (s: string) =>
 {
   rows.map((p) => {
     const slug = projectSlug(p.title);
-    /* The narrative fields, in the order someone would ask about them. */
-    const narrative = [p.approach, p.contribution, p.relation, p.outcome].filter(
-      (x): x is string => Boolean(x)
-    );
     return (
       <section class="case-study" id={`study-${slug}`}>
         <h3 id={slug}>{p.title}</h3>
@@ -72,18 +68,36 @@ const md = (s: string) =>
         <VisualEvidence evidence={visualForProject(p.title)} />
 
         <details class="case-study__detail">
-          <summary>Approach, evidence, and implementation</summary>
+          <summary>Research record and implementation</summary>
           <div class="case-study__body">
-            {narrative.map((text) => (
-              <p set:html={md(text)} />
-            ))}
-
-            <ProjectWorkflow project={p} />
-
             <dl>
+              {p.approach && (
+                <>
+                  <dt class="dash-label">Method or approach</dt>
+                  <dd set:html={md(p.approach)} />
+                </>
+              )}
+              {p.contribution && (
+                <>
+                  <dt class="dash-label">System contribution</dt>
+                  <dd set:html={md(p.contribution)} />
+                </>
+              )}
+              {p.relation && (
+                <>
+                  <dt class="dash-label">Relationship to Dash</dt>
+                  <dd set:html={md(p.relation)} />
+                </>
+              )}
+              {p.outcome && (
+                <>
+                  <dt class="dash-label">Current result</dt>
+                  <dd set:html={md(p.outcome)} />
+                </>
+              )}
               {p.evidence && (
                 <>
-                  <dt class="dash-label">Evidence for the status</dt>
+                  <dt class="dash-label">Evidence basis</dt>
                   <dd set:html={md(p.evidence)} />
                 </>
               )}
@@ -127,6 +141,8 @@ const md = (s: string) =>
                 </>
               )}
             </dl>
+
+            <ProjectWorkflow project={p} />
           </div>
         </details>
       </section>

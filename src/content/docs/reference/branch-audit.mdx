@@ -1,77 +1,51 @@
 ---
-title: Every branch and code path
-description: A reproducible audit of every source version reachable from every Dash-Web local and origin branch tip.
+title: Implementation archive
+description: Reproducible source evidence for current, branch-only, and historical Dash implementations.
 ---
 
 import BranchAudit from '../../../components/BranchAudit.astro';
 
-This is the evidence ledger behind the technical and project documentation.
-It answers three different questions that older project lists blurred
-together:
+This ledger separates three claims that older project lists blurred together:
 
-1. **What is in the current product?** Code contained in `origin/master`.
-2. **What was built somewhere else?** Code that survives on a branch but is
-   not contained in current master.
-3. **What was only described?** A project claim for which no matching
-   implementation branch or current source path was recovered.
+1. **Current product:** code and registries in the pinned `origin/master`.
+2. **Branch implementation:** code that survives on another ref but is not
+   contained in the canonical revision.
+3. **Historical implementation:** code in reachable Git history that no longer
+   survives at a branch tip.
 
-In very plain words: a **branch** is an alternate copy of the code’s history.
-Something can work beautifully on that copy and still not exist when a person
-opens today’s normal Dash. The label beside every branch below makes that
-difference visible.
+A branch is an alternate line of code history. Something can work on that line
+and still be absent from the application a reader runs today.
 
-## What “read every branch” means
+## What “complete reachable history” means
 
-Checking out every branch and rereading the same inherited files again and again
-would produce a large number without better evidence. This audit uses Git’s
-content identity instead:
+The generator:
 
-- enumerate every local and origin branch tip;
-- enumerate every code file under `src/` at every tip;
-- identify every exact file version by its Git blob SHA;
-- read every unique version once;
-- compare each branch with its merge-base against `origin/master`;
-- retain the complete changed-path list, named symbols, architecture areas,
-  service signals, visual-asset paths, and ahead/behind counts.
+- enumerates every local and origin ref and every reachable commit and object;
+- classifies every reachable blob as source, test, build/config, generated,
+  vendored, data, media, research artifact, or other artifact;
+- parses each unique TypeScript/JavaScript or Python blob once by Git SHA;
+- records unsupported formats and parser failures instead of dropping them;
+- compares each ref with its merge base against `origin/master`;
+- reports added, signature/documentation-changed, removed, and unreachable
+  symbols;
+- keeps declarations from removed implementations in a separate searchable
+  historical index.
 
-That means inherited code is not double-counted, while the feature delta of
-every branch remains separately inspectable.
+The comparison is semantic at the declaration level. It does not claim that a
+syntax-resolved call proves runtime reachability; runtime tests and captures
+remain stronger evidence.
 
 <BranchAudit />
 
-## How this evidence changes the rest of the documentation
-
-Every project case study now has a four-frame workflow:
-
-```text
-what the person does
-        ↓
-what appears in the interface
-        ↓
-which model / view / tool / service performs it
-        ↓
-what reusable Dash artifact remains
-```
-
-The case study also names the exact branch tips recovered from its source
-record. Integrated projects additionally point to `master`, then map into the
-canonical [capability catalog](/capabilities/) so project history updates the
-product manual instead of remaining a separate museum.
-
-The audit is intentionally stricter than screenshots. A picture proves that a
-surface existed at some time. A branch tip proves where its implementation
-survives. Containment in current master is what supports the **Integrated**
-label.
-
 ## Rebuild it
-
-From the documentation repository:
 
 ```sh
 npm run audit:branches
+npm run audit:source
+npm run audit:typedoc
 ```
 
-The generator never checks out or modifies Dash-Web. It reads refs, trees, and
-blobs from the Git object database and writes
-`src/data/generated/branch-audit.json`. `npm run coverage` verifies that the
-project workflows and branch-audit coverage remain complete.
+The generators read Git objects and an immutable temporary archive. They never
+check out or modify Dash-Web. `npm run coverage` rejects incomplete
+classification, parser failures, mutable source links, missing refs, or
+baseline mismatches.

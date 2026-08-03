@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this documentation archive, cite this repository and the specific Dash publication or source revision your claim relies on."
+title: "Dash Documentation and Research Archive"
+type: software
+authors:
+  - family-names: "Anterola"
+    given-names: "Wilber Sean"
+repository-code: "https://github.com/Wv-Anterola/dash-documentation"
+url: "https://brown-dash-documentation.vercel.app"
+license: "MIT"
+version: "1.0.0"

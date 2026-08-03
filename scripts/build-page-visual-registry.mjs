@@ -92,7 +92,7 @@ const manual = {
   '/reference/configuration': '/assets/gifs/gettingstarted/dash-properties-pane.gif',
   '/reference/document-types': '/assets/gifs/gettingstarted/dash-context-menu.gif',
   '/reference/glossary': '/assets/gifs/gettingstarted/dash-edit-link.gif',
-  '/reference/implementation-snapshot': '/assets/images/environment/dash-topbar.png',
+  '/reference/implementation-snapshot': '/assets/images/diagrams/source-evidence-flow.svg',
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
   '/reference/status-taxonomy': '/assets/gifs/gettingstarted/dash-annotation-icon.gif',
   '/research/cohorts': '/assets/gifs/environment/dash-drag-tab-back.gif',
@@ -112,6 +112,11 @@ const manual = {
   '/workflows/agent-assisted': '/assets/gifs/ai/ai-edit-3.gif',
   '/workflows/team-workspace': '/assets/gifs/gettingstarted/dash-drag-drop-link.gif',
   '/workflows': '/assets/gifs/gettingstarted/dash-present-trail.gif',
+};
+
+const manualAlt = {
+  '/reference/implementation-snapshot':
+    'Evidence flow from observed Dash behavior and source code through research records to published documentation.',
 };
 
 const synonymGroups = [
@@ -243,7 +248,7 @@ for (const route of routes) {
   used.add(source);
   assignments[route] = {
     src: source,
-    alt: `Dash demonstration of ${humanize(source)}.`,
+    alt: manualAlt[route] ?? `Dash demonstration of ${humanize(source)}.`,
   };
 }
 

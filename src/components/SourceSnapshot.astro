@@ -1,12 +1,14 @@
 ---
 import { verifiedAgainst } from '../data/capabilities';
+import { withBase } from '../data/dash';
 ---
 
-<aside class="source-snapshot">
-  <strong>Implementation snapshot</strong>
+<details class="source-snapshot">
+  <summary>Source scope</summary>
   <span>
-    Verified against <code>{verifiedAgainst.repository}</code>,
-    <code>{verifiedAgainst.ref}</code> at
-    <code>{verifiedAgainst.commit}</code> ({verifiedAgainst.date}).
+    Technical claims reflect the Dash-Web source reviewed on
+    <time datetime={verifiedAgainst.date}>{verifiedAgainst.date}</time>.
+    Exact revision and verification methods are recorded in the
+    <a href={withBase('/reference/implementation-snapshot/')}>source coverage note</a>.
   </span>
-</aside>
+</details>

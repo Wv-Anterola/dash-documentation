@@ -123,6 +123,10 @@
     "src": "/assets/gifs/environment/dash-report.gif",
     "alt": "Dash demonstration of Report."
   },
+  "/getting-started/basic-interactions": {
+    "src": "/assets/gifs/ai/ai-template-csv-2.gif",
+    "alt": "Dash demonstration of Ai Template Csv 2."
+  },
   "/getting-started/modes": {
     "src": "/assets/gifs/gettingstarted/dash-shift-click.gif",
     "alt": "Dash demonstration of Shift Click."
@@ -208,8 +212,8 @@
     "alt": "Dash demonstration of Edit Link."
   },
   "/reference/implementation-snapshot": {
-    "src": "/assets/images/environment/dash-topbar.png",
-    "alt": "Dash demonstration of Topbar."
+    "src": "/assets/images/diagrams/source-evidence-flow.svg",
+    "alt": "Evidence flow from observed Dash behavior and source code through research records to published documentation."
   },
   "/reference/keyboard-shortcuts": {
     "src": "/assets/gifs/gettingstarted/dash-highlight-select.gif",
@@ -238,6 +242,14 @@
   "/research/release-history": {
     "src": "/assets/gifs/gettingstarted/dash-reorganize-slides.gif",
     "alt": "Dash demonstration of Reorganize Slides."
+  },
+  "/research/reproducibility": {
+    "src": "/assets/gifs/environment/pdf.gif",
+    "alt": "Dash demonstration of Pdf."
+  },
+  "/technical/api": {
+    "src": "/assets/gifs/animation/animateaddremove.gif",
+    "alt": "Dash demonstration of Animateaddremove."
   },
   "/workflows": {
     "src": "/assets/gifs/gettingstarted/dash-present-trail.gif",

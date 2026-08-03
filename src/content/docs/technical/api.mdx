@@ -1,0 +1,27 @@
+---
+title: Source-generated API and registry reference
+description: Parser-generated modules, symbols, registries, routes, configuration, extension contracts, and source links from Dash-Web.
+sidebar:
+  order: 1
+---
+
+import SourceReference from '../../../components/SourceReference.astro';
+
+This reference is generated from a reproducible Dash-Web source snapshot. It
+records the current modules, declarations, runtime registries, routes,
+configuration boundaries, and extension contracts used by the architecture and
+development documentation.
+
+Evidence is ordered from strongest to weakest:
+
+1. runtime test or captured workflow;
+2. typed call or runtime-registry graph;
+3. implementation source;
+4. paper, design, or evaluation artifact;
+5. version-control history.
+
+Version-control history can establish provenance, but not runtime behavior by
+itself. Source links are immutable and include line ranges; exact revision
+metadata is kept in the [source coverage note](/reference/implementation-snapshot/).
+
+<SourceReference />

@@ -1,0 +1,82 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import reference from '../../../data/generated/semantic-branches.json';
+import { branchRecordSlug } from '../../../data/branchEvidence';
+
+export function getStaticPaths() {
+  return reference.branches.map((branch) => ({
+    params: { branch: branchRecordSlug(branch.fullName) },
+    props: { branch },
+  }));
+}
+
+type Branch = (typeof reference.branches)[number];
+interface Props { branch: Branch }
+
+const { branch } = Astro.props;
+const semanticRows = [
+  ...branch.semanticDelta.added.map((row) => ({ ...row, change: 'Added' })),
+  ...branch.semanticDelta.changed.map((row) => ({ ...row, change: 'Changed' })),
+  ...branch.semanticDelta.removed.map((row) => ({ ...row, change: 'Removed' })),
+];
+const changedFileCount =
+  branch.fileDelta.added + branch.fileDelta.changed + branch.fileDelta.removed + branch.fileDelta.renamed;
+const state = branch.containedInBaseline ? 'Integrated into the current source' : 'Branch-only implementation';
+---
+
+<StarlightPage
+  frontmatter={{
+    title: `Implementation record: ${branch.displayName}`,
+    description: `${state}. ${semanticRows.length} declaration changes and ${changedFileCount} changed files.`,
+  }}
+>
+  <p class="source-breadcrumb"><a href="/reference/branch-audit/">Implementation archive</a> / source record</p>
+
+  <p class="lede">
+    This record describes the source difference associated with one development
+    line. It establishes implementation provenance; runtime behavior still
+    requires an executable test or interface capture.
+  </p>
+
+  <div class="audit-summary" aria-label="Implementation record totals">
+    <div><strong>{changedFileCount}</strong><span>changed files</span></div>
+    <div><strong>{branch.fileDelta.added}</strong><span>files added</span></div>
+    <div><strong>{branch.fileDelta.changed}</strong><span>files changed</span></div>
+    <div><strong>{semanticRows.length}</strong><span>declaration changes</span></div>
+  </div>
+
+  <h2>Integration state</h2>
+  <p><strong>{state}.</strong></p>
+  <dl class="source-module-meta">
+    <div><dt>Last source update</dt><dd>{branch.authoredAt.slice(0, 10)}</dd></div>
+    <div><dt>Baseline relationship</dt><dd>{branch.aheadOfBaseline} ahead · {branch.behindBaseline} behind</dd></div>
+    <div><dt>Files removed</dt><dd>{branch.fileDelta.removed}</dd></div>
+    <div><dt>Files renamed</dt><dd>{branch.fileDelta.renamed}</dd></div>
+  </dl>
+
+  <h2>Declaration changes</h2>
+  {semanticRows.length ? (
+    <ul class="branch-audit__paths">
+      {semanticRows.map((row) => (
+        <li><strong>{row.change}</strong> <code>{row.name}</code> <small>{row.kind} · {row.path}</small></li>
+      ))}
+    </ul>
+  ) : <p>No named declaration delta was recovered for this source line.</p>}
+
+  <h2>Paths absent at this source tip</h2>
+  {branch.semanticDelta.unreachable.length ? (
+    <ul class="branch-audit__paths">
+      {branch.semanticDelta.unreachable.map((path) => <li><code>{path}</code></li>)}
+    </ul>
+  ) : <p>No unreachable paths were recorded.</p>}
+
+  <details>
+    <summary>Reproducibility identifiers</summary>
+    <dl class="source-module-meta">
+      <div><dt>Ref</dt><dd><code>{branch.fullName}</code></dd></div>
+      <div><dt>Tip revision</dt><dd><code>{branch.tip}</code></dd></div>
+      <div><dt>Merge base</dt><dd><code>{branch.mergeBase}</code></dd></div>
+      <div><dt>Archive digest</dt><dd><code>{reference.methodology.digest}</code></dd></div>
+    </dl>
+  </details>
+</StarlightPage>

@@ -17,10 +17,9 @@ model to do anything. The registry built this year is the difference: a set of
 tools the agent dispatches to, each a small class with a schema, so adding a
 capability means adding a file rather than editing a prompt.
 
-Once that existed, the interesting question became what to put in it. Some
-answers were obvious in hindsight and had simply been impossible before, like
-letting the agent see the documents on the canvas in front of you. One was
-stranger: the agent was given search over Dash's own source, so it could answer
+Once that existed, the design question became which capabilities belonged in
+the registry. One addition exposed the documents on the active canvas as agent
+context. Another gave the agent search access to Dash's source so it could answer
 questions about the system it was running inside, and then a path to generate a
 new tool and have it compiled into the running application.
 

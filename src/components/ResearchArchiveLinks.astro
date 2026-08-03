@@ -1,0 +1,19 @@
+---
+import { personRecords, publicationRecords } from '../data/researchArchive';
+import { withBase } from '../data/dash';
+
+interface Props {
+  kind: 'people' | 'publications';
+}
+const { kind } = Astro.props;
+const rows = kind === 'people' ? personRecords : publicationRecords;
+---
+
+<div class="source-rows">
+  {rows.map((row) => (
+    <a href={withBase(`/research/${kind}/${row.id}/`)}>
+      <strong>{'name' in row ? row.name : row.title}</strong>
+      <span>Structured archive record</span>
+    </a>
+  ))}
+</div>

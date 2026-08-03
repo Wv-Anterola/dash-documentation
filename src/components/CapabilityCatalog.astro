@@ -6,6 +6,7 @@ import {
   type CapabilityAvailability,
 } from '../data/capabilities';
 import { withBase } from '../data/dash';
+import { immutableSourceHref } from '../data/sourceReference';
 import { visualForCapability } from '../data/visuals';
 import VisualEvidence from './VisualEvidence.astro';
 
@@ -19,8 +20,9 @@ const availabilityClass: Record<CapabilityAvailability, string> = {
 ---
 
 <p class="capability-snapshot">
-  Verified against <code>{verifiedAgainst.repository}</code>
-  <code>{verifiedAgainst.commit.slice(0, 12)}</code>, {verifiedAgainst.date}.
+  Product behavior and implementation links were reviewed on {verifiedAgainst.date}.
+  See the <a href={withBase('/reference/implementation-snapshot/')}>source coverage note</a>{' '}
+  for reproducibility metadata.
 </p>
 
 <nav class="capability-jump" aria-label="Capability categories">
@@ -50,7 +52,17 @@ const availabilityClass: Record<CapabilityAvailability, string> = {
                 <dt>Start from</dt>
                 <dd>{capability.entryPoints.join(' · ')}</dd>
                 <dt>Implementation</dt>
-                <dd><a href={withBase(capability.technical)}>Technical reference</a></dd>
+                <dd>
+                  <a href={withBase(capability.technical)}>Technical reference</a>
+                  <details>
+                    <summary>{capability.source.length} immutable source link{capability.source.length === 1 ? '' : 's'}</summary>
+                    <ul>
+                      {capability.source.map((path) => (
+                        <li><a href={immutableSourceHref(path)}><code>{path}</code></a></li>
+                      ))}
+                    </ul>
+                  </details>
+                </dd>
                 <dt>Project provenance</dt>
                 <dd>
                   {capability.projects.length

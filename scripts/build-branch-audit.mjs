@@ -341,7 +341,7 @@ const main = () => {
 
   const result = {
     schemaVersion: 1,
-    generatedAt: new Date().toISOString(),
+    generatedAt: run(['show', '-s', '--format=%cI', baselineTip]).trim(),
     repository: {
       pathHint: 'Dash-Web',
       remote: tryRun(['remote', 'get-url', 'origin']),

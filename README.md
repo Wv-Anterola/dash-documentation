@@ -36,12 +36,15 @@ there is no hosted editor and no account required.
 npm run build     # production build into dist/
 npm run preview   # serve the built output
 npm run check     # Astro and TypeScript diagnostics
+npm test          # semantic parser and immutable-link unit tests
+npm run audit:all # branch tips, reachable history, semantic API, and TypeDoc JSON
 npm run coverage  # verify integrated projects map to canonical capability docs
+npm run encoding  # reject mojibake and replacement characters
 npm run links     # internal link, anchor, image, and heading checks over dist/
+npm run test:e2e  # generated reference, archive, and mobile-navigation checks
 ```
 
-Run `npm run coverage && npm run check && npm run build && npm run links`
-before committing.
+Run `npm run verify` before committing.
 
 ## Where things live
 
@@ -53,10 +56,17 @@ src/
     dash.ts           cohorts, concepts, statuses, people, helpers
     projects.ts       the project records
     capabilities.ts   product capabilities and project-to-feature mappings
+    researchArchive.ts
+                      structured projects, people, publications, and evidence
+    generated/        full inventory, semantic API, history, TypeDoc, branches
   styles/dash.css     palette and component styling
 scripts/
+  build-source-reference.mjs
+                      classifies every reachable blob and parses source by SHA
+  build-typedoc-reference.mjs
+                      generates TypeDoc JSON from an immutable Git archive
   check-capability-coverage.mjs
-                      rejects unmapped integrated work or dead canonical docs
+                      rejects incomplete inventories, parser failures, and dead evidence
 astro.config.mjs      sidebar, redirects, and site configuration
 public/assets/        images and screen recordings
 ```
@@ -85,10 +95,10 @@ shell rewrites `/Dash-Documentation` into a Windows path.
 
 ## A note on accuracy
 
-Implementation statuses are checked against the `master` branch of Dash-Web
-rather than inferred from a merged branch, a screenshot, or a finished report.
-Each project records what was actually verified. Cohort rosters come from commit
-authorship, cross-checked against the team list the site carried from 2021.
+Implementation statuses are checked against the current Dash-Web application,
+runtime evidence, and surviving research artifacts. Each project states what
+was verified and which questions remain open. Cohort rosters are provisional
+until the research group confirms membership and project roles from its records.
 
 Some entries are deliberately marked as unclear or documentation-only. That is
 the honest state of the evidence, not an omission.

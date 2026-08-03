@@ -1,0 +1,110 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { moduleSlug, reference } from '../../../../data/sourceReference';
+import { overlayForSymbol } from '../../../../data/symbolOverlays';
+
+export function getStaticPaths() {
+  return reference.modules.map((module) => ({
+    params: { module: moduleSlug(module.path) },
+    props: { module },
+  }));
+}
+
+type Module = (typeof reference.modules)[number];
+interface Props {
+  module: Module;
+}
+
+const { module } = Astro.props;
+const exported = module.symbols.filter((symbol) => symbol.exported);
+const exportedWithDocs = exported.map((symbol) => ({
+  symbol,
+  overlay: overlayForSymbol(symbol.id),
+}));
+const internal = module.symbols.filter((symbol) => !symbol.exported);
+const documented = exported.filter((symbol) => symbol.documentation).length;
+const callers = new Map<string, string[]>();
+for (const call of module.calls) {
+  const rows = callers.get(call.to) ?? [];
+  rows.push(call.from);
+  callers.set(call.to, rows);
+}
+---
+
+<StarlightPage
+  frontmatter={{
+    title: module.path,
+    description: `${module.symbols.length} source-generated declarations, imports, and syntax-resolved calls.`,
+  }}
+>
+  <p class="source-breadcrumb"><a href="/technical/api/">API reference</a> / module</p>
+
+  <div class="audit-summary" aria-label="Module totals">
+    <div><strong>{module.symbols.length}</strong><span>named declarations</span></div>
+    <div><strong>{exported.length}</strong><span>exported declarations</span></div>
+    <div><strong>{documented}</strong><span>documented exports</span></div>
+    <div><strong>{module.calls.length}</strong><span>syntax-resolved calls</span></div>
+  </div>
+
+  <dl class="source-module-meta">
+    <div><dt>Language parser</dt><dd>{module.language}</dd></div>
+    <div><dt>Imports</dt><dd>{module.imports.length ? module.imports.join(', ') : 'None recorded'}</dd></div>
+    <div><dt>Source version</dt><dd><a href="/reference/implementation-snapshot/">Reproducible snapshot</a></dd></div>
+  </dl>
+
+  {module.parserErrors.length > 0 && (
+    <div class="source-warning">
+      <strong>Parser failure:</strong> this module is incomplete and fails source-reference validation.
+    </div>
+  )}
+
+  <h2 id="exports">Exported API</h2>
+  {exported.length === 0 ? <p>This module has no exported declarations.</p> : (
+    <div class="symbol-reference">
+      {exportedWithDocs.map(({ symbol, overlay }) => (
+        <details id={moduleSlug(symbol.qualifiedName)}>
+          <summary>
+            <span><code>{symbol.qualifiedName}</code><small>{symbol.kind} · {symbol.visibility}</small></span>
+            <a href={symbol.sourceUrl}>source L{symbol.lineStart}–L{symbol.lineEnd}</a>
+          </summary>
+          <div>
+            <pre><code>{symbol.signature}</code></pre>
+            {symbol.documentation || overlay
+              ? <>
+                  <p>{symbol.documentation || overlay?.summary}</p>
+                  {overlay?.returns && <p><strong>Returns:</strong> {overlay.returns}</p>}
+                  {overlay?.errors?.map((error) => <p><strong>Error:</strong> {error}</p>)}
+                  {overlay?.sideEffects?.map((effect) => <p><strong>Side effect:</strong> {effect}</p>)}
+                  {overlay?.permissions && <p><strong>Permissions:</strong> {overlay.permissions}</p>}
+                  {overlay?.undo && <p><strong>Undo:</strong> {overlay.undo}</p>}
+                </>
+              : <p class="source-undocumented">No source documentation recorded.</p>}
+            {callers.has(symbol.name) && (
+              <p><strong>Called by:</strong> {callers.get(symbol.name)?.join(', ')}</p>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  )}
+
+  <h2 id="internal-symbols">Internal symbol index</h2>
+  <p>
+    Internal declarations remain searchable and source-linked. Inclusion here
+    does not make them a supported extension contract.
+  </p>
+  <div class="symbol-reference">
+    {internal.map((symbol) => (
+      <details id={moduleSlug(symbol.qualifiedName)}>
+        <summary>
+          <span><code>{symbol.qualifiedName}</code><small>{symbol.kind} · {symbol.visibility}</small></span>
+          <a href={symbol.sourceUrl}>source</a>
+        </summary>
+        <div>
+          <pre><code>{symbol.signature}</code></pre>
+          {symbol.documentation && <p>{symbol.documentation}</p>}
+        </div>
+      </details>
+    ))}
+  </div>
+</StarlightPage>

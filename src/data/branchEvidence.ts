@@ -30,8 +30,21 @@ export function branchAuditSummary() {
   return audit.methodology;
 }
 
-export function branchAnchor(branch: BranchAuditRow) {
+export function branchAnchor(branch: Pick<BranchAuditRow, 'displayName'>) {
   return `branch-${branch.displayName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+}
+
+export function branchRecordSlug(fullName: string) {
+  return fullName
+    .replace(/^refs\//, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+export function branchRecordHref(fullName: string) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}/research/implementation/${branchRecordSlug(fullName)}/`;
 }
 
 function escapeRegExp(value: string) {

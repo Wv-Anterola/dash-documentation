@@ -1,48 +1,39 @@
 ---
-import audit from '../data/generated/branch-audit.json';
-import { branchAnchor } from '../data/branchEvidence';
+import reference from '../data/generated/semantic-branches.json';
+import { branchRecordHref } from '../data/branchEvidence';
 
-const formatBytes = (bytes: number) => {
-  const units = ['B', 'KB', 'MB', 'GB'];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit++;
-  }
-  return `${value.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
-};
-
-const current = audit.branches.filter((branch) => branch.containedInBaseline);
-const branchOnly = audit.branches.filter((branch) => !branch.containedInBaseline);
+const current = reference.branches.filter((branch) => branch.containedInBaseline);
+const branchOnly = reference.branches.filter((branch) => !branch.containedInBaseline);
+const branchAnchor = (branch: { displayName: string }) =>
+  `branch-${branch.displayName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
 ---
 
 <div class="audit-summary" aria-label="Branch audit totals">
-  <div><strong>{audit.methodology.branchCount}</strong><span>{audit.methodology.originBranchCount} origin + {audit.methodology.localBranchCount} local refs</span></div>
-  <div><strong>{audit.methodology.branchTipSourceFileReferences.toLocaleString()}</strong><span>branch-to-file references</span></div>
-  <div><strong>{audit.methodology.uniqueCodeBlobsRead.toLocaleString()}</strong><span>unique code versions read</span></div>
-  <div><strong>{audit.methodology.totalUniqueLinesRead.toLocaleString()}</strong><span>unique lines read</span></div>
+  <div><strong>{reference.methodology.branchCount}</strong><span>local and origin refs</span></div>
+  <div><strong>{reference.methodology.reachableCommits.toLocaleString()}</strong><span>reachable commits</span></div>
+  <div><strong>{reference.methodology.reachableBlobs.toLocaleString()}</strong><span>classified reachable blobs</span></div>
+  <div><strong>{reference.methodology.symbolCount.toLocaleString()}</strong><span>canonical named symbols</span></div>
 </div>
 
-<div class="audit-pipeline" role="img" aria-label="How the source audit works">
+<div class="audit-pipeline" role="img" aria-label="How the semantic source audit works">
   <div><span>1</span><strong>List every branch tip</strong><small>origin and local refs</small></div>
   <b aria-hidden="true">→</b>
-  <div><span>2</span><strong>List every source blob</strong><small>{audit.methodology.branchTipSourceFileReferences.toLocaleString()} references</small></div>
+  <div><span>2</span><strong>Walk reachable history</strong><small>{reference.methodology.reachableCommits.toLocaleString()} commits</small></div>
   <b aria-hidden="true">→</b>
-  <div><span>3</span><strong>Read each unique version</strong><small>{formatBytes(audit.methodology.totalUniqueBytesRead)}</small></div>
+  <div><span>3</span><strong>Parse each source blob</strong><small>TypeScript compiler + Python AST</small></div>
   <b aria-hidden="true">→</b>
-  <div><span>4</span><strong>Attribute branch deltas</strong><small>paths, symbols, services, tests</small></div>
+  <div><span>4</span><strong>Compare symbols</strong><small>added, changed, removed, unreachable</small></div>
 </div>
 
 <div class="filter-bar branch-audit__filters">
   <div>
     <label class="dash-label" for="branch-query">Find a branch, file, symbol, or feature</label>
-    <input id="branch-query" type="search" placeholder="Try mapbox, agent, trails, dataviz…" />
+    <input id="branch-query" type="search" placeholder="Try mapbox, agent, trails, or dataviz…" />
   </div>
   <div>
     <label class="dash-label" for="branch-state">Relationship to master</label>
     <select id="branch-state">
-      <option value="">All {audit.branches.length}</option>
+      <option value="">All {reference.branches.length}</option>
       <option value="current">Contained in master ({current.length})</option>
       <option value="branch-only">Branch-only ({branchOnly.length})</option>
     </select>
@@ -52,17 +43,14 @@ const branchOnly = audit.branches.filter((branch) => !branch.containedInBaseline
 <p class="filter-count" id="branch-count" role="status"></p>
 
 <div class="branch-audit" id="branch-audit">
-  {audit.branches.map((branch) => {
-    const searchable = [
-      branch.shortName,
-      branch.displayName,
-      branch.subject,
-      branch.author,
-      ...branch.architectureAreas,
-      ...branch.featureSignals.map((signal) => signal.name),
-      ...branch.significantSymbols,
-      ...branch.changedPaths,
-    ].join(' ').toLowerCase();
+  {reference.branches.map((branch) => {
+    const semanticRowCount =
+      branch.semanticDelta.added.length +
+      branch.semanticDelta.changed.length +
+      branch.semanticDelta.removed.length;
+    const changedFileCount =
+      branch.fileDelta.added + branch.fileDelta.changed + branch.fileDelta.removed + branch.fileDelta.renamed;
+    const searchable = `${branch.shortName} ${branch.displayName}`.toLowerCase();
     return (
       <details
         id={branchAnchor(branch)}
@@ -73,7 +61,7 @@ const branchOnly = audit.branches.filter((branch) => !branch.containedInBaseline
         <summary>
           <span>
             <code>{branch.displayName}</code>
-            <small>{branch.subject || 'No commit subject'}</small>
+            <small>{semanticRowCount} changed declarations · {changedFileCount} changed files</small>
           </span>
           <span class:list={[
             'branch-audit__state',
@@ -84,60 +72,26 @@ const branchOnly = audit.branches.filter((branch) => !branch.containedInBaseline
         </summary>
         <div class="branch-audit__body">
           <dl>
-            <div><dt>Tip</dt><dd><code>{branch.tip}</code></dd></div>
-            <div><dt>Ref</dt><dd><code>{branch.fullName}</code></dd></div>
-            <div><dt>Last authored</dt><dd>{branch.authoredAt.slice(0, 10)} by {branch.author}</dd></div>
+            <div><dt>Last source update</dt><dd>{branch.authoredAt.slice(0, 10)}</dd></div>
             <div><dt>Compared with master</dt><dd>{branch.aheadOfBaseline} ahead · {branch.behindBaseline} behind</dd></div>
-            <div><dt>Source delta</dt><dd>{branch.changeSummary.added} added · {branch.changeSummary.modified} modified · {branch.changeSummary.deleted} deleted · {branch.changeSummary.renamed} renamed</dd></div>
-            <div><dt>Source tree</dt><dd>{branch.sourceFileCount.toLocaleString()} code files at this tip</dd></div>
-            <div><dt>Visual assets</dt><dd>{branch.visualAssetCount} image/video paths recorded</dd></div>
+            <div><dt>File delta</dt><dd>{branch.fileDelta.added} added · {branch.fileDelta.changed} changed · {branch.fileDelta.removed} removed · {branch.fileDelta.renamed} renamed</dd></div>
+            <div><dt>Symbol delta</dt><dd>{branch.semanticDelta.added.length} added · {branch.semanticDelta.changed.length} changed · {branch.semanticDelta.removed.length} removed</dd></div>
+            <div><dt>Unreachable paths</dt><dd>{branch.semanticDelta.unreachable.length} absent from this branch tip</dd></div>
           </dl>
-
-          {branch.architectureAreas.length > 0 && (
-            <>
-              <h3>Architecture touched</h3>
-              <ul class="branch-audit__chips">
-                {branch.architectureAreas.map((area) => <li>{area}</li>)}
-              </ul>
-            </>
-          )}
-
-          {branch.featureSignals.length > 0 && (
-            <>
-              <h3>Implementation signals in changed code</h3>
-              <ul class="branch-audit__chips">
-                {branch.featureSignals.map((signal) => <li>{signal.name} · {signal.files} files</li>)}
-              </ul>
-            </>
-          )}
-
-          {branch.significantSymbols.length > 0 && (
-            <details>
-              <summary>Named classes, functions, interfaces, and exports</summary>
-              <p class="branch-audit__code-list">
-                {branch.significantSymbols.map((symbol) => <code>{symbol}</code>)}
-              </p>
-            </details>
-          )}
-
-          {branch.changedPaths.length > 0 && (
-            <details>
-              <summary>Every changed source path ({branch.changedPaths.length})</summary>
-              <ul class="branch-audit__paths">
-                {branch.changedPaths.map((path) => <li><code>{path}</code></li>)}
-              </ul>
-            </details>
-          )}
+          <p><a href={branchRecordHref(branch.fullName)}>Open the complete implementation record</a></p>
         </div>
       </details>
     );
   })}
 </div>
 
-<p class="audit-digest">
-  Reproducibility digest: <code>{audit.methodology.auditDigest}</code><br />
-  Baseline: <code>{audit.repository.baselineTip}</code> · generated {audit.generatedAt.slice(0, 10)}
-</p>
+<details class="audit-digest">
+  <summary>Archive reproducibility metadata</summary>
+  <p>
+    Digest: <code>{reference.methodology.digest}</code><br />
+    Baseline revision: <code>{reference.repository.baselineTip}</code> · generated {reference.generatedAt.slice(0, 10)}
+  </p>
+</details>
 
 <script>
   const query = document.getElementById('branch-query') as HTMLInputElement | null;

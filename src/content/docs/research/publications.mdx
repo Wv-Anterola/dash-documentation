@@ -5,6 +5,8 @@ sidebar:
   order: 3
 ---
 
+import ResearchArchiveLinks from '../../../components/ResearchArchiveLinks.astro';
+
 Dash project papers often describe more than the version that eventually
 reached `master`. This bibliography keeps the research record and the product
 record beside one another: the paper explains the work; the status note says
@@ -13,6 +15,10 @@ what a reader can expect to find in the current application.
 The list is deliberately limited to public documents that can be matched to a
 named project, repository branch, or surviving implementation. A slide deck or
 paper is evidence that work happened, not evidence that it shipped.
+
+## Structured publication records
+
+<ResearchArchiveLinks kind="publications" />
 
 ## 2024
 
@@ -94,7 +100,7 @@ When adding a publication:
 1. Link to a stable university, proceedings, or author-controlled copy.
 2. Record the author, title, and publication type without inventing a venue.
 3. Match the work to commits or a branch.
-4. Check that branch against `origin/master`.
+4. Compare the implementation with the current product source.
 5. Write the product status separately from the paper summary.
 
 That last step prevents a polished report from being mistaken for a shipped

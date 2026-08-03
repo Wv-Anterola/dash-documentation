@@ -1,0 +1,87 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { projectRecords } from '../../../data/researchArchive';
+import { capabilitiesForProject } from '../../../data/capabilities';
+import { projectHref, projects, withBase } from '../../../data/dash';
+import { visualForProject } from '../../../data/visuals';
+import VisualEvidence from '../../../components/VisualEvidence.astro';
+
+export function getStaticPaths() {
+  return projectRecords.map((project) => ({ params: { project: project.id }, props: { project } }));
+}
+
+type Record = (typeof projectRecords)[number];
+interface Props { project: Record }
+
+const { project } = Astro.props;
+const projectSource = projects.find((candidate) => candidate.title === project.title)!;
+const capabilities = capabilitiesForProject(project.title);
+const label = (value: string) => value.replaceAll('-', ' ').replace(/^./, (character) => character.toUpperCase());
+---
+
+<StarlightPage frontmatter={{ title: project.title, description: project.researchQuestion }}>
+  <p class="source-breadcrumb"><a href="/research/projects/">Research projects</a> / structured record</p>
+
+  <VisualEvidence evidence={visualForProject(project.title)} />
+
+  <div class="audit-summary" aria-label="Project record summary">
+    <div><strong>{label(project.integrationState)}</strong><span>integration state</span></div>
+    <div><strong>{project.people.length}</strong><span>recorded contributors</span></div>
+    <div><strong>{capabilities.length}</strong><span>mapped product capabilities</span></div>
+    <div><strong>{project.sourceEvidence.length}</strong><span>source evidence records</span></div>
+  </div>
+
+  <p>
+    <a href={projectHref(projectSource)}>Read the cohort narrative and complete interaction workflow</a>.
+  </p>
+
+  <h2>Research question</h2>
+  <p>{project.researchQuestion}</p>
+
+  <h2>Method</h2>
+  <p>{project.methods}</p>
+
+  <h2>System contribution and result</h2>
+  <p>{project.results ?? 'No result is recorded in the surviving project materials.'}</p>
+
+  <h2>People and roles</h2>
+  {project.people.length ? (
+    <ul>{project.people.map((person) => <li><strong>{person.name}</strong> — {person.role}</li>)}</ul>
+  ) : <p>No contributor record is available.</p>}
+  <p><strong>Advisor:</strong> {project.advisor.name ?? 'Not recorded in the available project record.'}</p>
+
+  <h2>Evaluation and limitations</h2>
+  <dl class="source-module-meta">
+    <div><dt>Evaluation record</dt><dd>{label(project.evaluationStatus)}</dd></div>
+    <div><dt>Participant count</dt><dd>{project.participantCount ?? 'Not recorded'}</dd></div>
+    <div><dt>Ethics / IRB record</dt><dd>{label(project.ethicsIrBStatus)}</dd></div>
+    <div><dt>Limitations</dt><dd>{project.limitations ?? 'Not recorded'}</dd></div>
+  </dl>
+
+  <h2>Relationship to current Dash capabilities</h2>
+  {capabilities.length ? (
+    <ul>
+      {capabilities.map((capability) => (
+        <li><a href={withBase(capability.docs)}>{capability.title}</a> — {capability.summary}</li>
+      ))}
+    </ul>
+  ) : <p>No current product capability is mapped to this project.</p>}
+
+  <h2>Implementation evidence</h2>
+  {project.sourceEvidence.length ? (
+    <ul>
+      {project.sourceEvidence.map((evidence) => (
+        <li>
+          <a href={evidence.sourceUrl}>{evidence.path ?? evidence.symbol ?? 'Research artifact'}</a>
+          {' — '}{label(evidence.evidenceKind)}; {label(evidence.verificationState)}
+        </li>
+      ))}
+    </ul>
+  ) : <p>No implementation, test, runtime, publication, or artifact record is mapped.</p>}
+
+  <p class="source-warning">
+    Missing evaluation, advisor, ethics, dataset, or limitation fields indicate
+    gaps in the surviving archive. They are not assumptions about work that may
+    have existed outside the repository.
+  </p>
+</StarlightPage>

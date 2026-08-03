@@ -1,10 +1,19 @@
 ---
 title: People
-description: Faculty, staff, and every student cohort roster, drawn from commit authorship in the Dash-Web repository.
+description: Faculty, staff, and provisional student cohort rosters assembled from the surviving project record.
 ---
 
 import { faculty, unresolvedContributors } from '../../../data/dash';
 import AllCohortRosters from '../../../components/AllCohortRosters.astro';
+import ResearchArchiveLinks from '../../../components/ResearchArchiveLinks.astro';
+
+## Structured person records
+
+These records keep verified identity and project participation separate from
+code attribution. Commit authorship is never inferred to mean project
+authorship.
+
+<ResearchArchiveLinks kind="people" />
 
 ## Faculty and staff
 
@@ -29,18 +38,18 @@ For questions about the project or about joining it, contact Andries van Dam at
 
 ## Cohorts
 
-Rosters come from commit authorship in Dash-Web over each date range,
-cross-checked against the team list the site carried from 2021. Git is the
-stronger source: the earlier team page omitted most of the 2019 and 2020
-contributors, which is where more than half of all work on Dash happened.
+Rosters are provisional. They combine historical team pages, project records,
+and repository authorship where a contributor identity can be verified. They
+describe the surviving record and should not be treated as a complete statement
+of research-group membership or project authorship.
 
 <AllCohortRosters />
 
 ## Names we could not recover
 
-These accounts appear in the 2019 and 2020 commit history under a handle or a
-first name only. They contributed, in some cases substantially, and we could
-not work out who they are.
+These accounts appear in the 2019 and 2020 repository history under a handle or
+first name only. Their contributions are retained in the record, but the
+available evidence is insufficient to verify a full identity.
 
 <ul class="roster">
   {unresolvedContributors.map((u) => <li>{u}</li>)}

@@ -12,6 +12,10 @@ const [
   pageVisualsSource,
   workflowsSource,
   branchAuditSource,
+  sourceInventorySource,
+  sourceReferenceSource,
+  historicalSymbolsSource,
+  typedocSource,
   posterBuilderSource,
   pageRegistrySource,
 ] = await Promise.all([
@@ -22,6 +26,10 @@ const [
   readFile(path.join(root, 'src/data/pageVisuals.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/projectWorkflows.ts'), 'utf8'),
   readFile(path.join(root, 'src/data/generated/branch-audit.json'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/source-inventory.json'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/source-reference.json'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/historical-symbols.json'), 'utf8'),
+  readFile(path.join(root, 'src/data/generated/typedoc-api.json'), 'utf8'),
   readFile(path.join(root, 'scripts/build-visual-posters.mjs'), 'utf8'),
   readFile(path.join(root, 'src/data/generated/page-visuals.json'), 'utf8'),
 ]);
@@ -107,6 +115,33 @@ const duplicateAuditBranches = branchAudit.branches
 const unreadAuditBlobs =
   branchAudit.methodology.uniqueCodeBlobsExpected -
   branchAudit.methodology.uniqueCodeBlobsRead;
+const sourceInventory = JSON.parse(sourceInventorySource);
+const sourceReference = JSON.parse(sourceReferenceSource);
+const historicalSymbols = JSON.parse(historicalSymbolsSource);
+const typedoc = JSON.parse(typedocSource);
+const unclassifiedReachableBlobs =
+  sourceInventory.methodology.reachableBlobs -
+  sourceInventory.methodology.classifiedReachableBlobs;
+const inventoryPathCount = new Set(sourceInventory.files.map((file) => file.path)).size;
+const duplicateInventoryPaths =
+  sourceInventory.files.length - inventoryPathCount;
+const sourceParserFailures = sourceReference.parserFailures;
+const historicalParserFailures = historicalSymbols.parserFailures;
+const sourceBranchRefs = new Set(sourceReference.branches.map((branch) => branch.fullName));
+const missingSemanticBranches = branchAudit.branches
+  .filter((branch) => !sourceBranchRefs.has(branch.fullName))
+  .map((branch) => branch.fullName);
+const baselineMismatch =
+  sourceInventory.repository.baselineTip !== sourceReference.repository.baselineTip ||
+  sourceReference.repository.baselineTip !== branchAudit.repository.baselineTip;
+const sourceLinksWithoutCommit = sourceReference.modules.flatMap((module) =>
+  module.symbols
+    .filter((symbol) => !symbol.sourceUrl.includes(sourceReference.repository.baselineTip))
+    .map((symbol) => `${module.path}#${symbol.qualifiedName}`)
+);
+const typedocName = typedoc.name ?? '';
+const typedocBaselineMissing =
+  !typedocName.includes(sourceReference.repository.baselineTip.slice(0, 12));
 
 const missingNamedBranches = [];
 for (const match of projectsSource.matchAll(/^\s{4}code:\s*'(?<code>[^']+)',/gm)) {
@@ -280,6 +315,13 @@ if (
   unknownProjectWorkflows.length ||
   duplicateAuditBranches.length ||
   unreadAuditBlobs !== 0 ||
+  unclassifiedReachableBlobs !== 0 ||
+  duplicateInventoryPaths !== 0 ||
+  sourceParserFailures.length ||
+  missingSemanticBranches.length ||
+  baselineMismatch ||
+  sourceLinksWithoutCommit.length ||
+  typedocBaselineMissing ||
   !branchAudit.branches.some((branch) => branch.name === 'origin/master') ||
   missingNamedBranches.length ||
   missingCapabilityVisuals.length ||
@@ -334,6 +376,32 @@ if (
     console.error(
       `Branch audit did not read every expected blob: ${unreadAuditBlobs} remain.`
     );
+  }
+  if (unclassifiedReachableBlobs !== 0) {
+    console.error(`Source inventory left ${unclassifiedReachableBlobs} reachable blobs unclassified.`);
+  }
+  if (duplicateInventoryPaths !== 0) {
+    console.error(`Source inventory contains ${duplicateInventoryPaths} duplicate canonical paths.`);
+  }
+  if (sourceParserFailures.length) {
+    console.error('Semantic source parsers reported failures:');
+    for (const failure of sourceParserFailures.slice(0, 100)) {
+      console.error(`  - ${failure.path}:${failure.line ?? '?'} ${failure.message}`);
+    }
+  }
+  if (missingSemanticBranches.length) {
+    console.error('Branch-tip audit refs missing from semantic branch deltas:');
+    for (const ref of missingSemanticBranches) console.error(`  - ${ref}`);
+  }
+  if (baselineMismatch) {
+    console.error('Generated branch, inventory, and semantic references do not share one baseline commit.');
+  }
+  if (sourceLinksWithoutCommit.length) {
+    console.error('Generated symbols without immutable commit links:');
+    for (const symbol of sourceLinksWithoutCommit.slice(0, 100)) console.error(`  - ${symbol}`);
+  }
+  if (typedocBaselineMissing) {
+    console.error('TypeDoc reflection JSON is absent or was not generated for the semantic baseline.');
   }
   if (!branchAudit.branches.some((branch) => branch.name === 'origin/master')) {
     console.error('Branch audit does not contain the origin/master baseline.');
@@ -416,6 +484,15 @@ if (
       `${capabilityVisualIds.size} capability visuals, ${creatorLabels.length} creator cards, ` +
       `${posterNames.length} content-unique posters, ${assignedRoutes.size} non-repeating page visuals, ` +
       `and ${branchAudit.methodology.branchCount} branch tips / ` +
-      `${branchAudit.methodology.uniqueCodeBlobsRead} unique code versions verified.`
+      `${branchAudit.methodology.uniqueCodeBlobsRead} unique code versions verified; ` +
+      `${sourceInventory.methodology.reachableBlobs} reachable blobs classified, ` +
+      `${sourceReference.methodology.symbolCount} current symbols and ` +
+      `${historicalSymbols.methodology.removed} removed symbols indexed.`
+  );
+}
+
+if (historicalParserFailures.length) {
+  console.warn(
+    `Historical source archive recorded ${historicalParserFailures.length} parser failures from malformed or incomplete revisions; these remain disclosed in the generated archive.`
   );
 }

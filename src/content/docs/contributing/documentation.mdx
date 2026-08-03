@@ -277,6 +277,45 @@ Sentence case for headings and navigation, and no trailing colon on a heading.
 A heading should say what the section covers: "What you can do" rather than
 "Objects & Actions".
 
+Use a neutral research and engineering voice. State what the system does, what
+the evidence establishes, and what remains unknown. Do not use jokes, sarcasm,
+scolding, speculation about contributor intent, or language such as “obvious,”
+“just,” “pretending,” and “someone should.” Replace editorial commentary with a
+testable statement and name the evidence needed to resolve uncertainty.
+
+Write for one audience at a time:
+
+- **Guides** teach a task in the interface and define every control on first use.
+- **Concept pages** explain the mental model and stable product vocabulary.
+- **Architecture pages** describe components, state, data flow, lifecycle,
+  failure behavior, and extension contracts.
+- **API reference** records signatures, parameters, return values, side effects,
+  errors, permissions, and source links.
+- **Research records** separate research question, method, contribution,
+  evaluation, results, limitations, integration status, and artifacts.
+
+A short summary may precede technical detail, but do not label it “for
+toddlers,” “dumb explanation,” or “in plain words.” Use **Summary**, **Purpose**,
+or **What this shows**. Simplicity should come from concrete nouns, defined
+terms, and ordered steps rather than a childish tone.
+
+Keep source provenance out of the main reading flow. User and architecture
+pages may link to the source coverage note or immutable symbol source, but they
+must not present branch names, commit subjects, hashes, or audit digests as
+product content. Exact identifiers belong in collapsible reproducibility
+metadata and the research implementation archive.
+
+Every technical claim should make its evidence level clear:
+
+1. Runtime capture or executable test for visible behavior.
+2. Typed registry and reachable call path for current implementation.
+3. Surviving branch source or artifact for an implemented research prototype.
+4. Publication or historical documentation when implementation is unavailable.
+
+Do not upgrade a lower evidence level into a stronger claim. A screenshot can
+show that an interface existed; it cannot establish that the feature is present
+in the current product.
+
 Reference assets from `/assets/...`, which resolves against the configured base.
 
 Write alt text on every content image. Most images here are screen recordings,

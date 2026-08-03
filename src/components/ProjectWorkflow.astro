@@ -1,7 +1,7 @@
 ---
-import { withBase, type Project } from '../data/dash';
+import { type Project } from '../data/dash';
 import { workflowForProject } from '../data/projectWorkflows';
-import { branchAnchor, branchesForProject } from '../data/branchEvidence';
+import { branchRecordHref, branchesForProject } from '../data/branchEvidence';
 
 interface Props {
   project: Project;
@@ -15,8 +15,8 @@ const branches = branchesForProject(project);
 <section class="project-workflow" aria-label={`Complete workflow for ${project.title}`}>
   <div class="project-workflow__heading">
     <div>
-      <p class="dash-label">Whole workflow</p>
-      <h4>From first click to useful result</h4>
+      <p class="dash-label">End-to-end behavior</p>
+      <h4>Interaction and implementation workflow</h4>
     </div>
     <span>{steps.length} steps</span>
   </div>
@@ -28,36 +28,35 @@ const branches = branchesForProject(project);
         <h5>{step.title}</h5>
         <p>{step.explanation}</p>
         <details>
-          <summary>What the code does</summary>
-          <p><code>{step.technical}</code></p>
+          <summary>Implementation details</summary>
+          <p>{step.technical}</p>
         </details>
       </li>
     ))}
   </ol>
 
-  <div class="project-workflow__branches">
-    <strong>Code checked for this project</strong>
+  <details class="project-workflow__branches">
+    <summary>Implementation provenance</summary>
     {branches.length > 0 ? (
       <ul>
         {branches.map((branch) => (
           <li>
-            <a href={`${withBase('/reference/branch-audit/')}#${branchAnchor(branch)}`}>
+            <a href={branchRecordHref(branch.fullName)}>
               <code>{branch.displayName}</code>
             </a>
-            <span>{branch.tip.slice(0, 10)}</span>
             <span>
               {branch.containedInBaseline
-                ? 'contained in current master'
-                : `${branch.aheadOfBaseline} commits ahead · ${branch.changedSourceFileCount} changed source files`}
+                ? 'included in the current application'
+                : `branch implementation · ${branch.changedSourceFileCount} changed source files`}
             </span>
           </li>
         ))}
       </ul>
     ) : (
       <p>
-        No surviving branch name is written in the project record. The source paths and
-        status evidence above are the available implementation trail.
+        No branch identifier is recorded for this project. The source paths and status
+        evidence above are the available implementation record.
       </p>
     )}
-  </div>
+  </details>
 </section>

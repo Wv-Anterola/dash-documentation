@@ -111,18 +111,19 @@ export default defineConfig({
       pagination: true,
       sidebar: [
         {
-          label: 'Start here',
+          label: 'Start',
           items: [
             { slug: 'overview/what-dash-is', label: '1. What Dash is' },
             { slug: 'getting-started/picture-tour', label: '2. Picture tour' },
             { slug: 'getting-started/environment', label: '3. Know the screen' },
-            { slug: 'getting-started/using-dash', label: '4. Make your first board' },
+            { slug: 'getting-started/basic-interactions', label: '4. Move, order, and resize things' },
+            { slug: 'getting-started/using-dash', label: '5. Make your first board' },
             { slug: 'reference/interface-controls', label: 'Every button and node' },
             { slug: 'overview/current-state', label: 'What works right now' },
           ],
         },
         {
-          label: 'Use Dash',
+          label: 'Guides',
           items: [
             { slug: 'capabilities', label: 'Everything Dash can do' },
             {
@@ -194,7 +195,7 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Understand Dash',
+          label: 'Technical',
           collapsed: true,
           items: [
             {
@@ -223,31 +224,34 @@ export default defineConfig({
                 { slug: 'architecture/import-export' },
                 { slug: 'architecture/desktop-local-models' },
                 { slug: 'architecture/undo-provenance' },
+                { slug: 'technical/api', label: 'Generated API and registries' },
+              ],
+            },
+            {
+              label: 'Build and extend',
+              collapsed: true,
+              items: [
+                { slug: 'getting-started/running-dash', label: 'Run it locally' },
+                { slug: 'development/extension-points', label: 'Choose where to extend it' },
+                { slug: 'development/add-document-type' },
+                { slug: 'development/add-collection-view' },
+                { slug: 'development/add-agent-tool' },
+                { slug: 'development/testing-release' },
+                { slug: 'contributing/joining' },
+                { slug: 'contributing/documentation' },
               ],
             },
           ],
         },
         {
-          label: 'Build Dash',
-          collapsed: true,
-          items: [
-            { slug: 'getting-started/running-dash', label: 'Run it locally' },
-            { slug: 'development/extension-points', label: 'Choose where to extend it' },
-            { slug: 'development/add-document-type' },
-            { slug: 'development/add-collection-view' },
-            { slug: 'development/add-agent-tool' },
-            { slug: 'development/testing-release' },
-            { slug: 'contributing/joining' },
-            { slug: 'contributing/documentation' },
-          ],
-        },
-        {
-          label: 'Research and history',
+          label: 'Research',
           collapsed: true,
           items: [
             { slug: 'research/projects', label: 'All projects' },
             { slug: 'research/lineage', label: 'How projects became features' },
             { slug: 'research/publications' },
+            { slug: 'research/reproducibility' },
+            { slug: 'reference/branch-audit', label: 'Implementation archive' },
             {
               label: 'Cohorts by year',
               collapsed: true,
@@ -265,7 +269,7 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Look something up',
+          label: 'Reference',
           collapsed: true,
           items: [
             { slug: 'reference/keyboard-shortcuts' },
@@ -273,8 +277,7 @@ export default defineConfig({
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },
             { slug: 'reference/configuration' },
-            { slug: 'reference/implementation-snapshot' },
-            { slug: 'reference/branch-audit', label: 'Every branch and code path' },
+            { slug: 'reference/implementation-snapshot', label: 'Source coverage' },
             { slug: 'reference/status-taxonomy' },
             { slug: 'reference/glossary' },
           ],
