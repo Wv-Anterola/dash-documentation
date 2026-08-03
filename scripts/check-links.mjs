@@ -30,7 +30,7 @@ const files = new Set(walk(DIST));
 const pages = [...files].filter((f) => f.endsWith('.html'));
 
 const idsOf = new Map();
-const problems = { links: [], anchors: [], images: [], alt: [], headings: [] };
+const problems = { links: [], anchors: [], duplicateIds: [], images: [], alt: [], headings: [] };
 
 const html = new Map();
 for (const p of pages) {
@@ -40,7 +40,10 @@ for (const p of pages) {
 // Collect element ids per page so cross-page anchors can be checked.
 for (const [p, src] of html) {
   const ids = new Set();
-  for (const m of src.matchAll(/\sid="([^"]+)"/g)) ids.add(m[1]);
+  for (const m of src.matchAll(/\sid="([^"]+)"/g)) {
+    if (ids.has(m[1])) problems.duplicateIds.push([p, m[1]]);
+    ids.add(m[1]);
+  }
   idsOf.set(p, ids);
 }
 
@@ -113,9 +116,10 @@ const report = (name, rows, limit = 25) => {
 console.log(`Checked ${pages.length} pages in ${DIST}`);
 report('Broken internal links', problems.links);
 report('Broken anchors', problems.anchors);
+report('Duplicate element IDs', problems.duplicateIds);
 report('Broken images', problems.images);
 report('Images missing alt', problems.alt);
 report('Heading order problems', problems.headings);
 
-const fatal = problems.links.length + problems.anchors.length + problems.images.length;
+const fatal = Object.values(problems).reduce((total, rows) => total + rows.length, 0);
 process.exit(fatal ? 1 : 0);

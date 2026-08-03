@@ -25,6 +25,13 @@ development branch that may differ from the current application.
 - Use [testing and release](/development/testing-release/) for the validation
   ladder, branch evidence, production builds, desktop packaging, and release
   checklist.
+- Use [Troubleshooting Dash](/development/troubleshooting/) to move from a
+  visible symptom to the responsible bootstrap, synchronization, persistence,
+  rendering, worker, provider, or desktop boundary.
+
+The [runtime contract reference](/reference/runtime-contracts/) documents the
+preconditions, postconditions, invariants, and failure semantics of the core
+symbols these paths cross.
 
 The [implementation snapshot](/reference/implementation-snapshot/) records the
 exact source revision used for this documentation. The classified
@@ -91,7 +98,7 @@ Worth tracing once, because most debugging ends up somewhere on this path.
 5. MobX observability on the fields is what re-renders the view when anything
    changes.
 
-Step 5 is the one that surprises people. Fields are observable, so a
+Step 5 is easy to under-test. Fields are observable, so a
 computation that reads many of them re-runs when any of them changes. The 2026
 graph view hit this hard enough to need a layout engine that stops early;
 [collections and views](/concepts/collections/) records what that cost.
@@ -101,8 +108,8 @@ graph view hit this hard enough to need a layout engine that stops early;
 There are two suites, and neither is comprehensive.
 
 `npm test` runs mocha over `test/`. On `master` that is a single file,
-`test/test.ts`, so passing it means very little about the health of the
-application.
+`test/test.ts`; passing it proves that narrow unit scope, not application-wide
+health.
 
 Playwright end-to-end tests exist, but not on `master`. The
 `playwright.config.ts` file and the `e2e/` directory live on the branch for the
@@ -127,8 +134,9 @@ runs it first, so you rarely call it yourself, but a stale worker bundle is a
 plausible cause if equation solving breaks after a dependency change.
 
 The desktop builds (`build:mac`, `build:windows`) run the worker build, the
-client build, and a server build, then hand off to electron-builder. The macOS
-disk image step was still unreliable as of the June 2026 demo.
+client build, and a server build, then hand off to electron-builder. Packaging
+must be verified on a clean target machine; a successful web build does not
+establish installer correctness.
 
 ## Debugging
 

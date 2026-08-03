@@ -18,9 +18,10 @@
     "audit:typedoc": "node scripts/build-typedoc-reference.mjs",
     "audit:all": "npm run audit:branches && npm run audit:source && npm run audit:typedoc",
     "coverage": "node scripts/check-capability-coverage.mjs",
+    "quality": "node scripts/check-documentation-quality.mjs",
     "encoding": "node scripts/check-encoding.mjs",
     "links": "node scripts/check-links.mjs",
-    "verify": "npm test && npm run encoding && npm run coverage && npm run check && npm run build && npm run links && npm run test:e2e"
+    "verify": "npm test && npm run encoding && npm run coverage && npm run quality && npm run check && npm run build && npm run links && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",

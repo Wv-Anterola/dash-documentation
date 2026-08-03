@@ -1,0 +1,359 @@
+---
+title: Runtime contract reference
+description: Responsibilities, inputs, effects, invariants, failure semantics, and verification obligations for the core symbols that move a Dash document through the runtime.
+sidebar:
+  order: 5
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+The generated API answers “what declarations exist?” This reference answers
+“what must remain true when they are used together?” It is the contract layer
+between the [engineering model](/architecture/engineering-model/) and the
+[source-generated modules](/technical/api/).
+
+![A user action crosses input, undo, document, synchronization, storage, and rendering contracts before it is fully integrated.](/assets/images/diagrams/dash-runtime-contracts.svg)
+
+## Contract vocabulary
+
+| Term | Meaning in this reference |
+| :--- | :--- |
+| **Owner** | The object or service authoritative for a piece of state |
+| **Precondition** | What the caller must establish before invoking the symbol |
+| **Postcondition** | What a successful call makes true |
+| **Side effect** | State changed outside the returned value |
+| **Invariant** | A property that must hold before and after every supported call |
+| **Failure semantic** | What remains changed, unresolved, retried, or reported when work fails |
+| **Extension obligation** | What new code must test when it crosses the contract |
+
+“Internal” below does not mean unimportant. It means the symbol is not a stable
+third-party API; Dash itself depends on the behavior and can change the syntax
+only by updating its callers and stored-state assumptions together.
+
+## Contract index
+
+| Contract | Owner | Accepts | Produces or changes | Stability |
+| :--- | :--- | :--- | :--- | :--- |
+| `Doc` proxy | Client document model | ID and typed fields | Observable, serializable graph node | Foundational internal |
+| `Doc.GetProto` | Document model | Document/delegate | Data-root identity | Foundational internal |
+| `Doc.SetInPlace` | Document model | Document, key, value, ownership default | Write on delegate or data owner | Foundational internal |
+| `Doc.GetLayoutDataDocPair` | Document model | Container context and child | Resolved layout/data pair | Foundational internal |
+| `Documents.Prototypes` and factories | Creation registry | `DocumentType` and initial values | Initialized document shape | Supported extension seam |
+| `DocumentContentsView.Init` | Render registry | Renderer map | Global content dispatch table | Supported extension seam |
+| `CollectionView.renderSubView` | Collection renderer | `CollectionViewType` and shared props | Concrete collection view | Supported extension seam |
+| `DocServer.init` | Client synchronization | Protocol, host, port, user ID | Socket, cache, handlers | Internal runtime |
+| `DocServer.GetRefField(s)` | Client synchronization | Document IDs | Identity-preserving hydrated documents | Internal runtime |
+| `DocServer.UpdateField` | Client synchronization | ID and serialized diff | Best-effort outgoing operation | Internal runtime |
+| `WebSocket.UpdateField` | Server synchronization | Authenticated socket and diff | Ordered DB operation and peer broadcast | Internal runtime |
+| `Database.update` | Persistence | ID, Mongo update, callback, upsert policy | Serialized write for that ID | Internal runtime |
+| `UndoManager.StartBatch`/`AddEvent` | Reversibility | Name and inverse events | One undo/redo unit | Supported action seam |
+| `LinkFollower.FollowLink` | Navigation | Link endpoint and context | Target selection/navigation | Internal runtime |
+| `Agent.execute` | Agent orchestration | Conversation, tools, callbacks | Iterated tool observations and answer | Experimental internal |
+
+## Document construction contract
+
+### `new Doc(id?, forceSave?)`
+
+**Responsibility.** Create the field container and return its proxy. The proxy
+intercepts get, set, delete, enumeration, and access checks. When no ID is
+provided, or `forceSave` is true, construction asks `DocServer` to create the
+record.
+
+**Invariant.** Code that expects document semantics must operate on the returned
+proxy, not the constructor target. Field identity, observability, serialization,
+and update emission depend on those traps.
+
+**Failure semantic.** Before `DocServer.init`, persistence functions are bound
+to an error function. Construction that tries to persist before initialization
+fails instead of silently creating a disconnected durable document.
+
+**Extension obligation.** Do not bypass a canonical factory for a specialized
+document. Verify create, serialize, hydrate, mutate, undo, and reload.
+
+### `Documents.Prototypes.get(type)` and `InstanceFromProto`
+
+**Responsibility.** Select registered defaults for one document type and create
+an instance/delegate that participates in normal document identity.
+
+**Preconditions.** The type has a prototype registration and the factory knows
+which values belong on data versus layout state.
+
+**Postcondition.** The returned document has enough type and layout information
+for the render dispatch to select a component before optional provider work
+finishes.
+
+**Failure semantic.** A type with no complete registry path may exist in source
+but fail at creation, rendering, or reload. Registry presence is necessary but
+not sufficient evidence of integration.
+
+## Field ownership contract
+
+### `Doc.GetProto(doc)`
+
+**Responsibility.** Recursively follow `proto` until reaching a document marked
+as a data document or a root with no distinct prototype.
+
+**Invariant.** The prototype chain must terminate. Callers use the result as
+shared data identity, so introducing a cycle or a non-document prototype breaks
+more than inheritance.
+
+**Side effects.** None expected; this is identity resolution.
+
+**Extension obligation.** Test direct documents, delegates, nested delegates,
+and old stored documents whose optional markers are absent.
+
+### `Doc.SetInPlace(doc, key, value, defaultProto)`
+
+**Responsibility.** Choose the durable owner of a field write:
+
+- write on the delegate when it already owns the field;
+- write on the data document when the data owner already owns the field;
+- otherwise use `defaultProto` to choose data owner versus delegate.
+
+Leading underscores are removed before the ownership check.
+
+**Postcondition.** Exactly one resolved owner receives the new value through
+the normal document setter.
+
+**Failure semantic.** Choosing the wrong `defaultProto` may look correct in the
+current view but change every embedding or disappear when a new context is
+opened. The function cannot infer product intent from the field name.
+
+### `Doc.GetLayoutDataDocPair(containerDoc, containerDataDoc, childDoc, layoutFieldKey?)`
+
+**Responsibility.** Resolve the child layout to render and the optional data
+context used by templates.
+
+**Preconditions.** The child and its prototype are available. The container
+context reflects the place where the child is being rendered.
+
+**Postcondition.** Render code receives a layout document, plus data when the
+template/context relationship requires it.
+
+**Failure semantic.** A missing or still-pending child produces a warning and a
+pair containing the unresolved child. A renderer must handle a loading or
+missing value rather than dereference it as complete state.
+
+## Rendering contracts
+
+### `DocumentContentsView.Init(...)`
+
+**Responsibility.** Install layout primitives, document renderers, and auxiliary
+interface components before `MainView` renders.
+
+**Precondition.** Client bootstrap has loaded the current user and user
+document. Renderer dependencies are imported and their own initialization has
+completed.
+
+**Invariant.** A persisted user-facing type maps to a renderer that tolerates
+missing optional fields and respects access checks. Registration must not create
+a second durable store.
+
+**Failure semantic.** Missing initialization or mapping can leave a valid
+document represented by a fallback/loading surface. A successful factory test
+does not prove this contract.
+
+### `CollectionView.renderSubView(type, props)`
+
+**Responsibility.** Dispatch a persisted `CollectionViewType` to a concrete
+collection component while supplying the common child add, move, remove,
+selection, sizing, and layout callbacks.
+
+**Postcondition.** The selected view operates on the same collection members;
+changing perspective does not convert or copy them.
+
+**Failure semantic.** `undefined` returns no view. Safe mode rewrites selected
+types to simpler renderers. An enum value without a dispatch is not a current
+view capability.
+
+**Extension obligation.** Verify empty, single, mixed, and large collections;
+add/move/remove; perspective switch; save/reload; and a second embedding.
+
+## Client synchronization contracts
+
+### `DocServer.init(protocol, hostname, port, identifier)`
+
+**Responsibility.** Reset the document cache, create a WebSocket-only Socket.IO
+connection, bind document get/create/update functions, answer the server
+handshake with the user identifier, and register incoming update/delete/server-
+termination handlers.
+
+**Precondition.** Call once with the current identity before persistent document
+creation or reads.
+
+**Failure semantic.** `connect_error` is logged to the browser console. The
+client does not convert that event into a write retry queue. A server-termination
+message displays the supplied recovery notice and reloads the page.
+
+### `DocServer.GetRefField(id, force?)`
+
+**Responsibility.** Preserve one client object identity for a document ID.
+Return a cached document when available; otherwise request serialized state,
+deserialize it, populate the cache, and resolve waiting references.
+
+**Postcondition.** Concurrent readers of the same ID converge on the cached
+document rather than independent copies. `force` refreshes an existing cached
+document in place while suppressing server echo.
+
+**Failure semantic.** A missing server record resolves as `undefined` and is
+removed from cache. Callers must distinguish “not loaded yet” from “does not
+exist.”
+
+### `DocServer.GetRefFields(ids)`
+
+**Responsibility.** Batch cold document reads, deduplicate cache work, hydrate
+records, and periodically yield so the loading interface can update.
+
+**Invariant.** Existing cached instances retain identity; a batch must not
+replace an object already observed by views with an unrelated object.
+
+**Failure semantic.** Missing records remain missing in the result map. The
+loading counter is progress evidence, not proof that every requested ID exists.
+
+### `DocServer.UpdateField(id, diff)`
+
+**Responsibility.** Forward a serialized field operation when the client is
+editable and the current user is not `guest`.
+
+**Critical semantics.** Guest creation, updates, and deletes are not emitted.
+Read-only mode replaces the update function with a no-op. The local document is
+already observable, so the screen can change even when no durable operation was
+sent.
+
+**Failure semantic.** Standard updates have no client acknowledgement. A
+WebSocket disconnection does not by itself roll local MobX state back.
+
+**Extension obligation.** Persistence tests must reload from a cold cache under
+an authenticated editable user. Seeing the field change in the initiating
+window is insufficient evidence.
+
+## Server ordering and persistence contracts
+
+### `WebSocket.UpdateField(socket, diff)`
+
+**Responsibility.** Accept an operation only after the socket/user handshake,
+append it to the queue for its document ID, and start dispatch when that ID has
+no active operation.
+
+**Invariant.** Operations for one document ID execute in arrival order.
+Different IDs may progress independently.
+
+**List behavior.** Add/remove operations read the current list, reconcile with
+the client's length/hint, write a composite list, and may send the reconciled
+state back to the initiating socket when concurrent structure differs.
+
+**Failure semantic.** A socket without a mapped user is rejected by returning
+`false`. The normal field path broadcasts after the database callback; it does
+not return a durable receipt to the initiating client.
+
+### `Database.update(id, value, callback, upsert, collectionName)`
+
+**Responsibility.** Serialize writes for one ID through `currentWrites` and
+apply MongoDB `updateOne` with the requested upsert policy.
+
+**Precondition.** The database connection exists. Calls made before connection
+are queued in `onConnect`.
+
+**Postcondition.** On success, the per-ID write marker is removed when it still
+points at the completed promise, the callback runs, and queued work can proceed.
+
+**Failure semantic.** The current rejection path logs `MOngo UPDATE ONE ERROR`
+but does not resolve the wrapper promise or invoke the callback. Later writes
+chained to that unresolved per-ID promise may wait indefinitely. Recovery
+requires confirming database health and restarting the affected runtime; a
+browser-only retry is not proof that the queue recovered.
+
+## Undo contract
+
+### `UndoManager.StartBatch(name)` and `Batch.end()`
+
+**Responsibility.** Increment nesting depth, open the shared event list when
+needed, and commit that list only when the outer batch ends.
+
+**Invariant.** Every successful `StartBatch` must end or cancel, preferably in
+`finally`. Nested batches share the current event list; the outermost end
+decides whether it enters history.
+
+**Failure semantic.** Ending the same `Batch` twice logs a warning. A batch that
+never ends leaves nesting depth nonzero and can absorb later events. Canceling
+the outer batch prevents the collected events from entering history; temporary
+batches can actively replay their inverse events on failure.
+
+### `UndoManager.AddEvent`, `Undo`, and `Redo`
+
+**Responsibility.** Record inverse/forward functions only while a batch is open
+and not currently replaying. Undo applies inverse events in reverse order; redo
+applies forward events in original order.
+
+**Invariant.** Event functions must not recursively add new history while being
+replayed. The `undoing` flag enforces that at the manager boundary.
+
+**Extension obligation.** Assert the number and name of undo steps, the state
+after undo, and the state after redo. An action that merely “has undo code” has
+not met the contract.
+
+## Link navigation contract
+
+### `LinkFollower.FollowLink`
+
+**Responsibility.** Resolve the opposite endpoint, prefer an already visible
+target, otherwise open or navigate to a context containing it, then apply the
+link's view/highlight behavior.
+
+**Preconditions.** The link and endpoint references resolve, and the user can
+read the destination.
+
+**Invariant.** Following a relationship does not copy the target. Navigation
+preserves document identity and treats contextual layout separately.
+
+**Failure semantic.** Missing, private, or contextless targets require a
+non-destructive no-target outcome. Link UI must not reveal inaccessible endpoint
+content through titles, previews, backlinks, or agent results.
+
+## Agent execution contract
+
+### `Agent.execute(...)`
+
+**Responsibility.** Continue the model/tool loop, validate a selected tool and
+its parameters, call the registered implementation, append observations to
+conversation state, and stream processing/answer updates.
+
+**Preconditions.** The tool is registered, its schema accepts the arguments,
+and the requested scope is authorized. External and workspace effects are
+identified before execution.
+
+**Invariant.** Model text is not authority. Only a registered tool can cross
+from generated output into application behavior.
+
+**Failure semantic.** Tool, provider, parse, and validation failures remain
+distinct. A write tool must report what changed before failure and keep related
+workspace mutations in one undo batch. External effects need compensation when
+they cannot be undone.
+
+**Branch distinction.** The canonical execution path invokes the validated tool
+directly. The oversight research branch inserts provenance capture around that
+call; that wrapper is not part of the canonical contract.
+
+## End-to-end contract proof
+
+A feature that changes durable state should pass this sequence:
+
+1. Create it through the documented entry point.
+2. Perform one named action as an authenticated editable user.
+3. Verify the intended data owner and contextual layout owner.
+4. Undo once and verify the complete prior state.
+5. Redo once and verify the complete new state.
+6. Reload from a cold cache and verify persistence.
+7. Open the same document in a second context and verify shared versus local
+   fields.
+8. Repeat with a second client where concurrency matters.
+9. Interrupt the relevant server, database, worker, or provider boundary and
+   verify a truthful failure state.
+10. Restore the boundary and verify recovery without creating duplicate or
+    partial records.
+
+Use [Troubleshooting Dash](/development/troubleshooting/) to isolate a failed
+step. Use the [generated API](/technical/api/) to inspect exact signatures and
+immutable source locations.

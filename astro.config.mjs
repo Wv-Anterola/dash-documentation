@@ -215,6 +215,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { slug: 'architecture/engineering-model', label: 'How Dash actually works' },
+                { slug: 'architecture/decisions-tradeoffs', label: 'Decisions and tradeoffs' },
                 { slug: 'architecture/system-map' },
                 { slug: 'architecture/document-model' },
                 { slug: 'architecture/rendering-lifecycle' },
@@ -238,6 +239,7 @@ export default defineConfig({
                 { slug: 'development/add-collection-view' },
                 { slug: 'development/add-agent-tool' },
                 { slug: 'development/testing-release' },
+                { slug: 'development/troubleshooting' },
                 { slug: 'contributing/joining' },
                 { slug: 'contributing/documentation' },
               ],
@@ -278,6 +280,7 @@ export default defineConfig({
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },
             { slug: 'reference/configuration' },
+            { slug: 'reference/runtime-contracts' },
             { slug: 'reference/implementation-snapshot', label: 'Source coverage' },
             { slug: 'reference/status-taxonomy' },
             { slug: 'reference/glossary' },

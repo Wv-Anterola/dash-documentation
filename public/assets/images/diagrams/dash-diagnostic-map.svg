@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash diagnostic map</title>
+  <desc id="desc">A decision map routes four visible symptoms to the client bootstrap, synchronization, persistence, rendering, or external service boundary and names the first evidence to inspect.</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0d1733"/><stop offset="1" stop-color="#15274d"/></linearGradient>
+    <filter id="shadow2"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#000" flood-opacity="0.28"/></filter>
+    <marker id="arrow2" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 12 6 0 12Z" fill="#8fb4ff"/></marker>
+    <style>
+      .k{font:700 20px Inter,Segoe UI,sans-serif;letter-spacing:3px;fill:#8fb4ff}.t{font:700 46px Inter,Segoe UI,sans-serif;fill:#fff}.s{font:400 22px Inter,Segoe UI,sans-serif;fill:#c7d4f2}
+      .n{font:700 25px Inter,Segoe UI,sans-serif;fill:#111c3a}.l{font:700 15px Inter,Segoe UI,sans-serif;letter-spacing:1px;fill:#3159c6}.b{font:400 18px Inter,Segoe UI,sans-serif;fill:#34415e}.w{font:600 18px Inter,Segoe UI,sans-serif;fill:#fff}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg2)"/>
+  <text class="k" x="90" y="80">OPERATIONS</text><text class="t" x="90" y="142">Start with the symptom, then isolate the boundary</text>
+  <text class="s" x="90" y="184">Do not change code until the evidence distinguishes local state, transport, storage, and rendering.</text>
+
+  <g filter="url(#shadow2)">
+    <rect x="90" y="255" width="310" height="128" rx="18" fill="#fff"/><text class="l" x="120" y="292">SYMPTOM</text><text class="n" x="120" y="330">The screen never loads</text><text class="b" x="120" y="360">Check bootstrap + user document</text>
+    <rect x="90" y="420" width="310" height="128" rx="18" fill="#fff"/><text class="l" x="120" y="457">SYMPTOM</text><text class="n" x="120" y="495">Edits disappear</text><text class="b" x="120" y="525">Check identity + write eligibility</text>
+    <rect x="90" y="585" width="310" height="128" rx="18" fill="#fff"/><text class="l" x="120" y="622">SYMPTOM</text><text class="n" x="120" y="660">A node is blank</text><text class="b" x="120" y="690">Check type + renderer + proxy</text>
+
+    <rect x="565" y="235" width="420" height="165" rx="18" fill="#edf3ff" stroke="#8fb4ff" stroke-width="2"/><text class="l" x="600" y="275">CLIENT BOUNDARY</text><text class="n" x="600" y="315">FieldLoader → current user → MainView</text><text class="b" x="600" y="349">Evidence: fatal-user alert, console error,</text><text class="b" x="600" y="375">loading counters, network response.</text>
+    <rect x="565" y="445" width="420" height="165" rx="18" fill="#e8faf7" stroke="#4fb4a9" stroke-width="2"/><text class="l" x="600" y="485" fill="#23766f">SYNC BOUNDARY</text><text class="n" x="600" y="525">Doc proxy → DocServer → Socket.IO</text><text class="b" x="600" y="559">Evidence: guest/read-only state, broken heart,</text><text class="b" x="600" y="585">connect_error, outgoing UpdateField.</text>
+    <rect x="565" y="655" width="420" height="165" rx="18" fill="#fff5e8" stroke="#e59a49" stroke-width="2"/><text class="l" x="600" y="695" fill="#9a5515">VIEW BOUNDARY</text><text class="n" x="600" y="735">Type → layout pair → renderer</text><text class="b" x="600" y="769">Evidence: persisted type, resolved prototype,</text><text class="b" x="600" y="795">dispatch case, loading proxy.</text>
+
+    <rect x="1160" y="320" width="350" height="170" rx="18" fill="#fff5e8" stroke="#e59a49" stroke-width="2"/><text class="l" x="1195" y="360" fill="#9a5515">STORAGE BOUNDARY</text><text class="n" x="1195" y="400">WebSocket → write queue → MongoDB</text><text class="b" x="1195" y="434">Evidence: server update log, DB error,</text><text class="b" x="1195" y="460">reload from a cold cache.</text>
+    <rect x="1160" y="560" width="350" height="170" rx="18" fill="#f3edff" stroke="#9a73d3" stroke-width="2"/><text class="l" x="1195" y="600" fill="#68459b">SERVICE BOUNDARY</text><text class="n" x="1195" y="640">Provider, worker, file, or local model</text><text class="b" x="1195" y="674">Evidence: route status, credential scope,</text><text class="b" x="1195" y="700">worker bundle, provider response.</text>
+  </g>
+
+  <path d="M400 319H555" stroke="#8fb4ff" stroke-width="4" marker-end="url(#arrow2)"/><path d="M400 484H555" stroke="#8fb4ff" stroke-width="4" marker-end="url(#arrow2)"/><path d="M400 649H555" stroke="#8fb4ff" stroke-width="4" marker-end="url(#arrow2)"/>
+  <path d="M985 528C1080 528 1065 405 1150 405" fill="none" stroke="#8fb4ff" stroke-width="4" marker-end="url(#arrow2)"/><path d="M985 737C1080 737 1065 645 1150 645" fill="none" stroke="#8fb4ff" stroke-width="4" marker-end="url(#arrow2)"/>
+  <text class="w" x="90" y="835">Proof of recovery: repeat the action, reload from storage, and verify it from a second context.</text>
+</svg>

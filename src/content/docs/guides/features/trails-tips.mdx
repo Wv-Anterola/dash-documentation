@@ -18,14 +18,14 @@ For what a trail is and why it is not a slideshow, see
 
 Clicking the slide in the trail pans and zooms to the relevant part.
 
-![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/oPAU7mL.gif)
+![Screen recording: selecting a document and using its pin control to add it to the active presentation trail.](/assets/gifs/gettingstarted/dash-pin-doc.gif)
 
 ## Pin by dragging
 
 Drag the document into empty space on the trail. Either the title bar or the
 body of the document works as a drag handle.
 
-![Dragging a text document from the canvas onto empty space in the trail panel.](https://i.imgur.com/4CaqhZY.gif)
+![The Trails panel showing the destination where a dragged document becomes a new presentation step.](/assets/images/current/dash-trails-panel.webp)
 
 ## Pin with view
 
@@ -42,30 +42,36 @@ view properties are. Pinning the same document twice with different view
 properties and stepping between the slides is how you animate movement through a
 document.
 
-**Scroll position recorded with the slide:**
+**Content state recorded with the slide:**
 
-![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/LC47Mum.gif)
+![Screen recording: pinning a document with content state so the trail can restore its internal view.](/assets/gifs/trails/pincontent.gif)
 
-**Canvas position recorded with the slide:**
+**Layout state recorded with the slide:**
 
-![Screen recording: A single slide in a presentation trail, with its controls.](https://i.imgur.com/eaxJWcZ.gif)
+![Screen recording: pinning a document with layout state so the trail can restore its canvas position and size.](/assets/gifs/trails/pinlayout.gif)
 
-:::note[Externally hosted recordings]
-The recordings on this page are hosted on imgur rather than in this repository,
-which is how they were added in 2021. They work, but they are outside our
-control. New assets should go in `public/assets/`.
-:::
+## What the three methods store
 
-## Coverage beyond this legacy tips page
+| Method | Adds the document | Captures contextual view state | Best use |
+| :--- | :---: | :---: | :--- |
+| Pin button | Yes | No | Return to the live document with its current state |
+| Drag into trail | Yes | No | Build or reorder a trail spatially from the panel |
+| Shift + pin | Yes | Yes | Restore a deliberate scroll, pan, zoom, position, or size |
 
-The original version of this page had empty headings for pinning webpages,
-PDFs, audio, video, and collections, and for transitions and presenting. They
-had been empty since 2021.
+The slide keeps a reference to the live document rather than a detached copy.
+Changing the underlying content therefore changes what the trail presents;
+captured view state controls how that content is framed.
 
-Pinning works the same way for every document type, so the first group needed no
-separate sections. The canonical
-[links and presentation capability page](/capabilities/connections-and-trails/)
-now covers pin choices, branch design, transitions, animation, dictation,
-presentation review, and the relationship between links, trails, and graphs.
-The detailed [trails guide](/guides/features/trails/) remains the control-level
-reference.
+## Verify the result
+
+1. Open the new slide and confirm it navigates to the intended document.
+2. For a view pin, change the document's framing, reopen the slide, and verify
+   that the captured framing returns.
+3. Use **Update View** only when you intend to replace the saved framing.
+4. Reload the workspace and repeat the navigation before relying on the trail
+   for a presentation.
+
+The [links and presentation capability page](/capabilities/connections-and-trails/)
+explains how trails relate to links, branching, transitions, and graphs. The
+full [trail guide](/guides/features/trails/) documents slide controls and
+presentation operation.

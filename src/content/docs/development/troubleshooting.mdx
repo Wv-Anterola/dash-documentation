@@ -1,0 +1,428 @@
+---
+title: Troubleshooting Dash
+description: A symptom-first diagnostic guide for bootstrap, synchronization, persistence, rendering, imports, agents, workers, and the Electron runtime.
+sidebar:
+  order: 7
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+This guide is for failures in a running or locally built Dash application. It
+starts with what the reader can observe, identifies the boundary that owns the
+behavior, and ends with evidence that proves recovery.
+
+![Dash troubleshooting routes visible symptoms to client bootstrap, synchronization, persistence, rendering, and external-service boundaries.](/assets/images/diagrams/dash-diagnostic-map.svg)
+
+## First five minutes
+
+Record these facts before changing code or data:
+
+1. Exact action, target document, and expected result.
+2. Browser or Electron, operating system, and the URL or packaged build.
+3. Authenticated identity; specifically whether the client is `guest` or
+   read-only.
+4. Whether the server heart shows connected or disconnected.
+5. First browser-console error and first server error after reproducing once.
+6. Whether the result survives a full reload.
+7. Whether the same document behaves differently in a second context or client.
+8. Which optional provider, worker, or local service the action crosses.
+
+Do not use the visible initiating window as the only persistence check. Dash
+updates local observable state before the server round trip, and ordinary field
+writes do not return an acknowledgement to that client.
+
+## Diagnostic decision tree
+
+```text
+Can /home deliver the application shell?
+  no  -> server, port, build output, or Electron APP_ROOT
+  yes
+   |
+Can the client load the current user document?
+  no  -> session, account record, MongoDB, or document ID
+  yes
+   |
+Does the action change the current screen?
+  no  -> UI handler, permission, type/factory, or renderer
+  yes
+   |
+Does it survive a cold reload?
+  no  -> guest/read-only suppression, socket, write queue, or MongoDB
+  yes
+   |
+Does a second context/client show the intended result?
+  no  -> data/layout ownership, cache identity, broadcast, or ACL
+  yes -> core runtime path is working; isolate the optional service if present
+```
+
+## Server does not start
+
+### `mongod` is unavailable or MongoDB rejects the connection
+
+**Boundary:** database bootstrap.
+
+The server requires a valid database unless `DB=MEM` selects the in-memory
+implementation. `Database.tryInitializeConnection` logs the URI, waits for
+Mongoose's `connected` event, and exits the process on connection failure.
+
+Check:
+
+- `mongod` is installed, running, and listening on the expected interface;
+- the data directory exists and is writable;
+- `MONGO_URI` includes the intended host and database;
+- an Electron-launched server received the managed `MONGO_URI`;
+- no second process owns ports 27017, 1050, or the configured socket port.
+
+Recovery is proven when startup reaches the “mongoose established default
+connection,” HTTP listening, and WebSocket initialized messages, and a cold
+document read succeeds.
+
+### The build exits or exhausts memory
+
+**Boundary:** webpack/Node process.
+
+Use `npm start`, `npm run fast`, or `npm run debug`; those scripts provide the
+heap configuration and worker build expected by the repository. Run
+`npm run tsc` separately to distinguish a type error from a bundler or memory
+failure.
+
+Recovery is proven by loading `/home`, not only by seeing webpack complete.
+
+### Upload or media routes fail immediately
+
+**Boundary:** server filesystem.
+
+Confirm `src/server/public/files` exists in a source checkout. In Electron,
+confirm `APP_ROOT` resolves packaged assets and `DASH_DATA_ROOT` resolves a
+writable runtime directory. Capture the route status and server path error;
+do not move user data until the resolved target is known.
+
+## The page shell loads but Dash never appears
+
+### “Fatal Error: user not found in database”
+
+**Boundary:** client bootstrap and account/document identity.
+
+`Main.tsx` renders `FieldLoader`, calls `CurrentUserUtils.loadCurrentUser`, and
+stops with this alert when the response has no `userDocumentId`. Investigate the
+session, account record, user-document ID, and corresponding document record in
+that order.
+
+Creating an unrelated replacement document may hide the symptom while
+orphaning the account graph. Preserve the IDs and inspect the missing boundary
+before repairing data.
+
+### Loading counter stops while retrieving documents
+
+**Boundary:** reference hydration.
+
+`DocServer.GetRefFields` requests uncached IDs in a batch, deserializes them,
+and updates the load status while yielding periodically. Determine whether the
+last evidence is:
+
+- request never answered: socket/server/database path;
+- record returned as missing: bad reference or absent record;
+- deserialization failure: stored field type or malformed payload;
+- document hydrated but view absent: renderer dispatch.
+
+Recovery is proven by a cold-cache load. A warm cache can conceal the original
+read failure.
+
+### The shell is present but the main interface is blank
+
+**Boundary:** renderer initialization.
+
+After loading the user document, bootstrap initializes collection utilities,
+link following, presentation helpers, and the `DocumentContentsView` registry
+before replacing `FieldLoader` with `MainView`. The first exception in this
+sequence can prevent the final render.
+
+Use the first stack frame from the unminified `npm run debug` build. Verify the
+named renderer or initialization dependency rather than changing the root
+render call.
+
+## The connection heart is broken or collaboration stops
+
+### Browser console reports `connect_error`
+
+**Boundary:** client Socket.IO connection.
+
+`DocServer.init` constructs a WebSocket-only URL from protocol, hostname, and
+socket port. It logs `connect_error` but does not create a persistent outgoing
+write queue.
+
+Check:
+
+- page protocol matches the expected `ws`/`wss` transport;
+- the WebSocket port is listening and reachable;
+- proxy/firewall configuration permits WebSocket upgrade;
+- development and release socket ports match;
+- the server handshake (`Foo`/`Bar`) maps the socket to the intended user.
+
+After reconnecting, reload before editing important data. Local changes made
+while disconnected are not proven durable.
+
+### A server restart alert appears repeatedly
+
+**Boundary:** explicit server termination path.
+
+The client handles `ConnectionTerminated` reasons `crash`, `temporary`, and
+`exit`, then reloads. An unknown reason is logged and still reloads. Repeated
+alerts indicate the server or monitor continues terminating sessions; inspect
+the server/monitor process rather than the browser reload loop.
+
+### One client updates but another does not
+
+**Boundary:** handshake, peer broadcast, or client cache update.
+
+Verify both sockets completed the user handshake. A field update is broadcast
+to peer sockets after the database callback. On the receiving client,
+`DocServer` finds the cached document and calls its update handler. If the
+target is not cached, the next cold read should retrieve storage state.
+
+Test both cases:
+
+1. target already open on the peer;
+2. target first opened after the initiating edit.
+
+The first checks broadcast/cache handling; the second checks persistence.
+
+## An edit appears, then disappears after reload
+
+### Current user is `guest`
+
+**Boundary:** write eligibility.
+
+The canonical client deliberately suppresses document creation, field updates,
+and deletes when `CurrentUserEmail()` is `guest`. The local proxy still changes,
+so the edit can appear successful until reload.
+
+Use an authenticated editable account for persistence tests. Do not classify a
+guest-only result as a database defect.
+
+### Client is read-only
+
+**Boundary:** write eligibility.
+
+`DocServer.Control.makeReadOnly` keeps local creation in cache and replaces the
+field update function with a no-op. `makeEditable` reloads the page rather than
+mutating the existing client back into an editable state.
+
+Confirm the permission mode and reload through the supported transition. A
+local visual edit in read-only mode is not a durable write.
+
+### Socket disconnected during the action
+
+**Boundary:** transport.
+
+Normal writes are emitted without a per-operation acknowledgement. If the
+socket is unavailable, local observable state is not automatically rolled back.
+Restore the connection, reload from storage, and repeat the action. If loss of
+unacknowledged work is unacceptable for the feature, the implementation needs
+operation IDs, acknowledgement, retry, and conflict policy rather than another
+UI success message.
+
+### Server logs `MOngo UPDATE ONE ERROR`
+
+**Boundary:** MongoDB update and per-document write queue.
+
+`Database.update` chains operations for the same document ID. Its current error
+handler logs the rejection but does not resolve the wrapper promise or invoke
+the callback. Later writes for that ID may remain behind the unresolved promise.
+
+1. Preserve the first database error.
+2. Verify database health, space, permissions, and connection.
+3. Restart the affected server runtime to clear in-memory queues.
+4. Reload the document from a cold cache.
+5. Repeat one bounded edit and confirm it from a second client.
+
+Do not continue submitting edits to the same document as a recovery strategy;
+they may only extend the waiting chain.
+
+## A document exists but is blank, loading, or the wrong kind
+
+### Type exists but renderer does not
+
+**Boundary:** type/factory/render registration.
+
+Verify all of the following:
+
+1. persisted `DocumentType` value;
+2. prototype registration;
+3. canonical factory;
+4. `DocumentContentsView` renderer mapping or specialized dispatch;
+5. loading/error behavior;
+6. save/reload of fields required by the renderer.
+
+The [document type reference](/reference/document-types/) distinguishes
+user-facing, structural, loading, and sentinel entries.
+
+### The same document behaves differently in two collections
+
+**Boundary:** data/layout ownership.
+
+Inspect the value on the delegate/layout document and on `Doc.GetProto(doc)`.
+Content meant to be shared belongs to the data owner. Position, dimensions,
+crop, scroll, and perspective usually belong to the contextual layout owner.
+Use `Doc.SetInPlace` only after deciding the intended owner.
+
+Recovery is proven when the value is shared or isolated exactly as intended
+after opening a second context and reloading both.
+
+### A collection falls back to another view
+
+**Boundary:** collection dispatch or safe mode.
+
+Read the persisted `_type_collection`. Safe mode intentionally rewrites some
+view choices. `undefined` yields no subview, and only values dispatched by
+`CollectionView.renderSubView` are current renderable views. Confirm appearance-
+menu availability separately; not every internal view is offered to users.
+
+## Undo takes too many steps, too few steps, or affects unrelated work
+
+**Boundary:** `UndoManager` batch lifecycle.
+
+Check `UndoManager.GetOpenBatches()` and the visible undo-stack name. Typical
+causes are:
+
+- one visible action opened several outer batches;
+- a batch ended before asynchronous mutations ran;
+- a batch never ended and absorbed later edits;
+- a field mutation bypassed the event-producing setter;
+- an external effect has no inverse operation.
+
+Wrap the complete synchronous mutation in one named batch and close it in
+`finally`. For asynchronous workflows, define transaction boundaries and
+compensation explicitly; keeping a global batch open across arbitrary awaits
+can capture other users' actions in the same client.
+
+Recovery is proven by state assertions after action, undo, and redo—not by the
+presence of an Undo button.
+
+## Import, web, or media content fails
+
+### A dropped file never becomes a document
+
+**Boundary:** browser drop handler, upload route, file storage, or import
+conversion.
+
+Capture the file type and size, route response, server error, and whether a
+placeholder document was allocated. A robust import either produces a valid
+native document or a truthful retryable error; it should not leave an empty
+record whose type implies success.
+
+### An embedded web page refuses to load
+
+**Boundary:** remote framing policy or CORS proxy.
+
+Distinguish:
+
+- iframe refusal through `X-Frame-Options` or CSP;
+- proxy fetch failure;
+- rewritten asset failure;
+- authentication/cookie dependence;
+- source page change.
+
+A live webpage document is not an archival capture. If preservation is the
+requirement, import or clip the source material and retain its URL/provenance.
+
+### PDF, equation, or image processing stalls
+
+**Boundary:** media library or web worker.
+
+Confirm the worker bundle was rebuilt, the worker file loads, and its first
+message/exception. A successful main client build does not prove that the SymPy
+or image worker artifact matches the current source.
+
+## Agent or generative action fails
+
+### Tool is not selected or parameters are rejected
+
+**Boundary:** tool registry and schema validation.
+
+Confirm the tool is registered in the active agent constructor, the exact key
+matches the model request, and the parameter schema accepts the parsed values.
+Keep validation failure distinct from tool execution failure.
+
+### Agent reports success but the workspace is unchanged
+
+**Boundary:** tool observation versus durable mutation.
+
+Inspect the returned observation, target IDs, permission filtering, undo batch,
+and persistence after reload. Console output and fluent model text do not prove
+an application effect.
+
+### Hosted model, Firefly, map, search, or calendar call fails
+
+**Boundary:** external provider.
+
+Record:
+
+- server or browser caller;
+- configured variable name and whether it was bundled publicly;
+- route and status code;
+- timeout/retry behavior;
+- redacted provider request ID and error type;
+- data sent and whether a partial result was persisted.
+
+The [configuration reference](/reference/configuration/) lists current variable
+names and the important `_CLIENT_` exposure rule. Rotate any credential that
+appeared in a browser bundle or log unexpectedly.
+
+## Electron or local model fails
+
+### Packaged app cannot find assets or write runtime data
+
+**Boundary:** Electron process and path ownership.
+
+Check the values passed for `APP_ROOT`, `DASH_DATA_ROOT`, and `MONGO_URI`.
+Packaged assets are read from the application root; database files, session
+secrets, logs, and other mutable state need a writable data root.
+
+### Ollama is unavailable or a model is missing
+
+**Boundary:** optional local service.
+
+The current desktop client can call Ollama; the canonical installer does not
+guarantee that Ollama and a model are already installed. Distinguish service
+unavailable, model absent, model changed, and request failure. Verify the
+configured model with a minimal local request before debugging agent tools.
+
+## Evidence bundle for escalation
+
+Provide a compact, reproducible bundle:
+
+```text
+Build/source identifier:
+Browser or Electron + OS:
+Identity and permission mode:
+Document type and ID (redact private content):
+Exact reproduction steps:
+Expected result:
+Observed result:
+First client error:
+First server error:
+Network/route status:
+Survives reload: yes/no
+Second context/client result:
+External provider or worker involved:
+Smallest safe reproduction workspace:
+```
+
+Redact credentials, session IDs, private document content, and provider tokens.
+The best escalation artifact identifies the first failing boundary; a long log
+after several retries often hides it.
+
+## Recovery standard
+
+A symptom is resolved only when the original action succeeds, the expected
+state survives a cold reload, undo/redo remains coherent, and another context
+or client observes the intended state. If the failure crossed an external
+boundary, also verify that retry did not duplicate documents, links, files, or
+provider-side effects.
+
+See the [runtime contract reference](/reference/runtime-contracts/) for the
+invariants behind each boundary and [testing and release discipline](/development/testing-release/)
+for regression coverage.

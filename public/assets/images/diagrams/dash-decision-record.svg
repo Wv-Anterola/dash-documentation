@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash architecture decision record method</title>
+  <desc id="desc">Architecture decisions begin with a design pressure, choose a mechanism, create a runtime contract, impose a cost, and define a signal for reconsideration.</desc>
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffaf3"/><stop offset="1" stop-color="#eef3ff"/></linearGradient>
+    <filter id="shadow3"><feDropShadow dx="0" dy="8" stdDeviation="11" flood-color="#172554" flood-opacity="0.13"/></filter>
+    <marker id="arrow3" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 12 6 0 12Z" fill="#3159c6"/></marker>
+    <style>.k{font:700 20px Inter,Segoe UI,sans-serif;letter-spacing:3px;fill:#a45c16}.t{font:700 48px Inter,Segoe UI,sans-serif;fill:#111c3a}.s{font:400 22px Inter,Segoe UI,sans-serif;fill:#53607b}.num{font:800 18px Inter,Segoe UI,sans-serif;fill:#fff}.n{font:700 28px Inter,Segoe UI,sans-serif;fill:#111c3a}.b{font:400 18px Inter,Segoe UI,sans-serif;fill:#3b4763}.c{font:700 20px Inter,Segoe UI,sans-serif;fill:#fff}</style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg3)"/>
+  <text class="k" x="90" y="86">ARCHITECTURE</text><text class="t" x="90" y="150">A decision is more than the code that implements it</text>
+  <text class="s" x="90" y="193">Record the reason, the enforced contract, the cost, and the condition that would change the choice.</text>
+
+  <g filter="url(#shadow3)">
+    <rect x="90" y="305" width="250" height="220" rx="20" fill="#fff" stroke="#e6b979" stroke-width="2"/><circle cx="135" cy="350" r="22" fill="#b96d22"/><text class="num" x="129" y="357">1</text><text class="n" x="120" y="405">Pressure</text><text class="b" x="120" y="445">What property must</text><text class="b" x="120" y="472">the system preserve?</text>
+    <rect x="380" y="305" width="250" height="220" rx="20" fill="#fff" stroke="#9fb6ec" stroke-width="2"/><circle cx="425" cy="350" r="22" fill="#3159c6"/><text class="num" x="419" y="357">2</text><text class="n" x="410" y="405">Decision</text><text class="b" x="410" y="445">Which mechanism</text><text class="b" x="410" y="472">owns the answer?</text>
+    <rect x="670" y="305" width="250" height="220" rx="20" fill="#fff" stroke="#87cfc5" stroke-width="2"/><circle cx="715" cy="350" r="22" fill="#27837a"/><text class="num" x="709" y="357">3</text><text class="n" x="700" y="405">Contract</text><text class="b" x="700" y="445">What must every</text><text class="b" x="700" y="472">caller guarantee?</text>
+    <rect x="960" y="305" width="250" height="220" rx="20" fill="#fff" stroke="#d6b9ef" stroke-width="2"/><circle cx="1005" cy="350" r="22" fill="#875ab2"/><text class="num" x="999" y="357">4</text><text class="n" x="990" y="405">Cost</text><text class="b" x="990" y="445">What complexity and</text><text class="b" x="990" y="472">failure mode follow?</text>
+    <rect x="1250" y="305" width="250" height="220" rx="20" fill="#fff" stroke="#efaa9a" stroke-width="2"/><circle cx="1295" cy="350" r="22" fill="#b94e39"/><text class="num" x="1289" y="357">5</text><text class="n" x="1280" y="405">Revisit</text><text class="b" x="1280" y="445">Which evidence would</text><text class="b" x="1280" y="472">invalidate the choice?</text>
+  </g>
+  <path d="M340 415H370M630 415H660M920 415H950M1210 415H1240" stroke="#3159c6" stroke-width="4" marker-end="url(#arrow3)"/>
+
+  <rect x="230" y="650" width="1140" height="110" rx="22" fill="#172554"/>
+  <text class="c" x="275" y="695">Example: shared identity is required → represent links as documents → endpoints remain references</text>
+  <text class="s" x="275" y="733" fill="#c7d4f2">Cost: more graph objects and lifecycle work · Revisit signal: graph scale or permission leakage exceeds the model.</text>
+</svg>

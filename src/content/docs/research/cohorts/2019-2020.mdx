@@ -15,17 +15,17 @@ The core document model, collections, links, view system, and direct-manipulatio
 workspace were established in 2019 and 2020. Later work continues to build on
 those contracts.
 
-The decisions from this period are the ones nobody has needed to revisit. A
+Several decisions from this period remain part of the current runtime. A
 single document abstraction with typed fields and prototype inheritance, so a
 PDF and a collection and a link are all the same kind of thing. Collections
 that are themselves documents, with the display style as a property rather than
 a separate object. Links that anchor to a region, a selection, or a timestamp
 instead of to a file.
 
-The concrete evidence that these held up is that the files where you register a
-new document type in 2026 are the same files, with the same functions, written
-in 2019. The graph view added this year is one more value in the
-`CollectionViewType` enum first populated then.
+The concrete evidence of continuity is that current document types still use
+the same registry and factory boundaries established during this period. The
+graph view is another value in the `CollectionViewType` enum first populated
+then.
 
 ## Who was here
 

@@ -1,0 +1,290 @@
+---
+title: Architecture decisions and tradeoffs
+description: The design pressures behind Dash's major implementation choices, the contracts each choice creates, its cost, and the evidence that should trigger reconsideration.
+sidebar:
+  order: 3
+---
+
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<SourceSnapshot />
+
+An architecture diagram says what exists. A decision record explains why that
+structure exists, what it protects, and when it stops being the right structure.
+The records below describe decisions visible in the current implementation;
+they are not reconstructed from commit messages.
+
+![Architecture decisions move from design pressure through mechanism and contract to cost and an explicit reconsideration signal.](/assets/images/diagrams/dash-decision-record.svg)
+
+## How to read a decision
+
+Each record has five parts:
+
+1. **Pressure** names the property Dash must preserve.
+2. **Decision** names the implemented mechanism.
+3. **Contract** states what callers must do for the mechanism to remain valid.
+4. **Cost** records complexity introduced by the choice.
+5. **Revisit when** identifies evidence that would justify a different design.
+
+This structure prevents two common mistakes: treating current code as the only
+possible design, and describing an alternative without accounting for the
+property the current design protects.
+
+## ADR-001: Represent workspace entities with one document graph
+
+**Pressure.** Notes, media, collections, links, presentation steps, queries,
+agents, and interface state need to be saved, shared, nested, linked, and
+inspected through the same workspace operations.
+
+**Decision.** Represent them as typed `Doc` instances with typed fields and
+references. `DocumentType` selects the specialized behavior; identity and field
+lifecycle remain common.
+
+**Contract.** A new user-visible entity must define its durable fields, factory,
+renderer, creation path, and behavior in links, collections, permissions,
+serialization, and undo. An enum member alone is not a feature.
+
+**Why this choice.** A PDF excerpt can become a link endpoint, collection child,
+trail step, or agent input without being converted into four unrelated models.
+The same graph traversal and access rules can operate across content types.
+
+**Cost.** Internal and user-facing objects share a large model. The type enum,
+factory table, and render dispatch can become central merge points. A malformed
+field can affect generic graph operations rather than one isolated feature.
+
+**Revisit when.** Type-specific invariants can no longer be enforced at factory
+and renderer boundaries, or graph operations become dominated by internal
+document types that users cannot meaningfully inspect.
+
+## ADR-002: Preserve identity through references and delegation
+
+**Pressure.** The same source must appear in several contexts without producing
+independent copies that silently diverge.
+
+**Decision.** Store references by document identity and use prototype/delegate
+relationships for shared data and inherited defaults. `Doc.GetProto` resolves
+the data root; embeddings and delegates provide contextual appearances.
+
+**Contract.** Callers must choose deliberately between reference, delegate,
+embedding, and copy. Equality that means “same underlying item” must account for
+prototype identity rather than relying only on JavaScript object identity.
+
+**Why this choice.** Editing shared content can update every context while each
+context retains its own layout. Links continue to point to one addressable
+source.
+
+**Cost.** A field read may be inherited, while a write may belong on the
+delegate or data document. Cache identity and deserialization are correctness
+concerns. Recursive prototype traversal must remain acyclic.
+
+**Revisit when.** Users cannot predict whether an edit is local or shared even
+after the interface identifies the context, or prototype chains make migration,
+permission evaluation, and debugging materially less reliable than explicit
+composition.
+
+## ADR-003: Separate durable content from contextual layout
+
+**Pressure.** One document may need a different position, size, crop, scroll
+state, view, or template expansion in each containing collection.
+
+**Decision.** Resolve a layout/data pair. The data document owns reusable
+content; the layout document owns presentation in one context.
+`Doc.GetLayoutDataDocPair` and template expansion connect the two for rendering.
+
+**Contract.** Content renderers read and write the data owner for semantic
+content. Collection and decoration code writes contextual geometry and
+appearance to the layout owner. A control must state which owner it changes.
+
+**Why this choice.** The same PDF can be full-page in one collection and a
+cropped excerpt in another without duplicating the PDF or letting one context
+move the other.
+
+**Cost.** Every feature must test both direct documents and embeddings. Writing
+the correct value to the wrong owner often appears to work until another
+context opens or the page reloads.
+
+**Revisit when.** Layout resolution becomes an implicit rule that most extension
+authors bypass, or a typed context object can replace field-name conventions
+without breaking stored workspaces.
+
+## ADR-004: Create specialized documents through prototypes and factories
+
+**Pressure.** A document type needs consistent defaults, layout, metadata, and
+construction side effects regardless of which interface creates it.
+
+**Decision.** `Documents.Prototypes` stores registered prototypes and factory
+functions in `Documents.ts` call `InstanceFromProto` rather than constructing
+unrelated object shapes in views.
+
+**Contract.** Creation menus, imports, agent tools, and scripts should call the
+canonical factory. A factory must return a state that the renderer can consume
+before optional asynchronous work finishes.
+
+**Why this choice.** Defaults and serialization shape stay centralized. A new
+creation surface does not need to reproduce the document's internal schema.
+
+**Cost.** The factory registry is a coordination hotspot. Factories that mix
+allocation with provider calls can leave partial documents unless they define
+loading, failure, and retry states.
+
+**Revisit when.** Registry conflicts or cross-type initialization dependencies
+regularly block integration, suggesting modular registration with explicit
+dependency ordering.
+
+## ADR-005: Dispatch rendering by persisted type
+
+**Pressure.** A generic document graph still needs specialized media and
+interaction components.
+
+**Decision.** Initialize the renderer map through `DocumentContentsView.Init`
+and dispatch collection layouts through `CollectionView.renderSubView`. The
+persisted type selects the view.
+
+**Contract.** Every persisted type must have a deterministic render path,
+loading state, permission behavior, and safe handling for missing optional
+fields. Renderers do not own durable identity.
+
+**Why this choice.** The storage model remains independent from React while the
+client can add rich views for new types.
+
+**Cost.** Type registries and switch statements can drift. A stored enum value
+without a current dispatch produces a loading, fallback, or blank surface.
+
+**Revisit when.** Runtime plugin loading becomes a supported product
+requirement, or registration consistency cannot be enforced by generated
+checks.
+
+## ADR-006: Synchronize field operations instead of whole workspaces
+
+**Pressure.** A canvas gesture should not serialize a complete graph, overwrite
+unrelated concurrent work, or duplicate shared objects.
+
+**Decision.** The document proxy emits `$set`, `$unset`, and list operations
+through `DocServer`. The server serializes operations for a document ID, writes
+MongoDB, and broadcasts accepted state to peer sockets.
+
+**Contract.** A diff identifies one durable document and uses the field
+serialization protocol. List operations include enough context to reconcile
+concurrent insertion or removal. Features must not treat an optimistic MobX
+update as a storage acknowledgement.
+
+**Why this choice.** Network and database work scales with the changed field,
+and shared identity remains intact.
+
+**Cost.** The protocol is not an offline-first or conflict-free replicated data
+type. Standard field writes do not return a client acknowledgement. Server and
+client state can differ during disconnection or rejection.
+
+**Revisit when.** Offline editing, multi-writer convergence, or explicit write
+receipts become requirements. Those pressures call for operation IDs,
+acknowledgements, retry policy, and a defined conflict model.
+
+## ADR-007: Use MobX observability as the render invalidation model
+
+**Pressure.** A document may be visible through several views, and all of them
+must react when a shared field changes.
+
+**Decision.** Document fields and view state are observable; React components
+wrapped as observers re-render when values read during rendering change.
+
+**Contract.** A render or computed value should read only the observables it
+actually depends on. Long-lived reactions must be disposed. High-frequency
+layout loops must keep transient iteration state out of broad observable
+dependencies.
+
+**Why this choice.** The graph does not need a separate manual invalidation bus
+for every view.
+
+**Cost.** Dependency capture is implicit. A broad read can cause repeated work
+without an obvious call site, and a missed observer can leave a stale view.
+
+**Revisit when.** Profiling shows that implicit dependency capture dominates
+interaction latency, or server state and client view state need a stricter
+query/cache boundary.
+
+## ADR-008: Place undo at the mutation boundary
+
+**Pressure.** A visible action may change several documents and fields, but the
+reader expects one reversible action.
+
+**Decision.** Field mutations register inverse events in `UndoManager`.
+`StartBatch`/`RunInBatch` groups nested mutations, and only the outer completed
+batch enters undo history.
+
+**Contract.** Every persistent user or agent action opens one named batch,
+closes it in `finally`, and records all related mutations inside it. Undo events
+must be added only for state that can be replayed safely.
+
+**Why this choice.** Reversibility follows the durable edit even when several UI
+surfaces can trigger it.
+
+**Cost.** External effects are not automatically reversible. Asynchronous work
+can outlive a synchronous batch. Missing a batch creates fragmented undo;
+holding one open can absorb unrelated edits.
+
+**Revisit when.** Long-running actions need durable transactions, cancellation,
+or compensation across workspace and provider effects.
+
+## ADR-009: Represent relationships as first-class documents
+
+**Pressure.** A relationship needs endpoints, direction, description, anchor
+regions, visibility, provenance, and participation in search and collections.
+
+**Decision.** `DocumentType.LINK` is a document. Link managers create and query
+link documents; `LinkFollower` resolves an endpoint and navigates to the target
+context.
+
+**Contract.** Both endpoints must remain valid references, and access filtering
+must apply to the link and its targets. Deleting or exporting a target must
+define what happens to the relationship.
+
+**Why this choice.** Links can themselves be organized, annotated, generated,
+and traversed without a separate relationship database visible only to one
+feature.
+
+**Cost.** Relationship-heavy workspaces add many graph objects. Backlink and
+permission queries become graph operations rather than simple URL lookup.
+
+**Revisit when.** Link scale makes document-level storage prohibitively
+expensive, or access rules require a dedicated edge index while retaining the
+same user-visible identity semantics.
+
+## ADR-010: Constrain model actions through a tool registry
+
+**Pressure.** A model that can directly mutate arbitrary workspace state is
+difficult to validate, review, test, or undo.
+
+**Decision.** The agent selects named tools with parameter schemas. The
+canonical execution path validates the requested tool and arguments before
+calling its implementation; write tools use document operations and undo
+batches.
+
+**Contract.** A tool has bounded scope, explicit effects, useful observations,
+permission checks, failure semantics, and an undo or compensation policy.
+Retrieved content and tool output remain untrusted model input.
+
+**Why this choice.** The model chooses among inspectable capabilities rather
+than receiving an unrestricted application object.
+
+**Cost.** Safety depends on each tool contract. Dynamic tool generation expands
+the executable boundary and requires stronger review than static registration.
+
+**Revisit when.** Tool schemas cannot express resource and permission scope, or
+agent execution requires a transaction/provenance layer that the current undo
+boundary cannot provide.
+
+## Decision review checklist
+
+Before changing one of these mechanisms, answer:
+
+- Which pressure is no longer satisfied?
+- Is the failure in the decision or in a caller violating its contract?
+- Which stored documents and branch projects depend on the current semantics?
+- How will old records be read or migrated?
+- How will undo, permissions, links, and multi-context rendering behave?
+- What runtime evidence proves the replacement is better?
+- Which rollback restores the previous contract?
+
+Continue with the [runtime contract reference](/reference/runtime-contracts/)
+for symbol-level obligations and [testing and release discipline](/development/testing-release/)
+for the verification matrix.

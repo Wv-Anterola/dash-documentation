@@ -1,6 +1,6 @@
 ---
 import { moduleHref, reference, registryCounts } from '../data/sourceReference';
-import { coreExtensionApiIds } from '../data/symbolOverlays';
+import { runtimeContractApiIds } from '../data/symbolOverlays';
 
 const counts = registryCounts();
 const modules = reference.modules.map((module) => ({
@@ -18,7 +18,7 @@ const parserFailures = reference.parserFailures as Array<{ path: string; message
   <div><strong>{reference.methodology.symbolCount.toLocaleString()}</strong><span>current named symbols</span></div>
   <div><strong>{reference.methodology.exportedSymbolCount.toLocaleString()}</strong><span>exported declarations</span></div>
   <div><strong>{coverage}%</strong><span>exported API documentation</span></div>
-  <div><strong>{coreExtensionApiIds.length}/{coreExtensionApiIds.length}</strong><span>core extension contracts overlaid</span></div>
+  <div><strong>{runtimeContractApiIds.length}/{runtimeContractApiIds.length}</strong><span>reviewed runtime contracts overlaid</span></div>
 </div>
 
 <div class="source-method">

@@ -418,18 +418,24 @@ canvas into an image.
 ## Before you commit
 
 ```bash
-npm run coverage && npm run check && npm run build && npm run links
+npm run verify
 ```
 
+`verify` runs the unit, encoding, coverage, authored-document quality, Astro,
+production-build, built-link, and browser-level suites in their required order.
 `coverage` validates project/capability mappings and canonical targets. `check`
 runs Astro and TypeScript diagnostics, which is what catches a mistyped project
-title before the build does.
+title before the build does. `quality` requires unique page titles, purposeful
+metadata, local/reproducible media, non-empty informative alt text, unique
+section anchors, professional reader-facing prose, and runtime-contract overlays
+that still resolve to generated source symbols.
 
 The link checker walks the built output and reports broken internal links,
-broken anchors, missing images, images with no `alt` attribute, and headings
-that skip a level.
+broken anchors, duplicate element IDs, missing images, images with no `alt`
+attribute, and headings that skip a level. Any of those conditions fails the
+command.
 
-It has one blind spot worth knowing: it treats `alt=""` as present, so an image
-written `![](/assets/...)` passes. Emptiness is a legitimate choice for a
-labelled icon and a bug everywhere else, and no checker can tell which you
-meant. Search for `![](` before you commit.
+The general link checker treats `alt=""` as present. The quality checker closes
+that gap by permitting empty alt text only for the labelled interface icons in
+`/assets/icons/`; every other Markdown image must explain the information it
+conveys.

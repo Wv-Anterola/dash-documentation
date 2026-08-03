@@ -148,7 +148,10 @@ The two below are worth reading before you use any of the above, because they
 change what the AI surface can reach and where your documents go.
 
 <ProjectNote title="Agent tool registry and dynamic tool creation">
-  The reason there is an agent at all, and the thing to understand before letting it loose on documents you care about: several of its tools write to the workspace rather than answering questions about it.
+  Establishes the acting surface: several registered tools write to the
+  workspace rather than only returning an answer. Review target scope,
+  permissions, persisted changes, and undo behavior before using a write tool
+  on important documents.
 </ProjectNote>
 
 <ProjectNote title="Desktop build with local model execution">

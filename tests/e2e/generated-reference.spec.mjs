@@ -55,6 +55,33 @@ test('explains the causal engineering model instead of only listing components',
   await expect(page.locator('img[src*="dash-action-lifecycle"]')).toBeVisible();
 });
 
+test('connects decisions, runtime contracts, diagnostics, and symbol-level failure semantics', async ({ page }) => {
+  await page.goto('/architecture/decisions-tradeoffs/');
+  await expect(page.getByRole('heading', { name: 'Architecture decisions and tradeoffs' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ADR-006: Synchronize field operations instead of whole workspaces' })).toBeVisible();
+  await expect(page.locator('img[src*="dash-decision-record"]')).toBeVisible();
+
+  await page.goto('/reference/runtime-contracts/');
+  await expect(page.getByRole('heading', { name: 'Runtime contract reference' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Client synchronization contracts' })).toBeVisible();
+  await expect(page.getByText(/Guest creation, updates, and deletes are not emitted/)).toBeVisible();
+
+  await page.goto('/development/troubleshooting/');
+  await expect(page.getByRole('heading', { name: 'Troubleshooting Dash' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'An edit appears, then disappears after reload' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Evidence bundle for escalation' })).toBeVisible();
+
+  await page.goto(`/technical/api/modules/${slug('src/client/DocServer.ts')}/`);
+  const updateField = page.locator('details').filter({
+    has: page.locator('summary code').filter({ hasText: /^UpdateField$/ }),
+  });
+  await expect(updateField).toHaveCount(1);
+  await updateField.locator('summary').click();
+  await expect(updateField.getByText(/Failure semantic:/).first()).toBeVisible();
+  await expect(updateField.getByText(/Guest and read-only updates are suppressed/)).toBeVisible();
+  await expect(updateField.locator('.source-contract')).toBeVisible();
+});
+
 test('keeps basics and reference navigation usable on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/getting-started/basic-interactions/');

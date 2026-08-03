@@ -6,8 +6,8 @@
  * 1. Every size and every gap comes from the scales below. If a value is not on
  *    a scale, it does not go in. The previous version of this file carried eight
  *    font sizes under 1rem (0.72, 0.75, 0.82, 0.85, 0.9, 0.92, 0.94) and fifteen
- *    different spacing values. Nobody could tell 0.9rem from 0.94rem; what they
- *    could tell was that no one had decided anything.
+ *    different spacing values. Consolidating them makes hierarchy and spacing
+ *    intentional and keeps new components visually compatible.
  *
  * 2. A component earns a border or a background only when it needs to be
  *    distinguished from body text at a glance. Status labels and project
@@ -125,9 +125,8 @@
   text-transform: uppercase;
 }
 
-/* A section map: the term is the destination, the definition is what is there.
-   These were six bold-lead paragraphs, which is a description list wearing a
-   disguise. */
+/* A section map: the term is the destination and the definition describes its
+   contents. A description list preserves that relationship semantically. */
 .sl-markdown-content .section-map {
   margin: var(--dash-space-6) 0;
   max-width: var(--dash-measure);
@@ -1671,6 +1670,32 @@
   white-space: pre-wrap;
 }
 
+.source-contract {
+  border-block: 1px solid var(--dash-rule);
+  display: grid;
+  gap: 0;
+  margin-block: var(--dash-space-3);
+}
+
+.source-contract > div {
+  display: grid;
+  gap: var(--dash-space-3);
+  grid-template-columns: minmax(8rem, 0.3fr) 1fr;
+  padding-block: var(--dash-space-2);
+}
+
+.source-contract > div + div {
+  border-top: 1px solid var(--dash-rule-soft);
+}
+
+.source-contract :is(dt, dd) {
+  margin: 0;
+}
+
+.source-contract dd {
+  color: var(--sl-color-gray-2);
+}
+
 @media (max-width: 64rem) {
   .project-workflow__steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1724,5 +1749,10 @@
   .symbol-reference > details > summary {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .source-contract > div {
+    gap: var(--dash-space-1);
+    grid-template-columns: 1fr;
   }
 }
