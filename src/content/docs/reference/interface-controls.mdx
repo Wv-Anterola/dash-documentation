@@ -283,6 +283,10 @@ that otherwise looks arbitrary.
 | **Empty tile background** | Clicking the empty-tile message creates the same new canvas tab the plus control would. | The hit test looks for the element under the pointer rather than binding a handler. |
 | **Dragging a tab** | Batched as `tab move`. An aborted drag cancels the batch and rebuilds the layout from the saved configuration. | A cancelled move leaves no undo entry at all, by design. |
 | **Dragging a canvas document to the tab bar** | `StartOtherDrag` builds a GoldenLayout config and hands the gesture to a synthetic drag source. | This is why the drag changes character mid-gesture. Several documents at once dock as a row. |
+| **Hovering a tab mid-drag** | While a drag is in progress, hovering a tab brings it to the front so you can drop onto it. | Hovering *without* a drag brushes the document instead, which is what lights it up in the sidebar and tree view. |
+| **Right-clicking a tab** | There is no tab menu. Dash finds the deepest rendered content element and synthesises a click on it, offset 30 pixels down. | You get the document's own menu, positioned clear of the tab bar. |
+| **Right-clicking a tile header** | The blank strip beside the tabs adds a new canvas tab to that tile. | Unlike the plus control, this path is not wrapped in an undo batch, so the new tab cannot be undone in one step. |
+| **Tab minimap** | A second, non-interactive canvas view rendered at `_miniMapSize`, with each child flattened to a colored block by document type. | Only on the active tab of a freeform collection. Dragging the viewport writes the pan fields directly and is *not* undoable. |
 | **Grey side handle** | Opens or closes the adjacent sidebar or properties panel. | Panel state only; no document is moved. |
 | **Canvas –** | Zooms out. | Zoom is view state, not document state. |
 | **Undo / Redo** | Reverses or reapplies named action batches. | Yellow indicates an action is still in flight. |
@@ -291,6 +295,17 @@ that otherwise looks arbitrary.
 
 Each traced row above is in the searchable reference with its source line;
 filter it to **Tabs and tiles** to read the handler expressions.
+
+One thing in this region is listed precisely because you cannot use it. An eye
+icon is built for every tab and given a colour, but the element it is rendered
+into is never attached to the page: it is stored on a property that nothing in
+Dash-Web reads and that GoldenLayout does not know exists. It appears in the
+reference as **Tab visibility icon**, typed `Inert`, so that reading the source
+does not send anyone hunting for a control that has never been on screen.
+
+Where a tab or tile *puts* a document is a separate question with its own
+routing rules, covered in [Where a document
+opens](/reference/open-destinations/).
 
 The full drag-and-drop procedures are in [The Dash
 workspace](/getting-started/environment/). Keyboard equivalents are in

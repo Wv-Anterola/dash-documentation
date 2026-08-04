@@ -12,7 +12,7 @@
     "driftRule": "Generation fails when a reviewed source needle or required registry disappears"
   },
   "summary": {
-    "controls": 213,
+    "controls": 219,
     "regions": 8,
     "groups": 28,
     "nestedControls": 84,
@@ -40,6 +40,8 @@
     "DropdownList",
     "EditText",
     "Embedded status control",
+    "Hover target",
+    "Inert",
     "MenuButton",
     "MultiToggleButton",
     "NumberDropdownButton",
@@ -7006,6 +7008,64 @@
     {
       "parent": "",
       "icon": "",
+      "tooltip": "Drag to pan the canvas",
+      "controlType": "Drag target",
+      "interaction": "Press inside the minimap and drag.",
+      "visibility": "Appears inside the minimap once it has been opened.",
+      "predicate": "",
+      "handlerExpression": "setupMoveUpEvents → doc._freeform_panX / _freeform_panY = clamp(...)",
+      "beginner": "The pale rectangle in the minimap is the part of the canvas you can currently see. Drag it to move around.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 172,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L172"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Minimap viewport",
+      "technicalDetail": "The drag delta is scaled by the rendered content bounds and clamped to them, and writes the pan fields directly on the collection document. It is not undoable: no batch is started, so panning by minimap cannot be reversed with undo.",
+      "id": "tabs-and-tiles-tab-header-minimap-viewport",
+      "handler": {
+        "names": [
+          "clamp"
+        ],
+        "resolved": [],
+        "stateOwner": "The drag delta is scaled by the rendered content bounds and clamped to them, and writes the pan fields directly on the collection document. It is not undoable: no batch is started, so panning by minimap cannot be reversed with undo."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Show a minimap of this canvas",
+      "controlType": "ToggleButton",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears only on the active tab of a freeform collection rendered with its normal layout. It is absent on key/value tabs, on other collection types, and on inactive tabs.",
+      "predicate": "tabView()?._isActive && !keyValue && doc.layout === CollectionView.LayoutString(...) && doc._type_collection === CollectionViewType.Freeform",
+      "handlerExpression": "Popup(showUntilToggle) → TabMinimapView.popup → CollectionFreeFormView at _miniMapSize",
+      "beginner": "Opens a small overview of the whole canvas in the corner of the tab, so you can see where you are in something larger than the screen.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 186,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L186"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab minimap",
+      "technicalDetail": "The minimap is a second, non-interactive CollectionFreeFormView of the same document, rendered at _miniMapSize (150 by default) with a style provider that replaces each child with a flat colored block keyed to its document type.",
+      "id": "tabs-and-tiles-tab-header-tab-minimap",
+      "handler": {
+        "names": [
+          "Popup"
+        ],
+        "resolved": [],
+        "stateOwner": "The minimap is a second, non-interactive CollectionFreeFormView of the same document, rendered at _miniMapSize (150 by default) with a style provider that replaces each child with a flat colored block keyed to its document type."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
       "tooltip": "Rename the tab",
       "controlType": "EditText",
       "interaction": "Click the title, type, then commit the edit. Drag the tab to move it to another tile.",
@@ -7091,6 +7151,94 @@
     {
       "parent": "",
       "icon": "",
+      "tooltip": "None: the element is never inserted into the page",
+      "controlType": "Inert",
+      "interaction": "None. It cannot be reached.",
+      "visibility": "Never visible: the element is constructed but never attached to the tab, so there is no state in which it appears.",
+      "predicate": "",
+      "handlerExpression": "none",
+      "beginner": "There is no eye control on a tab. An eye icon is built in the code but never placed on screen, so nothing to look for here.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 418,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L418"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab visibility icon",
+      "technicalDetail": "The icon is rendered into a detached div that is only ever stored on tab.reactComponents and recolored alongside the visible controls. Nothing in Dash-Web reads tab.reactComponents, and GoldenLayout does not know the property exists, so unlike its sibling iconWrap the element is never prepended to the tab. It is documented here so that reading the source does not suggest a control that users can find.",
+      "id": "tabs-and-tiles-tab-header-tab-visibility-icon",
+      "handler": {
+        "names": [],
+        "resolved": [],
+        "stateOwner": "The icon is rendered into a detached div that is only ever stored on tab.reactComponents and recolored alongside the visible controls. Nothing in Dash-Web reads tab.reactComponents, and GoldenLayout does not know the property exists, so unlike its sibling iconWrap the element is never prepended to the tab. It is documented here so that reading the source does not suggest a control that users can find."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Hover a tab while dragging to bring it forward",
+      "controlType": "Hover target",
+      "interaction": "Hold a drag over a tab without dropping.",
+      "visibility": "Every tab responds to hover; the tab switch happens only during a drag.",
+      "predicate": "SnappingManager.IsDragging && tab.contentItem !== tab.header.parent.getActiveContentItem()",
+      "handlerExpression": "setActiveContentItem(tab.contentItem) → tab.setActive(true) → Doc.BrushDoc(document)",
+      "beginner": "While you are dragging something, hovering over a tab brings that tab to the front so you can drop onto it. Hovering without a drag just highlights the document elsewhere in the interface.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 455,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L455"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab spring-loading",
+      "technicalDetail": "The brush call is what makes the same document light up in the sidebar, the tree view, and on other canvases; the matching mouseleave unbrushes it. The tab switch is applied outside an undo batch.",
+      "id": "tabs-and-tiles-tab-header-tab-spring-loading",
+      "handler": {
+        "names": [
+          "setActiveContentItem",
+          "setActive",
+          "BrushDoc"
+        ],
+        "resolved": [],
+        "stateOwner": "The brush call is what makes the same document light up in the sidebar, the tree view, and on other canvases; the matching mouseleave unbrushes it. The tab switch is applied outside an undo batch."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Open the document’s menu from its tab",
+      "controlType": "Click target",
+      "interaction": "Right-click the tab.",
+      "visibility": "Available on every tab whose content has rendered.",
+      "predicate": "",
+      "handlerExpression": "getChild() → simulateMouseClick(child, clientX, clientY + 30)",
+      "beginner": "Right-clicking a tab gives you the document’s own menu, the same one you would get by right-clicking the document itself.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 466,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L466"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab right-click",
+      "technicalDetail": "There is no separate tab menu. Dash walks down to the deepest rendered content element and synthesises a click on it, offset 30 pixels down, so the document’s own context menu opens clear of the tab bar. The original event is stopped and its default prevented, which is what suppresses the browser menu.",
+      "id": "tabs-and-tiles-tab-header-tab-right-click",
+      "handler": {
+        "names": [
+          "getChild",
+          "simulateMouseClick"
+        ],
+        "resolved": [],
+        "stateOwner": "There is no separate tab menu. Dash walks down to the deepest rendered content element and synthesises a click on it, offset 30 pixels down, so the document’s own context menu opens clear of the tab bar. The original event is stopped and its default prevented, which is what suppresses the browser menu."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
       "tooltip": "Close this tab",
       "controlType": "Button",
       "interaction": "Click or tap once.",
@@ -7116,6 +7264,36 @@
         ],
         "resolved": [],
         "stateOwner": "Closing routes through tabDestroyed. Presentation documents and key/value tabs are excluded from the Recently Closed write, and a document that is still embedded elsewhere is not added to Recently Closed at all."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Add a new tab from empty header space",
+      "controlType": "Click target",
+      "interaction": "Right-click the empty part of a tile header, beside the tabs.",
+      "visibility": "Only the header background responds. Right-clicking a tab in the same header opens that document’s menu instead.",
+      "predicate": "e.target === stack.header.element[0] && e.button === 2",
+      "handlerExpression": "Docs.Create.FreeformDocument([], { title: 'Untitled Tab N' }) → inheritParentAcls → AddSplit(doc, OpenWhereMod.none, stack)",
+      "beginner": "Right-clicking the blank strip next to a tile’s tabs adds a new empty canvas tab to that tile.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 585,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L585"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tile header right-click",
+      "technicalDetail": "This path writes the new document straight into the header bar list and inherits the dashboard’s access control, but unlike the plus control it is not wrapped in an undo batch, so the new tab cannot be undone in one step.",
+      "id": "tabs-and-tiles-tile-chrome-tile-header-right-click",
+      "handler": {
+        "names": [
+          "FreeformDocument",
+          "AddSplit"
+        ],
+        "resolved": [],
+        "stateOwner": "This path writes the new document straight into the header bar list and inherits the dashboard’s access control, but unlike the plus control it is not wrapped in an undo batch, so the new tab cannot be undone in one step."
       }
     },
     {
