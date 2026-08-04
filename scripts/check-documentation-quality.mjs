@@ -115,6 +115,7 @@ const scriptingReferenceSource = await readFile(path.join(root, 'src', 'data', '
 const exportedReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'exported-symbols.json'), 'utf8');
 const interfaceControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'interface-controls.json'), 'utf8');
 const contextMenuReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'context-menus.json'), 'utf8');
+const keyboardReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'keyboard-shortcuts.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
@@ -123,6 +124,7 @@ const scriptingReference = JSON.parse(scriptingReferenceSource);
 const exportedReference = JSON.parse(exportedReferenceSource);
 const interfaceControlReference = JSON.parse(interfaceControlReferenceSource);
 const contextMenuReference = JSON.parse(contextMenuReferenceSource);
+const keyboardReference = JSON.parse(keyboardReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -301,6 +303,39 @@ if (!contextMenusPage.includes('<ContextMenuReference />') || !contextMenusPage.
 }
 if (!astroConfigSource.includes("slug: 'reference/context-menus'")) {
   errors.push('Context menu atlas is no longer discoverable in the primary navigation');
+}
+
+if (keyboardReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Keyboard shortcut reference and generated source reference use different baseline revisions');
+}
+if (keyboardReference.summary.shortcuts !== keyboardReference.shortcuts.length || keyboardReference.shortcuts.length < 50) {
+  errors.push('Keyboard shortcut inventory is stale or fell below the reviewed 50-shortcut floor');
+}
+if (new Set(keyboardReference.shortcuts.map((row) => row.id)).size !== keyboardReference.shortcuts.length) {
+  errors.push('Keyboard shortcut inventory contains duplicate identities');
+}
+// The page's central claim is that macOS routing is not a plain Cmd-for-Ctrl swap.
+if (keyboardReference.summary.platformDivergentHandlers < 3) {
+  errors.push('Keyboard shortcut page claims macOS routing diverges, but the router no longer shows a divergence');
+}
+const altRoute = keyboardReference.platformRouting.routes.find((route) => route.handler === 'alt');
+if (!altRoute || altRoute.macModifiers.join() !== 'Ctrl' || altRoute.otherModifiers.join() !== 'Alt') {
+  errors.push('Reviewed macOS Control-runs-the-Alt-handler routing evidence changed');
+}
+if (!keyboardReference.platformRouting.unroutedMac.includes('0010')) {
+  errors.push('Keyboard shortcut page states the macOS Option key is unrouted, but the router now handles it');
+}
+for (const row of keyboardReference.shortcuts) {
+  if (!row.chordMac || !row.chordOther || !row.plain || !row.browserDefault || !row.scopeName) {
+    errors.push(`${row.id}: keyboard shortcut is missing a chord, explanation, scope, or browser-default statement`);
+  }
+  if (!sourceModules.has(row.source?.file) || !row.source?.url?.includes(sourceReference.repository.baselineTip) || !row.source?.url?.endsWith(`#L${row.source?.line}`)) {
+    errors.push(`${row.id}: keyboard shortcut source is absent, mutable, or not line-addressed`);
+  }
+}
+const keyboardPage = await readFile(path.join(docsRoot, 'reference', 'keyboard-shortcuts.mdx'), 'utf8');
+if (!keyboardPage.includes('<KeyboardShortcutReference />')) {
+  errors.push('Keyboard shortcut page lost its searchable shortcut index');
 }
 
 if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
@@ -593,7 +628,8 @@ if (errors.length) {
       `${exportedSymbols.length.toLocaleString()} exported declarations have collision-safe module targets; ` +
       `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, ` +
       `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, ` +
-      `${interfaceControlReference.controls.length} interface controls, and ` +
-      `${contextMenuReference.items.length} context-menu entries pass inventory invariants.`
+      `${interfaceControlReference.controls.length} interface controls, ` +
+      `${contextMenuReference.items.length} context-menu entries, and ` +
+      `${keyboardReference.shortcuts.length} keyboard shortcuts pass inventory invariants.`
   );
 }

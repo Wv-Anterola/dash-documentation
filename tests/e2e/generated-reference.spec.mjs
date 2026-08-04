@@ -74,12 +74,12 @@ test('traces every interface control from plain behavior to implementation effec
   expect(dataResponse.ok()).toBeTruthy();
   expect(dataResponse.headers()['content-type']).toContain('application/json');
   const data = await dataResponse.json();
-  expect(data.controls).toHaveLength(203);
+  expect(data.controls).toHaveLength(213);
 
   await page.goto('/reference/interface-controls/');
   await expect(page.getByRole('heading', { name: 'Interface control and node atlas' })).toBeVisible();
   await expect(page.getByRole('img', { name: /source-backed trace of the Image.*Rotate control/ })).toBeVisible();
-  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('203');
+  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('213');
   await expect(page.locator('[data-control-row]:visible')).toHaveCount(40);
 
   const query = page.getByLabel('Find a button, icon, tooltip, handler, state field, or effect');
@@ -372,6 +372,116 @@ test('exposes every scripting global with source, role, and responsive filters',
     const root = document.querySelector('[data-script-global-reference]');
     const filters = document.querySelector('.script-global-filters');
     if (!root || !filters) throw new Error('Scripting global reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+});
+
+test('assembles every right-click menu entry from its contributing component', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/context-menus.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  expect(dataResponse.headers()['content-type']).toContain('application/json');
+  const data = await dataResponse.json();
+  expect(data.items).toHaveLength(223);
+
+  await page.goto('/reference/context-menus/');
+  await expect(page.getByRole('heading', { name: 'Right-click menu atlas' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /How Dash assembles a right-click menu/ })).toBeVisible();
+  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('223');
+  await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(40);
+
+  const query = page.getByLabel('Find an entry, guard, handler, or component');
+  await query.fill('Send to Back');
+  await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(1);
+  const entry = page.locator('#menu-list .control-contract-row');
+  await entry.locator('summary').first().click();
+  await expect(entry.getByText('Any document → Z Order... → Send to Back')).toBeVisible();
+  await expect(entry.locator('dd', { hasText: 'Z Order... → Send to Back' })).toBeVisible();
+  await entry.getByText('Technical trace', { exact: true }).click();
+  await expect(entry.getByText(/bringToFront/).first()).toBeVisible();
+  await expect(entry.getByRole('link', { name: /Open the registration in DocumentView\.tsx:\d+/ })).toHaveAttribute('href', /\/blob\/.*#L\d+$/);
+  await expect(page).toHaveURL(/entry=Send\+to\+Back/);
+
+  // A state-dependent label must show every string the same entry can read as.
+  await query.fill('Hide Clusters');
+  const clusters = page.locator('#menu-list .control-contract-row');
+  await clusters.locator('summary').first().click();
+  await expect(clusters.getByText('The same entry also reads:')).toBeVisible();
+  await expect(clusters.getByText('Show Clusters')).toBeVisible();
+  await expect(clusters.getByText('Contributed when Developer mode is on.')).toBeVisible();
+
+  await query.fill('');
+  await page.getByLabel('What you right-clicked').selectOption('dashboard');
+  await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(2);
+  await page.getByLabel('How its label is decided').selectOption('generated');
+  await expect(page.locator('[data-menu-count]')).toContainText('0 of 0 matching entries');
+
+  await page.getByRole('button', { name: 'Clear filters' }).click();
+  await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(40);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-menu-reference]');
+    const filters = root?.querySelector('.control-contract-filters');
+    if (!root || !filters) throw new Error('Context menu reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+});
+
+test('shows each keyboard chord for both platforms and says what the browser keeps', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/keyboard-shortcuts.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  const data = await dataResponse.json();
+  expect(data.shortcuts).toHaveLength(58);
+
+  await page.goto('/reference/keyboard-shortcuts/');
+  await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('58');
+  await expect(page.locator('#shortcut-list .control-contract-row')).toHaveCount(58);
+
+  const query = page.getByLabel('Find a key, effect, or handler');
+  await query.fill('Opens the Trails panel');
+  await expect(page.locator('#shortcut-list .control-contract-row')).toHaveCount(1);
+  const trails = page.locator('#shortcut-list .control-contract-row');
+  await trails.locator('summary').first().click();
+  await expect(trails.locator('dd', { hasText: 'Ctrl + S' })).toBeVisible();
+  await expect(trails.locator('dd', { hasText: 'Cmd + S' })).toBeVisible();
+
+  // The same letter is two different commands depending on the modifier, and
+  // the macOS chords for those two commands are not the ones a reader expects.
+  await query.fill('floats the first selected document');
+  const float = page.locator('#shortcut-list .control-contract-row');
+  await expect(float).toHaveCount(1);
+  await float.locator('summary').first().click();
+  await expect(float.locator('dd', { hasText: 'Ctrl + F' })).toBeVisible();
+
+  await query.fill('');
+  await page.getByLabel('Show the chord for').selectOption('mac');
+  await expect(page.locator('#shortcut-list .control-contract-row').filter({ hasText: 'Differs by platform' }).first()).toBeVisible();
+
+  await page.getByLabel('Browser default').selectOption('kept');
+  const kept = await page.locator('#shortcut-list .control-contract-row').count();
+  expect(kept).toBe(58 - data.summary.blocksBrowserDefault);
+  await expect(page.locator('#shortcut-list .control-contract-row').first()).toContainText('Browser default kept');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-shortcut-reference]');
+    const filters = root?.querySelector('.control-contract-filters');
+    if (!root || !filters) throw new Error('Keyboard shortcut reference layout is missing');
     return {
       pageWidth: document.documentElement.scrollWidth,
       viewportWidth: document.documentElement.clientWidth,

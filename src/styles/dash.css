@@ -2420,6 +2420,17 @@
   overflow-wrap: anywhere;
 }
 
+.shortcut-chord {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.shortcut-chord kbd {
+  white-space: nowrap;
+}
+
 .sl-markdown-content .menu-variants {
   margin: 0;
   overflow-wrap: anywhere;

@@ -498,7 +498,6 @@ function collectSubitemVariables(sourceFile) {
 function parentFor(node, sourceFile, { owners, lookups }) {
   let current = node;
   while (current.parent) {
-    const child = current;
     current = current.parent;
     // Inline nesting: { description: 'Group', subitems: [ {…} ] }
     if (ts.isPropertyAssignment(current) && nameOf(current, sourceFile) === 'subitems') {

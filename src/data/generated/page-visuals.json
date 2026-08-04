@@ -195,10 +195,6 @@
     "src": "/assets/gifs/gettingstarted/dash-properties-pane.gif",
     "alt": "Dash demonstration of Properties Pane."
   },
-  "/reference/context-menus": {
-    "src": "/assets/images/diagrams/dash-context-menu-composition.svg",
-    "alt": "How Dash assembles a right-click menu: the hit path up the React tree, each component contributing entries, guards removing them, and shared group names merging the result."
-  },
   "/reference/glossary": {
     "src": "/assets/gifs/gettingstarted/dash-edit-link.gif",
     "alt": "Dash demonstration of Edit Link."

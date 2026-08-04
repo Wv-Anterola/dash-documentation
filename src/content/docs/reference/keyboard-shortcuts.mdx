@@ -1,86 +1,138 @@
 ---
 title: Keyboard shortcuts
-description: Source-verified Dash keyboard shortcuts, including search, import, trails, undo, ink, selection, movement, grouping, and canvas-only commands.
+description: Every keyboard shortcut Dash routes itself, traced from its modifier router to the case that handles it, including the macOS routing differences and the chords Dash takes away from the browser.
 sidebar:
   order: 1
 ---
 
+import KeyboardShortcutReference from '../../../components/KeyboardShortcutReference.astro';
 import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
-Dash routes shortcuts by modifier state in
-`src/client/views/GlobalKeyHandler.ts`. On macOS, use <kbd>Command</kbd> where
-the tables say <kbd>Ctrl/Cmd</kbd>. Shortcuts do not override ordinary typing
-inside text inputs unless noted.
+<p class="lede">
+  Dash routes keystrokes in two places that never consult each other: a global
+  modifier router, and the freeform canvas. Which of them sees your keystroke
+  depends on what has focus, and on which operating system you are using.
+</p>
 
-## Global shortcuts
+## The router, and why macOS is genuinely different
 
-| Shortcut | Result |
-| :--- | :--- |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>F</kbd> | Search inside the selected document when that document implements search; otherwise open the global search panel. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>I</kbd> | Open the import panel. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>S</kbd> | Open the trails panel. This intentionally replaces the browser's Save command in the workspace. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>T</kbd> | Run the configured Tools button action. The exact surface depends on the current user document. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>Z</kbd> | Undo the most recent Dash batch outside the home screen. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>Y</kbd> | Redo outside the home screen. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> | Redo. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>P</kbd> | Toggle the ink tool. |
-| <kbd>Ctrl/Cmd</kbd> + <kbd>E</kbd> | Toggle the eraser. |
-| <kbd>Esc</kbd> | Cancel the active link, ink, drag, region selection, or authentication flow; close open menus and managers; then clear selection or lightbox state where applicable. |
+`GlobalKeyHandler.ts` builds a four-bit index from the modifiers you are
+holding, in the order **Shift, Ctrl, Alt, Cmd**, and looks that index up in a
+routing table. Only five combinations are registered. Anything else is dropped
+before any key is examined.
 
-The browser keeps <kbd>Ctrl/Cmd</kbd> + <kbd>R</kbd> for reload. Copy and paste
-also retain their normal behavior when text is selected or focus is in an
-input.
+The macOS table is not the same table with Cmd substituted for Ctrl. It changes
+which physical key reaches which handler:
 
-## Selection and movement
+| Handler | Windows and Linux | macOS | Consequence |
+| :--- | :--- | :--- | :--- |
+| `unmodified` | no modifier | no modifier | Same. |
+| `ctrl` | <kbd>Ctrl</kbd> | <kbd>Cmd</kbd> | The expected substitution. |
+| `alt` | <kbd>Alt</kbd> | <kbd>Ctrl</kbd> | **On macOS the Control key runs the Alt handler.** |
+| `ctrl_shift` | <kbd>Shift</kbd> + <kbd>Ctrl</kbd> | <kbd>Shift</kbd> + <kbd>Cmd</kbd> | The expected substitution. |
+| `shift` | <kbd>Shift</kbd> | <kbd>Shift</kbd> | Same. |
 
-| Shortcut | Result |
-| :--- | :--- |
-| Arrow key | Move the selected freeform document or documents by 1 canvas unit. |
-| <kbd>Shift</kbd> + Arrow key | Move the selection by 10 canvas units. |
-| <kbd>Delete</kbd> or <kbd>Backspace</kbd> | Invoke the selected document's close/remove action when focus is not in an input and no text is selected. |
-| <kbd>Shift</kbd> + <kbd>G</kbd> | Assign the selected documents to one group, then clear the selection. |
-| <kbd>Shift</kbd> + <kbd>U</kbd> | Remove grouping from the selected documents, then clear the selection. |
-| <kbd>Alt/Option</kbd> + <kbd>F</kbd> | Float the selected item when its collection view supports floating. |
+Two things follow that are easy to trip over:
 
-Dash copy and cut place document identifiers and the selection's canvas
-position on the clipboard. Pasting into a compatible collection recreates
-contexts for the same documents; copying requests clones. This is different
-from copying selected text inside a document.
+- **On macOS, the Option key is not routed at all.** No table entry maps to
+  Alt-alone on that platform, so Option chords never reach a Dash handler.
+- **On macOS, <kbd>Ctrl</kbd> + <kbd>F</kbd> floats a document** through the
+  `alt` handler, while <kbd>Cmd</kbd> + <kbd>F</kbd> searches through the `ctrl`
+  handler. The same letter, two different commands, decided by which modifier
+  you hold.
 
-## Canvas commands
+Eleven of the sixteen possible modifier combinations are unrouted on both
+platforms, including <kbd>Ctrl</kbd> + <kbd>Alt</kbd> and every three-modifier
+chord. Those currently do nothing.
 
-The freeform canvas listens for several commands after it has focus:
+## Search every shortcut
+
+Chords are shown for one platform at a time, and the selector defaults to
+yours. Filter to **Dash blocks it** to see which chords Dash takes away from
+your browser.
+
+<KeyboardShortcutReference />
+
+## Three scopes, in the order they get the keystroke
+
+| Scope | Who owns it | When it wins |
+| :--- | :--- | :--- |
+| **A focused freeform canvas** | `MarqueeView.onKeyDown` | While a freeform canvas has focus and no document is capturing input. Its final branch catches every ordinary character. |
+| **An active marquee selection** | `MarqueeView.marqueeCommand` | While a marquee is being drawn or is still active. It sets a flag so one keystroke cannot run two commands. |
+| **Anywhere in Dash** | `KeyManager` | Whenever nothing above has stopped the event. |
+
+Because the canvas handler's last branch matches any printable character, most
+unmodified letters never reach the global handler while a canvas has focus.
+That is deliberate: it is what makes typing on a canvas start a note.
+
+## The marquee commands
+
+Marquee commands are single letters with no modifier, which is why they are easy
+to trigger by accident and hard to discover. They run only while a marquee is
+active.
 
 | Key | Result |
 | :--- | :--- |
-| <kbd>:</kbd> | Open the document-creation menu at the pointer. |
-| <kbd>?</kbd> | Open a prompt that creates a Wikipedia web document for the entered topic. |
-| Start typing | Create a rich-text note at the pointer and put the typed character into it. |
-| <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Read plain text from the clipboard and turn non-empty lines into vertically arranged text notes, preserving indentation approximately. |
-| <kbd>Ctrl</kbd> + <kbd>P</kbd> while the canvas command handler owns focus | Parse tab-separated clipboard text into a CSV-backed table document. |
-| <kbd>Ctrl</kbd> + <kbd>H</kbd> while the canvas command handler owns focus | Create an HTML document from clipboard text. |
+| <kbd>C</kbd> or <kbd>T</kbd> | Collect the enclosed documents into a new collection. |
+| <kbd>G</kbd> | Collect them into a new collection and keep them grouped. |
+| <kbd>Shift</kbd> + <kbd>G</kbd> | Generate a scrapbook from them. |
+| <kbd>S</kbd> or <kbd>Shift</kbd> + <kbd>S</kbd> | Summarise them. |
+| <kbd>P</kbd> | Pile them into a stack. |
+| <kbd>W</kbd> | Generate wiki-style links between them. |
+| <kbd>D</kbd>, <kbd>Delete</kbd>, or <kbd>Backspace</kbd> | Delete them. |
+| <kbd>H</kbd> | Delete them, hiding rather than removing. |
+| <kbd>R</kbd> or <kbd>Space</kbd> | Switch between a rectangular marquee and a freehand lasso. |
 
-The two <kbd>Ctrl</kbd> + <kbd>P</kbd> behaviors are context-dependent: the
-global handler toggles ink, while the focused freeform command handler can
-consume the key first for table paste. If the result is not the one you
-expected, use the import panel for tabular data.
+The letter set is gated by a literal string in the source, so a command whose
+letter is missing from that string is unreachable even if its case exists.
 
-## Search and media
+## Clipboard behavior is document-shaped
 
-Once global search has found a document, selecting the result calls that
-document view's own `search()` method when available. PDF search can therefore
-highlight the query inside the file and <kbd>Shift</kbd>-clicking a result moves
-backward through matches.
+Dash copy and cut do not put content on the clipboard. They put a marker plus
+document identifiers and the selection's canvas centre:
 
-Media editors and rich-text fields also define local shortcuts. Those are
-handled inside the editor and can change as their upstream libraries change;
-this page lists only shortcuts routed by Dash itself.
+- <kbd>Ctrl/Cmd</kbd> + <kbd>C</kbd> writes `__DashCloneId(x,y):id:id…`, so
+  pasting requests clones.
+- <kbd>Ctrl/Cmd</kbd> + <kbd>X</kbd> writes `__DashDocId(x,y):id:id…` and then
+  closes the documents, so pasting recreates contexts for the same documents.
 
-## Source note
+A separate `paste` listener decodes both. This is why pasting Dash documents
+into another application yields an identifier string, and why copying selected
+*text* inside a document behaves normally instead.
 
-The tables above describe the active handlers, not commented-out commands. For
-example, the source still contains a disabled <kbd>Ctrl</kbd> + <kbd>S</kbd>
-canvas branch for creating a slide, but it does not execute and is not listed.
+## Two chords that surprise people
 
+- <kbd>Ctrl/Cmd</kbd> + <kbd>S</kbd> opens the Trails panel rather than saving.
+  Dash saves continuously, so the browser's Save is redundant inside the
+  workspace.
+- <kbd>Ctrl/Cmd</kbd> + <kbd>A</kbd> reaches the browser only when focus is
+  inside an element. With focus on the page body, Dash swallows it and nothing
+  is selected. On a freeform canvas the canvas handler claims it first and
+  selects every active document, which is usually what you wanted.
+
+<kbd>Ctrl/Cmd</kbd> + <kbd>R</kbd> is deliberately left to the browser, so
+reload always works.
+
+## Two keys are claimed but do nothing
+
+<kbd>Space</kbd> and <kbd>Enter</kbd> have cases in the unmodified handler whose
+bodies are commented out. The reference above lists them and marks them
+**Claimed but inert** rather than omitting them, because a reader who finds the
+case in the source deserves to know it is not a documentation gap.
+
+The same applies to a disabled <kbd>Ctrl</kbd> + <kbd>S</kbd> canvas branch for
+creating a slide: it is commented out, so it is not in the reference.
+
+## Shortcuts this page does not cover
+
+Media editors and rich-text fields define their own shortcuts inside the editor,
+and those change with their upstream libraries. Text-editing input rules such as
+typing `:` inside formatted text are documented with [formatted
+text](/guides/documents/text/). This page covers only the keystrokes Dash routes
+itself.
+
+Once global search has found a document, selecting a result calls that document
+view's own `search()` method when it has one, so PDF search can highlight inside
+the file and <kbd>Shift</kbd>-clicking a result moves backward through matches.

@@ -1,0 +1,296 @@
+---
+import reference from '../data/generated/keyboard-shortcuts.json';
+import { siteHref } from '../data/sourceReference';
+
+const { summary, scopes } = reference;
+const dataUrl = siteHref('/assets/data/keyboard-shortcuts.json');
+---
+
+<div class="control-contract-reference shortcut-reference" data-shortcut-reference data-source={dataUrl}>
+  <div class="audit-summary control-contract-summary" aria-label="Keyboard shortcut totals">
+    <div><strong>{summary.shortcuts}</strong><span>traced shortcuts</span></div>
+    <div><strong>{summary.scopes}</strong><span>scopes</span></div>
+    <div><strong>{summary.routedModifierCombinations}</strong><span>routed modifier combinations</span></div>
+    <div><strong>{summary.platformDivergentHandlers}</strong><span>wired differently on macOS</span></div>
+    <div><strong>{summary.blocksBrowserDefault}</strong><span>block a browser default</span></div>
+    <div><strong>{summary.reservedButEmpty}</strong><span>claimed but inert</span></div>
+  </div>
+
+  <div class="source-method">
+    <strong>How to read an entry.</strong> The two chords are the Windows and
+    Linux chord and the macOS chord, which are not always the same key with a
+    different name. “Browser default” says whether Dash blocks what your browser
+    would otherwise do. The technical trace carries the case body, the guards
+    inside it, and the functions it calls.
+  </div>
+
+  <div class="control-contract-filters" aria-label="Keyboard shortcut filters">
+    <div class="control-contract-query">
+      <label for="shortcut-query">Find a key, effect, or handler</label>
+      <input
+        id="shortcut-query"
+        type="search"
+        placeholder="Try undo, arrow, clipboard, marquee, or UndoManager"
+        autocomplete="off"
+        disabled
+      />
+    </div>
+    <div>
+      <label for="shortcut-scope">Where it works</label>
+      <select id="shortcut-scope" disabled>
+        <option value="">Every scope</option>
+        {scopes.map((scope) => <option value={scope.id}>{scope.name}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="shortcut-platform">Show the chord for</label>
+      <select id="shortcut-platform" disabled>
+        <option value="other">Windows and Linux</option>
+        <option value="mac">macOS</option>
+      </select>
+    </div>
+    <div>
+      <label for="shortcut-default">Browser default</label>
+      <select id="shortcut-default" disabled>
+        <option value="">Either</option>
+        <option value="blocked">Dash blocks it</option>
+        <option value="kept">The browser keeps it</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-contract-results-header">
+    <p class="filter-count" data-shortcut-count role="status" aria-live="polite">
+      Loading {summary.shortcuts} keyboard shortcuts…
+    </p>
+    <button type="button" data-shortcut-clear disabled>Clear filters</button>
+  </div>
+
+  <div class="control-contract-list" id="shortcut-list" aria-busy="true">
+    <p class="control-contract-loading">Loading the source-traced shortcuts…</p>
+  </div>
+
+  <noscript>
+    <p class="source-warning">
+      Interactive filtering requires JavaScript. The routing and scope tables on
+      this page remain available without it.
+    </p>
+  </noscript>
+</div>
+
+<script>
+  interface ShortcutRow {
+    id: string;
+    scope: string;
+    scopeName: string;
+    handler: string;
+    chordMac: string;
+    chordOther: string;
+    key: string;
+    keyLabel: string;
+    effect: string;
+    calls: string[];
+    guards: string[];
+    eventControl: { preventDefault: boolean; stopPropagation: boolean; conditional?: boolean };
+    plain: string;
+    browserDefault: string;
+    empty: boolean;
+    source: { file: string; line: number; url: string };
+    search?: string;
+  }
+
+  interface ShortcutPayload {
+    shortcuts: ShortcutRow[];
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-shortcut-reference]');
+  if (root) {
+    const query = root.querySelector<HTMLInputElement>('#shortcut-query');
+    const scope = root.querySelector<HTMLSelectElement>('#shortcut-scope');
+    const platform = root.querySelector<HTMLSelectElement>('#shortcut-platform');
+    const browserDefault = root.querySelector<HTMLSelectElement>('#shortcut-default');
+    const count = root.querySelector<HTMLElement>('[data-shortcut-count]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-shortcut-clear]');
+    const list = root.querySelector<HTMLElement>('#shortcut-list');
+    const inputs = [query, scope, platform, browserDefault, clear].filter(Boolean) as Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>;
+    let rows: ShortcutRow[] = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (query) query.value = params.get('key') ?? '';
+    if (scope) scope.value = params.get('scope') ?? '';
+    if (platform) platform.value = params.get('platform') ?? (/mac|iphone|ipad/i.test(navigator.userAgent) ? 'mac' : 'other');
+    if (browserDefault) browserDefault.value = params.get('default') ?? '';
+
+    const matches = (row: ShortcutRow) => {
+      const needle = query?.value.trim().toLowerCase() ?? '';
+      const wanted = browserDefault?.value ?? '';
+      return (!needle || row.search?.includes(needle)) &&
+        (!scope?.value || row.scope === scope.value) &&
+        (!wanted || (wanted === 'blocked' ? row.eventControl.preventDefault : !row.eventControl.preventDefault));
+    };
+
+    const syncUrl = () => {
+      const next = new URLSearchParams();
+      if (query?.value.trim()) next.set('key', query.value.trim());
+      if (scope?.value) next.set('scope', scope.value);
+      if (platform?.value) next.set('platform', platform.value);
+      if (browserDefault?.value) next.set('default', browserDefault.value);
+      const suffix = next.toString();
+      window.history.replaceState({}, '', suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname);
+    };
+
+    const chordOf = (row: ShortcutRow) => (platform?.value === 'mac' ? row.chordMac : row.chordOther);
+
+    const addFact = (target: HTMLDListElement, term: string, value: string) => {
+      const wrapper = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = term;
+      dd.textContent = value;
+      wrapper.append(dt, dd);
+      target.append(wrapper);
+    };
+
+    const addCodeList = (container: HTMLElement, label: string, values: string[]) => {
+      if (!values.length) return;
+      const paragraph = document.createElement('p');
+      paragraph.className = 'control-contract-code-list';
+      const heading = document.createElement('strong');
+      heading.textContent = `${label}:`;
+      paragraph.append(heading, document.createTextNode(' '));
+      values.slice(0, 8).forEach((value, index) => {
+        if (index) paragraph.append(document.createTextNode(', '));
+        const code = document.createElement('code');
+        code.textContent = value;
+        paragraph.append(code);
+      });
+      container.append(paragraph);
+    };
+
+    const createRow = (row: ShortcutRow) => {
+      const details = document.createElement('details');
+      details.className = 'control-contract-row';
+      details.id = `shortcut-${row.id}`;
+
+      const summaryEl = document.createElement('summary');
+      const identity = document.createElement('span');
+      identity.className = 'control-contract-identity';
+      const chord = document.createElement('strong');
+      chord.className = 'shortcut-chord';
+      for (const [index, part] of chordOf(row).split(' + ').entries()) {
+        if (index) chord.append(document.createTextNode(' + '));
+        const key = document.createElement('kbd');
+        key.textContent = part;
+        chord.append(key);
+      }
+      const location = document.createElement('small');
+      const otherChord = platform?.value === 'mac' ? row.chordOther : row.chordMac;
+      const otherName = platform?.value === 'mac' ? 'Windows and Linux' : 'macOS';
+      location.textContent = otherChord === chordOf(row) ? row.scopeName : `${row.scopeName} · ${otherName}: ${otherChord}`;
+      identity.append(chord, location);
+
+      const badges = document.createElement('span');
+      badges.className = 'control-contract-badges';
+      const badgeValues = [row.eventControl.preventDefault ? 'Blocks browser default' : 'Browser default kept'];
+      if (row.empty) badgeValues.push('Claimed but inert');
+      if (otherChord !== chordOf(row)) badgeValues.push('Differs by platform');
+      for (const value of badgeValues) {
+        const badge = document.createElement('span');
+        badge.textContent = value;
+        badges.append(badge);
+      }
+      summaryEl.append(identity, badges);
+
+      const body = document.createElement('div');
+      body.className = 'control-contract-body';
+      const plain = document.createElement('p');
+      plain.className = 'control-contract-plain';
+      const plainHeading = document.createElement('strong');
+      plainHeading.textContent = 'In plain words: ';
+      plain.append(plainHeading, document.createTextNode(row.plain));
+      body.append(plain);
+
+      const facts = document.createElement('dl');
+      facts.className = 'control-contract-facts';
+      addFact(facts, 'Windows and Linux', row.chordOther);
+      addFact(facts, 'macOS', row.chordMac);
+      addFact(facts, 'Where it works', row.scopeName);
+      addFact(facts, 'Browser default', row.browserDefault);
+      addFact(facts, 'Event propagation', row.eventControl.stopPropagation ? 'Dash stops the event here, so nothing further sees it.' : 'The event keeps travelling after Dash handles it.');
+      addFact(facts, 'Handler', row.handler);
+      body.append(facts);
+
+      const technical = document.createElement('details');
+      technical.className = 'control-contract-technical';
+      const technicalSummary = document.createElement('summary');
+      technicalSummary.textContent = 'Technical trace';
+      technical.append(technicalSummary);
+
+      if (row.effect) {
+        const effect = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Case body: ';
+        const code = document.createElement('code');
+        code.textContent = row.effect;
+        effect.append(heading, code);
+        technical.append(effect);
+      }
+      addCodeList(technical, 'Guards inside the case', row.guards);
+      addCodeList(technical, 'Calls', row.calls);
+
+      const source = document.createElement('a');
+      source.href = row.source.url;
+      source.textContent = `Open ${row.source.file.split('/').pop()}:${row.source.line}`;
+      technical.append(source);
+      body.append(technical);
+      details.append(summaryEl, body);
+      return details;
+    };
+
+    const render = () => {
+      const matching = rows.filter(matches);
+      list?.replaceChildren(...matching.map(createRow));
+      if (count) count.textContent = `Showing ${matching.length} of ${rows.length} traced shortcuts.`;
+      syncUrl();
+    };
+
+    query?.addEventListener('input', render);
+    scope?.addEventListener('change', render);
+    platform?.addEventListener('change', render);
+    browserDefault?.addEventListener('change', render);
+    clear?.addEventListener('click', () => {
+      if (query) query.value = '';
+      if (scope) scope.value = '';
+      if (browserDefault) browserDefault.value = '';
+      render();
+      query?.focus();
+    });
+
+    try {
+      const response = await fetch(root.dataset.source ?? '');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = (await response.json()) as ShortcutPayload;
+      rows = payload.shortcuts.map((row) => ({
+        ...row,
+        search: [row.chordMac, row.chordOther, row.keyLabel, row.scopeName, row.plain, row.effect, row.handler, row.browserDefault, ...row.calls, ...row.guards]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase(),
+      }));
+      inputs.forEach((input) => {
+        input.disabled = false;
+      });
+      if (list) list.ariaBusy = 'false';
+      render();
+    } catch (error) {
+      if (list) {
+        list.ariaBusy = 'false';
+        const warning = document.createElement('p');
+        warning.className = 'source-warning';
+        warning.textContent = `The keyboard-shortcut data could not be loaded: ${error instanceof Error ? error.message : String(error)}`;
+        list.replaceChildren(warning);
+      }
+      if (count) count.textContent = 'Keyboard-shortcut data is unavailable.';
+    }
+  }
+</script>

@@ -1,0 +1,2023 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "parser": "TypeScript compiler AST over GlobalKeyHandler.ts and MarqueeView.tsx",
+    "router": "KeyManager.router entries decoded from the four-bit shift/ctrl/alt/meta index, including the macOS branch",
+    "cases": "Every switch case and if/else branch that tests a key name, with fall-through cases attributed to the body they share",
+    "eventControl": "preventDefault and stopPropagation resolved from each case, falling back to the handler default",
+    "driftRule": "Generation fails when the router, a handler switch, or the marquee key branch disappears"
+  },
+  "summary": {
+    "shortcuts": 58,
+    "scopes": 3,
+    "routedModifierCombinations": 5,
+    "platformDivergentHandlers": 3,
+    "unroutedModifierCombinationsMac": 11,
+    "unroutedModifierCombinationsOther": 11,
+    "blocksBrowserDefault": 27,
+    "reservedButEmpty": 2
+  },
+  "platformRouting": {
+    "bitOrder": [
+      "Shift",
+      "Ctrl",
+      "Alt",
+      "Cmd"
+    ],
+    "routes": [
+      {
+        "handler": "unmodified",
+        "macModifiers": [],
+        "otherModifiers": [],
+        "differs": false,
+        "source": {
+          "file": "src/client/views/GlobalKeyHandler.ts",
+          "line": 43,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L43"
+        }
+      },
+      {
+        "handler": "ctrl",
+        "macModifiers": [
+          "Cmd"
+        ],
+        "otherModifiers": [
+          "Ctrl"
+        ],
+        "differs": true,
+        "source": {
+          "file": "src/client/views/GlobalKeyHandler.ts",
+          "line": 44,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L44"
+        }
+      },
+      {
+        "handler": "alt",
+        "macModifiers": [
+          "Ctrl"
+        ],
+        "otherModifiers": [
+          "Alt"
+        ],
+        "differs": true,
+        "source": {
+          "file": "src/client/views/GlobalKeyHandler.ts",
+          "line": 45,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L45"
+        }
+      },
+      {
+        "handler": "ctrl_shift",
+        "macModifiers": [
+          "Shift",
+          "Cmd"
+        ],
+        "otherModifiers": [
+          "Shift",
+          "Ctrl"
+        ],
+        "differs": true,
+        "source": {
+          "file": "src/client/views/GlobalKeyHandler.ts",
+          "line": 46,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L46"
+        }
+      },
+      {
+        "handler": "shift",
+        "macModifiers": [
+          "Shift"
+        ],
+        "otherModifiers": [
+          "Shift"
+        ],
+        "differs": false,
+        "source": {
+          "file": "src/client/views/GlobalKeyHandler.ts",
+          "line": 47,
+          "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L47"
+        }
+      }
+    ],
+    "unroutedMac": [
+      "0010",
+      "0011",
+      "0101",
+      "0110",
+      "0111",
+      "1010",
+      "1011",
+      "1100",
+      "1101",
+      "1110",
+      "1111"
+    ],
+    "unroutedOther": [
+      "0001",
+      "0011",
+      "0101",
+      "0110",
+      "0111",
+      "1001",
+      "1010",
+      "1011",
+      "1101",
+      "1110",
+      "1111"
+    ]
+  },
+  "scopes": [
+    {
+      "id": "global",
+      "name": "Anywhere in Dash",
+      "shortcuts": 35
+    },
+    {
+      "id": "freeform-canvas",
+      "name": "A focused freeform canvas",
+      "shortcuts": 9
+    },
+    {
+      "id": "marquee-selection",
+      "name": "An active marquee selection",
+      "shortcuts": 14
+    }
+  ],
+  "shortcuts": [
+    {
+      "id": "global-space",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Space",
+      "chordOther": "Space",
+      "key": " ",
+      "keyLabel": "Space",
+      "effect": "break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 111,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L111"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": true,
+      "plain": "Claimed but inert: the case exists with no body, so pressing it does nothing today.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-esc",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Esc",
+      "chordOther": "Esc",
+      "key": "escape",
+      "keyLabel": "Esc",
+      "effect": "{ DocumentLinksButton.StartLink = undefined; DocumentLinksButton.StartLinkView = undefined; InkStrokeProperties.Instance._controlButton = false; Doc.ActiveTool = InkTool.None; DragManager.CompleteWindowDrag?.(true); if (SnappingManager.IsDragging) { DragManag… break;",
+      "calls": [
+        "DragManager.CompleteWindowDrag",
+        "DragManager.AbortDrag",
+        "CollectionDockingView.Instance?.CloseFullScreen",
+        "CollectionStackedTimeline.StopSelecting",
+        "ContextMenu.Instance.closeMenu",
+        "DocumentView.DeselectAll",
+        "DocumentView.SetLightboxDoc",
+        "GoogleAuthenticationManager.Instance.cancel"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 114,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L114"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "The universal way out. It cancels a link in progress, the active ink tool, a drag, a timeline region selection, and the Google sign-in flow; closes the context menu, sharing, and settings; and only then clears the selection and any lightbox.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-enter",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Enter",
+      "chordOther": "Enter",
+      "key": "enter",
+      "keyLabel": "Enter",
+      "effect": "break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 146,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L146"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": true,
+      "plain": "Claimed but inert: the case exists with no body, so pressing it does nothing today.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-delete",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Delete",
+      "chordOther": "Delete",
+      "key": "delete",
+      "keyLabel": "Delete",
+      "effect": "if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') { if (DocumentView.LightboxDoc() && !DocumentView.Selected().length) { DocumentView.SetLightboxDoc(undefined); DocumentView.DeselectAll(); } else if (!window.ge… break;",
+      "calls": [
+        "DocumentView.LightboxDoc",
+        "DocumentView.Selected",
+        "DocumentView.SetLightboxDoc",
+        "DocumentView.DeselectAll",
+        "window.getSelection",
+        "DocumentDecorations.Instance.onCloseClick"
+      ],
+      "guards": [
+        "document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 150,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L150"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Closes the selected document, or dismisses the lightbox if nothing is selected. Ignored while you are typing in an input.",
+      "browserDefault": "Dash blocks the browser default in some branches of this case; read the trace for which."
+    },
+    {
+      "id": "global-backspace",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Backspace",
+      "chordOther": "Backspace",
+      "key": "backspace",
+      "keyLabel": "Backspace",
+      "effect": "if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') { if (DocumentView.LightboxDoc() && !DocumentView.Selected().length) { DocumentView.SetLightboxDoc(undefined); DocumentView.DeselectAll(); } else if (!window.ge… break;",
+      "calls": [
+        "DocumentView.LightboxDoc",
+        "DocumentView.Selected",
+        "DocumentView.SetLightboxDoc",
+        "DocumentView.DeselectAll",
+        "window.getSelection",
+        "DocumentDecorations.Instance.onCloseClick"
+      ],
+      "guards": [
+        "document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 150,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L150"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Closes the selected document, or dismisses the lightbox if nothing is selected. Ignored while you are typing in an input.",
+      "browserDefault": "Dash blocks the browser default in some branches of this case; read the trace for which."
+    },
+    {
+      "id": "global-left-arrow",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Left arrow",
+      "chordOther": "Left arrow",
+      "key": "arrowleft",
+      "keyLabel": "Left arrow",
+      "effect": "return (e.target as HTMLInputElement)?.type !== 'text' ? this.nudge(-1, 0, 'nudge left') : nothing;",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 159,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L159"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents one unit left. Ignored inside a text input.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-right-arrow",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Right arrow",
+      "chordOther": "Right arrow",
+      "key": "arrowright",
+      "keyLabel": "Right arrow",
+      "effect": "return (e.target as HTMLInputElement)?.type !== 'text' ? this.nudge( 1, 0, 'nudge right') : nothing;",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 160,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L160"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents one unit right. Ignored inside a text input.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-up-arrow",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Up arrow",
+      "chordOther": "Up arrow",
+      "key": "arrowup",
+      "keyLabel": "Up arrow",
+      "effect": "return (e.target as HTMLInputElement)?.type !== 'text' ? this.nudge(0, -1, 'nudge up') : nothing;",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 161,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L161"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents one unit up. Ignored inside a text input.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-down-arrow",
+      "scope": "global",
+      "handler": "unmodified",
+      "modifierBitsMac": "0000",
+      "modifierBitsOther": "0000",
+      "chordMac": "Down arrow",
+      "chordOther": "Down arrow",
+      "key": "arrowdown",
+      "keyLabel": "Down arrow",
+      "effect": "return (e.target as HTMLInputElement | null)?.type !== 'text'? this.nudge(0, 1, 'nudge down'): nothing;",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 162,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L162"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents one unit down. Ignored inside a text input.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-left-arrow",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + Left arrow",
+      "chordOther": "Shift + Left arrow",
+      "key": "arrowleft",
+      "keyLabel": "Left arrow",
+      "effect": "return this.nudge(-10,0, 'nudge left');",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 171,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L171"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents ten units left.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-right-arrow",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + Right arrow",
+      "chordOther": "Shift + Right arrow",
+      "key": "arrowright",
+      "keyLabel": "Right arrow",
+      "effect": "return this.nudge(10, 0, 'nudge right');",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 172,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L172"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents ten units right.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-up-arrow",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + Up arrow",
+      "chordOther": "Shift + Up arrow",
+      "key": "arrowup",
+      "keyLabel": "Up arrow",
+      "effect": "return this.nudge(0, -10, 'nudge up');",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 173,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L173"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents ten units up.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-down-arrow",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + Down arrow",
+      "chordOther": "Shift + Down arrow",
+      "key": "arrowdown",
+      "keyLabel": "Down arrow",
+      "effect": "return this.nudge(0, 10, 'nudge down');",
+      "calls": [
+        "this.nudge"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 174,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L174"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Nudges the selected freeform documents ten units down.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-u",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + U",
+      "chordOther": "Shift + U",
+      "key": "u",
+      "keyLabel": "U",
+      "effect": "if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') { UndoManager.RunInBatch(() => DocumentView.Selected().map(dv => dv.Document).forEach(doc => {doc.group = undefined}), 'unggroup'); DocumentView.DeselectAll(); } break;",
+      "calls": [
+        "UndoManager.RunInBatch",
+        "DocumentView.Selected",
+        "DocumentView.DeselectAll"
+      ],
+      "guards": [
+        "document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 175,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L175"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Removes the group from every selected document, then clears the selection.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-g",
+      "scope": "global",
+      "handler": "shift",
+      "modifierBitsMac": "1000",
+      "modifierBitsOther": "1000",
+      "chordMac": "Shift + G",
+      "chordOther": "Shift + G",
+      "key": "g",
+      "keyLabel": "G",
+      "effect": "if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') { const randomGroup = random(0, 1000); UndoManager.RunInBatch(() => DocumentView.Selected().forEach(dv => {dv.Document.group = randomGroup}), 'group'); Document… break;",
+      "calls": [
+        "random",
+        "UndoManager.RunInBatch",
+        "DocumentView.Selected",
+        "DocumentView.DeselectAll"
+      ],
+      "guards": [
+        "document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 181,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L181"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Puts every selected document into one new group, then clears the selection.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-alt",
+      "scope": "global",
+      "handler": "alt",
+      "modifierBitsMac": "0100",
+      "modifierBitsOther": "0010",
+      "chordMac": "Ctrl + ƒ",
+      "chordOther": "Alt + ƒ",
+      "key": "ƒ",
+      "keyLabel": "ƒ",
+      "effect": "UndoManager.RunInBatch(() => CollectionFreeFormDocumentView.from(DocumentView.Selected()?.[0])?.float(), 'float'); break;",
+      "calls": [
+        "UndoManager.RunInBatch",
+        "CollectionFreeFormDocumentView.from(DocumentView.Selected()?.[0])?.float",
+        "CollectionFreeFormDocumentView.from",
+        "DocumentView.Selected"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 203,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L203"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "The character this keyboard layout produces for the same chord. It shares the float case so the command still matches.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-alt-f",
+      "scope": "global",
+      "handler": "alt",
+      "modifierBitsMac": "0100",
+      "modifierBitsOther": "0010",
+      "chordMac": "Ctrl + F",
+      "chordOther": "Alt + F",
+      "key": "f",
+      "keyLabel": "F",
+      "effect": "UndoManager.RunInBatch(() => CollectionFreeFormDocumentView.from(DocumentView.Selected()?.[0])?.float(), 'float'); break;",
+      "calls": [
+        "UndoManager.RunInBatch",
+        "CollectionFreeFormDocumentView.from(DocumentView.Selected()?.[0])?.float",
+        "CollectionFreeFormDocumentView.from",
+        "DocumentView.Selected"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 203,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L203"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Floats the first selected document above its freeform collection, when that view supports floating.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-right-arrow",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + Right arrow",
+      "chordOther": "Ctrl + Right arrow",
+      "key": "arrowright",
+      "keyLabel": "Right arrow",
+      "effect": "if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') { return { stopPropagation: false, preventDefault: false }; } break;",
+      "calls": [],
+      "guards": [
+        "document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 227,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L227"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Reserved so the chord still reaches the browser inside an input; it does nothing on the canvas.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-left-arrow",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + Left arrow",
+      "chordOther": "Ctrl + Left arrow",
+      "key": "arrowleft",
+      "keyLabel": "Left arrow",
+      "effect": "if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') { return { stopPropagation: false, preventDefault: false }; } break;",
+      "calls": [],
+      "guards": [
+        "document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 232,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L232"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Reserved so the chord still reaches the browser inside an input; it does nothing on the canvas.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-backspace",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + Backspace",
+      "chordOther": "Ctrl + Backspace",
+      "key": "backspace",
+      "keyLabel": "Backspace",
+      "effect": "if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') { return { stopPropagation: false, preventDefault: false }; } break;",
+      "calls": [],
+      "guards": [
+        "document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 237,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L237"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Reserved so the chord still reaches the browser inside an input; it does nothing on the canvas.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-t",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + T",
+      "chordOther": "Ctrl + T",
+      "key": "t",
+      "keyLabel": "T",
+      "effect": "PromiseValue(Cast(Doc.UserDoc()['tabs-button-tools'], Doc)).then(pv => pv && (pv.onClick as ScriptField).script.run({ this: pv })); break;",
+      "calls": [
+        "PromiseValue",
+        "Doc.UserDoc"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 242,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L242"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Runs whatever the Tools button on your user document is configured to do.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-i",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + I",
+      "chordOther": "Ctrl + I",
+      "key": "i",
+      "keyLabel": "I",
+      "effect": "{ const importBtn = DocListCast(Doc.MyLeftSidebarMenu?.data).find(d => d.target === Doc.MyImports); if (importBtn) { MainView.Instance.selectLeftSidebarButton(importBtn); } } break;",
+      "calls": [
+        "MainView.Instance.selectLeftSidebarButton"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 245,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L245"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Opens the Imports panel.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-s",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + S",
+      "chordOther": "Ctrl + S",
+      "key": "s",
+      "keyLabel": "S",
+      "effect": "{ const trailsBtn = DocListCast(Doc.MyLeftSidebarMenu?.data).find(d => d.target === Doc.MyTrails); if (trailsBtn) { MainView.Instance.selectLeftSidebarButton(trailsBtn); } } break;",
+      "calls": [
+        "MainView.Instance.selectLeftSidebarButton"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 253,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L253"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Opens the Trails panel. This deliberately replaces the browser Save shortcut inside the workspace.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-f",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + F",
+      "chordOther": "Ctrl + F",
+      "key": "f",
+      "keyLabel": "F",
+      "effect": "if (DocumentView.Selected().length === 1 && DocumentView.Selected()[0].ComponentView?.search) { DocumentView.Selected()[0].ComponentView?.search?.('', false, false); } else { this.invokeSearch(); } break;",
+      "calls": [
+        "DocumentView.Selected",
+        "DocumentView.Selected()[0].ComponentView?.search",
+        "this.invokeSearch"
+      ],
+      "guards": [
+        "DocumentView.Selected().length === 1 && DocumentView.Selected()[0].ComponentView?.search"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 261,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L261"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Searches inside the selected document when that document supports search, and otherwise opens the global search panel.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-e",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + E",
+      "chordOther": "Ctrl + E",
+      "key": "e",
+      "keyLabel": "E",
+      "effect": "Doc.ActiveTool = Doc.ActiveTool === InkTool.Eraser ? InkTool.None : InkTool.Eraser; break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 268,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L268"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Turns the eraser on, or off if it is already on.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-p",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + P",
+      "chordOther": "Ctrl + P",
+      "key": "p",
+      "keyLabel": "P",
+      "effect": "Doc.ActiveTool = Doc.ActiveTool === InkTool.Ink ? InkTool.None : InkTool.Ink; break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 271,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L271"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Turns the pen on, or off if it is already on.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-ctrl-r",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + R",
+      "chordOther": "Ctrl + R",
+      "key": "r",
+      "keyLabel": "R",
+      "effect": "preventDefault = false; break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 274,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L274"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Left to the browser, so the page reloads.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-y",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + Y",
+      "chordOther": "Ctrl + Y",
+      "key": "y",
+      "keyLabel": "Y",
+      "effect": "if (Doc.ActivePage !== 'home') { DocumentView.DeselectAll(); UndoManager.Redo(); } stopPropagation = false; break;",
+      "calls": [
+        "DocumentView.DeselectAll",
+        "UndoManager.Redo"
+      ],
+      "guards": [
+        "Doc.ActivePage !== 'home'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": true,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 277,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L277"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Redoes the last undone batch. It does nothing on the home screen.",
+      "browserDefault": "Dash blocks the browser default in some branches of this case; read the trace for which."
+    },
+    {
+      "id": "global-ctrl-z",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + Z",
+      "chordOther": "Ctrl + Z",
+      "key": "z",
+      "keyLabel": "Z",
+      "effect": "if (Doc.ActivePage !== 'home') { DocumentView.DeselectAll(); UndoManager.Undo(); } stopPropagation = false; break;",
+      "calls": [
+        "DocumentView.DeselectAll",
+        "UndoManager.Undo"
+      ],
+      "guards": [
+        "Doc.ActivePage !== 'home'"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": true,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 284,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L284"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Undoes the last Dash action batch. It does nothing on the home screen.",
+      "browserDefault": "Dash blocks the browser default in some branches of this case; read the trace for which."
+    },
+    {
+      "id": "global-ctrl-a",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + A",
+      "chordOther": "Ctrl + A",
+      "key": "a",
+      "keyLabel": "A",
+      "effect": "if (e.target !== document.body) { stopPropagation = false; preventDefault = false; } break;",
+      "calls": [],
+      "guards": [
+        "e.target !== document.body"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 291,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L291"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Passed through to the browser only when focus is inside an element. With focus on the page body, Dash swallows it and nothing is selected.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-v",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + V",
+      "chordOther": "Ctrl + V",
+      "key": "v",
+      "keyLabel": "V",
+      "effect": "stopPropagation = false; preventDefault = false; break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 297,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L297"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Left to the browser, which fires the paste event Dash listens to separately.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-x",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + X",
+      "chordOther": "Ctrl + X",
+      "key": "x",
+      "keyLabel": "X",
+      "effect": "if (DocumentView.Selected().length) { const bds = DocumentDecorations.Instance.Bounds; const pt = DocumentView.Selected()[0] // .screenToViewTransform() .transformPoint(bds.x + (bds.r - bds.x) / 2, bds.y + (bds.b - bds.y) / 2); const text = `__DashDocId(${pt?… break;",
+      "calls": [
+        "DocumentView.Selected",
+        "DocumentView.Selected()[0] // .screenToViewTransform() .transformPoint",
+        "DocumentView.Selected()[0] // .screenToViewTransform",
+        "navigator.clipboard.writeText",
+        "DocumentDecorations.Instance.onCloseClick"
+      ],
+      "guards": [
+        "DocumentView.Selected().length"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 301,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L301"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Cuts the selected documents: it writes their identifiers and the selection centre to the clipboard, then closes them.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-ctrl-c",
+      "scope": "global",
+      "handler": "ctrl",
+      "modifierBitsMac": "0001",
+      "modifierBitsOther": "0100",
+      "chordMac": "Cmd + C",
+      "chordOther": "Ctrl + C",
+      "key": "c",
+      "keyLabel": "C",
+      "effect": "if ((!window.getSelection() || window.getSelection()?.isCollapsed) && !AnchorMenu.Instance.Active && DocumentDecorations.Instance.Bounds.r - DocumentDecorations.Instance.Bounds.x > 2) { const bds = DocumentDecorations.Instance.Bounds; const pt = DocumentView.… preventDefault = false; break;",
+      "calls": [
+        "window.getSelection",
+        "DocumentView.Selected()[0] .screenToViewTransform() .transformPoint",
+        "DocumentView.Selected()[0] .screenToViewTransform",
+        "DocumentView.Selected",
+        "DocumentView.SelectedDocs",
+        "navigator.clipboard.writeText"
+      ],
+      "guards": [
+        "(!window.getSelection() || window.getSelection()?.isCollapsed) && !AnchorMenu.Instance.Active && DocumentDecorations.Instance.Bounds.r - DocumentDecorations.Instance.Bounds.x > 2"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": true
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 318,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L318"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Copies the selected documents as clone references, together with the selection centre, rather than copying their contents.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "global-shift-ctrl-z",
+      "scope": "global",
+      "handler": "ctrl_shift",
+      "modifierBitsMac": "1001",
+      "modifierBitsOther": "1100",
+      "chordMac": "Shift + Cmd + Z",
+      "chordOther": "Shift + Ctrl + Z",
+      "key": "z",
+      "keyLabel": "Z",
+      "effect": "UndoManager.Redo(); break;",
+      "calls": [
+        "UndoManager.Redo"
+      ],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 363,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L363"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Redoes the last undone batch. Unlike plain redo, this one is not blocked on the home screen.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "global-shift-ctrl-p",
+      "scope": "global",
+      "handler": "ctrl_shift",
+      "modifierBitsMac": "1001",
+      "modifierBitsOther": "1100",
+      "chordMac": "Shift + Cmd + P",
+      "chordOther": "Shift + Ctrl + P",
+      "key": "p",
+      "keyLabel": "P",
+      "effect": "Doc.ActiveInk = InkInkTool.Write; Doc.ActiveTool = InkTool.Ink; break;",
+      "calls": [],
+      "guards": [],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/GlobalKeyHandler.ts",
+        "line": 366,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L366"
+      },
+      "scopeName": "Anywhere in Dash",
+      "empty": false,
+      "plain": "Switches the ink to handwriting mode and turns the pen on.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "freeform-canvas",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "?",
+      "chordOther": "?",
+      "key": "?",
+      "keyLabel": "?",
+      "effect": "{ cm.setDefaultItem('?', (str: string) => this._props.addDocTab(Docs.Create.WebDocument(`https://wikipedia.org/wiki/${str}`, { _width: 400, x, y, _height: 512, _nativeWidth: 850, title: `wiki:${str}`, data_useCors: true }), OpenWhere.addRight) ); cm.displayMenu(this._downX, this._downY, undefined, …",
+      "calls": [
+        "cm.setDefaultItem",
+        "this._props.addDocTab",
+        "Docs.Create.WebDocument",
+        "cm.displayMenu",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === '?'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 150,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L150"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Asks for a topic, then creates a Wikipedia web document for it beside the canvas.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "freeform-canvas-u",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "U",
+      "chordOther": "U",
+      "key": "u",
+      "keyLabel": "U",
+      "effect": "{ e.stopPropagation(); this._props.ungroup(); }",
+      "calls": [
+        "e.stopPropagation",
+        "this._props.ungroup"
+      ],
+      "guards": [
+        "e.key === 'u' && this._props.ungroup"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 156,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L156"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Ungroups, when the containing view supplies an ungroup action.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "freeform-canvas-2",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": ":",
+      "chordOther": ":",
+      "key": ":",
+      "keyLabel": ":",
+      "effect": "{ DocUtils.addDocumentCreatorMenuItems(this._props.addLiveTextDocument, this._props.addDocument || returnFalse, x, y); cm.displayMenu(this._downX, this._downY, undefined, true); e.stopPropagation(); }",
+      "calls": [
+        "DocUtils.addDocumentCreatorMenuItems",
+        "cm.displayMenu",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === ':'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 159,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L159"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Opens the document-creation menu at the pointer.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "freeform-canvas-ctrl-a",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Cmd + A",
+      "chordOther": "Ctrl + A",
+      "key": "a",
+      "keyLabel": "A",
+      "effect": "{ e.preventDefault(); this._props.selectDocuments(this._props.activeDocuments()); e.stopPropagation(); }",
+      "calls": [
+        "e.preventDefault",
+        "this._props.selectDocuments",
+        "this._props.activeDocuments",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === 'a' && (e.ctrlKey || e.metaKey)"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 164,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L164"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Selects every document currently active in this view.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "freeform-canvas-ctrl-q",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Ctrl + Q",
+      "chordOther": "Ctrl + Q",
+      "key": "q",
+      "keyLabel": "Q",
+      "effect": "{ e.preventDefault(); (async () => { const text: string = await navigator.clipboard.readText(); const ns = text.split('\\n').filter(t => t.trim() !== '\\r' && t.trim() !== ''); for (let i = 0; i < ns.length - 1; i++) { while ( !(ns[i].trim() === '' || ns[i].endsWith('-\\r') || ns[i].endsWith('-') || n…",
+      "calls": [
+        "e.preventDefault",
+        "navigator.clipboard.readText",
+        "ns.splice",
+        "ns[i + 1].trimLeft",
+        "line.search",
+        "Docs.Create.TextDocument",
+        "this._props.addDocument",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === 'q' && e.ctrlKey"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 168,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L168"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Reads the clipboard, rejoins lines that were wrapped mid-sentence, and creates one text note per resulting line, indented to match the source.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "freeform-canvas-ctrl-b",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Ctrl + B",
+      "chordOther": "Ctrl + B",
+      "key": "b",
+      "keyLabel": "B",
+      "effect": "{ document.body.focus(); // so that we can access the clipboard without an error setTimeout(() => // eslint-disable-next-line @typescript-eslint/no-explicit-any pasteImageBitmap((data: any, error: any) => { error && console.log(error); data && ClientUtils.convertDataUri(data, this._props.Document[I…",
+      "calls": [
+        "document.body.focus",
+        "setTimeout",
+        "pasteImageBitmap",
+        "console.log",
+        "ClientUtils.convertDataUri(data, this._props.Document[Id] + '_icon_' + new Date().getTime…",
+        "ClientUtils.convertDataUri",
+        "new Date().getTime"
+      ],
+      "guards": [
+        "e.key === 'b' && e.ctrlKey"
+      ],
+      "eventControl": {
+        "stopPropagation": false,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 193,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L193"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Pastes an image from the clipboard and uses it as this collection’s icon.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "freeform-canvas-ctrl-p",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Ctrl + P",
+      "chordOther": "Ctrl + P",
+      "key": "p",
+      "keyLabel": "P",
+      "effect": "{ navigator.clipboard.readText().then(text => { const ns = text.split('\\n').filter(t => t.trim() !== '\\r' && t.trim() !== ''); this.pasteTable(ns, x, y); }); e.preventDefault(); e.stopPropagation(); }",
+      "calls": [
+        "navigator.clipboard.readText",
+        "this.pasteTable",
+        "e.preventDefault",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === 'p' && e.ctrlKey"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 214,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L214"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Reads the clipboard and lays it out as a table, splitting on tabs.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "freeform-canvas-ctrl-h",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Ctrl + H",
+      "chordOther": "Ctrl + H",
+      "key": "h",
+      "keyLabel": "H",
+      "effect": "{ navigator.clipboard.readText().then(plain => this._props.addDocument?.(DocUtils.GetHtmlDoc(plain, x, y, 'html from clipboard'))); e.stopPropagation(); }",
+      "calls": [
+        "navigator.clipboard.readText",
+        "this._props.addDocument",
+        "DocUtils.GetHtmlDoc",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "e.key === 'h' && e.ctrlKey"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 221,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L221"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Reads the clipboard as HTML and creates a web document from it.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "freeform-canvas-any-other-printable-key",
+      "scope": "freeform-canvas",
+      "handler": "MarqueeView.onKeyDown",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "(any other printable key)",
+      "chordOther": "(any other printable key)",
+      "key": "(any other printable key)",
+      "keyLabel": "(any other printable key)",
+      "effect": "{ FormattedTextBox.LiveTextUndo = UndoManager.StartBatch('type new note'); this._props.addLiveTextDocument(DocUtils.GetNewTextDoc('-typed text-', x, y, 200)); e.stopPropagation(); }",
+      "calls": [
+        "UndoManager.StartBatch",
+        "this._props.addLiveTextDocument",
+        "DocUtils.GetNewTextDoc",
+        "e.stopPropagation"
+      ],
+      "guards": [
+        "!e.ctrlKey && !e.metaKey && DocumentView.Selected().length < 2"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 224,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L224"
+      },
+      "scopeName": "A focused freeform canvas",
+      "empty": false,
+      "plain": "Any ordinary character starts a new text note at the pointer and puts that character into it. This is the fallback branch, so it runs only when no earlier branch matched, neither Ctrl nor Cmd is held, and fewer than two documents are selected.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "marquee-selection-backspace",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Backspace",
+      "chordOther": "Backspace",
+      "key": "Backspace",
+      "keyLabel": "Backspace",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); ee.propagationIsStopped = true; this.delete(e, e.key === 'h'); e.stopPropagation(); }",
+      "calls": [
+        "e.stopPropagation",
+        "this.delete"
+      ],
+      "guards": [
+        "e.key === 'Backspace' || e.key === 'Delete' || e.key === 'd' || e.key === 'h'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1247,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1247"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Deletes the marquee’s documents.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "marquee-selection-delete",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Delete",
+      "chordOther": "Delete",
+      "key": "Delete",
+      "keyLabel": "Delete",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); ee.propagationIsStopped = true; this.delete(e, e.key === 'h'); e.stopPropagation(); }",
+      "calls": [
+        "e.stopPropagation",
+        "this.delete"
+      ],
+      "guards": [
+        "e.key === 'Backspace' || e.key === 'Delete' || e.key === 'd' || e.key === 'h'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1247,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1247"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Deletes the marquee’s documents.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "marquee-selection-d",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "D",
+      "chordOther": "D",
+      "key": "d",
+      "keyLabel": "D",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); ee.propagationIsStopped = true; this.delete(e, e.key === 'h'); e.stopPropagation(); }",
+      "calls": [
+        "e.stopPropagation",
+        "this.delete"
+      ],
+      "guards": [
+        "e.key === 'Backspace' || e.key === 'Delete' || e.key === 'd' || e.key === 'h'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1247,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1247"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Deletes the marquee’s documents.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "marquee-selection-h",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "H",
+      "chordOther": "H",
+      "key": "h",
+      "keyLabel": "H",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); ee.propagationIsStopped = true; this.delete(e, e.key === 'h'); e.stopPropagation(); }",
+      "calls": [
+        "e.stopPropagation",
+        "this.delete"
+      ],
+      "guards": [
+        "e.key === 'Backspace' || e.key === 'Delete' || e.key === 'd' || e.key === 'h'"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": false,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1247,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1247"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Deletes the marquee’s documents, hiding them rather than removing them outright.",
+      "browserDefault": "The browser default still runs."
+    },
+    {
+      "id": "marquee-selection-g",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "G",
+      "chordOther": "G",
+      "key": "g",
+      "keyLabel": "G",
+      "effect": "this.collection(e,true); break;",
+      "calls": [
+        "this.collection"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1260,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1260"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Collects the marquee’s documents into a new collection and keeps them grouped.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-c",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "C",
+      "chordOther": "C",
+      "key": "c",
+      "keyLabel": "C",
+      "effect": "this.collection(e); break;",
+      "calls": [
+        "this.collection"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1262,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1262"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Collects the marquee’s documents into a new collection.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-t",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "T",
+      "chordOther": "T",
+      "key": "t",
+      "keyLabel": "T",
+      "effect": "this.collection(e); break;",
+      "calls": [
+        "this.collection"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1262,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1262"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Collects the marquee’s documents into a new stacking collection.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-s",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "S",
+      "chordOther": "S",
+      "key": "s",
+      "keyLabel": "S",
+      "effect": "this.summary(); break;",
+      "calls": [
+        "this.summary"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1264,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1264"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Summarises the marquee’s documents.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-shift-s",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Shift + S",
+      "chordOther": "Shift + S",
+      "key": "S",
+      "keyLabel": "Shift + S",
+      "effect": "this.summary(); break;",
+      "calls": [
+        "this.summary"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1264,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1264"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Summarises the marquee’s documents; the capital letter runs the same command.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-shift-g",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Shift + G",
+      "chordOther": "Shift + G",
+      "key": "G",
+      "keyLabel": "Shift + G",
+      "effect": "this.generateScrapbook(); break;",
+      "calls": [
+        "this.generateScrapbook"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1265,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1265"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Generates a scrapbook from the marquee’s documents.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-p",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "P",
+      "chordOther": "P",
+      "key": "p",
+      "keyLabel": "P",
+      "effect": "this.pileup(); break;",
+      "calls": [
+        "this.pileup"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1266,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1266"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Piles the marquee’s documents up into a stack.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-w",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "W",
+      "chordOther": "W",
+      "key": "w",
+      "keyLabel": "W",
+      "effect": "this.generateWikilinks(); break;",
+      "calls": [
+        "this.generateWikilinks"
+      ],
+      "guards": [
+        "'ctsSpgGw'.indexOf(e.key) !== -1"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1267,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1267"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Generates wiki-style links between the marquee’s documents.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-r",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "R",
+      "chordOther": "R",
+      "key": "r",
+      "keyLabel": "R",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); e.preventDefault(); this._lassoFreehand = !this._lassoFreehand; }",
+      "calls": [
+        "e.stopPropagation",
+        "e.preventDefault"
+      ],
+      "guards": [
+        "e.key === 'r' || e.key === ' '"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1271,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1271"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Switches the marquee between a rectangle and a freehand lasso.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    },
+    {
+      "id": "marquee-selection-space",
+      "scope": "marquee-selection",
+      "handler": "MarqueeView.marqueeCommand",
+      "modifierBitsMac": "",
+      "modifierBitsOther": "",
+      "chordMac": "Space",
+      "chordOther": "Space",
+      "key": " ",
+      "keyLabel": "Space",
+      "effect": "{ this._commandExecuted = true; e.stopPropagation(); e.preventDefault(); this._lassoFreehand = !this._lassoFreehand; }",
+      "calls": [
+        "e.stopPropagation",
+        "e.preventDefault"
+      ],
+      "guards": [
+        "e.key === 'r' || e.key === ' '"
+      ],
+      "eventControl": {
+        "stopPropagation": true,
+        "preventDefault": true,
+        "conditional": false
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/MarqueeView.tsx",
+        "line": 1271,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1271"
+      },
+      "scopeName": "An active marquee selection",
+      "empty": false,
+      "plain": "Switches the marquee between a rectangle and a freehand lasso.",
+      "browserDefault": "Dash blocks the browser default for this chord."
+    }
+  ]
+}
