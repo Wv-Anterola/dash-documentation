@@ -4,6 +4,55 @@ import reference from '../../src/data/generated/source-modules.json' with { type
 const slug = (path) =>
   path.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+/**
+ * Measures whether the page can scroll sideways, and if it can, names the
+ * elements responsible.
+ *
+ * A bare `scrollWidth === clientWidth` assertion fails with two numbers and no
+ * way to act on them, and horizontal overflow is exactly the kind of defect
+ * that only shows up on another platform's font metrics. This reports the
+ * widest offending elements so a failure is actionable from the log alone.
+ */
+async function horizontalOverflow(page, rootSelector, filterSelector) {
+  return page.evaluate(([root, filters]) => {
+    const rootEl = document.querySelector(root);
+    if (!rootEl) throw new Error(`Missing layout root: ${root}`);
+    const filterEl = filters ? rootEl.querySelector(filters) ?? document.querySelector(filters) : null;
+    if (filters && !filterEl) throw new Error(`Missing filter row: ${filters}`);
+    const viewportWidth = document.documentElement.clientWidth;
+    const offenders = [];
+    for (const el of document.querySelectorAll('body *')) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width <= 0 || rect.right <= viewportWidth + 0.5) continue;
+      // Report the element itself, not every ancestor that merely contains it.
+      const style = getComputedStyle(el);
+      if (style.overflowX === 'auto' || style.overflowX === 'scroll' || style.overflowX === 'clip' || style.overflowX === 'hidden') continue;
+      offenders.push({
+        tag: el.tagName.toLowerCase(),
+        className: typeof el.className === 'string' ? el.className.slice(0, 60) : '',
+        right: Math.round(rect.right),
+        width: Math.round(rect.width),
+        text: (el.textContent ?? '').replace(/\s+/g, ' ').trim().slice(0, 60),
+      });
+    }
+    offenders.sort((a, b) => b.right - a.right);
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth,
+      rootRight: rootEl.getBoundingClientRect().right,
+      filtersRight: filterEl ? filterEl.getBoundingClientRect().right : 0,
+      offenders: offenders.slice(0, 6),
+    };
+  }, [rootSelector, filterSelector ?? null]);
+}
+
+function expectNoHorizontalScroll(geometry) {
+  expect(
+    geometry.pageWidth,
+    `page scrolls sideways by ${geometry.pageWidth - geometry.viewportWidth}px; widest offenders: ${JSON.stringify(geometry.offenders)}`
+  ).toBe(geometry.viewportWidth);
+}
+
 test('searches generated modules and opens an immutable symbol reference', async ({ page }) => {
   await page.goto('/technical/api/');
   await expect(page.getByRole('heading', { name: 'Source-generated API and registry reference' })).toBeVisible();
@@ -56,16 +105,8 @@ test('searches every exported symbol and opens its exact module contract', async
   await expect(page.locator('[data-exported-symbol-count]')).toContainText('80 of 428 matching exports');
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-exported-symbol-reference]');
-    if (!root) throw new Error('Exported symbol reference is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-exported-symbol-reference]');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
 
@@ -96,18 +137,8 @@ test('traces every interface control from plain behavior to implementation effec
   await expect(page).toHaveURL(/control=imageRotate90/);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-control-reference]');
-    const filters = document.querySelector('.control-contract-filters');
-    if (!root || !filters) throw new Error('Interface control reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-control-reference]', '.control-contract-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 });
 
@@ -227,23 +258,16 @@ test('catalogues the HTTP surface and exposes request-supervision contracts', as
   await expect(page.getByRole('img', { name: /Two-lane lifecycle/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /full 1600 × 900 resolution/ })).toBeVisible();
   await expect(page.getByText('109', { exact: true }).first()).toBeVisible();
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-http-route-reference]');
-    const filters = document.querySelector('.http-route-filters');
-    const scroller = document.querySelector('.http-route-scroll');
-    if (!root || !filters || !scroller) throw new Error('HTTP reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-      tableViewport: scroller.clientWidth,
-      tableContent: scroller.scrollWidth,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-http-route-reference]', '.http-route-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
-  expect(geometry.tableContent).toBeGreaterThan(geometry.tableViewport);
+  // The wide route table must scroll inside its own box rather than widen the page.
+  const routeTable = await page.evaluate(() => {
+    const scroller = document.querySelector('.http-route-scroll');
+    if (!scroller) throw new Error('HTTP route table scroller is missing');
+    return { viewport: scroller.clientWidth, content: scroller.scrollWidth };
+  });
+  expect(routeTable.content).toBeGreaterThan(routeTable.viewport);
 
   const query = page.getByLabel('Find a path, input, response, or service');
   await query.fill('saveDynamicTool');
@@ -275,18 +299,8 @@ test('maps every document type from stored value through factory and renderer', 
   await expect(page.getByRole('link', { name: /full 1600 x 900 resolution/ })).toBeVisible();
   await expect(page.locator('.document-type-summary strong').first()).toHaveText('51');
 
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-document-type-reference]');
-    const filters = document.querySelector('.document-type-filters');
-    if (!root || !filters) throw new Error('Document type reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-document-type-reference]', '.document-type-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 
   const query = page.getByLabel('Find a type, renderer, field, factory, or purpose');
@@ -316,18 +330,8 @@ test('maps every serialized field tag through storage, hydration, and conversion
   await expect(page.locator('.field-type-summary strong').nth(1)).toHaveText('21');
   await expect(page.locator('.field-primitives article')).toHaveCount(3);
 
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-field-type-reference]');
-    const filters = document.querySelector('.field-type-filters');
-    if (!root || !filters) throw new Error('Field type reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-field-type-reference]', '.field-type-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 
   const query = page.getByLabel('Find a tag, class, stored member, behavior, or purpose');
@@ -368,18 +372,8 @@ test('exposes every scripting global with source, role, and responsive filters',
   await expect(page.locator('[data-script-global-row]:visible')).toHaveCount(16);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-script-global-reference]');
-    const filters = document.querySelector('.script-global-filters');
-    if (!root || !filters) throw new Error('Scripting global reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-script-global-reference]', '.script-global-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 });
 
@@ -426,18 +420,8 @@ test('assembles every right-click menu entry from its contributing component', a
   await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(40);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-menu-reference]');
-    const filters = root?.querySelector('.control-contract-filters');
-    if (!root || !filters) throw new Error('Context menu reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-menu-reference]', '.control-contract-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 });
 
@@ -479,18 +463,8 @@ test('shows each keyboard chord for both platforms and says what the browser kee
   await expect(page.locator('#shortcut-list .control-contract-row').first()).toContainText('Browser default kept');
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('[data-shortcut-reference]');
-    const filters = root?.querySelector('.control-contract-filters');
-    if (!root || !filters) throw new Error('Keyboard shortcut reference layout is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-      filtersRight: filters.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '[data-shortcut-reference]', '.control-contract-filters');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 });
 
@@ -522,16 +496,8 @@ test('documents a project workspace without presenting branch work as shipped', 
   await expect(phaseAction.getByRole('link', { name: /Open TripBox\.tsx:\d+ on the branch/ })).toHaveAttribute('href', /\/blob\/[0-9a-f]{40}\/.*#L\d+$/);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('.project-control-reference');
-    if (!root) throw new Error('Project control reference is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '.project-control-reference');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
 
@@ -557,16 +523,8 @@ test('routes an everyday task to its control, menu, and keyboard equivalents', a
 
   await page.goto('/reference/task-routes/');
   await page.setViewportSize({ width: 390, height: 844 });
-  const geometry = await page.evaluate(() => {
-    const root = document.querySelector('.task-route-reference');
-    if (!root) throw new Error('Task route reference is missing');
-    return {
-      pageWidth: document.documentElement.scrollWidth,
-      viewportWidth: document.documentElement.clientWidth,
-      rootRight: root.getBoundingClientRect().right,
-    };
-  });
-  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  const geometry = await horizontalOverflow(page, '.task-route-reference');
+  expectNoHorizontalScroll(geometry);
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
 
