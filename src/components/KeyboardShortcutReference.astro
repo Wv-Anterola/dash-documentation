@@ -70,12 +70,40 @@ const dataUrl = siteHref('/assets/data/keyboard-shortcuts.json');
     <p class="control-contract-loading">Loading the source-traced shortcuts…</p>
   </div>
 
-  <noscript>
-    <p class="source-warning">
-      Interactive filtering requires JavaScript. The routing and scope tables on
-      this page remain available without it.
+  {/*
+    The filtered list above is built in the browser, so neither site search nor a
+    reader without JavaScript would otherwise see a single shortcut. This renders
+    the whole inventory into the page so both do.
+  */}
+  <details class="reference-index">
+    <summary>Complete index of all {summary.shortcuts} shortcuts, without filtering</summary>
+    <p class="reference-index-note">
+      This list is part of the page, so site search finds these shortcuts and they
+      remain readable without JavaScript.
     </p>
-  </noscript>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Windows and Linux</th>
+            <th scope="col">macOS</th>
+            <th scope="col">Where</th>
+            <th scope="col">What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reference.shortcuts.map((shortcut) => (
+            <tr id={`shortcut-index-${shortcut.id}`}>
+              <td><a href={shortcut.source.url}><kbd>{shortcut.chordOther}</kbd></a></td>
+              <td><kbd>{shortcut.chordMac}</kbd></td>
+              <td>{shortcut.scopeName}</td>
+              <td>{shortcut.plain} {shortcut.browserDefault}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
 </div>
 
 <script>

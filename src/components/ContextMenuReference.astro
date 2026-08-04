@@ -80,17 +80,48 @@ const labelKinds = [
     <p class="control-contract-loading">Loading the source-traced menu entries…</p>
   </div>
 
-  <noscript>
-    <p class="source-warning">
-      Interactive filtering requires JavaScript. The surface tables on this page
-      remain available without it.
-    </p>
-  </noscript>
-
   <div class="control-contract-paging">
     <button type="button" data-menu-more aria-controls="menu-list" hidden disabled>Show more</button>
     <button type="button" data-menu-all aria-controls="menu-list" hidden disabled>Show all matching</button>
   </div>
+
+  {/*
+    The filtered list above is built in the browser, so neither site search nor a
+    reader without JavaScript would otherwise see a single entry. This renders
+    the whole inventory into the page so both do.
+  */}
+  <details class="reference-index">
+    <summary>Complete index of all {summary.entries} entries, without filtering</summary>
+    <p class="reference-index-note">
+      This list is part of the page, so site search finds these entries and they
+      remain readable without JavaScript.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Entry</th>
+            <th scope="col">Where</th>
+            <th scope="col">What it does</th>
+            <th scope="col">Traced to</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reference.items.map((item) => (
+            <tr id={`menu-index-${item.id}`}>
+              <td>
+                <a href={item.source.url}>{item.label}</a>
+                {item.labelVariants.length > 1 && <div class="reference-index-variants">also: {item.labelVariants.slice(1).join(' · ')}</div>}
+              </td>
+              <td>{item.parent ? `${item.surfaceName} → ${item.parent}` : item.surfaceName}</td>
+              <td>{item.plain} {item.availability}</td>
+              <td><code>{`${item.owner.container}.${item.owner.member}`}{item.handler.names.length ? ` · ${item.handler.names.join(' · ')}` : ''}</code></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
 </div>
 
 <script>

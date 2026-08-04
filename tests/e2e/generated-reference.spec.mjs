@@ -569,3 +569,29 @@ test('routes an everyday task to its control, menu, and keyboard equivalents', a
   expect(geometry.pageWidth).toBe(geometry.viewportWidth);
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
+
+test('renders every reference inventory into the page so search and no-JS readers see it', async ({ page }) => {
+  // The interactive lists are built client-side. Without a rendered index, site
+  // search would find none of these entries and a reader without JavaScript
+  // would see an empty page.
+  for (const [route, entry, container] of [
+    ['/reference/interface-controls/', 'imageRotate90', '.reference-index'],
+    ['/reference/context-menus/', 'Zip Export', '.reference-index'],
+    ['/reference/keyboard-shortcuts/', 'Opens the Trails panel', '.reference-index'],
+  ]) {
+    await page.goto(route);
+    const index = page.locator(container);
+    await expect(index).toHaveCount(1);
+    await expect(index.getByText(entry, { exact: false }).first()).toBeAttached();
+  }
+
+  await page.goto('/reference/context-menus/');
+  const index = page.locator('.reference-index');
+  await expect(index.locator('tbody tr')).toHaveCount(223);
+  await index.locator('summary').click();
+  await expect(index.getByRole('link', { name: 'Zip Export' }).first()).toHaveAttribute('href', /\/blob\/[0-9a-f]{40}\/.*#L\d+$/);
+
+  // The site's own search must be able to reach a menu entry by name.
+  await page.goto('/reference/interface-controls/');
+  await expect(page.locator('.reference-index tbody tr')).toHaveCount(213);
+});

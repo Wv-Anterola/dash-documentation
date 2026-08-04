@@ -2420,6 +2420,34 @@
   overflow-wrap: anywhere;
 }
 
+.reference-index {
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-md);
+  margin-block: var(--dash-space-4);
+  padding: var(--dash-space-3);
+}
+
+.reference-index > summary {
+  color: var(--dash-accent-strong);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.sl-markdown-content .reference-index-note {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: var(--dash-space-2);
+}
+
+.reference-index-variants {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+}
+
+.sl-markdown-content .reference-index table {
+  font-size: var(--dash-type-sm);
+}
+
 .task-route {
   border-top: 1px solid var(--dash-rule);
   margin-block: var(--dash-space-5);

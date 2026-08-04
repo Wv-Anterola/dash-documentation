@@ -76,17 +76,45 @@ const evidenceLevels = [
     <p class="control-contract-loading">Loading the source-backed control contracts…</p>
   </div>
 
-  <noscript>
-    <p class="source-warning">
-      Interactive filtering requires JavaScript. The explanatory tables on this
-      page remain available without it.
-    </p>
-  </noscript>
-
   <div class="control-contract-paging">
     <button type="button" data-control-more aria-controls="control-contract-list" hidden disabled>Show more</button>
     <button type="button" data-control-all aria-controls="control-contract-list" hidden disabled>Show all matching</button>
   </div>
+
+  {/*
+    The filtered list above is built in the browser, so neither site search nor a
+    reader without JavaScript would otherwise see a single control. This renders
+    the whole inventory into the page so both do.
+  */}
+  <details class="reference-index">
+    <summary>Complete index of all {summary.controls} controls, without filtering</summary>
+    <p class="reference-index-note">
+      This list is part of the page, so site search finds these controls and they
+      remain readable without JavaScript.
+    </p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Control</th>
+            <th scope="col">Where</th>
+            <th scope="col">What it does</th>
+            <th scope="col">Traced to</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reference.controls.map((control) => (
+            <tr id={`control-index-${control.id}`}>
+              <td><a href={control.source.url}>{control.label}</a></td>
+              <td>{control.parent ? `${control.region} → ${control.parent}` : `${control.region} → ${control.group}`}</td>
+              <td>{control.beginner} {control.visibility}</td>
+              <td><code>{[...control.handler.names, control.handler.stateOwner].filter(Boolean).join(' · ')}</code></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </details>
 </div>
 
 <script>

@@ -410,6 +410,19 @@ if (/baseline: \w+\.repository\.baseline,/.test(manifestSource)) {
     if (['exportedSymbols'].includes(dataset)) errors.push(`Dataset manifest publishes a mutable ref for ${id}; use the resolved commit`);
   }
 }
+// Client-rendered lists are invisible to site search and to readers without
+// JavaScript, so each searchable reference must also render its full inventory.
+for (const [component, inventory] of [
+  ['InterfaceControlReference.astro', 'reference.controls.map'],
+  ['ContextMenuReference.astro', 'reference.items.map'],
+  ['KeyboardShortcutReference.astro', 'reference.shortcuts.map'],
+]) {
+  const source = await readFile(path.join(root, 'src', 'components', component), 'utf8');
+  if (!source.includes('class="reference-index"') || !source.includes(inventory)) {
+    errors.push(`${component} no longer renders its full inventory into the page, so search cannot reach it`);
+  }
+}
+
 const generatedDataPage = await readFile(path.join(docsRoot, 'reference', 'generated-data.mdx'), 'utf8');
 if (!generatedDataPage.includes('<DatasetIndex />') || !generatedDataPage.includes('/assets/data/index.json')) {
   errors.push('Generated data page lost its dataset index or its manifest link');
