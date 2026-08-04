@@ -86,6 +86,7 @@ const manual = {
   '/guides/views/notetaking': '/assets/gifs/gettingstarted/textannos.gif',
   '/guides/views/stacking': '/assets/gifs/environment/colon-stack.gif',
   '/reference/interface-controls': '/assets/gifs/gettingstarted/dash-context-menu.gif',
+  '/reference/context-menus': '/assets/images/diagrams/dash-context-menu-composition.svg',
   '/reference/branch-audit': '/assets/gifs/environment/dash-report.gif',
   '/reference/agent-tools': '/assets/gifs/ai/ai-template-csv-1.gif',
   '/reference/collection-views': '/assets/images/environment/views/schema_view.png',
@@ -115,6 +116,8 @@ const manual = {
 };
 
 const manualAlt = {
+  '/reference/context-menus':
+    'How Dash assembles a right-click menu: the hit path up the React tree, each component contributing entries, guards removing them, and shared group names merging the result.',
   '/reference/document-types':
     'Document construction lifecycle from serialized type through prototypes, data and view delegates, and layout-driven rendering.',
   '/reference/implementation-snapshot':

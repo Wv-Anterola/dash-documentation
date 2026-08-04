@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">How Dash assembles a right-click menu</title>
+  <desc id="desc">A right-click on an image inside a freeform collection travels up the React tree; each component it passes contributes entries into the single ContextMenu singleton, guards remove the entries whose conditions fail, and shared group names such as Options let separate components merge their contributions into one submenu.</desc>
+  <defs>
+    <linearGradient id="cmbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#160d24"/>
+      <stop offset="0.5" stop-color="#1c1233"/>
+      <stop offset="1" stop-color="#141d38"/>
+    </linearGradient>
+    <linearGradient id="cmpanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f1ff"/>
+      <stop offset="1" stop-color="#e4dcf4"/>
+    </linearGradient>
+    <linearGradient id="cmviolet" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b98cff"/>
+      <stop offset="1" stop-color="#7ad0ff"/>
+    </linearGradient>
+    <linearGradient id="cmamber" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffc46b"/>
+      <stop offset="1" stop-color="#ff7fa8"/>
+    </linearGradient>
+    <filter id="cmshadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#07030f" flood-opacity="0.5"/>
+    </filter>
+    <filter id="cmglow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <marker id="cmarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#b98cff"/>
+    </marker>
+    <marker id="cmarrowwarm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#ff9f6b"/>
+    </marker>
+    <style>
+      .ui { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+      .cmeyebrow { fill: #c9a4ff; font-size: 18px; font-weight: 800; letter-spacing: 3px; }
+      .cmhead { fill: #fbf7ff; font-size: 47px; font-weight: 800; letter-spacing: -1px; }
+      .cmsub { fill: #b7abd4; font-size: 21px; }
+      .cmstage { fill: #d3b4ff; font-size: 14px; font-weight: 850; letter-spacing: 1.8px; }
+      .cmcard { fill: #f7f2ff; font-size: 19px; font-weight: 780; }
+      .cmbody { fill: #b3a8cd; font-size: 15px; }
+      .cmcode { fill: #d9c6ff; font-size: 13.5px; }
+      .cmitem { fill: #2b2140; font-size: 15px; font-weight: 650; }
+      .cmitemdim { fill: #8d84a3; font-size: 15px; font-weight: 600; }
+      .cmnote { fill: #efe6ff; font-size: 14px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#cmbg)"/>
+  <circle cx="1330" cy="120" r="230" fill="#7b4fd0" opacity="0.16" filter="url(#cmglow)"/>
+  <circle cx="190" cy="810" r="215" fill="#2f6fbf" opacity="0.14" filter="url(#cmglow)"/>
+
+  <g class="ui">
+    <text x="72" y="60" class="cmeyebrow">DASH MENU COMPOSITION</text>
+    <text x="72" y="115" class="cmhead">One menu, many authors</text>
+    <text x="72" y="152" class="cmsub">Hit path → each component contributes → guards remove → shared group names merge → the menu you see</text>
+
+    <!-- Stage 1: the hit path up the React tree -->
+    <text x="72" y="206" class="cmstage">1 · THE HIT PATH</text>
+    <g filter="url(#cmshadow)">
+      <rect x="72" y="222" width="336" height="586" rx="22" fill="#20163a" stroke="#4b3a75" stroke-width="2"/>
+    </g>
+    <text x="98" y="258" class="cmbody">You right-click an image inside a</text>
+    <text x="98" y="279" class="cmbody">freeform collection. The event travels up.</text>
+
+    <g>
+      <rect x="98" y="300" width="284" height="78" rx="14" fill="#2c2050" stroke="#6f56ab" stroke-width="2"/>
+      <text x="118" y="330" class="cmcard">ImageBox</text>
+      <text x="118" y="356" class="cmbody mono">13 entries · image renderer</text>
+    </g>
+    <path d="M240 378L240 404" stroke="#b98cff" stroke-width="2.5" marker-end="url(#cmarrow)"/>
+
+    <g>
+      <rect x="98" y="410" width="284" height="78" rx="14" fill="#2c2050" stroke="#6f56ab" stroke-width="2"/>
+      <text x="118" y="440" class="cmcard">CollectionFreeFormView</text>
+      <text x="118" y="466" class="cmbody mono">20 entries · freeform canvas</text>
+    </g>
+    <path d="M240 488L240 514" stroke="#b98cff" stroke-width="2.5" marker-end="url(#cmarrow)"/>
+
+    <g>
+      <rect x="98" y="520" width="284" height="78" rx="14" fill="#2c2050" stroke="#6f56ab" stroke-width="2"/>
+      <text x="118" y="550" class="cmcard">CollectionView</text>
+      <text x="118" y="576" class="cmbody mono">28 entries · any collection</text>
+    </g>
+    <path d="M240 598L240 624" stroke="#b98cff" stroke-width="2.5" marker-end="url(#cmarrow)"/>
+
+    <g>
+      <rect x="98" y="630" width="284" height="78" rx="14" fill="#33235c" stroke="#9a7ce0" stroke-width="2.5"/>
+      <text x="118" y="660" class="cmcard">DocumentView</text>
+      <text x="118" y="686" class="cmbody mono">38 entries · every document gets these</text>
+    </g>
+
+    <rect x="98" y="726" width="284" height="60" rx="12" fill="#1a1230" stroke="#4b3a75" stroke-width="1.5"/>
+    <text x="118" y="750" class="cmnote">Nothing declares the whole menu.</text>
+    <text x="118" y="772" class="cmbody">Each layer only knows its own entries.</text>
+
+    <!-- Stage 2: the singleton and its guards -->
+    <text x="446" y="206" class="cmstage">2 · ONE SHARED MENU OBJECT</text>
+    <g filter="url(#cmshadow)">
+      <rect x="446" y="222" width="392" height="586" rx="22" fill="#20163a" stroke="#4b3a75" stroke-width="2"/>
+    </g>
+
+    <rect x="472" y="248" width="340" height="72" rx="14" fill="#3a2a68" stroke="#a888f0" stroke-width="2.5"/>
+    <text x="492" y="278" class="cmcard mono">ContextMenu.Instance</text>
+    <text x="492" y="302" class="cmbody">A single observable array of entries.</text>
+
+    <path d="M408 668L446 668" stroke="#b98cff" stroke-width="2.5" marker-end="url(#cmarrow)"/>
+
+    <text x="472" y="356" class="cmstage">GUARDS RUN AS EACH ENTRY IS ADDED</text>
+
+    <g>
+      <rect x="472" y="372" width="340" height="62" rx="12" fill="#241a42" stroke="#5d4a92" stroke-width="1.8"/>
+      <text x="492" y="397" class="cmcode mono">!Doc.noviceMode</text>
+      <text x="492" y="420" class="cmbody">Removes most developer-facing entries.</text>
+    </g>
+    <g>
+      <rect x="472" y="444" width="340" height="62" rx="12" fill="#241a42" stroke="#5d4a92" stroke-width="1.8"/>
+      <text x="492" y="469" class="cmcode mono">GetEffectiveAcl(doc) === AclAdmin</text>
+      <text x="492" y="492" class="cmbody">Removes entries above your access level.</text>
+    </g>
+    <g>
+      <rect x="472" y="516" width="340" height="62" rx="12" fill="#241a42" stroke="#5d4a92" stroke-width="1.8"/>
+      <text x="492" y="541" class="cmcode mono">!this.Document.isFolder</text>
+      <text x="492" y="564" class="cmbody">Removes entries this document cannot use.</text>
+    </g>
+
+    <g>
+      <rect x="472" y="600" width="340" height="98" rx="14" fill="#2a1c30" stroke="#c07a5f" stroke-width="2"/>
+      <text x="492" y="628" class="cmcard">findByDescription</text>
+      <text x="492" y="653" class="cmbody">A component that wants to extend a group</text>
+      <text x="492" y="674" class="cmbody">looks it up by its visible text, then pushes</text>
+      <text x="492" y="692" class="cmbody">into the array it finds.</text>
+    </g>
+
+    <rect x="472" y="716" width="340" height="70" rx="12" fill="#1a1230" stroke="#4b3a75" stroke-width="1.5"/>
+    <text x="492" y="741" class="cmnote">The group name is the join key.</text>
+    <text x="492" y="763" class="cmbody">Rename a group and the merge silently</text>
+    <text x="492" y="781" class="cmbody">splits into two menus.</text>
+
+    <path d="M838 520L886 520" stroke="#ff9f6b" stroke-width="2.5" marker-end="url(#cmarrowwarm)"/>
+
+    <!-- Stage 3: the assembled menu -->
+    <text x="886" y="206" class="cmstage">3 · WHAT YOU SEE</text>
+    <g filter="url(#cmshadow)">
+      <rect x="886" y="222" width="330" height="586" rx="22" fill="#241a42" stroke="#6f56ab" stroke-width="2"/>
+      <rect x="906" y="244" width="290" height="542" rx="14" fill="url(#cmpanel)"/>
+    </g>
+
+    <text x="928" y="278" class="cmitem">Create document</text>
+    <text x="1160" y="278" class="cmitemdim">›</text>
+    <line x1="922" y1="292" x2="1180" y2="292" stroke="#c9bde3" stroke-width="1"/>
+
+    <text x="928" y="318" class="cmitem">Appearance…</text>
+    <text x="1160" y="318" class="cmitemdim">›</text>
+    <text x="928" y="342" class="cmitemdim">Open in Lightbox · Pin · Hide Clusters</text>
+
+    <text x="928" y="378" class="cmitem">Options…</text>
+    <text x="1160" y="378" class="cmitemdim">›</text>
+    <text x="928" y="402" class="cmitemdim">Dynamic Res · Freeze Aspect · Lightbox</text>
+
+    <text x="928" y="438" class="cmitem">Z Order…</text>
+    <text x="1160" y="438" class="cmitemdim">›</text>
+    <text x="928" y="462" class="cmitemdim">Bring to Front · Send to Back</text>
+
+    <text x="928" y="498" class="cmitem">OnClick…</text>
+    <text x="1160" y="498" class="cmitemdim">›</text>
+
+    <text x="928" y="534" class="cmitem">More…</text>
+    <text x="1160" y="534" class="cmitemdim">›</text>
+    <line x1="922" y1="552" x2="1180" y2="552" stroke="#c9bde3" stroke-width="1"/>
+
+    <text x="928" y="580" class="cmitem">General…</text>
+    <text x="1160" y="580" class="cmitemdim">›</text>
+    <text x="928" y="604" class="cmitemdim">Share · Zip Export · Close · Show Metadata</text>
+
+    <text x="928" y="640" class="cmitem">Help…</text>
+    <text x="1160" y="640" class="cmitemdim">›</text>
+    <text x="928" y="664" class="cmitemdim">See image node documentation</text>
+
+    <rect x="922" y="690" width="258" height="80" rx="10" fill="#ded3f5"/>
+    <text x="940" y="716" class="cmitem">Every group above is filled</text>
+    <text x="940" y="738" class="cmitem">by more than one component.</text>
+    <text x="940" y="760" class="cmitemdim">Options… alone has 16 authors.</text>
+
+    <!-- Right rail: consequences -->
+    <text x="1252" y="206" class="cmstage">WHAT THIS EXPLAINS</text>
+    <g filter="url(#cmshadow)">
+      <rect x="1252" y="222" width="276" height="586" rx="22" fill="#20163a" stroke="#4b3a75" stroke-width="2"/>
+    </g>
+
+    <rect x="1274" y="248" width="232" height="6" rx="3" fill="url(#cmviolet)"/>
+    <text x="1274" y="288" class="cmcard">The menu is additive</text>
+    <text x="1274" y="313" class="cmbody">Two documents of the same</text>
+    <text x="1274" y="333" class="cmbody">type give different menus if</text>
+    <text x="1274" y="353" class="cmbody">their containers differ.</text>
+
+    <rect x="1274" y="386" width="232" height="6" rx="3" fill="url(#cmviolet)"/>
+    <text x="1274" y="426" class="cmcard">Absence is a guard</text>
+    <text x="1274" y="451" class="cmbody">A missing entry is usually</text>
+    <text x="1274" y="471" class="cmbody">Novice mode or an access</text>
+    <text x="1274" y="491" class="cmbody">level, not a broken build.</text>
+
+    <rect x="1274" y="524" width="232" height="6" rx="3" fill="url(#cmamber)"/>
+    <text x="1274" y="564" class="cmcard">Labels can flip</text>
+    <text x="1274" y="589" class="cmbody">“Hide Clusters” names the</text>
+    <text x="1274" y="609" class="cmbody">state you move to, not the</text>
+    <text x="1274" y="629" class="cmbody">state you are in.</text>
+
+    <rect x="1274" y="662" width="232" height="6" rx="3" fill="url(#cmamber)"/>
+    <text x="1274" y="702" class="cmcard">Undo is per handler</text>
+    <text x="1274" y="727" class="cmbody">No entry sets the menu's own</text>
+    <text x="1274" y="747" class="cmbody">undoable flag. Reversibility</text>
+    <text x="1274" y="767" class="cmbody">comes from the handler.</text>
+
+    <text x="72" y="852" class="cmbody">Entry counts and guard expressions are generated from the pinned Dash-Web baseline; the hit path shown is one representative click.</text>
+    <text x="72" y="876" class="cmbody mono">DocumentView.tsx · CollectionView.tsx · CollectionFreeFormView.tsx · ImageBox.tsx · ContextMenu.tsx</text>
+  </g>
+</svg>

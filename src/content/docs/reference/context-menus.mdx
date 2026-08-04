@@ -14,6 +14,10 @@ import ContextMenuReference from '../../../components/ContextMenuReference.astro
   why an entry someone described to you may simply not be there.
 </p>
 
+![How Dash assembles a right-click menu: the hit path up the React tree with per-component entry counts, the single ContextMenu singleton where guards remove entries, findByDescription merging contributions into shared groups, and the resulting menu.](/assets/images/diagrams/dash-context-menu-composition.svg)
+
+[Open the menu composition diagram at its full 1600 × 900 resolution.](/assets/images/diagrams/dash-context-menu-composition.svg)
+
 ## The one idea that explains the whole menu
 
 There is exactly one menu object: `ContextMenu.Instance`. When you right-click,

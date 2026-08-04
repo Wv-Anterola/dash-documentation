@@ -296,8 +296,8 @@ if (contextMenuReference.summary.undoablePropUsed !== 0) {
   errors.push('Context menu page states that no entry sets ContextMenuProps.undoable, but the inventory now finds one');
 }
 const contextMenusPage = await readFile(path.join(docsRoot, 'reference', 'context-menus.mdx'), 'utf8');
-if (!contextMenusPage.includes('<ContextMenuReference />')) {
-  errors.push('Context menu page lost its searchable entry index');
+if (!contextMenusPage.includes('<ContextMenuReference />') || !contextMenusPage.includes('dash-context-menu-composition.svg')) {
+  errors.push('Context menu page lost its searchable entry index or unique composition visual');
 }
 if (!astroConfigSource.includes("slug: 'reference/context-menus'")) {
   errors.push('Context menu atlas is no longer discoverable in the primary navigation');
