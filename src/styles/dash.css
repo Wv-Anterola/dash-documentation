@@ -2608,6 +2608,120 @@
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * Open destinations
+ * ------------------------------------------------------------------ */
+
+.open-destination-overrides {
+  display: grid;
+  gap: var(--dash-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  margin-block: var(--dash-space-4);
+}
+
+.open-destination-override {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-rule);
+  border-left: 4px solid var(--dash-accent);
+  border-radius: var(--dash-radius-md);
+  padding: var(--dash-space-3);
+}
+
+.sl-markdown-content .open-destination-override h4 {
+  margin-block: 0 var(--dash-space-1);
+}
+
+.sl-markdown-content .open-destination-override p {
+  margin-block: 0 var(--dash-space-2);
+}
+
+.open-destination-meta {
+  color: var(--dash-ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dash-space-2);
+  font-size: var(--dash-type-sm);
+}
+
+.sl-markdown-content .open-destination-meta {
+  margin-block: var(--dash-space-1) 0;
+}
+
+.open-destination-router {
+  border-left: 3px solid var(--dash-rule-strong);
+  margin-block: var(--dash-space-4);
+  padding-left: var(--dash-space-3);
+}
+
+.sl-markdown-content .open-destination-router h4 {
+  align-items: center;
+  display: flex;
+  gap: var(--dash-space-2);
+  margin-block: 0 var(--dash-space-1);
+}
+
+.open-destination-rank {
+  align-items: center;
+  background: var(--dash-accent);
+  border-radius: 999px;
+  color: var(--dash-surface);
+  display: inline-flex;
+  flex: none;
+  font-size: var(--dash-type-sm);
+  height: 1.6rem;
+  justify-content: center;
+  width: 1.6rem;
+}
+
+.open-destination-row + .open-destination-row {
+  margin-top: var(--dash-space-2);
+}
+
+.open-destination-row > summary {
+  flex-wrap: wrap;
+}
+
+.open-destination-value {
+  flex: none;
+}
+
+.open-destination-plain {
+  color: var(--dash-ink-soft);
+  flex: 1 1 16rem;
+}
+
+.open-destination-count {
+  color: var(--dash-ink-soft);
+  flex: none;
+  font-size: var(--dash-type-sm);
+  white-space: nowrap;
+}
+
+.sl-markdown-content ul.open-destination-uses {
+  display: grid;
+  gap: var(--dash-space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sl-markdown-content ul.open-destination-uses > li {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+}
+
+.open-destination-call {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  overflow-wrap: anywhere;
+}
+
+.open-destination-more {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+}
+
 @media (max-width: 64rem) {
   .http-route-summary,
   .http-route-filters,

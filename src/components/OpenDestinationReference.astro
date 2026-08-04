@@ -1,0 +1,190 @@
+---
+/**
+ * Renders the open-destination map entirely on the server.
+ *
+ * The other generated references filter thousands of records in the browser.
+ * This one has eighteen destinations and five routers, and its value is in the
+ * order things happen, so it is a set of ordered tables instead. Nothing here
+ * needs JavaScript, which also means every claim on the page is reachable by
+ * site search and by a reader who has scripting turned off.
+ */
+import reference from '../data/generated/open-destinations.json';
+
+const { summary, overrides, routers, layout, destinations, modifiers } = reference;
+const busiest = [...destinations].sort((a, b) => b.useCount - a.useCount);
+---
+
+<div class="open-destination-reference">
+  <div class="audit-summary control-contract-summary" aria-label="Open destination totals">
+    <div><strong>{summary.destinations}</strong><span>destinations</span></div>
+    <div><strong>{summary.modifiers}</strong><span>modifiers</span></div>
+    <div><strong>{summary.routers}</strong><span>routers in the chain</span></div>
+    <div><strong>{summary.routingCases}</strong><span>routing cases</span></div>
+    <div><strong>{summary.layoutBranches}</strong><span>split branches</span></div>
+    <div><strong>{summary.callSites}</strong><span>call sites traced</span></div>
+  </div>
+
+  <h3 id="overrides">What outranks the destination you asked for</h3>
+  <p>
+    These four rules run before or instead of the routing table. Each one is the
+    answer to a different report of Dash “ignoring” a destination.
+  </p>
+  <div class="open-destination-overrides">
+    {overrides.map((override) => (
+      <section class="open-destination-override" id={override.id}>
+        <h4>{override.name}</h4>
+        <p>{override.plain}</p>
+        <p class="open-destination-meta">
+          <span>Beats: {override.beats}</span>
+          <a href={override.source.url}><code>{override.source.file.split('/').pop()}:{override.source.line}</code></a>
+        </p>
+      </section>
+    ))}
+  </div>
+
+  <h3 id="routers">The router chain</h3>
+  <p>
+    A request climbs this ladder from wherever it started. Each router claims
+    the verbs it understands and forwards the rest upward, so where you clicked
+    decides which router sees your request first.
+  </p>
+  {routers.map((router) => (
+    <section class="open-destination-router" id={`router-${router.id}`}>
+      <h4><span class="open-destination-rank">{router.rank}</span> {router.name}</h4>
+      <p>{router.plain}</p>
+      <p class="open-destination-meta">
+        <code>{router.symbol}</code>
+        {router.scrutinee && <span>switches on <code>{router.scrutinee}</code></span>}
+        {router.forwardsTo && <span>forwards the rest to <code>{router.forwardsTo}</code></span>}
+        <a href={router.source.url}><code>{router.source.file.split('/').pop()}:{router.source.line}</code></a>
+      </p>
+      {router.cases.length > 0 && (
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Case</th>
+                <th scope="col">What it does</th>
+                <th scope="col">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {router.cases.map((entry) => (
+                <tr>
+                  <td><code>{entry.label}</code></td>
+                  <td>{entry.plain || <em>Falls through to the case above.</em>}</td>
+                  <td><code>{entry.effect}</code></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  ))}
+
+  <h3 id="destinations">Every destination</h3>
+  <p>
+    Ordered by how often the destination is used in the client, which is a fair
+    proxy for how often you will meet it. Expand an entry for the routers that
+    claim it and the code that asks for it.
+  </p>
+  {busiest.map((destination) => (
+    <details class="control-contract-row open-destination-row" id={destination.id}>
+      <summary>
+        <span class="open-destination-value"><code>{destination.value}</code></span>
+        <span class="open-destination-plain">{destination.plain}</span>
+        <span class="open-destination-count">{destination.useCount} {destination.useCount === 1 ? 'use' : 'uses'}</span>
+      </summary>
+      <div class="control-contract-body">
+        <p>{destination.detail}</p>
+        <dl class="control-contract-facts">
+          <div><dt>Enum member</dt><dd><code>OpenWhere.{destination.member}</code></dd></div>
+          <div><dt>Verb</dt><dd><code>{destination.base}</code></dd></div>
+          <div><dt>Modifier</dt><dd>{destination.modifier ? <code>{destination.modifier}</code> : 'none'}</dd></div>
+          <div><dt>Raw fields</dt><dd>{destination.keyValue ? 'yes, shows the key/value table' : 'no'}</dd></div>
+          <div>
+            <dt>Claimed by</dt>
+            <dd>
+              {destination.claimedBy.length
+                ? destination.claimedBy.map((id) => routers.find((router) => router.id === id)?.name ?? id).join(', ')
+                : 'no addDocTab router; reached another way'}
+            </dd>
+          </div>
+        </dl>
+        {destination.uses.length > 0 && (
+          <>
+            <p class="control-contract-code-list"><strong>Asked for by:</strong></p>
+            <ul class="open-destination-uses">
+              {destination.uses.map((use) => (
+                <li>
+                  <a href={use.source.url}><code>{use.owner}</code></a>
+                  {use.call && <code class="open-destination-call">{use.call}</code>}
+                </li>
+              ))}
+            </ul>
+            {destination.useCount > destination.uses.length && (
+              <p class="open-destination-more">
+                and {destination.useCount - destination.uses.length} more, in the published dataset.
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </details>
+  ))}
+
+  <h3 id="modifiers">Modifiers</h3>
+  <p>
+    Everything after the first colon. A modifier is not part of the verb: the
+    same modifier means the same thing to every verb that accepts one.
+  </p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Modifier</th>
+          <th scope="col">What it changes</th>
+          <th scope="col">Uses</th>
+        </tr>
+      </thead>
+      <tbody>
+        {modifiers.map((modifier) => (
+          <tr id={modifier.id}>
+            <td><a href={modifier.source.url}><code>{modifier.value || '(empty)'}</code></a></td>
+            <td>{modifier.plain}</td>
+            <td>{modifier.useCount}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="split-algebra">How a split is actually made</h3>
+  <p>
+    Once a request reaches <code>AddSplit</code>, the side you asked for is only
+    a hint. These branches are tested in order, and the first one that matches
+    decides the layout. This is why the same request produces a new tab in one
+    workspace and a half-height pane in another.
+  </p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Order</th>
+          <th scope="col">Condition</th>
+          <th scope="col">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {layout.map((branch, index) => (
+          <tr id={branch.id}>
+            <td>{index + 1}</td>
+            <td><a href={branch.source.url}><code>{branch.condition}</code></a></td>
+            <td>{branch.plain}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>

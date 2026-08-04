@@ -1,0 +1,1868 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "enums": "Both destination enums parsed from OpenWhere.ts with the TypeScript compiler, values and trailing comments included",
+    "routers": "Each router located by name, its switch scrutinee compared against the reviewed contract, and its case clauses recovered verbatim",
+    "overrides": "Reviewed precedence rules pinned to source expressions that must still appear in the routing files",
+    "layout": "The branch order inside CollectionDockingView.AddSplit pinned to its reviewed conditions",
+    "callSites": "Every OpenWhere and OpenWhereMod property access in the client, with its enclosing declaration and call expression",
+    "driftRule": "Generation fails when an enum member loses its explanation, a router stops switching on the reviewed expression, an override or layout branch disappears, or a routed destination stops being claimed"
+  },
+  "summary": {
+    "destinations": 18,
+    "modifiers": 7,
+    "routers": 5,
+    "routingCases": 15,
+    "overrides": 4,
+    "layoutBranches": 6,
+    "callSites": 145,
+    "unroutedDestinations": 1,
+    "mostUsed": "addRight"
+  },
+  "overrides": [
+    {
+      "id": "lightbox-capture",
+      "name": "An open lightbox captures everything",
+      "plain": "While the lightbox is showing a document, the top-level router rewrites every requested destination to `lightbox`. Following a link that asks for a tab on the right will replace the lightbox contents instead. Dismiss the lightbox first if you want the tab.",
+      "beats": "every destination",
+      "expression": "DocumentView.LightboxDoc() ? OpenWhere.lightbox",
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 748,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L748"
+      }
+    },
+    {
+      "id": "dashboard-swap",
+      "name": "A dashboard replaces the workspace",
+      "plain": "A document that carries a `dockingConfig` is a dashboard. Opening one switches the whole workspace to it, whatever destination was asked for. Adding the `keyValue` modifier is the exception: it opens the dashboard document’s raw fields in a tab instead of switching to it.",
+      "beats": "every destination except keyValue",
+      "expression": "doc.dockingConfig && !keyValue",
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 747,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L747"
+      }
+    },
+    {
+      "id": "docking-swap",
+      "name": "Splits refuse to nest a dashboard",
+      "plain": "`AddSplit` and `InsertSplit` repeat the dashboard check independently, so a dashboard reached through a tile split also swaps the workspace rather than becoming a tab inside the current one.",
+      "beats": "add, insert",
+      "expression": "document?._type_collection === CollectionViewType.Docking && !keyValue",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 175,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L175"
+      }
+    },
+    {
+      "id": "reuse-existing-tab",
+      "name": "An already-open tab is reused",
+      "plain": "`AddSplit` looks for a tab already showing this document with the same layout before it creates anything. If one exists, that tab is brought to the front and no split happens: this is why asking twice for a document on the right only ever produces one tab.",
+      "beats": "add and its modifiers",
+      "expression": "tab.header.parent.setActiveContentItem(tab.contentItem)",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 202,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L202"
+      }
+    }
+  ],
+  "routers": [
+    {
+      "id": "freeform",
+      "name": "Freeform canvas router",
+      "rank": 1,
+      "plain": "The innermost router. It is the only place that can put a document onto the canvas you are looking at instead of into a tab, and the only place that honours a collection marked as its own lightbox. Anything it does not claim is passed to the router above it.",
+      "symbol": "addDocTab",
+      "scrutinee": "where",
+      "forwardsTo": "this._props.addDocTab(docsIn, location, layoutString)",
+      "cases": [
+        {
+          "labels": [
+            "OpenWhere.inParent"
+          ],
+          "label": "OpenWhere.inParent",
+          "handles": [
+            "inParent"
+          ],
+          "effect": "return this._props.addDocument?.(docs) || false;",
+          "plain": "Adds the document to this canvas as a child. No tab is opened and nothing moves to another tile.",
+          "line": 1653
+        },
+        {
+          "labels": [
+            "OpenWhere.inParentFromScreen"
+          ],
+          "label": "OpenWhere.inParentFromScreen",
+          "handles": [
+            "inParentFromScreen"
+          ],
+          "effect": "{ const docContext = DocCast(docs[0]?.embedContainer); return ( (this.addDocument?.( toList(docs).map(doc => { [doc.x, doc.y] = this.screenToFreeformContentsXf.transformPoint(NumCast(doc.x), NumCast(doc.y)); return doc; }) ) && (!docContext || this._props.removeDocument?.(docContext))) || false ); }",
+          "plain": "Adds the document to this canvas, converting its screen position into canvas coordinates first, then removing it from whatever it was embedded in. This is how a document is dragged out of a pile or a nested collection onto the canvas beneath it.",
+          "line": 1655
+        },
+        {
+          "labels": [
+            "undefined",
+            "OpenWhere.lightbox"
+          ],
+          "label": "undefined / OpenWhere.lightbox",
+          "handles": [
+            "lightbox"
+          ],
+          "effect": "if (this.dataDoc.$isLightbox) { this._lightboxDoc = docs[0]; return true; } return this.addLinkedDocTab(docsIn, location);",
+          "plain": "An empty destination is treated the same as `lightbox`.",
+          "line": 1669
+        }
+      ],
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 1648,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1648"
+      }
+    },
+    {
+      "id": "linked",
+      "name": "Collection shortcut",
+      "rank": 2,
+      "plain": "Shared by carousels, card decks, and the freeform canvas. Before anything opens, it checks whether the document is already a child of this collection: if it is, the request is satisfied by unhiding it in place, and no tab is created. Adding `:always` is what defeats this.",
+      "symbol": "addLinkedDocTab",
+      "scrutinee": "",
+      "forwardsTo": "this._props.addDocTab(docsIn, location)",
+      "cases": [],
+      "source": {
+        "file": "src/client/views/collections/CollectionSubView.tsx",
+        "line": 168,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionSubView.tsx#L168"
+      }
+    },
+    {
+      "id": "tab",
+      "name": "Tab router",
+      "rank": 3,
+      "plain": "Runs when the request comes from inside a docked tab. It is identical to the top-level router except that it knows which tile it is in, so `add`, `replace`, `insert`, and `toggle` act relative to that tile rather than the workspace root.",
+      "symbol": "addDocTab",
+      "scrutinee": "whereFields[0]",
+      "forwardsTo": "",
+      "cases": [
+        {
+          "labels": [
+            "undefined",
+            "OpenWhere.lightbox"
+          ],
+          "label": "undefined / OpenWhere.lightbox",
+          "handles": [
+            "lightbox"
+          ],
+          "effect": "return LightboxView.Instance.AddDocTab(docs[0], location);",
+          "plain": "Floats the document over the workspace.",
+          "line": 573
+        },
+        {
+          "labels": [
+            "OpenWhere.close"
+          ],
+          "label": "OpenWhere.close",
+          "handles": [
+            "close"
+          ],
+          "effect": "return CollectionDockingView.CloseSplit(docs[0], whereMods);",
+          "plain": "Closes the tab showing this document in this tile.",
+          "line": 574
+        },
+        {
+          "labels": [
+            "OpenWhere.replace"
+          ],
+          "label": "OpenWhere.replace",
+          "handles": [
+            "replace"
+          ],
+          "effect": "return CollectionDockingView.ReplaceTab(docs[0], whereMods, this.stack, panelName, undefined, keyValue, layoutString);",
+          "plain": "Swaps the contents of the active tab in this tile, or of the named panel if one was given.",
+          "line": 575
+        },
+        {
+          "labels": [
+            "OpenWhere.toggle"
+          ],
+          "label": "OpenWhere.toggle",
+          "handles": [
+            "toggle"
+          ],
+          "effect": "return CollectionDockingView.ToggleSplit(docs[0], whereMods, this.stack, TabDocView.DontSelectOnActivate, keyValue, layoutString);",
+          "plain": "Closes the document if it is already open anywhere, otherwise opens it. The opened tab is deliberately not selected.",
+          "line": 576
+        },
+        {
+          "labels": [
+            "OpenWhere.insert"
+          ],
+          "label": "OpenWhere.insert",
+          "handles": [
+            "insert"
+          ],
+          "effect": "return CollectionDockingView.InsertSplit(docs[0], whereMods, this.stack, panelName || \"HackForStackName\", keyValue, layoutString);",
+          "plain": "Adds the document alongside an existing tab for it, rather than starting a new tile.",
+          "line": 577
+        },
+        {
+          "labels": [
+            "OpenWhere.add",
+            "default"
+          ],
+          "label": "OpenWhere.add / default",
+          "handles": [
+            "add"
+          ],
+          "effect": "return CollectionDockingView.AddSplit(docs[0], whereMods, this.stack, undefined, keyValue, layoutString);",
+          "plain": "Adds a tab, splitting this tile on the requested side.",
+          "line": 578
+        }
+      ],
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 563,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L563"
+      }
+    },
+    {
+      "id": "main",
+      "name": "Top-level router",
+      "rank": 4,
+      "plain": "The fallback every other router eventually reaches, and the one used directly by the sidebar, the properties panel, and the creator menus. It has no tile context, so splits are measured against the workspace root.",
+      "symbol": "addDocTabFunc_impl",
+      "scrutinee": "DocumentView.LightboxDoc() ? OpenWhere.lightbox : whereFields[0]",
+      "forwardsTo": "",
+      "cases": [
+        {
+          "labels": [
+            "OpenWhere.lightbox"
+          ],
+          "label": "OpenWhere.lightbox",
+          "handles": [
+            "lightbox"
+          ],
+          "effect": "return LightboxView.Instance.AddDocTab(doc, location, layoutString);",
+          "plain": "Floats the document over the workspace.",
+          "line": 749
+        },
+        {
+          "labels": [
+            "OpenWhere.close"
+          ],
+          "label": "OpenWhere.close",
+          "handles": [
+            "close"
+          ],
+          "effect": "return CollectionDockingView.CloseSplit(doc, whereMods, layoutString);",
+          "plain": "Closes the tab showing this document.",
+          "line": 750
+        },
+        {
+          "labels": [
+            "OpenWhere.toggle"
+          ],
+          "label": "OpenWhere.toggle",
+          "handles": [
+            "toggle"
+          ],
+          "effect": "return CollectionDockingView.ToggleSplit(doc, whereMods, undefined, TabDocView.DontSelectOnActivate);",
+          "plain": "Closes the document if it is already open anywhere, otherwise opens it. The opened tab is deliberately not selected, so the backlinks menu can preview a target without stealing the selection.",
+          "line": 751
+        },
+        {
+          "labels": [
+            "OpenWhere.replace"
+          ],
+          "label": "OpenWhere.replace",
+          "handles": [
+            "replace"
+          ],
+          "effect": "return CollectionDockingView.ReplaceTab(doc, whereMods, undefined, panelName, undefined, keyValue, layoutString);",
+          "plain": "Swaps the contents of the named panel, or of the active tab if no panel was named.",
+          "line": 752
+        },
+        {
+          "labels": [
+            "OpenWhere.insert"
+          ],
+          "label": "OpenWhere.insert",
+          "handles": [
+            "insert"
+          ],
+          "effect": "return CollectionDockingView.InsertSplit(doc, whereMods, undefined, panelName || \"HackForStackName\", keyValue, layoutString);",
+          "plain": "Adds the document alongside an existing tab for it, rather than starting a new tile.",
+          "line": 753
+        },
+        {
+          "labels": [
+            "OpenWhere.add",
+            "default"
+          ],
+          "label": "OpenWhere.add / default",
+          "handles": [
+            "add"
+          ],
+          "effect": "return CollectionDockingView.AddSplit(doc, whereMods, undefined, undefined, keyValue, layoutString);",
+          "plain": "Adds a tab, splitting the workspace root on the requested side.",
+          "line": 754
+        }
+      ],
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 740,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L740"
+      }
+    },
+    {
+      "id": "lightbox",
+      "name": "Lightbox terminal",
+      "rank": 5,
+      "plain": "Not a router: the end of the line for `lightbox`. It floats one document over the workspace and queues that document’s annotations as the forward history for the next and previous buttons.",
+      "symbol": "AddDocTab",
+      "scrutinee": "",
+      "forwardsTo": "",
+      "cases": [],
+      "source": {
+        "file": "src/client/views/LightboxView.tsx",
+        "line": 134,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/LightboxView.tsx#L134"
+      }
+    }
+  ],
+  "layout": [
+    {
+      "id": "into-current-tile",
+      "condition": "!pullSide && stack",
+      "plain": "No side was asked for and the caller is inside a tile, so the document becomes another tab in that tile and is activated.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 212,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L212"
+      }
+    },
+    {
+      "id": "empty-workspace",
+      "condition": "glayRoot.contentItems.length === 0",
+      "plain": "The workspace is empty, so the document becomes the first tile.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 221,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L221"
+      }
+    },
+    {
+      "id": "single-tile",
+      "condition": "glayRoot.contentItems[0].isStack",
+      "plain": "The workspace is a single tile with no rows or columns around it, so the side is ignored and the document becomes another tab in it.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 224,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L224"
+      }
+    },
+    {
+      "id": "single-nested-tile",
+      "condition": "glayRoot.contentItems[0].contentItems[0].contentItems.length === 0",
+      "plain": "The workspace has one empty tile inside one container. The document goes into that tile rather than splitting an empty layout.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 226,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L226"
+      }
+    },
+    {
+      "id": "row-layout",
+      "condition": "instance._goldenLayout.root.contentItems[0].isRow",
+      "plain": "The workspace is arranged left to right. Left and right insert a new tile into that row directly. Top and bottom cannot, so the entire row is wrapped in a new column and the two halves are set to 50 percent each.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 228,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L228"
+      }
+    },
+    {
+      "id": "column-layout",
+      "condition": "collayout.parent.replaceChild(collayout, newRow)",
+      "plain": "The workspace is arranged top to bottom. Top and bottom insert into that column directly. Left and right wrap the whole column in a new row and split it 50 / 50.",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 279,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L279"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "where-lightbox",
+      "member": "lightbox",
+      "value": "lightbox",
+      "base": "lightbox",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Float the document over the workspace, dimming everything behind it.",
+      "detail": "Inside a collection that is flagged as its own lightbox, the document is shown within that collection instead. Inside any collection that already contains the document, the request is satisfied by unhiding it in place and no lightbox opens at all.",
+      "comment": "",
+      "claimedBy": [
+        "freeform",
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 10,
+      "uses": [
+        {
+          "owner": "makeIntoPortal",
+          "call": "",
+          "source": {
+            "file": "src/client/documents/DocUtils.ts",
+            "line": 587,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L587"
+          }
+        },
+        {
+          "owner": "DocumentManager.showDocument",
+          "call": "options.openLocation?.includes(OpenWhere.lightbox)",
+          "source": {
+            "file": "src/client/util/DocumentManager.ts",
+            "line": 274,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/DocumentManager.ts#L274"
+          }
+        },
+        {
+          "owner": "doFollow.options",
+          "call": "StrCast(srcAnchor.followLinkLocation, OpenWhere.lightbox)",
+          "source": {
+            "file": "src/client/util/LinkFollower.ts",
+            "line": 86,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/LinkFollower.ts#L86"
+          }
+        },
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 748,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L748"
+          }
+        },
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 749,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L749"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.lightbox}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1630,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1630"
+          }
+        },
+        {
+          "owner": "CollectionSubViewInternal.addLinkedDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionSubView.tsx",
+            "line": 171,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionSubView.tsx#L171"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 573,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L573"
+          }
+        },
+        {
+          "owner": "CollectionFreeFormView.addDocTab",
+          "call": "action((docsIn: Doc | Doc[], location: OpenWhere, layoutString?: string) => { const docs = toList(docsIn); if (this._props.isAnnotationOverlay) retur…",
+          "source": {
+            "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+            "line": 1669,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1669"
+          }
+        },
+        {
+          "owner": "LinkDocPreview.followLink",
+          "call": "openLocation: OpenWhere.lightbox",
+          "source": {
+            "file": "src/client/views/nodes/LinkDocPreview.tsx",
+            "line": 197,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/LinkDocPreview.tsx#L197"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 11,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L11"
+      }
+    },
+    {
+      "id": "where-lightbox-always",
+      "member": "lightboxAlways",
+      "value": "lightbox:always",
+      "base": "lightbox",
+      "modifier": "always",
+      "keyValue": false,
+      "plain": "Float the document over the workspace, even if it is already visible where you are.",
+      "detail": "The `always` modifier defeats the collection shortcut that would otherwise satisfy the request in place.",
+      "comment": "",
+      "claimedBy": [
+        "freeform",
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 7,
+      "uses": [
+        {
+          "owner": "DocumentDecorations.onMaximizeClick",
+          "call": "selView._props.addDocTab(openDoc, OpenWhere.lightboxAlways)",
+          "source": {
+            "file": "src/client/views/DocumentDecorations.tsx",
+            "line": 296,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentDecorations.tsx#L296"
+          }
+        },
+        {
+          "owner": "LightboxView",
+          "call": "LightboxView.Instance.AddDocTab(documentView.Document, OpenWhere.lightboxAlways, 'layout')",
+          "source": {
+            "file": "src/client/views/LightboxView.tsx",
+            "line": 366,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/LightboxView.tsx#L366"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.lightboxAlways}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1629,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1629"
+          }
+        },
+        {
+          "owner": "CollectionDockingView",
+          "call": "CollectionDockingView.Instance?._props.addDocTab(doc, OpenWhere.lightboxAlways)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 675,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L675"
+          }
+        },
+        {
+          "owner": "init.docIcon",
+          "call": "this.addDocTab(doc, OpenWhere.lightboxAlways)",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 412,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L412"
+          }
+        },
+        {
+          "owner": "TreeView.openLevel",
+          "call": "this._props.addDocTab(bestEmbedding, OpenWhere.lightboxAlways)",
+          "source": {
+            "file": "src/client/views/collections/TreeView.tsx",
+            "line": 247,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TreeView.tsx#L247"
+          }
+        },
+        {
+          "owner": "DocumentViewInternal.onClick",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.lightboxAlways)",
+          "source": {
+            "file": "src/client/views/nodes/DocumentView.tsx",
+            "line": 283,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L283"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 12,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L12"
+      }
+    },
+    {
+      "id": "where-insert",
+      "member": "insert",
+      "value": "insert",
+      "base": "insert",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Add the document beside an existing tab for it rather than starting a new tile.",
+      "detail": "Falls back to `add` when no such tab exists.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 753,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L753"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 577,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L577"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 13,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L13"
+      }
+    },
+    {
+      "id": "where-insert-right",
+      "member": "insertRight",
+      "value": "insert:right",
+      "base": "insert",
+      "modifier": "right",
+      "keyValue": false,
+      "plain": "Insert beside an existing tab, appended after it.",
+      "detail": "Left and top insert at position zero; right and bottom append.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.insertRight}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1624,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1624"
+          }
+        },
+        {
+          "owner": "CalendarBox.handleEventContextMenu",
+          "call": "this._props.addDocTab(doc, OpenWhere.insertRight, FormattedTextBox.LayoutString('task_description'))",
+          "source": {
+            "file": "src/client/views/nodes/calendarBox/CalendarBox.tsx",
+            "line": 302,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/calendarBox/CalendarBox.tsx#L302"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 14,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L14"
+      }
+    },
+    {
+      "id": "where-add",
+      "member": "add",
+      "value": "add",
+      "base": "add",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Open the document in a tab.",
+      "detail": "With no side, it joins the tile the request came from, or the workspace’s first tile when there is no tile context.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 3,
+      "uses": [
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 754,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L754"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.add}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1631,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1631"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 578,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L578"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 15,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L15"
+      }
+    },
+    {
+      "id": "where-add-left",
+      "member": "addLeft",
+      "value": "add:left",
+      "base": "add",
+      "modifier": "left",
+      "keyValue": false,
+      "plain": "Open the document in a tab to the left.",
+      "detail": "In a top-to-bottom workspace this wraps the whole layout in a new row and splits it in half.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.addLeft}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1625,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1625"
+          }
+        },
+        {
+          "owner": "NavigateToTarget.options",
+          "call": "openLocation: targetDoc.type === DocumentType.PRES ? ((OpenWhere.replace + ':' + PresBox.PanelName) as OpenWhere) : OpenWhere.addLeft",
+          "source": {
+            "file": "src/client/views/nodes/trails/PresBox.tsx",
+            "line": 774,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/trails/PresBox.tsx#L774"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 16,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L16"
+      }
+    },
+    {
+      "id": "where-add-right",
+      "member": "addRight",
+      "value": "add:right",
+      "base": "add",
+      "modifier": "right",
+      "keyValue": false,
+      "plain": "Open the document in a tab to the right.",
+      "detail": "The most common destination in Dash: link following, search results, and most menu entries use it.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 51,
+      "uses": [
+        {
+          "owner": "setupChildClickEditors.reqdTempOpts",
+          "call": "script: `openDoc(this.doubleClickView, \"${OpenWhere.addRight}\")`",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 111,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L111"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.addRight",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 485,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L485"
+          }
+        },
+        {
+          "owner": "Independent",
+          "call": "target.props.addDocTab(newBox, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/util/DictationManager.ts",
+            "line": 380,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/DictationManager.ts#L380"
+          }
+        },
+        {
+          "owner": "showDocument.rootContextView",
+          "call": "DocumentViewInternal.addDocTabFunc(docContextPath[0], options.openLocation ?? OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/util/DocumentManager.ts",
+            "line": 271,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/DocumentManager.ts#L271"
+          }
+        },
+        {
+          "owner": "DocumentButtonBar.toggleTrail",
+          "call": "this._props.views().lastElement()?._props.addDocTab(trail, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/views/DocumentButtonBar.tsx",
+            "line": 432,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentButtonBar.tsx#L432"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.addRight}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1626,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1626"
+          }
+        },
+        {
+          "owner": "CollectionDockingView",
+          "call": "ScriptingGlobals.add( // eslint-disable-next-line prefer-arrow-callback function openDoc(doc: Doc | string, where: OpenWhere) { switch (where) { case…",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 684,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L684"
+          }
+        },
+        {
+          "owner": "CollectionView.onContextMenu",
+          "call": "this._props.addDocTab(newRendition, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/views/collections/CollectionView.tsx",
+            "line": 153,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionView.tsx#L153"
+          }
+        },
+        {
+          "owner": "CollectionView.onContextMenu",
+          "call": "this._props.addDocTab(this.Document.childLayout as Doc, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/views/collections/CollectionView.tsx",
+            "line": 161,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionView.tsx#L161"
+          }
+        },
+        {
+          "owner": "CollectionView.onContextMenu",
+          "call": "this._props.addDocTab(this.Document.childClickedOpenTemplateView as Doc, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/views/collections/CollectionView.tsx",
+            "line": 164,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionView.tsx#L164"
+          }
+        },
+        {
+          "owner": "CollectionView.onContextMenu",
+          "call": "this._props.addDocTab(embedding, OpenWhere.addRight)",
+          "source": {
+            "file": "src/client/views/collections/CollectionView.tsx",
+            "line": 184,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionView.tsx#L184"
+          }
+        },
+        {
+          "owner": "contextMenuItems.openEmbedding",
+          "call": "ScriptField.MakeFunction(`openDoc(getEmbedding(this), \"${OpenWhere.addRight}\")`)",
+          "source": {
+            "file": "src/client/views/collections/TreeView.tsx",
+            "line": 452,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TreeView.tsx#L452"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 17,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L17"
+      }
+    },
+    {
+      "id": "where-add-bottom",
+      "member": "addBottom",
+      "value": "add:bottom",
+      "base": "add",
+      "modifier": "bottom",
+      "keyValue": false,
+      "plain": "Open the document in a tab below.",
+      "detail": "In a left-to-right workspace this wraps the whole layout in a new column and splits it in half.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 1,
+      "uses": [
+        {
+          "owner": "onPointerDown.func",
+          "call": "this._props.addDocTab(audiodoc, OpenWhere.addBottom)",
+          "source": {
+            "file": "src/client/views/nodes/formattedText/FormattedTextBox.tsx",
+            "line": 2073,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/formattedText/FormattedTextBox.tsx#L2073"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 18,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L18"
+      }
+    },
+    {
+      "id": "where-close",
+      "member": "close",
+      "value": "close",
+      "base": "close",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Close the tab showing this document.",
+      "detail": "Closing is not deleting. Unless the document is still embedded elsewhere, it is added to Recently Closed.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 3,
+      "uses": [
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 750,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L750"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 574,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L574"
+          }
+        },
+        {
+          "owner": "KeyValueBox.specificContextMenu",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.close)",
+          "source": {
+            "file": "src/client/views/nodes/KeyValueBox.tsx",
+            "line": 322,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/KeyValueBox.tsx#L322"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 19,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L19"
+      }
+    },
+    {
+      "id": "where-toggle",
+      "member": "toggle",
+      "value": "toggle",
+      "base": "toggle",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Close the document if it is open anywhere, otherwise open it.",
+      "detail": "The tab it opens is deliberately left unselected.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 3,
+      "uses": [
+        {
+          "owner": "DocumentManager.showDocumentView",
+          "call": "options.openLocation?.startsWith(OpenWhere.toggle)",
+          "source": {
+            "file": "src/client/util/DocumentManager.ts",
+            "line": 237,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/DocumentManager.ts#L237"
+          }
+        },
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 751,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L751"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 576,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L576"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 20,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L20"
+      }
+    },
+    {
+      "id": "where-toggle-right",
+      "member": "toggleRight",
+      "value": "toggle:right",
+      "base": "toggle",
+      "modifier": "right",
+      "keyValue": false,
+      "plain": "Close the document if it is open anywhere, otherwise open it on the right.",
+      "detail": "Used where a panel should flip on and off without stealing the selection.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 7,
+      "uses": [
+        {
+          "owner": "PropertiesDocBacklinksSelector.getOnClick",
+          "call": "this.props.addDocTab(Doc.IsDataProto(otherdoc) ? Doc.MakeDelegate(otherdoc) : otherdoc, OpenWhere.toggleRight)",
+          "source": {
+            "file": "src/client/views/PropertiesDocBacklinksSelector.tsx",
+            "line": 31,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L31"
+          }
+        },
+        {
+          "owner": "GraphNodeBox.openTagCollection",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.toggleRight)",
+          "source": {
+            "file": "src/client/views/collections/collectionGraph/CollectionGraphView.tsx",
+            "line": 174,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionGraph/CollectionGraphView.tsx#L174"
+          }
+        },
+        {
+          "owner": "GraphNodeBox.openTagCollection",
+          "call": "this._props.addDocTab(newCollection, OpenWhere.toggleRight)",
+          "source": {
+            "file": "src/client/views/collections/collectionGraph/CollectionGraphView.tsx",
+            "line": 189,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionGraph/CollectionGraphView.tsx#L189"
+          }
+        },
+        {
+          "owner": "onNodePointerDown.onClick",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.toggleRight)",
+          "source": {
+            "file": "src/client/views/collections/collectionGraph/CollectionGraphView.tsx",
+            "line": 206,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionGraph/CollectionGraphView.tsx#L206"
+          }
+        },
+        {
+          "owner": "DocumentView.toggleDetail",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.toggleRight, StrCast(!isDetailView ? this.Document['layout_' + detailLayoutKeySuffix] : this.Document[…",
+          "source": {
+            "file": "src/client/views/nodes/DocumentView.tsx",
+            "line": 1725,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1725"
+          }
+        },
+        {
+          "owner": "DocumentView.FocusOrOpen",
+          "call": "openLocation: OpenWhere.toggleRight",
+          "source": {
+            "file": "src/client/views/nodes/DocumentView.tsx",
+            "line": 1943,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1943"
+          }
+        },
+        {
+          "owner": "CalendarBox.handleEventClick",
+          "call": "this._props.addDocTab(doc, OpenWhere.toggleRight)",
+          "source": {
+            "file": "src/client/views/nodes/calendarBox/CalendarBox.tsx",
+            "line": 287,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/calendarBox/CalendarBox.tsx#L287"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 21,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L21"
+      }
+    },
+    {
+      "id": "where-replace",
+      "member": "replace",
+      "value": "replace",
+      "base": "replace",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Swap the contents of the current tab rather than adding one.",
+      "detail": "With a panel name, the named panel is swapped and created on the right if it does not exist yet.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 4,
+      "uses": [
+        {
+          "owner": "MainView.addDocTabFunc_impl",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 752,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L752"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.replace}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1632,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1632"
+          }
+        },
+        {
+          "owner": "TabDocView.addDocTab",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 575,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L575"
+          }
+        },
+        {
+          "owner": "NavigateToTarget.options",
+          "call": "openLocation: targetDoc.type === DocumentType.PRES ? ((OpenWhere.replace + ':' + PresBox.PanelName) as OpenWhere) : OpenWhere.addLeft",
+          "source": {
+            "file": "src/client/views/nodes/trails/PresBox.tsx",
+            "line": 774,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/trails/PresBox.tsx#L774"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 22,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L22"
+      }
+    },
+    {
+      "id": "where-replace-right",
+      "member": "replaceRight",
+      "value": "replace:right",
+      "base": "replace",
+      "modifier": "right",
+      "keyValue": false,
+      "plain": "Swap the contents of the tab on the right, creating it if needed.",
+      "detail": "Keeps a single preview tab instead of accumulating one per click.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 4,
+      "uses": [
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.replaceRight}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1628,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1628"
+          }
+        },
+        {
+          "owner": "LinkMenuItem.onEdit",
+          "call": "DocumentViewInternal.addDocTabFunc(trail, OpenWhere.replaceRight)",
+          "source": {
+            "file": "src/client/views/linking/LinkMenuItem.tsx",
+            "line": 101,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/linking/LinkMenuItem.tsx#L101"
+          }
+        },
+        {
+          "owner": "FormattedTextBox.showTargetTrail",
+          "call": "this._props.addDocTab(trail, OpenWhere.replaceRight)",
+          "source": {
+            "file": "src/client/views/nodes/formattedText/FormattedTextBox.tsx",
+            "line": 1123,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/formattedText/FormattedTextBox.tsx#L1123"
+          }
+        },
+        {
+          "owner": "Annotation.showTargetTrail",
+          "call": "this._props.addDocTab(trail, OpenWhere.replaceRight)",
+          "source": {
+            "file": "src/client/views/pdf/Annotation.tsx",
+            "line": 86,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/pdf/Annotation.tsx#L86"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 23,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L23"
+      }
+    },
+    {
+      "id": "where-replace-left",
+      "member": "replaceLeft",
+      "value": "replace:left",
+      "base": "replace",
+      "modifier": "left",
+      "keyValue": false,
+      "plain": "Swap the contents of the tab on the left, creating it if needed.",
+      "detail": "Keeps a single preview tab instead of accumulating one per click.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 1,
+      "uses": [
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.replaceLeft}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1627,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1627"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 24,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L24"
+      }
+    },
+    {
+      "id": "where-in-parent",
+      "member": "inParent",
+      "value": "inParent",
+      "base": "inParent",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Put the document on the canvas you are looking at.",
+      "detail": "Only the freeform canvas router understands this. Anywhere else it falls through to `add` and opens a tab.",
+      "comment": "",
+      "claimedBy": [
+        "freeform"
+      ],
+      "routed": true,
+      "useCount": 4,
+      "uses": [
+        {
+          "owner": "LinkFollower.traverseLink",
+          "call": "followLinks.forEach(async linkDoc => { const target = DocCast( sourceDoc === linkDoc.link_anchor_1 ? linkDoc.link_anchor_2 : sourceDoc === linkDoc.li…",
+          "source": {
+            "file": "src/client/util/LinkFollower.ts",
+            "line": 102,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/LinkFollower.ts#L102"
+          }
+        },
+        {
+          "owner": "PropertiesView",
+          "call": "value={OpenWhere.inParent}",
+          "source": {
+            "file": "src/client/views/PropertiesView.tsx",
+            "line": 1633,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1633"
+          }
+        },
+        {
+          "owner": "CollectionFreeFormView.addDocTab",
+          "call": "action((docsIn: Doc | Doc[], location: OpenWhere, layoutString?: string) => { const docs = toList(docsIn); if (this._props.isAnnotationOverlay) retur…",
+          "source": {
+            "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+            "line": 1653,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1653"
+          }
+        },
+        {
+          "owner": "ImageBox.crop",
+          "call": "this._props.addDocTab(cropping, OpenWhere.inParent)",
+          "source": {
+            "file": "src/client/views/nodes/ImageBox.tsx",
+            "line": 389,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L389"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 25,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L25"
+      }
+    },
+    {
+      "id": "where-in-parent-from-screen",
+      "member": "inParentFromScreen",
+      "value": "inParentFromScreen",
+      "base": "inParentFromScreen",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Move the document onto the canvas you are looking at, keeping it under the pointer.",
+      "detail": "Screen coordinates are converted to canvas coordinates and the document is removed from whatever it was embedded in. This is the drag-out-of-a-pile path.",
+      "comment": "",
+      "claimedBy": [
+        "freeform"
+      ],
+      "routed": true,
+      "useCount": 4,
+      "uses": [
+        {
+          "owner": "CollectionPileView.pointerDown",
+          "call": "this._props.addDocTab(doc, OpenWhere.inParentFromScreen)",
+          "source": {
+            "file": "src/client/views/collections/CollectionPileView.tsx",
+            "line": 133,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionPileView.tsx#L133"
+          }
+        },
+        {
+          "owner": "CollectionFreeFormView.addDocTab",
+          "call": "action((docsIn: Doc | Doc[], location: OpenWhere, layoutString?: string) => { const docs = toList(docsIn); if (this._props.isAnnotationOverlay) retur…",
+          "source": {
+            "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+            "line": 1655,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1655"
+          }
+        },
+        {
+          "owner": "CollectionFreeFormView.promoteCollection",
+          "call": "this._props.addDocTab(childDocs, OpenWhere.inParentFromScreen, '')",
+          "source": {
+            "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+            "line": 1992,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1992"
+          }
+        },
+        {
+          "owner": "CollectionFreeFormDocumentView.float",
+          "call": "this._props.addDocTab(topDoc, OpenWhere.inParentFromScreen)",
+          "source": {
+            "file": "src/client/views/nodes/CollectionFreeFormDocumentView.tsx",
+            "line": 253,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/CollectionFreeFormDocumentView.tsx#L253"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 26,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L26"
+      }
+    },
+    {
+      "id": "where-overlay",
+      "member": "overlay",
+      "value": "overlay",
+      "base": "overlay",
+      "modifier": "",
+      "keyValue": false,
+      "plain": "Open the document as a floating window over the workspace.",
+      "detail": "No `addDocTab` router has a case for this: it is reached through the `openDoc` scripting global, which adds the document to your overlay list.",
+      "comment": "",
+      "claimedBy": [],
+      "routed": false,
+      "useCount": 8,
+      "uses": [
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 462,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L462"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 463,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L463"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 466,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L466"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 467,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L467"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 480,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L480"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 481,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L481"
+          }
+        },
+        {
+          "owner": "CurrentUserUtils.creatorBtnDescriptors",
+          "call": "openFactoryLocation: OpenWhere.overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 483,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L483"
+          }
+        },
+        {
+          "owner": "CollectionDockingView",
+          "call": "ScriptingGlobals.add( // eslint-disable-next-line prefer-arrow-callback function openDoc(doc: Doc | string, where: OpenWhere) { switch (where) { case…",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 686,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L686"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 27,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L27"
+      }
+    },
+    {
+      "id": "where-add-right-keyvalue",
+      "member": "addRightKeyvalue",
+      "value": "add:right:keyValue",
+      "base": "add",
+      "modifier": "right",
+      "keyValue": true,
+      "plain": "Open the document’s raw fields in a tab on the right.",
+      "detail": "Shows the key/value table instead of the document’s own layout, which is how a dashboard can be inspected without switching to it.",
+      "comment": "",
+      "claimedBy": [
+        "tab",
+        "main"
+      ],
+      "routed": true,
+      "useCount": 4,
+      "uses": [
+        {
+          "owner": "ImageLabelBox.render",
+          "call": "this._props.addDocTab(doc, OpenWhere.addRightKeyvalue)",
+          "source": {
+            "file": "src/client/views/collections/collectionFreeForm/ImageLabelBox.tsx",
+            "line": 320,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/ImageLabelBox.tsx#L320"
+          }
+        },
+        {
+          "owner": "DocumentViewInternal.onContextMenu",
+          "call": "this._props.addDocTab(this.Document, OpenWhere.addRightKeyvalue)",
+          "source": {
+            "file": "src/client/views/nodes/DocumentView.tsx",
+            "line": 812,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L812"
+          }
+        },
+        {
+          "owner": "KeyValuePair.onContextMenu",
+          "call": "this._props.addDocTab(value, OpenWhere.addRightKeyvalue)",
+          "source": {
+            "file": "src/client/views/nodes/KeyValuePair.tsx",
+            "line": 58,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/KeyValuePair.tsx#L58"
+          }
+        },
+        {
+          "owner": "CalendarBox.handleEventContextMenu",
+          "call": "this._props.addDocTab(doc, OpenWhere.addRightKeyvalue)",
+          "source": {
+            "file": "src/client/views/nodes/calendarBox/CalendarBox.tsx",
+            "line": 295,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/calendarBox/CalendarBox.tsx#L295"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 28,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L28"
+      }
+    }
+  ],
+  "modifiers": [
+    {
+      "id": "mod-none",
+      "member": "none",
+      "value": "",
+      "plain": "No side. The document joins the tile the request came from.",
+      "comment": "",
+      "useCount": 6,
+      "uses": [
+        {
+          "owner": "LightboxView.downloadDoc",
+          "call": "this._props.addSplit(lightDoc, OpenWhereMod.none)",
+          "source": {
+            "file": "src/client/views/LightboxView.tsx",
+            "line": 207,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/LightboxView.tsx#L207"
+          }
+        },
+        {
+          "owner": "addDocTabFunc_impl.whereMods",
+          "call": "",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 744,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L744"
+          }
+        },
+        {
+          "owner": "CollectionDockingView.AddSplit",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 232,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L232"
+          }
+        },
+        {
+          "owner": "CollectionDockingView.stackCreated",
+          "call": "CollectionDockingView.AddSplit(docToAdd, OpenWhereMod.none, stack)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 596,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L596"
+          }
+        },
+        {
+          "owner": "stackCreated.addNewDoc",
+          "call": "CollectionDockingView.AddSplit(docToAdd, OpenWhereMod.none, stack)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 613,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L613"
+          }
+        },
+        {
+          "owner": "addDocTab.whereMods",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 568,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L568"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 2,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L2"
+      }
+    },
+    {
+      "id": "mod-left",
+      "member": "left",
+      "value": "left",
+      "plain": "Split to the left of the current tile, or of the workspace when there is no tile context.",
+      "comment": "",
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "CollectionDockingView.InsertSplit",
+          "call": "stackRight.addChild(docContentConfig, undefined, pullSide === OpenWhereMod.left || pullSide === OpenWhereMod.top ? 0 : undefined)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 184,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L184"
+          }
+        },
+        {
+          "owner": "CollectionDockingView.AddSplit",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 236,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L236"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 3,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L3"
+      }
+    },
+    {
+      "id": "mod-right",
+      "member": "right",
+      "value": "right",
+      "plain": "Split to the right. The default side when a split is needed and none was named.",
+      "comment": "",
+      "useCount": 11,
+      "uses": [
+        {
+          "owner": "ReplayMovements.openTab",
+          "call": "DocumentView.addSplit(doc, OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/util/ReplayMovements.ts",
+            "line": 133,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ReplayMovements.ts#L133"
+          }
+        },
+        {
+          "owner": "DocumentDecorations.onMaximizeClick",
+          "call": "CollectionDockingView.AddSplit(Doc.BestEmbedding(selView.Document), OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/views/DocumentDecorations.tsx",
+            "line": 279,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentDecorations.tsx#L279"
+          }
+        },
+        {
+          "owner": "DocumentDecorations.onMaximizeClick",
+          "call": "CollectionDockingView.AddSplit(Docs.Create.FreeformDocument([embedding], { title: 'Tab for ' + embedding.title }), OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/views/DocumentDecorations.tsx",
+            "line": 286,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentDecorations.tsx#L286"
+          }
+        },
+        {
+          "owner": "DocumentDecorations.onMaximizeClick",
+          "call": "CollectionDockingView.ToggleSplit(selView.Document, OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/views/DocumentDecorations.tsx",
+            "line": 289,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentDecorations.tsx#L289"
+          }
+        },
+        {
+          "owner": "MainView.createNewPresentation",
+          "call": "CollectionDockingView.AddSplit(pres, OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 599,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L599"
+          }
+        },
+        {
+          "owner": "MainView.openPresentation",
+          "call": "CollectionDockingView.AddSplit(pres, OpenWhereMod.right, undefined, PresBox.PanelName)",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 607,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L607"
+          }
+        },
+        {
+          "owner": "CollectionDockingView.AddSplit",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 233,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L233"
+          }
+        },
+        {
+          "owner": "CollectionDockingView",
+          "call": "CollectionDockingView.AddSplit(doc, OpenWhereMod.right)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 685,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L685"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 4,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L4"
+      }
+    },
+    {
+      "id": "mod-top",
+      "member": "top",
+      "value": "top",
+      "plain": "Split above. In a left-to-right workspace this rebuilds the layout as a column.",
+      "comment": "",
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "CollectionDockingView.InsertSplit",
+          "call": "stackRight.addChild(docContentConfig, undefined, pullSide === OpenWhereMod.left || pullSide === OpenWhereMod.top ? 0 : undefined)",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 184,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L184"
+          }
+        },
+        {
+          "owner": "CollectionDockingView.AddSplit",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 239,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L239"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 5,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L5"
+      }
+    },
+    {
+      "id": "mod-bottom",
+      "member": "bottom",
+      "value": "bottom",
+      "plain": "Split below. In a left-to-right workspace this rebuilds the layout as a column.",
+      "comment": "",
+      "useCount": 1,
+      "uses": [
+        {
+          "owner": "CollectionDockingView.AddSplit",
+          "call": "",
+          "source": {
+            "file": "src/client/views/collections/CollectionDockingView.tsx",
+            "line": 240,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L240"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 6,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L6"
+      }
+    },
+    {
+      "id": "mod-keyvalue",
+      "member": "keyvalue",
+      "value": "keyValue",
+      "plain": "Render the document as a key/value table of its raw fields instead of its own layout.",
+      "comment": "",
+      "useCount": 2,
+      "uses": [
+        {
+          "owner": "addDocTabFunc_impl.keyValue",
+          "call": "whereFields.includes(OpenWhereMod.keyvalue)",
+          "source": {
+            "file": "src/client/views/MainView.tsx",
+            "line": 743,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L743"
+          }
+        },
+        {
+          "owner": "addDocTab.keyValue",
+          "call": "whereFields.includes(OpenWhereMod.keyvalue)",
+          "source": {
+            "file": "src/client/views/collections/TabDocView.tsx",
+            "line": 567,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L567"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 7,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L7"
+      }
+    },
+    {
+      "id": "mod-always",
+      "member": "always",
+      "value": "always",
+      "plain": "Force the destination instead of reusing a view that already shows the document.",
+      "comment": "forces the open location instead of using an existing open view (see DocumentDecorations)",
+      "useCount": 1,
+      "uses": [
+        {
+          "owner": "CollectionSubViewInternal.addLinkedDocTab",
+          "call": "location.includes(OpenWhereMod.always)",
+          "source": {
+            "file": "src/client/views/collections/CollectionSubView.tsx",
+            "line": 173,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionSubView.tsx#L173"
+          }
+        }
+      ],
+      "source": {
+        "file": "src/client/views/nodes/OpenWhere.ts",
+        "line": 8,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/OpenWhere.ts#L8"
+      }
+    }
+  ]
+}

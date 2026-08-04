@@ -1,0 +1,98 @@
+---
+title: Where a document opens
+description: "The full routing map behind Dash's open destinations: every OpenWhere value, the five routers that claim them, the four rules that override the destination you asked for, and the branch order that decides what a split actually looks like."
+sidebar:
+  order: 4
+---
+
+import OpenDestinationReference from '../../../components/OpenDestinationReference.astro';
+
+<p class="lede">
+  Almost every Dash control that shows you a document ends up calling one
+  function with one string. That string is not a place; it is a routing key,
+  and four different routers get a chance to interpret it. This page is the map.
+</p>
+
+## Why the same request lands in different places
+
+If you have used Dash for more than an afternoon you have probably seen a link
+open a tab on the right once and replace the lightbox the next time, or watched
+a document you asked to open "here" appear as a tab instead. Neither is a bug,
+and neither is random. Three things decide the outcome:
+
+1. **Where the request came from.** The routers form a chain. A request that
+   starts inside a freeform canvas meets the canvas router first, which can put
+   the document straight onto the canvas. The same request from the sidebar has
+   no canvas above it and reaches the top-level router instead, which can only
+   open tabs.
+2. **What is already on screen.** An open lightbox rewrites every destination to
+   itself. A tab that already shows the document is reused rather than
+   duplicated. A collection that already contains the document can satisfy the
+   request by unhiding it in place.
+3. **What the workspace looks like.** Asking for "bottom" in a left-to-right
+   workspace cannot simply insert a pane, so the entire layout is wrapped in a
+   new column and split in half. The side you asked for is a hint to an
+   algorithm, not an instruction.
+
+## Reading a destination string
+
+A destination is a colon-separated string, and the parts are independent:
+
+```text
+add : right : keyValue
+ │      │       │
+ │      │       └─ modifier: render the raw fields instead of the layout
+ │      └───────── modifier: which side to split
+ └──────────────── verb: what to do
+```
+
+The verb is matched by the router's `switch`. Everything after the first colon
+is scanned for modifiers, and anything in a third position is treated as a
+panel name, which lets `replace` target a specific reusable pane by name rather
+than by position.
+
+Three consequences worth knowing:
+
+- An unrecognised verb is not an error. Every router's `default` case is `add`,
+  so a typo opens a tab on the right rather than failing.
+- `keyValue` can be combined with anything. It is what lets you inspect a
+  dashboard's raw fields without switching your workspace to it.
+- `always` exists only to defeat the reuse shortcuts. It is the difference
+  between "show me this" and "show me this *here*, again".
+
+<OpenDestinationReference />
+
+## How this page stays honest
+
+Everything above is parsed from Dash-Web at the pinned revision rather than
+transcribed. The enums, each router's `switch` and its case bodies, the four
+override expressions, the branch order inside `AddSplit`, and every call site in
+the client are recovered with the TypeScript compiler.
+
+The plain-language explanations are written by hand, because "what this means
+for you" is not something a parser can produce. They are pinned to the source,
+though: each one is attached to a routing case, an override expression, or a
+layout branch that must still be present. Generation fails, and the site does
+not build, when
+
+- an enum member appears without a reviewed explanation,
+- a router stops switching on the expression it was reviewed against,
+- a router stops forwarding unclaimed destinations upward,
+- an override or split branch disappears from its file, or
+- a destination that used to be routed stops being claimed by any router.
+
+One destination is deliberately allowed to be unrouted. `overlay` has no case
+in any `addDocTab` router at all: it is reached through the `openDoc` scripting
+global, and passing it to `addDocTab` opens a tab on the right instead. Two
+others, `inParent` and `inParentFromScreen`, are claimed by exactly one router,
+which is why they do nothing recognisable outside a freeform canvas.
+
+## Where to go next
+
+- [Interface control and node atlas](/reference/interface-controls/) for the
+  tab and tile chrome that these destinations manipulate.
+- [Every way to do the same thing](/reference/task-routes/) for the task-first
+  view of the same machinery.
+- [Scripting](/guides/features/scripting/) for `openDoc` and
+  `openInLightbox`, which take these destinations directly.
+- [Generated datasets](/reference/generated-data/) to consume this map as JSON.

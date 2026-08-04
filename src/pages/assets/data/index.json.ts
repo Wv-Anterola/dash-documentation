@@ -15,6 +15,7 @@ import fieldTypes from '../../../data/generated/field-types.json';
 import httpRoutes from '../../../data/generated/http-routes.json';
 import interfaceControls from '../../../data/generated/interface-controls.json';
 import keyboardShortcuts from '../../../data/generated/keyboard-shortcuts.json';
+import openDestinations from '../../../data/generated/open-destinations.json';
 import projectControls from '../../../data/generated/project-controls.json';
 import scriptingGlobals from '../../../data/generated/scripting-globals.json';
 import taskRoutes from '../../../data/generated/task-routes.json';
@@ -83,6 +84,18 @@ const datasets: DatasetEntry[] = [
     recordKey: 'tasks',
     baseline: taskRoutes.repository.baseline,
     generator: 'npm run audit:tasks',
+  },
+  {
+    id: 'open-destinations',
+    title: 'Open destination map',
+    description: 'Every OpenWhere destination, the routers that claim it, the rules that override it, and the split algebra it feeds.',
+    path: '/assets/data/open-destinations.json',
+    page: '/reference/open-destinations/',
+    schemaVersion: openDestinations.schemaVersion,
+    records: openDestinations.destinations.length,
+    recordKey: 'destinations',
+    baseline: openDestinations.repository.baseline,
+    generator: 'npm run audit:destinations',
   },
   {
     id: 'project-controls',
