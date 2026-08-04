@@ -1,0 +1,111 @@
+---
+/**
+ * Adds the two things Starlight's head does not carry for this site.
+ *
+ * **A preview image.** Every page here already has a visual chosen for it, or
+ * inline media of its own. Without an `og:image` a link to any of it unfurls as
+ * a grey rectangle in Slack, in a chat, and in a citation manager, which is
+ * where most people meet a documentation link for the first time.
+ *
+ * **Structured data.** The generated references are datasets in the schema.org
+ * sense: derived by a stated method from a pinned revision, versioned, and
+ * published at a stable URL. Saying so in JSON-LD is what lets a dataset search
+ * index find them, and it costs nothing but the honesty of filling the fields
+ * in correctly. The dataset descriptions come from the same manifest the
+ * endpoints are built from, so they cannot drift from what is served.
+ */
+import Default from '@astrojs/starlight/components/Head.astro';
+import { pageVisualForPath } from '../data/pageVisuals';
+import datasets from '../data/generated/coverage-report.json';
+import interfaceControls from '../data/generated/interface-controls.json';
+
+const site = Astro.site ?? new URL('https://brown-dash-documentation.vercel.app');
+const absolute = (path: string) => new URL(path, site).href;
+
+const pathname = Astro.url.pathname;
+const visual = pageVisualForPath(pathname);
+const { title, description } = Astro.locals.starlightRoute.entry.data;
+
+// A page visual makes a far better preview than a generic card, but only when
+// it is a raster: SVG previews are ignored by every major unfurler, so a page
+// illustrated with a diagram falls back to a card sized 1200 x 630 for them.
+const socialCard = '/assets/images/social-card.jpg';
+const usableVisual = visual && !visual.src.endsWith('.svg') ? visual : undefined;
+const previewImage = absolute(usableVisual?.src ?? socialCard);
+const previewAlt = usableVisual?.alt ?? 'The Dash workspace, with documents, a map, and a trail arranged on one canvas';
+
+const isDatasetIndex = pathname.replace(/\/$/, '').endsWith('/reference/generated-data');
+
+const article = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: title,
+  description,
+  url: absolute(pathname),
+  image: previewImage,
+  inLanguage: 'en',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Dash documentation',
+    url: site.href,
+  },
+  about: {
+    '@type': 'SoftwareSourceCode',
+    name: 'Dash',
+    codeRepository: 'https://github.com/brown-dash/Dash-Web',
+    // Every generated claim on this site is pinned to one revision, and saying
+    // which one is the whole basis for citing a page rather than a moving URL.
+    version: interfaceControls.repository.baseline,
+  },
+  license: 'https://opensource.org/licenses/MIT',
+  publisher: {
+    '@type': 'Organization',
+    name: 'Brown University Dash research group',
+    url: 'https://github.com/brown-dash',
+  },
+};
+
+/**
+ * One Dataset record per published inventory, emitted only on the page that
+ * documents them. Each carries the commit it was derived from, so two versions
+ * of the same dataset are distinguishable rather than both being "latest".
+ */
+const datasetRecords = isDatasetIndex
+  ? datasets.surfaces.map((surface) => ({
+      '@context': 'https://schema.org',
+      '@type': 'Dataset',
+      name: surface.name,
+      description: `${surface.records} records traced to source in the Dash client. ${surface.explainedPct}% carry a plain-language explanation; every record carries the file and line it was read from.`,
+      url: absolute(surface.page),
+      identifier: surface.id,
+      version: datasets.repository.baseline,
+      isAccessibleForFree: true,
+      license: 'https://opensource.org/licenses/MIT',
+      creator: {
+        '@type': 'Organization',
+        name: 'Brown University Dash research group',
+        url: 'https://github.com/brown-dash',
+      },
+      distribution: [
+        {
+          '@type': 'DataDownload',
+          encodingFormat: 'application/json',
+          contentUrl: absolute(surface.dataset),
+        },
+      ],
+    }))
+  : [];
+---
+
+<Default />
+
+<meta property="og:image" content={previewImage} />
+<meta property="og:image:alt" content={previewAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={previewImage} />
+<meta name="twitter:image:alt" content={previewAlt} />
+
+<script type="application/ld+json" set:html={JSON.stringify(article)} is:inline />
+{datasetRecords.map((record) => (
+  <script type="application/ld+json" set:html={JSON.stringify(record)} is:inline />
+))}

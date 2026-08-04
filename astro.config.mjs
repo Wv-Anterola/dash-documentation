@@ -106,6 +106,8 @@ export default defineConfig({
       customCss: ['./src/styles/dash.css'],
       components: {
         PageTitle: './src/components/PageTitle.astro',
+        // Adds a preview image and schema.org structured data; see the file.
+        Head: './src/components/Head.astro',
       },
       // Starlight ships Pagefind search, breadcrumbs via the sidebar, an
       // on-page table of contents, previous/next links, and mobile navigation.

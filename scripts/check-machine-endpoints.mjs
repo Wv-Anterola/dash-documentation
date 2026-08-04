@@ -170,6 +170,49 @@ if (inappText) {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * Page metadata: preview images and structured data
+ * ------------------------------------------------------------------ */
+
+let previewed = 0;
+let structured = 0;
+const metadataProblems = [];
+for (const file of contentRoutes) {
+  const html = readFileSync(join(DIST, file.slice(1)), 'utf8');
+  const route = pagePath(file);
+
+  const image = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
+  if (!image) {
+    metadataProblems.push(`${route} has no preview image`);
+  } else {
+    previewed += 1;
+    // An SVG preview is silently dropped by every major unfurler, which is
+    // worse than a generic card because it looks correct in the markup.
+    if (image.endsWith('.svg')) metadataProblems.push(`${route} offers an SVG preview image, which unfurlers ignore`);
+    if (!/<meta property="og:image:alt" content="[^"]+"/.test(html)) metadataProblems.push(`${route} has a preview image with no alt text`);
+    let pathname = new URL(image).pathname;
+    if (BASE && pathname.startsWith(BASE)) pathname = pathname.slice(BASE.length);
+    if (!files.has(pathname)) metadataProblems.push(`${route} points its preview at ${pathname}, which was not built`);
+  }
+
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  if (!blocks.length) {
+    metadataProblems.push(`${route} publishes no structured data`);
+    continue;
+  }
+  structured += 1;
+  for (const block of blocks) {
+    try {
+      const parsed = JSON.parse(block[1]);
+      if (!parsed['@context'] || !parsed['@type']) metadataProblems.push(`${route} has a structured-data block with no @context or @type`);
+    } catch (error) {
+      metadataProblems.push(`${route} has structured data that is not valid JSON: ${error.message}`);
+    }
+  }
+}
+for (const problem of [...new Set(metadataProblems)].slice(0, 20)) complain(problem);
+if (metadataProblems.length > 20) complain(`... and ${metadataProblems.length - 20} more metadata findings`);
+
 console.log(`Checked the machine-readable entry points in ${DIST}`);
 if (problems.length) {
   console.log(`\n### Problems: ${problems.length}`);
@@ -179,5 +222,6 @@ if (problems.length) {
 console.log(
   `llms.txt indexes ${linked.size} pages, llms-full.txt carries the prose corpus, ` +
     'robots.txt names the sitemap and both text entry points, every advertised dataset is served, ' +
-    'and every in-app help link resolves against the built pages.'
+    `and every in-app help link resolves against the built pages. ${previewed} pages carry a preview image ` +
+    `and ${structured} carry valid structured data.`
 );
