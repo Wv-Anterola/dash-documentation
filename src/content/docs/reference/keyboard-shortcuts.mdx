@@ -16,6 +16,10 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
   depends on what has focus, and on which operating system you are using.
 </p>
 
+![How Dash routes a keystroke: the focused canvas and any active marquee claim it first, then a four-bit modifier index selects one of only five registered handlers, and each handler decides whether the browser default survives.](/assets/images/diagrams/dash-key-routing.svg)
+
+[Open the key routing diagram at its full 1600 × 900 resolution.](/assets/images/diagrams/dash-key-routing.svg)
+
 ## The router, and why macOS is genuinely different
 
 `GlobalKeyHandler.ts` builds a four-bit index from the modifiers you are

@@ -338,8 +338,8 @@ for (const row of keyboardReference.shortcuts) {
   }
 }
 const keyboardPage = await readFile(path.join(docsRoot, 'reference', 'keyboard-shortcuts.mdx'), 'utf8');
-if (!keyboardPage.includes('<KeyboardShortcutReference />')) {
-  errors.push('Keyboard shortcut page lost its searchable shortcut index');
+if (!keyboardPage.includes('<KeyboardShortcutReference />') || !keyboardPage.includes('dash-key-routing.svg')) {
+  errors.push('Keyboard shortcut page lost its searchable shortcut index or unique routing visual');
 }
 
 if (!projectControlReference.disclosure || !/not .*master|feature branch/i.test(projectControlReference.disclosure)) {

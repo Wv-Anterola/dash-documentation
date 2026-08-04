@@ -31,17 +31,21 @@ The inventory combines three kinds of evidence:
 
 - runtime captures, used to show where a person sees each control;
 - the control registries and JSX in `TopBar.tsx`, `CurrentUserUtils.ts`,
-  `DocumentButtonBar.tsx`, and `PropertiesView.tsx`;
+  `DocumentButtonBar.tsx`, `PropertiesView.tsx`, `CollectionDockingView.tsx`,
+  and `TabDocView.tsx`;
 - the document, creator, and scripting-global indexes generated from the Dash
   source tree.
 
-The captured runtime and checked-out TypeScript are not perfectly identical.
-The captured compiled client exposes **Trip Planner Tool** and **Trip Doc**
-creators that are not recoverable as dedicated entries in the checked-out
-`creatorBtnDescriptors` registry. The source registry, meanwhile, contains
-newer developer and agent creators that the captured runtime does not expose.
-The creator cards identify the runtime and source-registry states separately so
-the difference remains explicit.
+The captured runtime and the pinned `master` tree are not perfectly identical,
+and the reason is specific rather than mysterious. The captured client exposes
+**Trip Planner** and **Trip Doc** creators. Those are real registry entries, but
+they are declared on the `wv-anterola-trip-planner` branch, which is not merged
+into `master`, so the atlas below does not list them. Their controls are
+documented in the [Trip Planner guide](/guides/features/trip-planner/) against
+that branch instead. The `master` registry, meanwhile, contains newer developer
+and agent creators that the captured runtime does not expose. The creator cards
+identify the runtime and source-registry states separately so the difference
+remains explicit.
 
 ## The persistent frame
 

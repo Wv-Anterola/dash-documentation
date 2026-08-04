@@ -449,6 +449,7 @@ test('shows each keyboard chord for both platforms and says what the browser kee
 
   await page.goto('/reference/keyboard-shortcuts/');
   await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /How Dash routes a keystroke/ })).toBeVisible();
   await expect(page.locator('.control-contract-summary strong').first()).toHaveText('58');
   await expect(page.locator('#shortcut-list .control-contract-row')).toHaveCount(58);
 
