@@ -1,0 +1,955 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "masterTip": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "disclosure": "Every control below is generated from a project feature branch, not from master. Rows are pinned to that branch tip and each project records whether it has been merged. Nothing here should be read as shipped behavior on the mainline.",
+  "methodology": {
+    "parser": "TypeScript compiler AST over each project surface component on its own branch tip",
+    "controlShape": "JSX Button elements carrying a text prop, and plain button elements with literal text or an aria-label, in either case with an onClick",
+    "panels": "Grouped by the render method the control is declared in, which is how each project organises its workflow",
+    "availability": "Disabled conditions taken from inactive/disabled props; render conditions taken from enclosing && and ternary guards",
+    "driftRule": "Generation fails when a project branch is missing, a surface file disappears, reviewed workflow evidence changes, or a surface stops yielding controls"
+  },
+  "summary": {
+    "projects": 1,
+    "controls": 29,
+    "surfaces": 3,
+    "panels": 15,
+    "conditionallyDisabled": 10,
+    "guarded": 10,
+    "leaveDash": 4,
+    "unmergedProjects": 1
+  },
+  "projects": [
+    {
+      "id": "trip-planner",
+      "name": "Trip Planner",
+      "branch": "origin/wv-anterola-trip-planner",
+      "branchTip": "9dd8e271728082187d5576dcd7a303bb269a8089",
+      "mergedIntoMaster": false,
+      "guide": "/guides/features/trip-planner/",
+      "summary": "A dashboard preset that assembles a trip document, a map, and a planner tool into one phased workflow.",
+      "phases": [
+        {
+          "id": "plan",
+          "label": "Plan"
+        },
+        {
+          "id": "prepare",
+          "label": "Prepare"
+        },
+        {
+          "id": "execute",
+          "label": "Today"
+        },
+        {
+          "id": "recap",
+          "label": "Recap"
+        }
+      ],
+      "surfaces": [
+        {
+          "name": "Trip overview",
+          "plain": "The document that holds the trip: its phase tabs, setup, inbox, health, itinerary, bookings, and connections.",
+          "file": "src/client/views/nodes/Trip/TripBox.tsx",
+          "controls": 26
+        },
+        {
+          "name": "Planner tool",
+          "plain": "The tool docked beside the map, where you search for places and edit the stop order.",
+          "file": "src/client/views/nodes/MapBox/TripPlannerBox.tsx",
+          "controls": 3
+        },
+        {
+          "name": "Integrations panel",
+          "plain": "The panel that reports which external travel and research services are configured.",
+          "file": "src/client/views/nodes/MapBox/TripPlannerIntegrationsPanel.tsx",
+          "controls": 0
+        }
+      ],
+      "controls": 29
+    }
+  ],
+  "controls": [
+    {
+      "id": "trip-planner-mark-booked",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Saved Bookings Summary",
+      "scope": "renderSavedBookingsSummary",
+      "label": "Mark booked",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Mark booked\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "saved.length",
+        "status !== 'booked'"
+      ],
+      "handlerExpression": "() => this.promptForConfirmation(booking)",
+      "calls": [
+        "promptForConfirmation"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 981,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L981"
+      },
+      "plain": "Records that you have actually booked this option. It stores your confirmation, it does not make a reservation for you.",
+      "availability": "Rendered only when its guard holds: status !== 'booked'",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-save-option",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Booking Option",
+      "scope": "renderBookingOption",
+      "label": "Save option",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Save option\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "!(option.deepLink)",
+        "!existingBooking"
+      ],
+      "handlerExpression": "() => this.saveBookingSelection(option)",
+      "calls": [
+        "saveBookingSelection"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1050,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1050"
+      },
+      "plain": "Keeps a quoted option on the trip so you can compare it later. It does not book anything.",
+      "availability": "Rendered only when its guard holds: !existingBooking",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-mark-booked-2",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Booking Option",
+      "scope": "renderBookingOption",
+      "label": "Mark booked",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Mark booked\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "existingBooking && status !== 'booked'"
+      ],
+      "handlerExpression": "() => { const saved = this.saveBookingSelection(option); this.promptForConfirmation(saved); }",
+      "calls": [
+        "saveBookingSelection",
+        "promptForConfirmation"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1053,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1053"
+      },
+      "plain": "Records that you have actually booked this option. It stores your confirmation, it does not make a reservation for you.",
+      "availability": "Rendered only when its guard holds: existingBooking && status !== 'booked'",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-map",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Connections Panel",
+      "scope": "renderTripConnectionsPanel",
+      "label": "Open map …",
+      "labelVariants": [
+        "No trip map linked"
+      ],
+      "labelKind": "generated",
+      "labelExpression": "mapDoc ? `Open map ${StrCast(mapDoc.title, 'Trip Map')}` : 'No trip map linked'",
+      "generatedFrom": "",
+      "controlType": "Inline button",
+      "ariaLabel": "mapDoc ? `Open map ${StrCast(mapDoc.title, 'Trip Map')}` : 'No trip map linked'",
+      "disabledWhen": "!mapDoc",
+      "guards": [],
+      "handlerExpression": "this.openLinkedMap",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1089,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1089"
+      },
+      "plain": "Brings the linked trip map into view. Greyed out until a map is linked.",
+      "availability": "Present but greyed out while !mapDoc.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-planner",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Connections Panel",
+      "scope": "renderTripConnectionsPanel",
+      "label": "Open planner …",
+      "labelVariants": [
+        "No trip planner linked"
+      ],
+      "labelKind": "generated",
+      "labelExpression": "plannerDoc ? `Open planner ${StrCast(plannerDoc.title, 'Trip Planner')}` : 'No trip planner linked'",
+      "generatedFrom": "",
+      "controlType": "Inline button",
+      "ariaLabel": "plannerDoc ? `Open planner ${StrCast(plannerDoc.title, 'Trip Planner')}` : 'No trip planner linked'",
+      "disabledWhen": "!plannerDoc",
+      "guards": [],
+      "handlerExpression": "() => plannerDoc && DocumentView.showDocument(plannerDoc, { willPan: true })",
+      "calls": [
+        "DocumentView.showDocument"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1093,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1093"
+      },
+      "plain": "Brings the linked planner tool into view. Greyed out until a planner is linked.",
+      "availability": "Present but greyed out while !plannerDoc.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-one-control-per-doc",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Connections Panel",
+      "scope": "renderTripConnectionsPanel",
+      "label": "One button per linked resource",
+      "labelVariants": [],
+      "labelKind": "generated",
+      "labelExpression": "StrCast(doc.title, String(doc.type || 'document'))",
+      "generatedFrom": "resources.slice(0, 5)",
+      "controlType": "Inline button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "!!resources.length"
+      ],
+      "handlerExpression": "() => DocumentView.showDocument(doc, { willPan: true })",
+      "calls": [
+        "DocumentView.showDocument",
+        "String"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1113,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1113"
+      },
+      "plain": "One button per resource attached to the trip, each opening that document. The count depends on your own trip.",
+      "availability": "Rendered only when its guard holds: !!resources.length",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-generate-from-reviewed-items",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Phase Focus Panel",
+      "scope": "renderPhaseFocusPanel",
+      "label": "Generate from reviewed items",
+      "labelVariants": [
+        "Generate from reviewed items",
+        "Open planner",
+        "Refreshing prices...",
+        "Refresh prices",
+        "Open live map",
+        "Copy share link"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "primary.text",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "primary.inactive",
+      "guards": [],
+      "handlerExpression": "primary.onClick",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1168,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1168"
+      },
+      "plain": "The Plan phase primary action. Its label and behavior change with the phase you are in, which is why the same button reads five different ways.",
+      "availability": "Present but greyed out while primary.inactive.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-edit-basics",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Health Panel",
+      "scope": "renderTripHealthPanel",
+      "label": "Edit basics",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Edit basics\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "variant === 'full'"
+      ],
+      "handlerExpression": "() => this.setPhase('plan')",
+      "calls": [
+        "setPhase"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1273,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1273"
+      },
+      "plain": "Returns to the Plan phase so you can change origin, destination, dates, or travellers.",
+      "availability": "Rendered only when its guard holds: variant === 'full'",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-planner-2",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Health Panel",
+      "scope": "renderTripHealthPanel",
+      "label": "Open planner",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Open planner\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "!this.linkedMapDoc",
+      "guards": [
+        "variant === 'full'"
+      ],
+      "handlerExpression": "this.openLinkedMap",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1274,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1274"
+      },
+      "plain": "Brings the planner tool and its map into view beside the trip.",
+      "availability": "Present but greyed out while !this.linkedMapDoc.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-prefill-trip",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Inbox Candidate Actions",
+      "scope": "renderInboxCandidateActions",
+      "label": "Prefill trip",
+      "labelVariants": [
+        "Prefill trip",
+        "Save booking",
+        "Create stop",
+        "Plan stop",
+        "Attach resource"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "primaryText",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.applyInboxCandidate(inboxDoc, candidate, primaryAction)",
+      "calls": [
+        "applyInboxCandidate"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1295,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1295"
+      },
+      "plain": "Applies the candidate the way its kind implies: trip details prefill the setup, bookings and stops are created, anything else is attached as a resource.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-attach",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Inbox Candidate Actions",
+      "scope": "renderInboxCandidateActions",
+      "label": "Attach",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Attach\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "primaryAction !== 'attachResource'"
+      ],
+      "handlerExpression": "() => this.applyInboxCandidate(inboxDoc, candidate, 'attachResource')",
+      "calls": [
+        "applyInboxCandidate"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1296,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1296"
+      },
+      "plain": "Attaches the candidate to the trip as a resource instead of applying it as an itinerary change.",
+      "availability": "Rendered only when its guard holds: primaryAction !== 'attachResource'",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-dismiss",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Inbox Item",
+      "scope": "renderTripInboxItem",
+      "label": "Dismiss",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Dismiss\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "status === 'needsReview'"
+      ],
+      "handlerExpression": "() => this.applyInboxCandidate(inboxDoc, fallbackCandidate, 'dismiss')",
+      "calls": [
+        "applyInboxCandidate"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1338,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1338"
+      },
+      "plain": "Removes the candidate from the inbox without changing the trip.",
+      "availability": "Rendered only when its guard holds: status === 'needsReview'",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-generate-itinerary",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Inbox Panel",
+      "scope": "renderTripInboxPanel",
+      "label": "Generate itinerary",
+      "labelVariants": [
+        "Working...",
+        "Generate itinerary"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "this._inboxLoading ? 'Working...' : 'Generate itinerary'",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "this._inboxLoading || !this.selectedTripInboxDocs.length",
+      "guards": [],
+      "handlerExpression": "() => this.generateItineraryFromInbox()",
+      "calls": [
+        "generateItineraryFromInbox"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1381,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1381"
+      },
+      "plain": "Turns the reviewed inbox candidates into itinerary stops. Candidates you have not reviewed are left alone.",
+      "availability": "Present but greyed out while this._inboxLoading || !this.selectedTripInboxDocs.length.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-add-to-inbox",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Inbox Panel",
+      "scope": "renderTripInboxPanel",
+      "label": "Add to inbox",
+      "labelVariants": [
+        "Extracting...",
+        "Add to inbox"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "this._inboxLoading ? 'Extracting...' : 'Add to inbox'",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "this._inboxLoading || !this._inboxDraft.trim()",
+      "guards": [],
+      "handlerExpression": "this.submitInboxDraft",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1397,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1397"
+      },
+      "plain": "Extracts structured trip details from the text you pasted and files them as candidates to accept or dismiss.",
+      "availability": "Present but greyed out while this._inboxLoading || !this._inboxDraft.trim().",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-planner-3",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Open Planner Panel",
+      "scope": "renderOpenPlannerPanel",
+      "label": "Open planner",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Open planner\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "hasMap"
+      ],
+      "handlerExpression": "this.openLinkedMap",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1428,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1428"
+      },
+      "plain": "Brings the planner tool and its map into view beside the trip.",
+      "availability": "Rendered only when its guard holds: hasMap",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-one-control-per-tab",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Result Mode Tabs",
+      "scope": "renderResultModeTabs",
+      "label": "One tab per booking result mode",
+      "labelVariants": [],
+      "labelKind": "generated",
+      "labelExpression": "tab.label",
+      "generatedFrom": "tabs",
+      "controlType": "Inline button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.setResultMode(tab.id)",
+      "calls": [
+        "setResultMode"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1497,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1497"
+      },
+      "plain": "Filters the booking results to one kind. Tabs with no results are not rendered at all, so the tab set changes with the search.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-review-in-plan",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Readiness Panel",
+      "scope": "renderPrepareReadinessPanel",
+      "label": "Review in Plan",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Review in Plan\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.setPhase('plan')",
+      "calls": [
+        "setPhase"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1545,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1545"
+      },
+      "plain": "Jumps back to the Plan phase with the current readiness issue in view.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-planner-4",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Readiness Panel",
+      "scope": "renderPrepareReadinessPanel",
+      "label": "Open planner",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Open planner\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "!this.linkedMapDoc",
+      "guards": [],
+      "handlerExpression": "this.openLinkedMap",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1546,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1546"
+      },
+      "plain": "Brings the planner tool and its map into view beside the trip.",
+      "availability": "Present but greyed out while !this.linkedMapDoc.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-refresh-prices",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Refresh prices",
+      "labelVariants": [
+        "Searching...",
+        "Refresh prices"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "this._bookingLoading ? 'Searching...' : 'Refresh prices'",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "this._bookingLoading",
+      "guards": [],
+      "handlerExpression": "() => this.fetchBookingQuotes()",
+      "calls": [
+        "fetchBookingQuotes"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1566,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1566"
+      },
+      "plain": "Re-queries the configured travel provider for current quotes. Availability and price come from that provider, not from Dash.",
+      "availability": "Present but greyed out while this._bookingLoading.",
+      "leavesDash": true
+    },
+    {
+      "id": "trip-planner-open-trip-planner",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Open Trip Planner",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Open Trip Planner\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => { const planner = this.linkedPlannerDoc; if (planner) DocumentView.showDocument(planner, { willPan: true }); }",
+      "calls": [
+        "DocumentView.showDocument"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1576,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1576"
+      },
+      "plain": "Opens the planner tool for this trip.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-push-trip-to-google-calendar",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Push trip to Google Calendar",
+      "labelVariants": [
+        "Working...",
+        "Push trip to Google Calendar"
+      ],
+      "labelKind": "stateful",
+      "labelExpression": "this._calendarBusy ? 'Working...' : 'Push trip to Google Calendar'",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "this._calendarBusy",
+      "guards": [],
+      "handlerExpression": "this.pushTripToGoogleCalendar",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1608,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1608"
+      },
+      "plain": "Writes the itinerary into your Google Calendar. This leaves Dash and requires the Google integration to be connected.",
+      "availability": "Present but greyed out while this._calendarBusy.",
+      "leavesDash": true
+    },
+    {
+      "id": "trip-planner-share-with-companion-s",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Share with companion(s)",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Share with companion(s)\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "this._calendarBusy",
+      "guards": [],
+      "handlerExpression": "this.shareGoogleCalendar",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1609,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1609"
+      },
+      "plain": "Shares the created Google calendar with the people on the trip.",
+      "availability": "Present but greyed out while this._calendarBusy.",
+      "leavesDash": true
+    },
+    {
+      "id": "trip-planner-export-to-phone-calendar-ics",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Export to phone calendar (.ics)",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Export to phone calendar (.ics)\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "this.exportIcs",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1610,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1610"
+      },
+      "plain": "Downloads the itinerary as an .ics file you can import anywhere. Nothing is sent to an external service.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": true
+    },
+    {
+      "id": "trip-planner-start-trip",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Start trip",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Start trip\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.setStatus('active')",
+      "calls": [
+        "setStatus"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1625,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1625"
+      },
+      "plain": "Marks the trip active, which changes what the phase panels emphasise.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-trip-completed",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Prepare Tab",
+      "scope": "renderPrepareTab",
+      "label": "Trip completed",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Trip completed\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.setStatus('completed')",
+      "calls": [
+        "setStatus"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1626,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1626"
+      },
+      "plain": "Marks the trip finished and moves the emphasis to the Recap phase.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-plan-prepare-today-recap",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Trip overview",
+      "panel": "Main view",
+      "scope": "render",
+      "label": "Plan · Prepare · Today · Recap",
+      "labelVariants": [
+        "Plan",
+        "Prepare",
+        "Today",
+        "Recap"
+      ],
+      "labelKind": "generated",
+      "labelExpression": "PHASE_LABEL[p]",
+      "generatedFrom": "phases",
+      "controlType": "Workflow tab",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.setPhase(p)",
+      "calls": [
+        "setPhase"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/Trip/TripBox.tsx",
+        "line": 1694,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/Trip/TripBox.tsx#L1694"
+      },
+      "plain": "The four workflow phases. Switching phase changes what the trip emphasises; nothing is deleted or hidden from the underlying documents.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-one-control-per-map-doc",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Planner tool",
+      "panel": "Link Chooser",
+      "scope": "renderLinkChooser",
+      "label": "One button per candidate map",
+      "labelVariants": [],
+      "labelKind": "generated",
+      "labelExpression": "StrCast(mapDoc.title, 'Trip Map')",
+      "generatedFrom": "this.visibleTripPlannerMaps",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "() => this.linkToMap(mapDoc)",
+      "calls": [
+        "linkToMap"
+      ],
+      "source": {
+        "file": "src/client/views/nodes/MapBox/TripPlannerBox.tsx",
+        "line": 234,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/MapBox/TripPlannerBox.tsx#L234"
+      },
+      "plain": "One button per map Dash could link to this trip. Choosing one links it; it does not copy the map.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-create-map-for-this-trip",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Planner tool",
+      "panel": "Create Map Action",
+      "scope": "renderCreateMapAction",
+      "label": "Create map for this trip",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Create map for this trip\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [],
+      "handlerExpression": "this.createMapForTrip",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/MapBox/TripPlannerBox.tsx",
+        "line": 245,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/MapBox/TripPlannerBox.tsx#L245"
+      },
+      "plain": "Creates a new map document and links it to the trip.",
+      "availability": "Rendered whenever its panel is open.",
+      "leavesDash": false
+    },
+    {
+      "id": "trip-planner-open-map-2",
+      "project": "trip-planner",
+      "projectName": "Trip Planner",
+      "surface": "Planner tool",
+      "panel": "Main view",
+      "scope": "render",
+      "label": "Open Map",
+      "labelVariants": [],
+      "labelKind": "literal",
+      "labelExpression": "\"Open Map\"",
+      "generatedFrom": "",
+      "controlType": "Action button",
+      "ariaLabel": "",
+      "disabledWhen": "",
+      "guards": [
+        "linkedMapDoc"
+      ],
+      "handlerExpression": "this.openLinkedMap",
+      "calls": [],
+      "source": {
+        "file": "src/client/views/nodes/MapBox/TripPlannerBox.tsx",
+        "line": 277,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/9dd8e271728082187d5576dcd7a303bb269a8089/src/client/views/nodes/MapBox/TripPlannerBox.tsx#L277"
+      },
+      "plain": "Opens the map this planner is attached to.",
+      "availability": "Rendered only when its guard holds: linkedMapDoc",
+      "leavesDash": false
+    }
+  ]
+}

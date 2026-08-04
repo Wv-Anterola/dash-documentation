@@ -116,6 +116,7 @@ const exportedReferenceSource = await readFile(path.join(root, 'src', 'data', 'g
 const interfaceControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'interface-controls.json'), 'utf8');
 const contextMenuReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'context-menus.json'), 'utf8');
 const keyboardReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'keyboard-shortcuts.json'), 'utf8');
+const projectControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'project-controls.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
@@ -125,6 +126,7 @@ const exportedReference = JSON.parse(exportedReferenceSource);
 const interfaceControlReference = JSON.parse(interfaceControlReferenceSource);
 const contextMenuReference = JSON.parse(contextMenuReferenceSource);
 const keyboardReference = JSON.parse(keyboardReferenceSource);
+const projectControlReference = JSON.parse(projectControlReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -336,6 +338,42 @@ for (const row of keyboardReference.shortcuts) {
 const keyboardPage = await readFile(path.join(docsRoot, 'reference', 'keyboard-shortcuts.mdx'), 'utf8');
 if (!keyboardPage.includes('<KeyboardShortcutReference />')) {
   errors.push('Keyboard shortcut page lost its searchable shortcut index');
+}
+
+if (!projectControlReference.disclosure || !/not .*master|feature branch/i.test(projectControlReference.disclosure)) {
+  errors.push('Project control reference no longer states that its rows come from unmerged feature branches');
+}
+if (projectControlReference.summary.controls !== projectControlReference.controls.length || projectControlReference.controls.length < 25) {
+  errors.push('Project control inventory is stale or fell below the reviewed 25-control floor');
+}
+if (new Set(projectControlReference.controls.map((row) => row.id)).size !== projectControlReference.controls.length) {
+  errors.push('Project control inventory contains duplicate identities');
+}
+const projectControlIds = new Set(projectControlReference.projects.map((entry) => entry.id));
+for (const project of projectControlReference.projects) {
+  if (!project.branch || !/^[0-9a-f]{40}$/.test(project.branchTip)) {
+    errors.push(`${project.id}: project control record is not pinned to a resolved branch commit`);
+  }
+  if (!project.phases.length || !project.surfaces.length) {
+    errors.push(`${project.id}: project control record lost its workflow phases or surfaces`);
+  }
+}
+for (const row of projectControlReference.controls) {
+  if (!projectControlIds.has(row.project)) errors.push(`${row.id}: project control belongs to an unregistered project`);
+  if (!row.label || !row.plain || !row.availability || !row.handlerExpression) {
+    errors.push(`${row.id}: project control is missing a label, explanation, availability, or handler`);
+  }
+  // Branch-pinned rows must never resolve to the master baseline.
+  if (!row.source?.url?.endsWith(`#L${row.source?.line}`) || row.source.url.includes(sourceReference.repository.baselineTip)) {
+    errors.push(`${row.id}: project control source is not line-addressed on its own branch tip`);
+  }
+}
+const tripPlannerPage = await readFile(path.join(docsRoot, 'guides', 'features', 'trip-planner.mdx'), 'utf8');
+if (!tripPlannerPage.includes('<ProjectControlReference project="trip-planner" />')) {
+  errors.push('Trip Planner guide lost its generated project-control reference');
+}
+if (!/not\s+merged into `master`/.test(tripPlannerPage)) {
+  errors.push('Trip Planner guide no longer discloses that the feature is unmerged');
 }
 
 if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
@@ -629,7 +667,8 @@ if (errors.length) {
       `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, ` +
       `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, ` +
       `${interfaceControlReference.controls.length} interface controls, ` +
-      `${contextMenuReference.items.length} context-menu entries, and ` +
-      `${keyboardReference.shortcuts.length} keyboard shortcuts pass inventory invariants.`
+      `${contextMenuReference.items.length} context-menu entries, ` +
+      `${keyboardReference.shortcuts.length} keyboard shortcuts, and ` +
+      `${projectControlReference.controls.length} project controls pass inventory invariants.`
   );
 }

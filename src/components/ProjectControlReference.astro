@@ -1,0 +1,113 @@
+---
+import reference from '../data/generated/project-controls.json';
+
+interface Props {
+  project: string;
+}
+
+const { project: projectId } = Astro.props;
+const project = reference.projects.find((entry) => entry.id === projectId);
+if (!project) throw new Error(`No generated project-control record for ${projectId}`);
+
+const controls = reference.controls.filter((control) => control.project === projectId);
+const surfaces = project.surfaces
+  .map((surface) => ({
+    ...surface,
+    panels: [...new Set(controls.filter((control) => control.surface === surface.name).map((control) => control.panel))].map((panel) => ({
+      name: panel,
+      controls: controls.filter((control) => control.surface === surface.name && control.panel === panel),
+    })),
+  }))
+  .filter((surface) => surface.panels.length);
+
+const shortSha = project.branchTip.slice(0, 7);
+const branchUrl = `${reference.repository.remote}/tree/${project.branchTip}`;
+---
+
+<div class="project-control-reference">
+  <div class="audit-summary control-contract-summary" aria-label={`${project.name} control totals`}>
+    <div><strong>{controls.length}</strong><span>traced controls</span></div>
+    <div><strong>{surfaces.length}</strong><span>surfaces</span></div>
+    <div><strong>{project.phases.length}</strong><span>workflow phases</span></div>
+    <div><strong>{controls.filter((control) => control.disabledWhen).length}</strong><span>can be greyed out</span></div>
+    <div><strong>{controls.filter((control) => control.leavesDash).length}</strong><span>reach outside Dash</span></div>
+    <div><strong>{controls.filter((control) => control.labelKind !== 'literal').length}</strong><span>labels that change</span></div>
+  </div>
+
+  {!project.mergedIntoMaster && (
+    <p class="source-warning project-control-branch">
+      <strong>Branch-only.</strong> These controls are generated from{' '}
+      <a href={branchUrl}><code>{project.branch}</code> at <code>{shortSha}</code></a>, which is
+      not merged into <code>master</code>. Everything below describes that branch,
+      not the mainline build.
+    </p>
+  )}
+
+  {surfaces.map((surface) => (
+    <section class="project-control-surface">
+      <h3>{surface.name}</h3>
+      <p class="project-control-surface-plain">{surface.plain}</p>
+      {surface.panels.map((panel) => (
+        <div class="project-control-panel">
+          <h4>{panel.name}</h4>
+          {panel.controls.map((control) => (
+            <details class="control-contract-row">
+              <summary>
+                <span class="control-contract-identity">
+                  <strong>{control.label}</strong>
+                  <small>{control.controlType}</small>
+                </span>
+                <span class="control-contract-badges">
+                  {control.disabledWhen && <span>Can be greyed out</span>}
+                  {control.leavesDash && <span>Leaves Dash</span>}
+                  {control.labelKind !== 'literal' && <span>Label changes</span>}
+                </span>
+              </summary>
+              <div class="control-contract-body">
+                <p class="control-contract-plain"><strong>In plain words: </strong>{control.plain}</p>
+                {control.labelVariants.length > 1 && (
+                  <p class="menu-variants">
+                    <strong>The same control also reads: </strong>
+                    {control.labelVariants.map((variant, index) => (
+                      <>{index ? ' · ' : ''}<code>{variant}</code></>
+                    ))}
+                  </p>
+                )}
+                <dl class="control-contract-facts">
+                  <div><dt>When you get it</dt><dd>{control.availability}</dd></div>
+                  <div><dt>Where</dt><dd>{control.surface} → {control.panel}</dd></div>
+                  {control.ariaLabel && <div><dt>Screen-reader name</dt><dd>{control.ariaLabel}</dd></div>}
+                  <div><dt>Leaves Dash</dt><dd>{control.leavesDash ? 'Yes. It contacts an external service or downloads a file.' : 'No. It only changes documents inside Dash.'}</dd></div>
+                </dl>
+                <details class="control-contract-technical">
+                  <summary>Technical trace</summary>
+                  <p><strong>Label expression: </strong><code>{control.labelExpression}</code></p>
+                  {control.generatedFrom && <p><strong>Generated over: </strong><code>{control.generatedFrom}</code></p>}
+                  {control.disabledWhen && <p><strong>Disabled while: </strong><code>{control.disabledWhen}</code></p>}
+                  {control.guards.length > 0 && (
+                    <p class="control-contract-code-list">
+                      <strong>Render guards, outermost first: </strong>
+                      {control.guards.map((guard, index) => (
+                        <>{index ? ', ' : ''}<code>{guard}</code></>
+                      ))}
+                    </p>
+                  )}
+                  <p><strong>Handler: </strong><code>{control.handlerExpression}</code></p>
+                  {control.calls.length > 0 && (
+                    <p class="control-contract-code-list">
+                      <strong>Calls: </strong>
+                      {control.calls.map((call, index) => (
+                        <>{index ? ', ' : ''}<code>{call}</code></>
+                      ))}
+                    </p>
+                  )}
+                  <a href={control.source.url}>Open {control.source.file.split('/').pop()}:{control.source.line} on the branch</a>
+                </details>
+              </div>
+            </details>
+          ))}
+        </div>
+      ))}
+    </section>
+  ))}
+</div>

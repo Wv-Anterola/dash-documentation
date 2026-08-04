@@ -492,3 +492,44 @@ test('shows each keyboard chord for both platforms and says what the browser kee
   expect(geometry.pageWidth).toBe(geometry.viewportWidth);
   expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
 });
+
+test('documents a project workspace without presenting branch work as shipped', async ({ page }) => {
+  await page.goto('/guides/features/trip-planner/');
+  await expect(page.getByRole('heading', { name: 'Trip Planner workspace' })).toBeVisible();
+
+  // The unmerged disclosure has to be visible, not buried in a details element.
+  const disclosure = page.locator('.project-control-branch');
+  await expect(disclosure).toBeVisible();
+  await expect(disclosure).toContainText('not merged into master');
+  await expect(disclosure.getByRole('link')).toHaveAttribute('href', /\/tree\/[0-9a-f]{40}$/);
+
+  await expect(page.locator('.project-control-reference .control-contract-row')).toHaveCount(29);
+  await expect(page.getByRole('heading', { name: 'Trip overview' })).toBeVisible();
+
+  const calendar = page.locator('.control-contract-row').filter({ hasText: 'Push trip to Google Calendar' }).first();
+  await calendar.locator('summary').first().click();
+  await expect(calendar.getByText('Leaves Dash', { exact: true }).first()).toBeVisible();
+  await expect(calendar.getByText(/contacts an external service/)).toBeVisible();
+  await expect(calendar.locator('dd', { hasText: 'Present but greyed out while' })).toBeVisible();
+
+  // A control whose label changes must list every reading, not just the first.
+  const phaseAction = page.locator('.control-contract-row').filter({ hasText: 'Generate from reviewed items' }).first();
+  await phaseAction.locator('summary').first().click();
+  await expect(phaseAction.getByText('The same control also reads:')).toBeVisible();
+  await expect(phaseAction.getByText('Copy share link')).toBeVisible();
+  await phaseAction.getByText('Technical trace', { exact: true }).click();
+  await expect(phaseAction.getByRole('link', { name: /Open TripBox\.tsx:\d+ on the branch/ })).toHaveAttribute('href', /\/blob\/[0-9a-f]{40}\/.*#L\d+$/);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('.project-control-reference');
+    if (!root) throw new Error('Project control reference is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+});

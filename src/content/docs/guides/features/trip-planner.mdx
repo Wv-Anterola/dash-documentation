@@ -3,16 +3,19 @@ title: Trip Planner workspace
 description: 'Create and operate the Trip Planner dashboard preset, understand its linked map, itinerary, resources, health checks, and AI-assisted planning, and maintain the feature safely.'
 ---
 
+import ProjectControlReference from '../../../../components/ProjectControlReference.astro';
+
 The Trip Planner is a useful example of how a Dash project becomes a product
 feature. It is not a separate application pasted beside Dash. Creating the
-preset assembles ordinary Dash objects—a dashboard, freeform documents, a map,
-linked resources, and a planner tool—into one opinionated workflow.
+preset assembles ordinary Dash objects: a dashboard, freeform documents, a map,
+linked resources, and a planner tool, into one opinionated workflow.
 
-:::note[Observed runtime feature]
-This guide was verified against the current local client bundle on 29 July
-2026. The public Dash deployment was unavailable during verification. See
-[Runtime and source alignment](#runtime-and-source-alignment) before changing
-the implementation.
+:::note[Branch-only feature]
+The implementation is on the `wv-anterola-trip-planner` branch and is not
+merged into `master`. The control reference below is generated from that branch
+tip; the walkthrough was verified against a local client bundle carrying it.
+See [Runtime and source alignment](#runtime-and-source-alignment) before
+changing the implementation.
 :::
 
 ## Create the workspace
@@ -175,25 +178,44 @@ disagreement by duplicating the objects.
 controls to pan or zoom back to the overview, map, and planner. The objects may
 be present outside the current viewport.
 
+## Every control this project adds
+
+A project earns its own control reference when it introduces controls that no
+global registry knows about. These are not toolbar buttons and not right-click
+entries, so neither the [interface control
+atlas](/reference/interface-controls/) nor the [right-click menu
+atlas](/reference/context-menus/) can see them.
+
+Each entry below is parsed from the project's own components. Read **When you
+get it** first: more than a third of these controls are present but greyed out
+under a named condition, which is the usual reason a button appears to do
+nothing. **Leaves Dash** marks the four controls that contact an external
+service or write a file.
+
+<ProjectControlReference project="trip-planner" />
+
+The phase tabs deserve a specific warning: switching phase changes what the
+trip emphasises, and nothing else. No document is deleted, hidden, or detached
+by moving between **Plan**, **Prepare**, **Today**, and **Recap**.
+
 ## Runtime and source alignment
 
-The verified compiled client contains the Trip Planner preset and runtime
-surfaces shown above. In the source snapshot inspected for this documentation,
-the dedicated `trip-shell` and `tripPlannerTool` implementation was not
-recoverable as corresponding TypeScript source outside the compiled bundle.
+The Trip Planner implementation lives on the `wv-anterola-trip-planner` branch
+and is **not merged into `master`**. Both facts matter when reading this guide:
 
-That is a maintenance risk:
+- The controls above are generated from that branch tip, and every source link
+  points at it. They describe the branch, not a mainline build.
+- A clean build from `master` will not contain the preset, so a reader who does
+  not see it in their client is not necessarily misconfigured.
 
-- a clean production rebuild may omit the feature;
-- runtime behavior cannot be reviewed or tested at the source level;
-- generated bundles must not become the canonical source of truth; and
-- documentation cannot provide stable file-level links until the source is
-  restored and committed.
+Earlier revisions of this page were written from a compiled client bundle
+because the source had not been located. That is no longer the case, and this
+page now links to the implementation directly. Documentation written from a
+bundle should be treated as provisional until its source is found.
 
-Before extending the feature, recover or commit its source, add a browser test
-that creates the preset, and verify a clean build produces the same workspace.
-The test should cover preset creation, linked object creation, manual stop
-editing, map loading, route refresh, and persistence after reload.
+Before the feature is merged, it should carry a browser test that creates the
+preset and covers preset creation, linked object creation, manual stop editing,
+map loading, route refresh, and persistence after reload.
 
 ## Related
 

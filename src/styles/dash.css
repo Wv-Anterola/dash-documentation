@@ -2420,6 +2420,36 @@
   overflow-wrap: anywhere;
 }
 
+.project-control-branch {
+  margin-block: var(--dash-space-4);
+}
+
+.project-control-surface {
+  margin-block: var(--dash-space-5);
+}
+
+.sl-markdown-content .project-control-surface h3 {
+  margin-block: 0 var(--dash-space-1);
+}
+
+.project-control-surface-plain {
+  color: var(--dash-ink-soft);
+}
+
+.project-control-panel {
+  border-left: 3px solid var(--dash-rule-strong);
+  margin-block: var(--dash-space-3);
+  padding-left: var(--dash-space-3);
+}
+
+.sl-markdown-content .project-control-panel h4 {
+  margin-block: 0 var(--dash-space-2);
+}
+
+.project-control-panel .control-contract-row + .control-contract-row {
+  margin-top: var(--dash-space-2);
+}
+
 .shortcut-chord {
   align-items: center;
   display: flex;
