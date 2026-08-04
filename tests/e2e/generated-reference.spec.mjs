@@ -24,9 +24,16 @@ async function horizontalOverflow(page, rootSelector, filterSelector) {
     for (const el of document.querySelectorAll('body *')) {
       const rect = el.getBoundingClientRect();
       if (rect.width <= 0 || rect.right <= viewportWidth + 0.5) continue;
-      // Report the element itself, not every ancestor that merely contains it.
-      const style = getComputedStyle(el);
-      if (style.overflowX === 'auto' || style.overflowX === 'scroll' || style.overflowX === 'clip' || style.overflowX === 'hidden') continue;
+      // A wide table inside its own scroll box is correct, not a defect. Skip
+      // anything whose own box, or any ancestor's, already contains the overflow.
+      const contained = (node) => {
+        for (let current = node; current && current !== document.body; current = current.parentElement) {
+          const overflowX = getComputedStyle(current).overflowX;
+          if (overflowX !== 'visible') return true;
+        }
+        return false;
+      };
+      if (contained(el)) continue;
       offenders.push({
         tag: el.tagName.toLowerCase(),
         className: typeof el.className === 'string' ? el.className.slice(0, 60) : '',

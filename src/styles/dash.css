@@ -2226,6 +2226,14 @@
 .control-contract-reference {
   container-type: inline-size;
   margin-block: var(--dash-space-5);
+  /* Nothing inside a reference block may widen the page; wide content scrolls
+     in its own box instead. Font metrics differ between platforms, so this is
+     stated rather than left to each child getting its sizing exactly right. */
+  max-width: 100%;
+}
+
+.control-contract-reference :is(dd, p, code, a, li) {
+  overflow-wrap: anywhere;
 }
 
 .control-contract-summary {
