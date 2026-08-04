@@ -1,0 +1,76 @@
+---
+/**
+ * The health report for links that come *into* this site from Dash itself.
+ *
+ * Server-rendered, because the whole point is that a machine or a person can
+ * read the current state without running anything, and because the report is
+ * small enough that filtering it would be theatre.
+ */
+import reference from '../data/generated/inapp-doc-links.json';
+
+const { summary, links } = reference;
+
+const statusLabels: Record<string, string> = {
+  direct: 'Lands directly',
+  redirect: 'Lands via a redirect',
+  'needs-trailing-slash': 'Needs the host to add a slash',
+  'redirect-to-nowhere': 'Redirects to a missing page',
+  unresolved: 'No matching route',
+};
+
+const bySurface = [...new Set(links.map((link) => link.surface))].map((surface) => ({
+  surface,
+  plain: links.find((link) => link.surface === surface)?.surfacePlain ?? '',
+  rows: links.filter((link) => link.surface === surface),
+}));
+---
+
+<div class="inapp-link-reference">
+  <div class="audit-summary control-contract-summary" aria-label="In-app documentation link totals">
+    <div><strong>{summary.links}</strong><span>links in Dash</span></div>
+    <div><strong>{summary.surfaces}</strong><span>surfaces they sit on</span></div>
+    <div><strong>{summary.distinctTargets}</strong><span>distinct targets</span></div>
+    <div><strong>{summary.viaRedirect}</strong><span>land via a redirect</span></div>
+    <div><strong>{summary.needsTrailingSlash}</strong><span>need a slash added</span></div>
+    <div><strong>{summary.unresolved}</strong><span>do not resolve</span></div>
+  </div>
+
+  {bySurface.map((group) => (
+    <section class="inapp-link-surface">
+      <h3>{group.surface}</h3>
+      <p>{group.plain}</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">What Dash asks for</th>
+              <th scope="col">Where it lands</th>
+              <th scope="col">Status</th>
+              <th scope="col">In Dash</th>
+            </tr>
+          </thead>
+          <tbody>
+            {group.rows.map((link) => (
+              <tr id={link.id}>
+                <td>
+                  <code>{link.requested}{link.fragment ? `#${link.fragment}` : ''}</code>
+                  {!link.reachable && <span class="inapp-link-flag">commented out</span>}
+                </td>
+                <td>
+                  {link.target ? (
+                    <a href={link.target}>{link.targetTitle || link.target}</a>
+                  ) : (
+                    <em>nowhere</em>
+                  )}
+                  {link.fragmentStatus === 'missing' && <span class="inapp-link-flag">fragment missing</span>}
+                </td>
+                <td>{statusLabels[link.status] ?? link.status}</td>
+                <td><a href={link.source.url}><code>{link.source.file.split('/').pop()}:{link.source.line}</code></a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+</div>

@@ -15,6 +15,7 @@ import fieldTypes from '../../../data/generated/field-types.json';
 import httpRoutes from '../../../data/generated/http-routes.json';
 import interfaceControls from '../../../data/generated/interface-controls.json';
 import keyboardShortcuts from '../../../data/generated/keyboard-shortcuts.json';
+import inappDocLinks from '../../../data/generated/inapp-doc-links.json';
 import openDestinations from '../../../data/generated/open-destinations.json';
 import projectControls from '../../../data/generated/project-controls.json';
 import scriptingGlobals from '../../../data/generated/scripting-globals.json';
@@ -96,6 +97,18 @@ const datasets: DatasetEntry[] = [
     recordKey: 'destinations',
     baseline: openDestinations.repository.baseline,
     generator: 'npm run audit:destinations',
+  },
+  {
+    id: 'inapp-doc-links',
+    title: 'Links from Dash into this site',
+    description: 'Every documentation URL shipped inside the Dash client, resolved against this site’s page list and redirect table, with fragment checks.',
+    path: '/assets/data/inapp-doc-links.json',
+    page: '/contributing/inapp-links/',
+    schemaVersion: inappDocLinks.schemaVersion,
+    records: inappDocLinks.links.length,
+    recordKey: 'links',
+    baseline: inappDocLinks.repository.baseline,
+    generator: 'npm run audit:inapp',
   },
   {
     id: 'project-controls',

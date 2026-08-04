@@ -139,6 +139,37 @@ if (manifestText) {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * The in-app link report must agree with the site that was actually built
+ * ------------------------------------------------------------------ */
+
+const inappText = read('/assets/data/inapp-doc-links.json');
+if (inappText) {
+  let inapp;
+  try {
+    inapp = JSON.parse(inappText);
+  } catch (error) {
+    complain(`the in-app link dataset is not valid JSON: ${error.message}`);
+  }
+  // The dataset resolves fragments against the MDX sources, which is the right
+  // input at generation time but is not the page a reader lands on. Re-checking
+  // the claim against the rendered HTML is what makes it a verified statement
+  // rather than a derived one.
+  for (const link of inapp?.links ?? []) {
+    if (!link.reachable || !link.target) continue;
+    const file = `${link.target}index.html`;
+    if (!files.has(file)) {
+      complain(`the in-app link report says ${link.requested} lands on ${link.target}, which was not built`);
+      continue;
+    }
+    if (link.fragmentStatus !== 'present') continue;
+    const html = readFileSync(join(DIST, file.slice(1)), 'utf8');
+    if (!html.includes(`id="${link.fragment}"`)) {
+      complain(`the in-app link report claims ${link.target}#${link.fragment} exists, but the built page has no such id`);
+    }
+  }
+}
+
 console.log(`Checked the machine-readable entry points in ${DIST}`);
 if (problems.length) {
   console.log(`\n### Problems: ${problems.length}`);
@@ -147,5 +178,6 @@ if (problems.length) {
 }
 console.log(
   `llms.txt indexes ${linked.size} pages, llms-full.txt carries the prose corpus, ` +
-    'robots.txt names the sitemap and both text entry points, and every advertised dataset is served.'
+    'robots.txt names the sitemap and both text entry points, every advertised dataset is served, ' +
+    'and every in-app help link resolves against the built pages.'
 );

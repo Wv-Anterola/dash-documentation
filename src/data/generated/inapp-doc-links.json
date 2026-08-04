@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "discovery": "Every string literal in the Dash-Web client containing \"Dash-Documentation\", found with the TypeScript compiler",
+    "resolution": "Each path is resolved against this site’s own page list and the redirect table in astro.config.mjs",
+    "fragments": "Fragments are checked against the heading slugs and explicit element ids of the resolved page",
+    "trailingSlash": "The site is built with trailingSlash: always, so a link without one is recorded separately: it reaches the page only because the host adds the slash",
+    "commented": "A URL inside a comment never reaches the parse tree, so the raw text is compared against the parsed lines and any difference is recorded as present but unreachable",
+    "driftRule": "Generation fails when a file links to the documentation without a reviewed surface, when a reviewed surface stops linking, or when a URL cannot be parsed. A broken link is published, not suppressed."
+  },
+  "summary": {
+    "links": 18,
+    "reachable": 17,
+    "distinctTargets": 14,
+    "files": 7,
+    "surfaces": 7,
+    "direct": 1,
+    "viaRedirect": 13,
+    "needsTrailingSlash": 3,
+    "unresolved": 0,
+    "missingFragments": 0
+  },
+  "redirectTableSize": 52,
+  "links": [
+    {
+      "id": "link-1",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/collaboration/",
+      "host": "brown-dash.github.io",
+      "requested": "/features/collaboration/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/features/collaboration/",
+      "targetTitle": "Collaboration",
+      "via": [
+        "/features/collaboration/"
+      ],
+      "reachable": true,
+      "surface": "Sharing dialog, question icon",
+      "surfacePlain": "The question mark beside the sharing information in the share dialog.",
+      "owner": "SharingManager",
+      "source": {
+        "file": "src/client/util/SharingManager.tsx",
+        "line": 276,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SharingManager.tsx#L276"
+      }
+    },
+    {
+      "id": "link-2",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/collaboration/",
+      "host": "brown-dash.github.io",
+      "requested": "/features/collaboration/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/features/collaboration/",
+      "targetTitle": "Collaboration",
+      "via": [
+        "/features/collaboration/"
+      ],
+      "reachable": true,
+      "surface": "Sharing dialog, question icon",
+      "surfacePlain": "The question mark beside the sharing information in the share dialog.",
+      "owner": "SharingManager",
+      "source": {
+        "file": "src/client/util/SharingManager.tsx",
+        "line": 277,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SharingManager.tsx#L277"
+      }
+    },
+    {
+      "id": "link-5",
+      "url": "https://brown-dash.github.io/Dash-Documentation/views/",
+      "host": "brown-dash.github.io",
+      "requested": "/views/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/views/views/",
+      "targetTitle": "Views",
+      "via": [
+        "/views/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 827,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L827"
+      }
+    },
+    {
+      "id": "link-6",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/pdf/",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/pdf/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/documents/pdf/",
+      "targetTitle": "PDFs",
+      "via": [
+        "/documents/pdf/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 831,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L831"
+      }
+    },
+    {
+      "id": "link-7",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/tempMedia/video",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/tempMedia/video",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "needs-trailing-slash",
+      "target": "/guides/documents/video/",
+      "targetTitle": "Video",
+      "via": [
+        "/documents/tempMedia/video/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 835,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L835"
+      }
+    },
+    {
+      "id": "link-8",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/tempMedia/audio",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/tempMedia/audio",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "needs-trailing-slash",
+      "target": "/guides/documents/audio/",
+      "targetTitle": "Audio",
+      "via": [
+        "/documents/tempMedia/audio/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 839,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L839"
+      }
+    },
+    {
+      "id": "link-9",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/webpage/",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/webpage/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/documents/webpage/",
+      "targetTitle": "Web pages",
+      "via": [
+        "/documents/webpage/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 843,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L843"
+      }
+    },
+    {
+      "id": "link-10",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/images/",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/images/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/documents/images/",
+      "targetTitle": "Images",
+      "via": [
+        "/documents/images/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 847,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L847"
+      }
+    },
+    {
+      "id": "link-11",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/text/",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/text/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/documents/text/",
+      "targetTitle": "Text",
+      "via": [
+        "/documents/text/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 851,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L851"
+      }
+    },
+    {
+      "id": "link-12",
+      "url": "https://brown-dash.github.io/Dash-Documentation/documents/dataViz/",
+      "host": "brown-dash.github.io",
+      "requested": "/documents/dataViz/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/documents/dataviz/",
+      "targetTitle": "Data visualisation",
+      "via": [
+        "/documents/dataViz/"
+      ],
+      "reachable": true,
+      "surface": "Document right-click menu, Help entry",
+      "surfacePlain": "Every document’s right-click menu ends with Help, and for eight document types that submenu offers a link to this site for that type.",
+      "owner": "DocumentViewInternal.onContextMenu",
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 855,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L855"
+      }
+    },
+    {
+      "id": "link-13",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/generativeai/#editing",
+      "host": "brown-dash.github.io",
+      "requested": "/features/generativeai/",
+      "fragment": "editing",
+      "fragmentStatus": "present",
+      "status": "redirect",
+      "target": "/guides/features/generative-ai/",
+      "targetTitle": "Generative AI",
+      "via": [
+        "/features/generativeai/"
+      ],
+      "reachable": true,
+      "surface": "Image editor, generative fill toolbar",
+      "surfacePlain": "The Open Documentation button beside the generative fill controls.",
+      "owner": "",
+      "source": {
+        "file": "src/client/views/nodes/imageEditor/GenerativeFillButtons.tsx",
+        "line": 39,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/imageEditor/GenerativeFillButtons.tsx#L39"
+      }
+    },
+    {
+      "id": "link-14",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/generativeai/#editing",
+      "host": "brown-dash.github.io",
+      "requested": "/features/generativeai/",
+      "fragment": "editing",
+      "fragmentStatus": "present",
+      "status": "redirect",
+      "target": "/guides/features/generative-ai/",
+      "targetTitle": "Generative AI",
+      "via": [
+        "/features/generativeai/"
+      ],
+      "reachable": true,
+      "surface": "Image editor, generative fill toolbar",
+      "surfacePlain": "The Open Documentation button beside the generative fill controls.",
+      "owner": "",
+      "source": {
+        "file": "src/client/views/nodes/imageEditor/GenerativeFillButtons.tsx",
+        "line": 69,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/imageEditor/GenerativeFillButtons.tsx#L69"
+      }
+    },
+    {
+      "id": "link-15",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/generativeai/#editing",
+      "host": "brown-dash.github.io",
+      "requested": "/features/generativeai/",
+      "fragment": "editing",
+      "fragmentStatus": "present",
+      "status": "redirect",
+      "target": "/guides/features/generative-ai/",
+      "targetTitle": "Generative AI",
+      "via": [
+        "/features/generativeai/"
+      ],
+      "reachable": true,
+      "surface": "Image editor, main toolbar",
+      "surfacePlain": "The Open Documentation button on the image editor toolbar.",
+      "owner": "",
+      "source": {
+        "file": "src/client/views/nodes/imageEditor/ImageEditorButtons.tsx",
+        "line": 48,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/imageEditor/ImageEditorButtons.tsx#L48"
+      }
+    },
+    {
+      "id": "link-16",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/trails/#slide-customization",
+      "host": "brown-dash.github.io",
+      "requested": "/features/trails/",
+      "fragment": "slide-customization",
+      "fragmentStatus": "present",
+      "status": "redirect",
+      "target": "/guides/features/trails/",
+      "targetTitle": "Create and present trails",
+      "via": [
+        "/features/trails/"
+      ],
+      "reachable": true,
+      "surface": "Trail properties, info icon",
+      "surfacePlain": "The info icon in the trail slide properties, which points at the slide customization section.",
+      "owner": "PresBox",
+      "source": {
+        "file": "src/client/views/nodes/trails/PresBox.tsx",
+        "line": 1876,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/trails/PresBox.tsx#L1876"
+      }
+    },
+    {
+      "id": "link-3",
+      "url": "https://brown-dash.github.io/Dash-Documentation/properties",
+      "host": "brown-dash.github.io",
+      "requested": "/properties",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "needs-trailing-slash",
+      "target": "/guides/properties/properties/",
+      "targetTitle": "The properties panel",
+      "via": [
+        "/properties/"
+      ],
+      "reachable": true,
+      "surface": "Properties panel, section info icons",
+      "surfacePlain": "Small info icons beside properties panel sections, which open the matching guide.",
+      "owner": "PropertiesView.render",
+      "source": {
+        "file": "src/client/views/PropertiesView.tsx",
+        "line": 1871,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1871"
+      }
+    },
+    {
+      "id": "link-4",
+      "url": "https://brown-dash.github.io/Dash-Documentation/features/trails/",
+      "host": "brown-dash.github.io",
+      "requested": "/features/trails/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "redirect",
+      "target": "/guides/features/trails/",
+      "targetTitle": "Create and present trails",
+      "via": [
+        "/features/trails/"
+      ],
+      "reachable": true,
+      "surface": "Properties panel, section info icons",
+      "surfacePlain": "Small info icons beside properties panel sections, which open the matching guide.",
+      "owner": "PropertiesView.render",
+      "source": {
+        "file": "src/client/views/PropertiesView.tsx",
+        "line": 1903,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1903"
+      }
+    },
+    {
+      "id": "link-18",
+      "url": "https://brown-dash.github.io/Dash-Documentation/",
+      "host": "brown-dash.github.io",
+      "requested": "/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "direct",
+      "target": "/",
+      "targetTitle": "Dash",
+      "via": [],
+      "reachable": false,
+      "surface": "Top bar, Help menu",
+      "surfacePlain": "The Documentation entry in the top bar Help menu, which opens the site root.",
+      "owner": "commented out",
+      "source": {
+        "file": "src/client/views/topbar/TopBar.tsx",
+        "line": 200,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/topbar/TopBar.tsx#L200"
+      }
+    },
+    {
+      "id": "link-17",
+      "url": "https://brown-dash.github.io/Dash-Documentation/",
+      "host": "brown-dash.github.io",
+      "requested": "/",
+      "fragment": "",
+      "fragmentStatus": "none",
+      "status": "direct",
+      "target": "/",
+      "targetTitle": "Dash",
+      "via": [],
+      "reachable": true,
+      "surface": "Top bar, Help menu",
+      "surfacePlain": "The Documentation entry in the top bar Help menu, which opens the site root.",
+      "owner": "TopBar",
+      "source": {
+        "file": "src/client/views/topbar/TopBar.tsx",
+        "line": 214,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/topbar/TopBar.tsx#L214"
+      }
+    }
+  ]
+}

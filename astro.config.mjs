@@ -247,6 +247,7 @@ export default defineConfig({
                 { slug: 'development/troubleshooting' },
                 { slug: 'contributing/joining' },
                 { slug: 'contributing/documentation' },
+                { slug: 'contributing/inapp-links', label: 'Links from Dash into this site' },
               ],
             },
           ],

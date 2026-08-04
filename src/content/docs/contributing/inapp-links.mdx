@@ -1,0 +1,75 @@
+---
+title: Links from Dash into this site
+description: Dash ships help buttons that open this documentation. Each of those URLs was written for the old site structure, so each one is resolved here against the current page list and redirect table, and the result is published rather than assumed.
+sidebar:
+  order: 3
+---
+
+import InAppLinkReference from '../../../components/InAppLinkReference.astro';
+
+<p class="lede">
+  Dash has help buttons, and they open pages here. Those URLs live in the
+  application's source, not in this repository, so nobody editing a page ever
+  sees them. This is the report that keeps them from rotting quietly.
+</p>
+
+## Why this is measured
+
+A documentation set is usually checked from the inside: are its own links
+valid, are its anchors real. That misses the direction that matters most to a
+reader, which is inward. Someone who presses a question mark in Dash and lands
+on a 404 has been failed by the documentation, and no amount of internal link
+checking will ever notice.
+
+The risk here is concrete. Every one of these URLs was written when this site
+was a Jekyll build with flat permalinks such as `/documents/pdf/`. The site is
+now organised under `/guides/`, and the old paths survive only because a
+redirect table says they should. That table is a promise to the application,
+and this page is the audit of whether the promise is being kept.
+
+Two failure modes are separated deliberately, because they are not equally bad:
+
+- **A path that resolves only because the host adds a trailing slash.** The site
+  is built with `trailingSlash: 'always'`, so `/properties` is not a route;
+  `/properties/` is. Most hosts add the slash and the link works. It is still
+  worth naming, because it is the part of the chain that depends on the deploy
+  target rather than on anything in either repository.
+- **A fragment that no longer exists.** A link to
+  `/features/trails/#slide-customization` that lands on the right page and then
+  does nothing is harder to notice than a 404, and reads to the user as the
+  documentation not covering the thing they asked about.
+
+## Every link, and where it lands
+
+Targets are resolved against this site's own page list and the redirect table
+in `astro.config.mjs`. Fragments are checked against the heading slugs and
+element ids of the page they land on.
+
+<InAppLinkReference />
+
+## What to do with a broken row
+
+The fix belongs in Dash-Web, not here. Changing a redirect to accommodate a
+stale in-app URL keeps the button working and leaves the application pointing
+at a path that no longer describes anything, which multiplies the problem with
+every restructure.
+
+Redirects in this repository exist for links that are already loose in the
+world: bookmarks, papers, and old issue threads. They are not a substitute for
+correcting a link that ships inside the product.
+
+## How this page stays honest
+
+The inventory is parsed from the pinned Dash-Web revision with the TypeScript
+compiler: every string literal in the client that names this site, wherever it
+appears. A URL sitting inside a comment never reaches the parse tree, so the
+raw text is compared against the parsed lines and any difference is published
+as present but unreachable, which is why one row below is marked commented out
+rather than silently dropped.
+
+Generation fails when a file gains a documentation link without a reviewed
+description of the surface it sits on, when a reviewed surface stops linking,
+or when a URL cannot be parsed. It deliberately does **not** fail on a broken
+link. A broken link is the finding; suppressing the report to keep the build
+green would defeat the purpose. The counts are asserted in the test suite
+instead, so a regression is visible without hiding the current state.

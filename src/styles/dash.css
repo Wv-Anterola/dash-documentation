@@ -2722,6 +2722,30 @@
   font-size: var(--dash-type-sm);
 }
 
+/* ------------------------------------------------------------------ *
+ * Links from Dash into this site
+ * ------------------------------------------------------------------ */
+
+.inapp-link-surface {
+  margin-block: var(--dash-space-5);
+}
+
+.sl-markdown-content .inapp-link-surface h3 {
+  margin-block: 0 var(--dash-space-1);
+}
+
+.inapp-link-flag {
+  background: color-mix(in srgb, var(--dash-accent-soft) 40%, var(--dash-surface));
+  border: 1px solid var(--dash-rule);
+  border-radius: 999px;
+  color: var(--dash-ink-soft);
+  display: inline-block;
+  font-size: var(--dash-type-sm);
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.5rem;
+  white-space: nowrap;
+}
+
 @media (max-width: 64rem) {
   .http-route-summary,
   .http-route-filters,
