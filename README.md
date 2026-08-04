@@ -10,6 +10,14 @@ student cohort contributed. Every recovered project has an evidence-backed
 implementation status and every integrated project maps back into the
 capability it expanded.
 
+Most of the reference is generated rather than written by hand. Parsers read a
+pinned Dash-Web revision and emit inventories of every interface control,
+right-click menu entry, keyboard shortcut, document type, serialized field,
+HTTP route, scripting global, and exported symbol, each row line-addressed to
+an immutable commit. Those inventories are published as JSON at
+`/assets/data/`, and generation fails when the code a row describes moves, so
+drift is a build error rather than a silent inaccuracy.
+
 ## Relationship to the upstream project
 
 Dash itself lives at [brown-dash/Dash-Web](https://github.com/brown-dash/Dash-Web),
@@ -37,14 +45,18 @@ npm run build     # production build into dist/
 npm run preview   # serve the built output
 npm run check     # Astro and TypeScript diagnostics
 npm test          # semantic parser and immutable-link unit tests
-npm run audit:all # branch tips, reachable history, semantic API, and TypeDoc JSON
+npm run audit:all # regenerate every source-derived inventory (needs a Dash-Web checkout)
 npm run coverage  # verify integrated projects map to canonical capability docs
 npm run encoding  # reject mojibake and replacement characters
 npm run links     # internal link, anchor, image, and heading checks over dist/
 npm run test:e2e  # generated reference, archive, and mobile-navigation checks
 ```
 
-Run `npm run verify` before committing.
+Run `npm run verify` before committing. The same steps run in CI on every push
+and pull request (`.github/workflows/verify.yml`). CI does not run `audit:all`,
+because those generators read a sibling Dash-Web checkout it does not have;
+their output is committed and the other checks prove it is internally
+consistent and source-addressed.
 
 ## Where things live
 
@@ -60,13 +72,26 @@ src/
                       structured projects, people, publications, and evidence
     generated/        full inventory, semantic API, history, TypeDoc, branches
   styles/dash.css     palette and component styling
+  pages/assets/data/  published JSON endpoints, one per generated dataset
 scripts/
   build-source-reference.mjs
                       classifies every reachable blob and parses source by SHA
+  build-interface-control-reference.mjs
+                      every persistent control, including the tab and tile chrome
+  build-context-menu-reference.mjs
+                      every right-click entry, its guards, nesting, and effects
+  build-keyboard-shortcut-reference.mjs
+                      the modifier router, both platform chords, and event control
+  build-project-control-reference.mjs
+                      controls a workspace preset adds, pinned to its own branch
+  build-task-route-reference.mjs
+                      everyday tasks resolved to every control, menu, and shortcut
   build-typedoc-reference.mjs
                       generates TypeDoc JSON from an immutable Git archive
   check-capability-coverage.mjs
                       rejects incomplete inventories, parser failures, and dead evidence
+  check-documentation-quality.mjs
+                      page metadata, media, prose, and every generated inventory invariant
 astro.config.mjs      sidebar, redirects, and site configuration
 public/assets/        images and screen recordings
 ```
@@ -102,3 +127,7 @@ until the research group confirms membership and project roles from its records.
 
 Some entries are deliberately marked as unclear or documentation-only. That is
 the honest state of the evidence, not an omission.
+
+Work that lives on an unmerged feature branch is documented as such: those rows
+are pinned to the branch tip, carry a `mergedIntoMaster` flag, and the pages
+using them say plainly that the feature is not on the mainline.
