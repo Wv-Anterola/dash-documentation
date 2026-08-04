@@ -11,7 +11,7 @@ head:
 
 Dash is a visual knowledge workspace where a PDF, video, web page, recording,
 rich-text note, dataset, task, map, 3D model, policy analysis, agent, and
-collection are all addressable documents—and a link can start or end at a
+collection are all addressable documents, and a link can start or end at a
 precise region inside them.
 
 It has been in continuous development since December 2018, almost entirely by
@@ -45,6 +45,34 @@ recovered projects with evidence-backed status labels.
 
 If you are about to work on Dash, [architecture](/architecture/) describes the
 implementation and the four places you extend it.
+
+## How to check what this site tells you
+
+Most of this documentation is generated from one pinned revision of the Dash
+source rather than written from memory, and the parts that are not are marked.
+That has three consequences worth knowing before you rely on anything here.
+
+**Almost every record names its own evidence.** Each button, right-click entry,
+keystroke, document type, field type, HTTP route, and scripting global carries
+the file, the line, and the 40-character commit it was read from. When the code
+moves, generation fails and the build breaks, rather than the page quietly
+going stale.
+
+**The underlying data is published.** Every reference on this site is a view
+over a dataset you can fetch as JSON, listed at [generated data
+endpoints](/reference/generated-data/). You can check a claim, diff two
+revisions, or build something else on it without scraping a page.
+
+**The gaps are published too.** [What this documentation does not
+know](/reference/documentation-coverage/) counts, for every generated surface,
+how many records a person has actually explained rather than only traced, names
+the two surfaces that are behind, and lists what is still missing. It is not
+flattering and it is not meant to be.
+
+There is one limit worth stating on the way in: the Dash source repository is
+private, so the source links resolve for people with access to it and return a
+404 for everyone else. What that does and does not affect is set out under [who
+can open a source link](/reference/implementation-snapshot/#who-can-open-a-source-link).
 
 ## How this documentation is organised
 
