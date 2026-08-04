@@ -62,6 +62,9 @@ jobs:
       - name: Machine-readable entry points
         run: npm run endpoints
 
+      - name: Accessibility
+        run: npm run accessibility
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

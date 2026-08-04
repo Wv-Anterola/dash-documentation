@@ -91,6 +91,10 @@
     "src": "/assets/gifs/trails/miniplayer.gif",
     "alt": "Dash demonstration of Miniplayer."
   },
+  "/contributing/inapp-links": {
+    "src": "/assets/images/diagrams/dash-inapp-doc-link-path.svg",
+    "alt": "A help control in Dash opening an old permalink, the path being resolved against this site and its redirect table, and the three outcomes: it lands, it lands only if the host adds a trailing slash, or it reaches a fragment that no longer exists."
+  },
   "/contributing/joining": {
     "src": "/assets/gifs/environment/dash-drag-tab-create-tile.gif",
     "alt": "Dash demonstration of Drag Tab Create Tile."
@@ -206,6 +210,10 @@
   "/reference/implementation-snapshot": {
     "src": "/assets/images/diagrams/source-evidence-flow.svg",
     "alt": "Evidence flow from observed Dash behavior and source code through research records to published documentation."
+  },
+  "/reference/open-destinations": {
+    "src": "/assets/images/diagrams/dash-open-destination-routing.svg",
+    "alt": "A destination string splitting into a verb and a modifier, then climbing four routers to the canvas, the lightbox, or the tile layout, with the lightbox and dashboard overrides checked first."
   },
   "/reference/status-taxonomy": {
     "src": "/assets/gifs/gettingstarted/dash-annotation-icon.gif",

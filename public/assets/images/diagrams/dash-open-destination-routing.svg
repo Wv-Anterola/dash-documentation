@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">How Dash decides where a document opens</title>
+  <desc id="desc">A destination string is split into a verb and modifiers, then climbs a ladder of four routers. The freeform canvas router claims in-parent destinations, the collection shortcut satisfies a request in place, the tab router acts on the current tile, and the top-level router acts on the workspace root. Two rules outrank all of them: an open lightbox captures every destination, and a dashboard document replaces the whole workspace.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#25345f" flood-opacity="0.12"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#5269d8"/></marker>
+    <marker id="arrowMuted" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#98a6e8"/></marker>
+    <marker id="arrowWarn" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#c2410c"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1465" cy="112" r="185" fill="#dfe5ff" opacity="0.6"/><circle cx="95" cy="835" r="210" fill="#e8ddff" opacity="0.55"/>
+
+  <text x="100" y="102" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="750" fill="#17213f">Where a document opens</text>
+  <text x="102" y="152" font-family="Inter,Arial,sans-serif" font-size="25" fill="#526078">One string, four routers that each claim part of it, and two rules that outrank whatever you asked for.</text>
+
+  <!-- The request, split into its parts -->
+  <g filter="url(#shadow)"><rect x="100" y="212" width="470" height="150" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="128" y="256" font-size="21" font-weight="700" fill="#6b7796" letter-spacing="1.2">THE REQUEST</text>
+    <text x="128" y="300" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="27" fill="#17213f">addDocTab(doc, "</text>
+    <text x="352" y="300" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="27" font-weight="700" fill="#315bd6">add</text>
+    <text x="401" y="300" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="27" fill="#526078">:</text>
+    <text x="415" y="300" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="27" font-weight="700" fill="#6d4dd6">right</text>
+    <text x="497" y="300" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="27" fill="#17213f">")</text>
+    <text x="352" y="336" font-size="21" fill="#315bd6">verb</text>
+    <text x="415" y="336" font-size="21" fill="#6d4dd6">modifier</text>
+  </g>
+
+  <!-- The ladder -->
+  <text x="100" y="418" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700" fill="#6b7796" letter-spacing="1.2">THE ROUTER CHAIN, INNERMOST FIRST</text>
+
+  <g font-family="Inter,Arial,sans-serif">
+    <g filter="url(#shadow)"><rect x="100" y="440" width="470" height="104" rx="22" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <circle cx="146" cy="478" r="22" fill="#198a83"/><text x="146" y="487" text-anchor="middle" font-size="24" font-weight="750" fill="#fff">1</text>
+    <text x="182" y="487" font-size="28" font-weight="720" fill="#17213f">Freeform canvas</text>
+    <text x="128" y="524" font-size="22" fill="#526078">Claims inParent and the in-place lightbox</text>
+
+    <g filter="url(#shadow)"><rect x="100" y="562" width="470" height="104" rx="22" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <circle cx="146" cy="600" r="22" fill="#198a83"/><text x="146" y="609" text-anchor="middle" font-size="24" font-weight="750" fill="#fff">2</text>
+    <text x="182" y="609" font-size="28" font-weight="720" fill="#17213f">Collection shortcut</text>
+    <text x="128" y="646" font-size="22" fill="#526078">Already a child here? Unhide it, stop</text>
+
+    <g filter="url(#shadow)"><rect x="100" y="684" width="470" height="104" rx="22" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <circle cx="146" cy="722" r="22" fill="#315bd6"/><text x="146" y="731" text-anchor="middle" font-size="24" font-weight="750" fill="#fff">3</text>
+    <text x="182" y="731" font-size="28" font-weight="720" fill="#17213f">Tab router</text>
+    <text x="128" y="768" font-size="22" fill="#526078">Splits are measured against this tile</text>
+
+    <g filter="url(#shadow)"><rect x="640" y="684" width="430" height="104" rx="22" fill="#17213f"/></g>
+    <circle cx="686" cy="722" r="22" fill="#6f9bff"/><text x="686" y="731" text-anchor="middle" font-size="24" font-weight="750" fill="#17213f">4</text>
+    <text x="722" y="731" font-size="28" font-weight="720" fill="#fff">Top-level router</text>
+    <text x="668" y="768" font-size="22" fill="#c5d8ff">Splits measured against the workspace root</text>
+  </g>
+
+  <!-- Forwarding arrows -->
+  <path d="M335 544v14" stroke="#98a6e8" stroke-width="5" marker-end="url(#arrowMuted)"/>
+  <path d="M335 666v14" stroke="#98a6e8" stroke-width="5" marker-end="url(#arrowMuted)"/>
+  <path d="M570 736h62" stroke="#98a6e8" stroke-width="5" marker-end="url(#arrowMuted)"/>
+  <text x="352" y="558" font-family="Inter,Arial,sans-serif" font-size="20" fill="#7c88ad">forwards what it does not claim</text>
+
+  <!-- Terminals -->
+  <text x="640" y="418" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700" fill="#6b7796" letter-spacing="1.2">WHERE A CLAIMED VERB ENDS UP</text>
+  <g font-family="Inter,Arial,sans-serif">
+    <g filter="url(#shadow)"><rect x="640" y="440" width="430" height="104" rx="22" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <text x="668" y="483" font-size="26" font-weight="720" fill="#17213f">This canvas</text>
+    <text x="668" y="518" font-size="22" fill="#526078">No tab at all: it becomes a child</text>
+
+    <g filter="url(#shadow)"><rect x="640" y="562" width="430" height="104" rx="22" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <text x="668" y="605" font-size="26" font-weight="720" fill="#17213f">The lightbox</text>
+    <text x="668" y="640" font-size="22" fill="#526078">Floats over everything, moves nothing</text>
+
+    <g filter="url(#shadow)"><rect x="1140" y="440" width="360" height="348" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+    <text x="1170" y="486" font-size="26" font-weight="720" fill="#17213f">The tile layout</text>
+    <text x="1170" y="522" font-size="21" fill="#6b7796">CollectionDockingView</text>
+    <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="23" fill="#315bd6">
+      <text x="1170" y="572">AddSplit</text>
+      <text x="1170" y="612">InsertSplit</text>
+      <text x="1170" y="652">ReplaceTab</text>
+      <text x="1170" y="692">ToggleSplit</text>
+      <text x="1170" y="732">CloseSplit</text>
+    </g>
+    <text x="1170" y="770" font-size="20" fill="#526078">Six branches decide the shape</text>
+  </g>
+  <path d="M1070 492h56" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+  <path d="M1070 614h56" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+  <path d="M1070 736h56" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+
+  <!-- The overrides -->
+  <g filter="url(#shadow)"><rect x="640" y="212" width="860" height="150" rx="26" fill="#fff7ed" stroke="#fdba74" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="668" y="256" font-size="21" font-weight="700" fill="#9a3412" letter-spacing="1.2">CHECKED FIRST, AND THEY WIN</text>
+    <circle cx="682" cy="292" r="8" fill="#c2410c"/>
+    <text x="704" y="300" font-size="24" fill="#7c2d12">An open lightbox rewrites every destination to itself.</text>
+    <circle cx="682" cy="334" r="8" fill="#c2410c"/>
+    <text x="704" y="342" font-size="24" fill="#7c2d12">A document with a dockingConfig is a dashboard: it replaces the workspace.</text>
+  </g>
+  <path d="M1070 300h-486" stroke="#c2410c" stroke-width="5" stroke-dasharray="12 8" marker-end="url(#arrowWarn)"/>
+</svg>

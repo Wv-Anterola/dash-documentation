@@ -34,7 +34,8 @@
     "encoding": "node scripts/check-encoding.mjs",
     "links": "node scripts/check-links.mjs",
     "endpoints": "node scripts/check-machine-endpoints.mjs",
-    "verify": "npm test && npm run encoding && npm run coverage && npm run quality && npm run check && npm run build && npm run links && npm run endpoints && npm run test:e2e"
+    "accessibility": "node scripts/check-accessibility.mjs",
+    "verify": "npm test && npm run encoding && npm run coverage && npm run quality && npm run check && npm run build && npm run links && npm run endpoints && npm run accessibility && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",

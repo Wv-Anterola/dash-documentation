@@ -50,7 +50,6 @@
      Light overrides follow. */
   --dash-blue: #8fb4ff;
   --dash-blue-bright: #a8c5ff;
-  --dash-blue-light: #bdddf5;
 
   --sl-color-accent-low: #16213f;
   --sl-color-accent: #6f9bff;
@@ -58,7 +57,43 @@
 
   --dash-rule: #33384a;
   --dash-rule-soft: #262b39;
+  --dash-rule-strong: #4a5165;
+  /* The visible edge of a form control, which WCAG 1.4.11 holds to 3:1 against
+     its background. Separated from --dash-rule-strong deliberately: that one
+     draws decorative grouping rules, where a 3:1 edge would read as a border
+     around everything. */
+  --dash-control-border: #737a8c;
   --dash-muted: #a8aeba;
+
+  /* ------------------------------------------------- semantic colour tokens
+     The palette above names colours; these name jobs, so a component can ask
+     for "body text on a card" without knowing which blue or grey that is.
+     Values are literal rather than `var(--sl-color-…)` so the contrast audit
+     in scripts/check-accessibility.mjs can resolve every pair without
+     reimplementing Starlight's cascade. They are matched to Starlight's own
+     dark palette; the light overrides follow, and both are checked. */
+  --dash-ink: #e8eaf0;
+  --dash-ink-soft: #a8aeba;
+  --dash-surface: #1c1e24;
+  --dash-surface-raised: #23262e;
+  --dash-panel: #1c1e24;
+  --dash-accent: #6f9bff;
+  --dash-accent-soft: #16213f;
+  --dash-accent-strong: #c5d8ff;
+  --dash-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 6px 20px rgb(0 0 0 / 0.35);
+
+  /* -------------------------------------------------- remaining scale steps
+     The spacing scale is 0.25rem based; 5 and 7 fill the gaps the components
+     actually reach for. The type aliases exist so component rules read as a
+     role rather than a pixel size. */
+  --dash-space-5: 1.25rem;
+  --dash-space-7: 1.75rem;
+  --dash-radius-sm: 4px;
+  --dash-radius-md: 8px;
+  --dash-radius-lg: 14px;
+  --dash-type-xs: var(--dash-text-xs);
+  --dash-type-sm: var(--dash-text-sm);
+  --dash-type-md: var(--dash-text-base);
 
   --sl-content-width: 45rem;
   --sl-text-code: 0.9em;
@@ -76,7 +111,19 @@
 
   --dash-rule: #d8dce3;
   --dash-rule-soft: #e6e9ee;
+  --dash-rule-strong: #b3bac6;
+  --dash-control-border: #868d9a;
   --dash-muted: #57606a;
+
+  --dash-ink: #16181d;
+  --dash-ink-soft: #57606a;
+  --dash-surface: #ffffff;
+  --dash-surface-raised: #f2f4f8;
+  --dash-panel: #f8f9fc;
+  --dash-accent: #2a55c4;
+  --dash-accent-soft: #d8e2fb;
+  --dash-accent-strong: #1c3d94;
+  --dash-shadow: 0 1px 2px rgb(16 24 40 / 0.06), 0 6px 20px rgb(16 24 40 / 0.06);
 }
 
 /* ------------------------------------------------------------- typography */
@@ -2262,7 +2309,7 @@
 
 .control-contract-filters :is(input, select) {
   background: var(--dash-surface);
-  border: 1px solid var(--dash-rule-strong);
+  border: 1px solid var(--dash-control-border);
   border-radius: var(--dash-radius-sm);
   color: var(--dash-ink);
   font: inherit;
@@ -2282,7 +2329,7 @@
 .control-contract-results-header button,
 .control-contract-paging button {
   background: var(--dash-surface-raised);
-  border: 1px solid var(--dash-rule-strong);
+  border: 1px solid var(--dash-control-border);
   border-radius: 999px;
   color: var(--dash-accent-strong);
   cursor: pointer;

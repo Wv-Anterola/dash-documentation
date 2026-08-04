@@ -93,6 +93,8 @@ const manual = {
   '/reference/document-types': '/assets/images/diagrams/dash-document-construction-lifecycle.svg',
   '/reference/glossary': '/assets/gifs/gettingstarted/dash-edit-link.gif',
   '/reference/implementation-snapshot': '/assets/images/diagrams/source-evidence-flow.svg',
+  '/reference/open-destinations': '/assets/images/diagrams/dash-open-destination-routing.svg',
+  '/contributing/inapp-links': '/assets/images/diagrams/dash-inapp-doc-link-path.svg',
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
   '/reference/status-taxonomy': '/assets/gifs/gettingstarted/dash-annotation-icon.gif',
   '/research/cohorts': '/assets/gifs/environment/dash-drag-tab-back.gif',
@@ -119,6 +121,10 @@ const manualAlt = {
     'Document construction lifecycle from serialized type through prototypes, data and view delegates, and layout-driven rendering.',
   '/reference/implementation-snapshot':
     'Evidence flow from observed Dash behavior and source code through research records to published documentation.',
+  '/reference/open-destinations':
+    'A destination string splitting into a verb and a modifier, then climbing four routers to the canvas, the lightbox, or the tile layout, with the lightbox and dashboard overrides checked first.',
+  '/contributing/inapp-links':
+    'A help control in Dash opening an old permalink, the path being resolved against this site and its redirect table, and the three outcomes: it lands, it lands only if the host adds a trailing slash, or it reaches a fragment that no longer exists.',
 };
 
 const synonymGroups = [

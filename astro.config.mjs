@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { unified } from '@astrojs/markdown-remark';
 import { rehypeBaseUrls } from './src/plugins/rehype-base-urls.mjs';
+import { rehypeContentA11y } from './src/plugins/rehype-content-a11y.mjs';
 
 // Where the site is served from. Vercel serves it at a domain root, so `base`
 // is empty by default. The original GitHub Pages deployment lives under a
@@ -23,8 +24,10 @@ export default defineConfig({
   markdown: {
     // Authors write site-root paths; this adds the base so they resolve in
     // production as well as in dev. See src/plugins/rehype-base-urls.mjs.
+    // rehype-content-a11y adds the table header scopes and task-list labels
+    // that markdown has no syntax for.
     processor: unified({
-      rehypePlugins: [[rehypeBaseUrls, { base }]],
+      rehypePlugins: [[rehypeBaseUrls, { base }], rehypeContentA11y],
     }),
   },
   // The Jekyll site used flat permalinks. These keep old links and bookmarks

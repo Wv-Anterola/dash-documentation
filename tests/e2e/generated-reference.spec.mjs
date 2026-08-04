@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test';
 import reference from '../../src/data/generated/source-modules.json' with { type: 'json' };
+import interfaceControls from '../../src/data/generated/interface-controls.json' with { type: 'json' };
+import openDestinations from '../../src/data/generated/open-destinations.json' with { type: 'json' };
+import inappLinks from '../../src/data/generated/inapp-doc-links.json' with { type: 'json' };
+
+// Counts that grow whenever a control is traced are read from the dataset the
+// page renders, not pinned here. A hardcoded total turns "we documented six
+// more controls" into a browser-test failure, which teaches the wrong lesson.
+const controlCount = interfaceControls.controls.length;
+const destinationCount = openDestinations.destinations.length;
 
 const slug = (path) =>
   path.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -122,12 +131,12 @@ test('traces every interface control from plain behavior to implementation effec
   expect(dataResponse.ok()).toBeTruthy();
   expect(dataResponse.headers()['content-type']).toContain('application/json');
   const data = await dataResponse.json();
-  expect(data.controls).toHaveLength(213);
+  expect(data.controls).toHaveLength(controlCount);
 
   await page.goto('/reference/interface-controls/');
   await expect(page.getByRole('heading', { name: 'Interface control and node atlas' })).toBeVisible();
   await expect(page.getByRole('img', { name: /source-backed trace of the Image.*Rotate control/ })).toBeVisible();
-  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('213');
+  await expect(page.locator('.control-contract-summary strong').first()).toHaveText(String(controlCount));
   await expect(page.locator('[data-control-row]:visible')).toHaveCount(40);
 
   const query = page.getByLabel('Find a button, icon, tooltip, handler, state field, or effect');
@@ -558,5 +567,62 @@ test('renders every reference inventory into the page so search and no-JS reader
 
   // The site's own search must be able to reach a menu entry by name.
   await page.goto('/reference/interface-controls/');
-  await expect(page.locator('.reference-index tbody tr')).toHaveCount(213);
+  await expect(page.locator('.reference-index tbody tr')).toHaveCount(controlCount);
+});
+
+test('publishes the open-destination map without needing JavaScript to read it', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/open-destinations.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  expect(dataResponse.headers()['content-type']).toContain('application/json');
+  const data = await dataResponse.json();
+  expect(data.destinations).toHaveLength(destinationCount);
+
+  await page.goto('/reference/open-destinations/');
+  await expect(page.getByRole('heading', { name: 'Where a document opens' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /destination string splitting into a verb and a modifier/ })).toBeVisible();
+
+  // Unlike the filtered references, every record here is server-rendered, so
+  // the whole table must be present before any script runs.
+  await expect(page.locator('.open-destination-row')).toHaveCount(destinationCount);
+  await expect(page.locator('.open-destination-override')).toHaveCount(openDestinations.overrides.length);
+
+  // The two overrides are the reason this page exists; they must be readable
+  // without expanding anything.
+  await expect(page.locator('#lightbox-capture')).toContainText('rewrites every requested destination');
+  await expect(page.locator('#dashboard-swap')).toContainText('switches the whole workspace to it');
+
+  // The busiest destination leads, and its call sites resolve to real source.
+  const busiest = page.locator('.open-destination-row').first();
+  await expect(busiest.locator('summary')).toContainText('add:right');
+  await busiest.locator('summary').click();
+  await expect(busiest.locator('.open-destination-uses a').first()).toHaveAttribute('href', /\/blob\/[0-9a-f]{40}\/.*#L\d+$/);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await horizontalOverflow(page, '.open-destination-reference');
+  expectNoHorizontalScroll(geometry);
+  expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+});
+
+test('reports where every help link in Dash lands', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/inapp-doc-links.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  const data = await dataResponse.json();
+  expect(data.links).toHaveLength(inappLinks.links.length);
+  expect(data.summary.unresolved).toBe(0);
+
+  await page.goto('/contributing/inapp-links/');
+  await expect(page.getByRole('heading', { name: 'Links from Dash into this site' })).toBeVisible();
+  await expect(page.locator('.inapp-link-surface')).toHaveCount(inappLinks.summary.surfaces);
+
+  // Each row names a target that is a real page on this site, so following one
+  // must not leave the site or 404.
+  const targets = page.locator('.inapp-link-surface tbody tr td:nth-child(2) a');
+  await expect(targets.first()).toBeVisible();
+  const href = await targets.first().getAttribute('href');
+  const targetResponse = await page.request.get(href);
+  expect(targetResponse.ok()).toBeTruthy();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await horizontalOverflow(page, '.inapp-link-reference');
+  expectNoHorizontalScroll(geometry);
 });
