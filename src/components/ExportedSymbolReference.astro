@@ -1,0 +1,333 @@
+---
+import reference from '../data/generated/exported-symbols.json';
+import { siteHref } from '../data/sourceReference';
+
+const { summary, kinds, subsystems } = reference;
+const dataUrl = siteHref('/assets/data/exported-symbols.json');
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<div
+  class="exported-symbol-reference"
+  data-exported-symbol-reference
+  data-source={dataUrl}
+  data-base-url={baseUrl}
+>
+  <div class="audit-summary exported-symbol-summary" aria-label="Exported symbol totals">
+    <div><strong>{summary.exports.toLocaleString()}</strong><span>exported declarations</span></div>
+    <div><strong>{summary.modules.toLocaleString()}</strong><span>modules with exports</span></div>
+    <div><strong>{summary.reviewed.toLocaleString()}</strong><span>reviewed contracts</span></div>
+    <div><strong>{summary.sourceDescribed.toLocaleString()}</strong><span>source-described exports</span></div>
+    <div><strong>{summary.declarationOnly.toLocaleString()}</strong><span>declaration-only exports</span></div>
+    <div><strong>{summary.kinds}</strong><span>declaration kinds</span></div>
+  </div>
+
+  <div class="source-method">
+    <strong>Evidence labels are intentionally different.</strong>
+    A reviewed contract records behavior checked against the implementation. A
+    source description is authored near the declaration. Declaration only means
+    the parser proves the export exists, but no behavioral explanation has been
+    accepted yet.
+  </div>
+
+  <div class="exported-symbol-filters" aria-label="Exported symbol filters">
+    <div class="exported-symbol-query">
+      <label for="exported-symbol-query">Find a name, signature, module, behavior, or direct call</label>
+      <input
+        id="exported-symbol-query"
+        type="search"
+        placeholder="Try CompileScript, Doc, undo, route, or selectedDocs"
+        autocomplete="off"
+        disabled
+      />
+    </div>
+    <div>
+      <label for="exported-symbol-kind">Declaration kind</label>
+      <select id="exported-symbol-kind" disabled>
+        <option value="">All kinds</option>
+        {kinds.map((kind) => <option value={kind}>{kind}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="exported-symbol-subsystem">Subsystem</label>
+      <select id="exported-symbol-subsystem" disabled>
+        <option value="">All subsystems</option>
+        {subsystems.map((subsystem) => (
+          <option value={subsystem.value}>{subsystem.label}</option>
+        ))}
+      </select>
+    </div>
+    <div>
+      <label for="exported-symbol-evidence">Contract evidence</label>
+      <select id="exported-symbol-evidence" disabled>
+        <option value="">All evidence levels</option>
+        <option value="reviewed">Reviewed contract</option>
+        <option value="source">Source description</option>
+        <option value="declaration">Declaration only</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="exported-symbol-results-header">
+    <p class="filter-count" data-exported-symbol-count role="status" aria-live="polite">
+      Loading {summary.exports.toLocaleString()} exported declarations…
+    </p>
+    <button type="button" data-exported-symbol-clear disabled>Clear filters</button>
+  </div>
+
+  <div class="exported-symbol-list" id="exported-symbol-list" aria-busy="true">
+    <p class="exported-symbol-loading">Loading the source-generated index…</p>
+  </div>
+
+  <noscript>
+    <p class="source-warning">
+      Interactive symbol filtering requires JavaScript. The complete static
+      module reference remains available from the generated API index.
+    </p>
+  </noscript>
+
+  <div class="exported-symbol-paging">
+    <button type="button" data-exported-symbol-more aria-controls="exported-symbol-list" hidden disabled>Show more</button>
+    <button type="button" data-exported-symbol-all aria-controls="exported-symbol-list" hidden disabled>Show all matching</button>
+  </div>
+</div>
+
+<script>
+  interface SymbolRow {
+    id: string;
+    name: string;
+    qualifiedName: string;
+    kind: string;
+    visibility: string;
+    signature: string;
+    module: string;
+    subsystem: string;
+    subsystemLabel: string;
+    evidence: 'reviewed' | 'source' | 'declaration';
+    description: string;
+    lineStart: number;
+    lineEnd: number;
+    calls: string[];
+    callers: string[];
+    contractPath: string;
+    sourceUrl: string;
+    search?: string;
+  }
+
+  interface SymbolPayload {
+    rows: SymbolRow[];
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-exported-symbol-reference]');
+  if (root) {
+    const query = root.querySelector<HTMLInputElement>('#exported-symbol-query');
+    const kind = root.querySelector<HTMLSelectElement>('#exported-symbol-kind');
+    const subsystem = root.querySelector<HTMLSelectElement>('#exported-symbol-subsystem');
+    const evidence = root.querySelector<HTMLSelectElement>('#exported-symbol-evidence');
+    const count = root.querySelector<HTMLElement>('[data-exported-symbol-count]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-exported-symbol-clear]');
+    const more = root.querySelector<HTMLButtonElement>('[data-exported-symbol-more]');
+    const all = root.querySelector<HTMLButtonElement>('[data-exported-symbol-all]');
+    const list = root.querySelector<HTMLElement>('#exported-symbol-list');
+    const controls = [query, kind, subsystem, evidence, clear, more, all].filter(Boolean) as HTMLInputElement[];
+    const pageSize = 80;
+    let limit = pageSize;
+    let rows: SymbolRow[] = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (query) query.value = params.get('q') ?? '';
+    if (kind) kind.value = params.get('kind') ?? '';
+    if (subsystem) subsystem.value = params.get('subsystem') ?? '';
+    if (evidence) evidence.value = params.get('evidence') ?? '';
+
+    const withBase = (path: string) => `${root.dataset.baseUrl ?? ''}${path}`;
+    const evidenceLabels = {
+      reviewed: 'Reviewed contract',
+      source: 'Source description',
+      declaration: 'Declaration only',
+    } as const;
+
+    const matches = (row: SymbolRow) => {
+      const needle = query?.value.trim().toLowerCase() ?? '';
+      return (!needle || row.search?.includes(needle)) &&
+        (!kind?.value || row.kind === kind.value) &&
+        (!subsystem?.value || row.subsystem === subsystem.value) &&
+        (!evidence?.value || row.evidence === evidence.value);
+    };
+
+    const syncUrl = () => {
+      const next = new URLSearchParams();
+      if (query?.value.trim()) next.set('q', query.value.trim());
+      if (kind?.value) next.set('kind', kind.value);
+      if (subsystem?.value) next.set('subsystem', subsystem.value);
+      if (evidence?.value) next.set('evidence', evidence.value);
+      const suffix = next.toString();
+      window.history.replaceState({}, '', suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname);
+    };
+
+    const appendCallList = (body: HTMLElement, title: string, values: string[]) => {
+      if (!values.length) return;
+      const paragraph = document.createElement('p');
+      paragraph.className = 'source-call-list';
+      const heading = document.createElement('strong');
+      heading.textContent = `${title}:`;
+      paragraph.append(heading, document.createTextNode(' '));
+      values.slice(0, 10).forEach((value, index) => {
+        if (index) paragraph.append(document.createTextNode(', '));
+        const code = document.createElement('code');
+        code.textContent = value;
+        paragraph.append(code);
+      });
+      if (values.length > 10) paragraph.append(document.createTextNode(`, and ${values.length - 10} more`));
+      body.append(paragraph);
+    };
+
+    const createRow = (row: SymbolRow) => {
+      const details = document.createElement('details');
+      details.className = 'exported-symbol-row';
+      details.dataset.exportedSymbolRow = '';
+
+      const summary = document.createElement('summary');
+      const identity = document.createElement('span');
+      identity.className = 'exported-symbol-identity';
+      const name = document.createElement('code');
+      name.textContent = row.qualifiedName;
+      const module = document.createElement('small');
+      module.textContent = row.module;
+      identity.append(name, module);
+
+      const badges = document.createElement('span');
+      badges.className = 'exported-symbol-badges';
+      for (const label of [row.kind, row.subsystemLabel]) {
+        const badge = document.createElement('span');
+        badge.textContent = label;
+        badges.append(badge);
+      }
+      const evidenceBadge = document.createElement('span');
+      evidenceBadge.className = `exported-symbol-evidence exported-symbol-evidence--${row.evidence}`;
+      evidenceBadge.textContent = evidenceLabels[row.evidence];
+      badges.append(evidenceBadge);
+      summary.append(identity, badges);
+
+      const body = document.createElement('div');
+      body.className = 'exported-symbol-body';
+      const pre = document.createElement('pre');
+      const signature = document.createElement('code');
+      signature.textContent = row.signature;
+      pre.append(signature);
+      body.append(pre);
+
+      const description = document.createElement('p');
+      if (row.description) {
+        description.textContent = row.description;
+      } else {
+        description.className = 'source-undocumented';
+        description.textContent = 'This entry proves the declaration and export boundary only. Read the implementation before depending on its behavior.';
+      }
+      body.append(description);
+
+      const facts = document.createElement('dl');
+      facts.className = 'exported-symbol-facts';
+      const factRows = [
+        ['Visibility', row.visibility],
+        ['Source range', `L${row.lineStart}–L${row.lineEnd}`],
+        ['Direct calls here', row.calls.length.toLocaleString()],
+        ['Local references', row.callers.length.toLocaleString()],
+      ];
+      for (const [term, value] of factRows) {
+        const wrapper = document.createElement('div');
+        const dt = document.createElement('dt');
+        const dd = document.createElement('dd');
+        dt.textContent = term;
+        dd.textContent = value;
+        wrapper.append(dt, dd);
+        facts.append(wrapper);
+      }
+      body.append(facts);
+
+      appendCallList(body, 'Direct calls in this module', row.calls);
+      appendCallList(body, 'Referenced by in this module', row.callers);
+
+      const links = document.createElement('div');
+      links.className = 'exported-symbol-links';
+      const contract = document.createElement('a');
+      contract.href = withBase(row.contractPath);
+      contract.textContent = 'Open generated module contract';
+      const source = document.createElement('a');
+      source.href = row.sourceUrl;
+      source.textContent = 'Open immutable source';
+      links.append(contract, source);
+      body.append(links);
+
+      details.append(summary, body);
+      return details;
+    };
+
+    const render = () => {
+      const matching = rows.filter(matches);
+      const visible = matching.slice(0, limit);
+      list?.replaceChildren(...visible.map(createRow));
+
+      const shown = visible.length;
+      if (count) {
+        count.textContent = `Showing ${shown.toLocaleString()} of ${matching.length.toLocaleString()} matching exports (${rows.length.toLocaleString()} total).`;
+      }
+      if (more) {
+        more.hidden = shown >= matching.length;
+        more.textContent = `Show ${Math.min(pageSize, matching.length - shown).toLocaleString()} more`;
+      }
+      if (all) all.hidden = shown >= matching.length;
+      syncUrl();
+    };
+
+    const resetAndRender = () => {
+      limit = pageSize;
+      render();
+    };
+
+    query?.addEventListener('input', resetAndRender);
+    kind?.addEventListener('change', resetAndRender);
+    subsystem?.addEventListener('change', resetAndRender);
+    evidence?.addEventListener('change', resetAndRender);
+    more?.addEventListener('click', () => {
+      limit += pageSize;
+      render();
+    });
+    all?.addEventListener('click', () => {
+      limit = rows.length;
+      render();
+    });
+    clear?.addEventListener('click', () => {
+      if (query) query.value = '';
+      if (kind) kind.value = '';
+      if (subsystem) subsystem.value = '';
+      if (evidence) evidence.value = '';
+      resetAndRender();
+      query?.focus();
+    });
+
+    try {
+      const response = await fetch(root.dataset.source ?? '');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json() as SymbolPayload;
+      rows = payload.rows.map((row) => ({
+        ...row,
+        search: `${row.qualifiedName} ${row.signature} ${row.module} ${row.description} ${row.calls.join(' ')} ${row.callers.join(' ')}`.toLowerCase(),
+      }));
+      controls.forEach((control) => {
+        control.disabled = false;
+      });
+      if (list) list.ariaBusy = 'false';
+      render();
+    } catch (error) {
+      if (list) {
+        list.ariaBusy = 'false';
+        const warning = document.createElement('p');
+        warning.className = 'source-warning';
+        warning.textContent = `The exported-symbol data could not be loaded: ${error instanceof Error ? error.message : String(error)}`;
+        list.replaceChildren(warning);
+      }
+      if (count) count.textContent = 'Exported-symbol data is unavailable.';
+    }
+  }
+</script>

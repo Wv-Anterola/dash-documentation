@@ -228,6 +228,7 @@ export default defineConfig({
                 { slug: 'architecture/desktop-local-models' },
                 { slug: 'architecture/undo-provenance' },
                 { slug: 'technical/api', label: 'Generated API and registries' },
+                { slug: 'technical/exported-symbols', label: 'Search exported symbols' },
               ],
             },
             {

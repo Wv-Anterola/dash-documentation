@@ -1,6 +1,7 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { moduleSlug, reference } from '../../../../data/sourceReference';
+import SourceSymbolDetails from '../../../../components/SourceSymbolDetails.astro';
+import { moduleSlug, reference, siteHref, sourceSymbolAnchors } from '../../../../data/sourceReference';
 import { overlayForSymbol } from '../../../../data/symbolOverlays';
 
 export function getStaticPaths() {
@@ -17,30 +18,36 @@ interface Props {
 
 const { module } = Astro.props;
 const exported = module.symbols.filter((symbol) => symbol.exported);
-const exportedWithDocs = exported.map((symbol) => ({
-  symbol,
-  overlay: overlayForSymbol(symbol.id),
-}));
 const internal = module.symbols.filter((symbol) => !symbol.exported);
-const internalWithDocs = internal.map((symbol) => ({
-  symbol,
-  overlay: overlayForSymbol(symbol.id),
-}));
 const documented = module.symbols.filter((symbol) => symbol.documentation || overlayForSymbol(symbol.id)).length;
-const anchorCounts = new Map<string, number>();
-const symbolAnchors = new Map<Module['symbols'][number], string>();
-for (const symbol of module.symbols) {
-  const base = moduleSlug(symbol.qualifiedName);
-  const occurrence = (anchorCounts.get(base) ?? 0) + 1;
-  anchorCounts.set(base, occurrence);
-  symbolAnchors.set(symbol, occurrence === 1 ? base : `${base}-${occurrence}`);
-}
-const callers = new Map<string, string[]>();
+const symbolAnchors = sourceSymbolAnchors(module);
+const callsBySource = new Map<string, Set<string>>();
+const referencesByTarget = new Map<string, Set<string>>();
+
 for (const call of module.calls) {
-  const rows = callers.get(call.to) ?? [];
-  rows.push(call.from);
-  callers.set(call.to, rows);
+  const calls = callsBySource.get(call.from) ?? new Set<string>();
+  calls.add(call.to);
+  callsBySource.set(call.from, calls);
+
+  const references = referencesByTarget.get(call.to) ?? new Set<string>();
+  references.add(call.from);
+  referencesByTarget.set(call.to, references);
 }
+
+const callNames = (symbol: Module['symbols'][number]) =>
+  [...new Set([
+    ...(callsBySource.get(symbol.name) ?? []),
+    ...(callsBySource.get(symbol.qualifiedName) ?? []),
+  ])].sort();
+
+const callerNames = (symbol: Module['symbols'][number]) =>
+  [...new Set([
+    ...(referencesByTarget.get(symbol.name) ?? []),
+    ...(referencesByTarget.get(symbol.qualifiedName) ?? []),
+  ])].sort();
+const apiHref = siteHref('/technical/api/');
+const exportedSymbolsHref = siteHref('/technical/exported-symbols/');
+const snapshotHref = siteHref('/reference/implementation-snapshot/');
 ---
 
 <StarlightPage
@@ -49,7 +56,10 @@ for (const call of module.calls) {
     description: `${module.symbols.length} source-generated declarations, imports, and syntax-resolved calls.`,
   }}
 >
-  <p class="source-breadcrumb"><a href="/technical/api/">API reference</a> / module</p>
+  <p class="source-breadcrumb">
+    <a href={apiHref}>API reference</a> /
+    <a href={exportedSymbolsHref}>exported symbols</a> / module
+  </p>
 
   <div class="audit-summary" aria-label="Module totals">
     <div><strong>{module.symbols.length}</strong><span>named declarations</span></div>
@@ -61,7 +71,7 @@ for (const call of module.calls) {
   <dl class="source-module-meta">
     <div><dt>Language parser</dt><dd>{module.language}</dd></div>
     <div><dt>Imports</dt><dd>{module.imports.length ? module.imports.join(', ') : 'None recorded'}</dd></div>
-    <div><dt>Source version</dt><dd><a href="/reference/implementation-snapshot/">Reproducible snapshot</a></dd></div>
+    <div><dt>Source version</dt><dd><a href={snapshotHref}>Reproducible snapshot</a></dd></div>
   </dl>
 
   {module.parserErrors.length > 0 && (
@@ -73,40 +83,14 @@ for (const call of module.calls) {
   <h2 id="exports">Exported API</h2>
   {exported.length === 0 ? <p>This module has no exported declarations.</p> : (
     <div class="symbol-reference">
-      {exportedWithDocs.map(({ symbol, overlay }) => (
-        <details id={symbolAnchors.get(symbol)}>
-          <summary>
-            <span><code>{symbol.qualifiedName}</code><small>{symbol.kind} · {symbol.visibility}</small></span>
-            <a href={symbol.sourceUrl}>source L{symbol.lineStart}–L{symbol.lineEnd}</a>
-          </summary>
-          <div>
-            <pre><code>{symbol.signature}</code></pre>
-            {symbol.documentation || overlay
-              ? <>
-                  <p>{overlay?.summary || symbol.documentation}</p>
-                  {overlay?.parameters && (
-                    <dl class="source-contract">
-                      {Object.entries(overlay.parameters).map(([name, description]) => (
-                        <div><dt><code>{name}</code></dt><dd>{description}</dd></div>
-                      ))}
-                    </dl>
-                  )}
-                  {overlay?.returns && <p><strong>Returns:</strong> {overlay.returns}</p>}
-                  {overlay?.preconditions?.map((condition) => <p><strong>Precondition:</strong> {condition}</p>)}
-                  {overlay?.postconditions?.map((condition) => <p><strong>Postcondition:</strong> {condition}</p>)}
-                  {overlay?.invariants?.map((invariant) => <p><strong>Invariant:</strong> {invariant}</p>)}
-                  {overlay?.failureSemantics?.map((failure) => <p><strong>Failure semantic:</strong> {failure}</p>)}
-                  {overlay?.errors?.map((error) => <p><strong>Error:</strong> {error}</p>)}
-                  {overlay?.sideEffects?.map((effect) => <p><strong>Side effect:</strong> {effect}</p>)}
-                  {overlay?.permissions && <p><strong>Permissions:</strong> {overlay.permissions}</p>}
-                  {overlay?.undo && <p><strong>Undo:</strong> {overlay.undo}</p>}
-                </>
-              : <p class="source-undocumented">No source documentation recorded.</p>}
-            {callers.has(symbol.name) && (
-              <p><strong>Called by:</strong> {callers.get(symbol.name)?.join(', ')}</p>
-            )}
-          </div>
-        </details>
+      {exported.map((symbol) => (
+        <SourceSymbolDetails
+          symbol={symbol}
+          overlay={overlayForSymbol(symbol.id)}
+          anchor={symbolAnchors.get(symbol) ?? moduleSlug(symbol.qualifiedName)}
+          calls={callNames(symbol)}
+          callers={callerNames(symbol)}
+        />
       ))}
     </div>
   )}
@@ -114,43 +98,31 @@ for (const call of module.calls) {
   <h2 id="internal-symbols">Internal symbol index</h2>
   <p>
     Internal declarations remain searchable and source-linked. Inclusion here
-    does not make them a supported extension contract.
+    does not make them a supported extension contract. Call lists are direct,
+    syntax-resolved evidence within this module; they are not a complete
+    cross-module runtime graph.
   </p>
   <div class="symbol-reference">
-    {internalWithDocs.map(({ symbol, overlay }) => (
-      <details id={symbolAnchors.get(symbol)}>
-        <summary>
-          <span><code>{symbol.qualifiedName}</code><small>{symbol.kind} · {symbol.visibility}</small></span>
-          <a href={symbol.sourceUrl}>source L{symbol.lineStart}–L{symbol.lineEnd}</a>
-        </summary>
-        <div>
-          <pre><code>{symbol.signature}</code></pre>
-          {symbol.documentation || overlay
-            ? <>
-                <p>{overlay?.summary || symbol.documentation}</p>
-                {overlay?.parameters && (
-                  <dl class="source-contract">
-                    {Object.entries(overlay.parameters).map(([name, description]) => (
-                      <div><dt><code>{name}</code></dt><dd>{description}</dd></div>
-                    ))}
-                  </dl>
-                )}
-                {overlay?.returns && <p><strong>Returns:</strong> {overlay.returns}</p>}
-                {overlay?.preconditions?.map((condition) => <p><strong>Precondition:</strong> {condition}</p>)}
-                {overlay?.postconditions?.map((condition) => <p><strong>Postcondition:</strong> {condition}</p>)}
-                {overlay?.invariants?.map((invariant) => <p><strong>Invariant:</strong> {invariant}</p>)}
-                {overlay?.failureSemantics?.map((failure) => <p><strong>Failure semantic:</strong> {failure}</p>)}
-                {overlay?.errors?.map((error) => <p><strong>Error:</strong> {error}</p>)}
-                {overlay?.sideEffects?.map((effect) => <p><strong>Side effect:</strong> {effect}</p>)}
-                {overlay?.permissions && <p><strong>Permissions:</strong> {overlay.permissions}</p>}
-                {overlay?.undo && <p><strong>Undo:</strong> {overlay.undo}</p>}
-              </>
-            : <p class="source-undocumented">No source documentation recorded.</p>}
-          {callers.has(symbol.name) && (
-            <p><strong>Called by:</strong> {callers.get(symbol.name)?.join(', ')}</p>
-          )}
-        </div>
-      </details>
+    {internal.map((symbol) => (
+      <SourceSymbolDetails
+        symbol={symbol}
+        overlay={overlayForSymbol(symbol.id)}
+        anchor={symbolAnchors.get(symbol) ?? moduleSlug(symbol.qualifiedName)}
+        calls={callNames(symbol)}
+        callers={callerNames(symbol)}
+      />
     ))}
   </div>
+
+  <script>
+    const revealTarget = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (target instanceof HTMLDetailsElement) target.open = true;
+    };
+
+    revealTarget();
+    window.addEventListener('hashchange', revealTarget);
+  </script>
 </StarlightPage>

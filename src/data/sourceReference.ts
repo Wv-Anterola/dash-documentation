@@ -12,9 +12,40 @@ export function moduleSlug(path: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export function moduleHref(path: string): string {
+export function siteHref(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  return `${base}/technical/api/modules/${moduleSlug(path)}/`;
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${normalized}`;
+}
+
+export function moduleHref(path: string): string {
+  return siteHref(`/technical/api/modules/${moduleSlug(path)}/`);
+}
+
+/**
+ * Build the exact, collision-safe fragment identifiers used on one generated
+ * module page. The declaration object is retained as the key because a source
+ * file may legally contain repeated local names and the generator preserves
+ * those occurrences separately.
+ */
+export function sourceSymbolAnchors(module: SourceModule): Map<SourceSymbol, string> {
+  const counts = new Map<string, number>();
+  const anchors = new Map<SourceSymbol, string>();
+
+  for (const symbol of module.symbols) {
+    const base = moduleSlug(symbol.qualifiedName);
+    const occurrence = (counts.get(base) ?? 0) + 1;
+    counts.set(base, occurrence);
+    anchors.set(symbol, occurrence === 1 ? base : `${base}-${occurrence}`);
+  }
+
+  return anchors;
+}
+
+export function sourceSymbolHref(module: SourceModule, symbol: SourceSymbol): string {
+  const anchor = sourceSymbolAnchors(module).get(symbol);
+  if (!anchor) throw new Error(`Unable to build an anchor for ${symbol.id}`);
+  return `${moduleHref(module.path)}#${anchor}`;
 }
 
 export function immutableSourceHref(path: string): string {

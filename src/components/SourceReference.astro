@@ -1,5 +1,5 @@
 ---
-import { moduleHref, reference, registryCounts } from '../data/sourceReference';
+import { moduleHref, reference, registryCounts, siteHref } from '../data/sourceReference';
 import { runtimeContractApiIds } from '../data/symbolOverlays';
 
 const counts = registryCounts();
@@ -11,6 +11,8 @@ const modules = reference.modules.map((module) => ({
 const removedCount = reference.methodology.historicalRemovedSymbols;
 const coverage = (100 * reference.methodology.exportedDocumentationCoverage).toFixed(1);
 const parserFailures = reference.parserFailures as Array<{ path: string; message: string }>;
+const snapshotHref = siteHref('/reference/implementation-snapshot/');
+const exportedSymbolsHref = siteHref('/technical/exported-symbols/');
 ---
 
 <div class="audit-summary" aria-label="Semantic source reference totals">
@@ -26,9 +28,17 @@ const parserFailures = reference.parserFailures as Array<{ path: string; message
     Generated from a reproducible Dash-Web source snapshot. The generator classified{' '}
     {reference.methodology.reachableBlobs.toLocaleString()} reachable blobs and parsed each supported
     source file once. Exact revision metadata is kept in the{' '}
-    <a href="/reference/implementation-snapshot/">source coverage note</a>.
+    <a href={snapshotHref}>source coverage note</a>.
   </p>
 </div>
+
+<a class="source-symbol-promo" href={exportedSymbolsHref}>
+  <span>
+    <strong>Search all {reference.methodology.exportedSymbolCount.toLocaleString()} exported declarations</strong>
+    <small>Filter names, signatures, modules, subsystems, declaration kinds, evidence levels, and direct calls.</small>
+  </span>
+  <b aria-hidden="true">→</b>
+</a>
 
 <h2 id="generated-registries">Runtime and platform registries</h2>
 

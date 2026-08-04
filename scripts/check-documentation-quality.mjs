@@ -112,11 +112,13 @@ const httpReferenceSource = await readFile(path.join(root, 'src', 'data', 'gener
 const documentReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'document-types.json'), 'utf8');
 const fieldReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'field-types.json'), 'utf8');
 const scriptingReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'scripting-globals.json'), 'utf8');
+const exportedReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'exported-symbols.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
 const fieldReference = JSON.parse(fieldReferenceSource);
 const scriptingReference = JSON.parse(scriptingReferenceSource);
+const exportedReference = JSON.parse(exportedReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -137,6 +139,84 @@ const allowedAccess = new Set([
 const routeKeys = new Map();
 const completeRegistrations = new Set();
 const sourceModules = new Set(sourceReference.modules.map((module) => module.path));
+const exportedSymbols = sourceReference.modules.flatMap((module) =>
+  module.symbols.filter((symbol) => symbol.exported).map((symbol) => ({ module, symbol }))
+);
+const symbolSlug = (value) => value
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '');
+
+if (exportedSymbols.length !== sourceReference.methodology.exportedSymbolCount) {
+  errors.push(`Exported symbol summary is stale (${sourceReference.methodology.exportedSymbolCount} versus ${exportedSymbols.length})`);
+}
+const moduleSlugs = sourceReference.modules.map((module) => symbolSlug(module.path));
+if (new Set(moduleSlugs).size !== moduleSlugs.length) {
+  errors.push('Generated module paths do not produce unique API route slugs');
+}
+for (const module of sourceReference.modules) {
+  const anchorCounts = new Map();
+  const anchors = [];
+  for (const symbol of module.symbols) {
+    const base = symbolSlug(symbol.qualifiedName);
+    const occurrence = (anchorCounts.get(base) ?? 0) + 1;
+    anchorCounts.set(base, occurrence);
+    anchors.push(occurrence === 1 ? base : `${base}-${occurrence}`);
+  }
+  if (new Set(anchors).size !== anchors.length) {
+    errors.push(`${module.path}: generated symbol anchors are not unique`);
+  }
+}
+for (const { module, symbol } of exportedSymbols) {
+  const label = `${module.path}#${symbol.qualifiedName}`;
+  if (!symbol.name || !symbol.qualifiedName || !symbol.kind || !symbol.signature || !symbol.id) {
+    errors.push(`${label}: exported declaration is missing searchable identity data`);
+  }
+  if (!Number.isInteger(symbol.lineStart) || !Number.isInteger(symbol.lineEnd) || symbol.lineEnd < symbol.lineStart) {
+    errors.push(`${label}: exported declaration has an invalid source range`);
+  }
+  if (!symbol.sourceUrl.includes(sourceReference.repository.baselineTip) || !symbol.sourceUrl.includes(`#L${symbol.lineStart}`)) {
+    errors.push(`${label}: exported declaration source is mutable or not line-addressed`);
+  }
+}
+
+if (exportedReference.repository.baselineTip !== sourceReference.repository.baselineTip) {
+  errors.push('Exported symbol index and generated source reference use different baseline revisions');
+}
+if (exportedReference.rows.length !== exportedSymbols.length) {
+  errors.push(`Exported symbol client index is stale (${exportedReference.rows.length} versus ${exportedSymbols.length})`);
+}
+const recomputedExportedSummary = {
+  exports: exportedReference.rows.length,
+  modules: new Set(exportedReference.rows.map((row) => row.module)).size,
+  reviewed: exportedReference.rows.filter((row) => row.evidence === 'reviewed').length,
+  sourceDescribed: exportedReference.rows.filter((row) => row.evidence === 'source').length,
+  declarationOnly: exportedReference.rows.filter((row) => row.evidence === 'declaration').length,
+  kinds: new Set(exportedReference.rows.map((row) => row.kind)).size,
+};
+if (JSON.stringify(exportedReference.summary) !== JSON.stringify(recomputedExportedSummary)) {
+  errors.push('Exported symbol client summary is stale relative to its generated rows');
+}
+if (new Set(exportedReference.rows.map((row) => row.id)).size !== exportedReference.rows.length) {
+  errors.push('Exported symbol client index contains duplicate row identities');
+}
+for (const row of exportedReference.rows) {
+  if (!row.contractPath.startsWith('/technical/api/modules/') || !row.contractPath.includes('/#')) {
+    errors.push(`${row.id}: exported symbol contract target is malformed`);
+  }
+  if (!sourceModules.has(row.module) || !row.sourceUrl.includes(sourceReference.repository.baselineTip)) {
+    errors.push(`${row.id}: exported symbol module or immutable source is not in the generated baseline`);
+  }
+}
+
+const exportedSymbolsPage = await readFile(path.join(docsRoot, 'technical', 'exported-symbols.mdx'), 'utf8');
+const astroConfigSource = await readFile(path.join(root, 'astro.config.mjs'), 'utf8');
+if (!exportedSymbolsPage.includes('<ExportedSymbolReference />') || !exportedSymbolsPage.includes('dash-exported-symbol-reference.svg')) {
+  errors.push('Exported symbol page lost its searchable reference or unique explanatory visual');
+}
+if (!astroConfigSource.includes("slug: 'technical/exported-symbols'")) {
+  errors.push('Exported symbol reference is no longer discoverable in the primary navigation');
+}
 
 if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
   errors.push('Document type reference and generated source reference use different baseline revisions');
@@ -425,6 +505,7 @@ if (errors.length) {
     `Documentation quality complete: ${files.length} pages have required metadata and unique titles; ` +
       `${images} inline images have reproducible sources and intentional alt text; ` +
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
+      `${exportedSymbols.length.toLocaleString()} exported declarations have collision-safe module targets; ` +
       `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, and ` +
       `${fieldReference.registrations.length} serialized field types plus ${scriptingReference.globals.length} scripting globals pass inventory invariants.`
   );

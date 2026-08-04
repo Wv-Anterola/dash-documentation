@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">How the Dash exported-symbol reference turns source into navigable evidence</title>
+  <desc id="desc">A five-stage map from the pinned source tree through semantic parsing, filtered symbol search, a module contract, and immutable implementation lines. Three evidence labels distinguish reviewed contracts, source descriptions, and declaration-only entries.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f9ff"/>
+      <stop offset="1" stop-color="#eef4ff"/>
+    </linearGradient>
+    <linearGradient id="search" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3159c7"/>
+      <stop offset="1" stop-color="#6549d8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#17316f" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#8292bb"/>
+    </marker>
+    <style>
+      .title { font: 800 45px Inter, ui-sans-serif, system-ui, sans-serif; fill: #12234d; }
+      .subtitle { font: 400 20px Inter, ui-sans-serif, system-ui, sans-serif; fill: #53658d; }
+      .metric { font: 800 24px Inter, ui-sans-serif, system-ui, sans-serif; fill: #173f9a; }
+      .metric-label { font: 600 13px Inter, ui-sans-serif, system-ui, sans-serif; fill: #607096; letter-spacing: .03em; }
+      .step { font: 800 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #fff; }
+      .card-title { font: 800 21px Inter, ui-sans-serif, system-ui, sans-serif; fill: #14244d; }
+      .card-copy { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #53658d; }
+      .code { font: 600 14px ui-monospace, SFMono-Regular, Consolas, monospace; fill: #253b72; }
+      .search-title { font: 800 23px Inter, ui-sans-serif, system-ui, sans-serif; fill: #fff; }
+      .search-copy { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #dbe4ff; }
+      .lane-title { font: 800 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #14244d; }
+      .lane-copy { font: 400 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #53658d; }
+      .footer-title { font: 800 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #14244d; }
+      .footer-copy { font: 500 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #53658d; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1510" cy="-20" r="240" fill="#dfe8ff"/>
+  <circle cx="65" cy="875" r="210" fill="#e3edff"/>
+
+  <text x="72" y="80" class="title">One exported symbol, every layer of evidence</text>
+  <text x="72" y="116" class="subtitle">Source-generated navigation for 2,264 current exports—without calling every export a stable public API</text>
+
+  <g transform="translate(1080 45)">
+    <rect width="132" height="72" rx="18" fill="#fff" stroke="#cad5ef"/>
+    <text x="66" y="32" text-anchor="middle" class="metric">637</text>
+    <text x="66" y="53" text-anchor="middle" class="metric-label">MODULES</text>
+  </g>
+  <g transform="translate(1224 45)">
+    <rect width="132" height="72" rx="18" fill="#fff" stroke="#cad5ef"/>
+    <text x="66" y="32" text-anchor="middle" class="metric">7</text>
+    <text x="66" y="53" text-anchor="middle" class="metric-label">KINDS</text>
+  </g>
+  <g transform="translate(1368 45)">
+    <rect width="160" height="72" rx="18" fill="#fff" stroke="#cad5ef"/>
+    <text x="80" y="32" text-anchor="middle" class="metric">32,350</text>
+    <text x="80" y="53" text-anchor="middle" class="metric-label">DECLARATIONS</text>
+  </g>
+
+  <line x1="305" y1="336" x2="345" y2="336" stroke="#8292bb" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="620" y1="336" x2="660" y2="336" stroke="#8292bb" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="940" y1="336" x2="980" y2="336" stroke="#8292bb" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="1255" y1="336" x2="1295" y2="336" stroke="#8292bb" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g transform="translate(65 190)" filter="url(#shadow)">
+    <rect width="240" height="292" rx="22" fill="#fff" stroke="#cad5ef"/>
+    <circle cx="38" cy="38" r="20" fill="#3159c7"/>
+    <text x="38" y="43" text-anchor="middle" class="step">1</text>
+    <text x="28" y="88" class="card-title">Pinned source tree</text>
+    <text x="28" y="124" class="code">*.ts  *.tsx  *.js</text>
+    <text x="28" y="162" class="card-copy">One reproducible baseline</text>
+    <text x="28" y="185" class="card-copy">keeps names, signatures,</text>
+    <text x="28" y="208" class="card-copy">line ranges, and modules</text>
+    <text x="28" y="231" class="card-copy">from drifting independently.</text>
+    <rect x="28" y="252" width="184" height="1" fill="#e2e7f3"/>
+    <text x="28" y="274" class="metric-label">AUTHORITATIVE INPUT</text>
+  </g>
+
+  <g transform="translate(350 190)" filter="url(#shadow)">
+    <rect width="270" height="292" rx="22" fill="#fff" stroke="#cad5ef"/>
+    <circle cx="38" cy="38" r="20" fill="#3159c7"/>
+    <text x="38" y="43" text-anchor="middle" class="step">2</text>
+    <text x="28" y="88" class="card-title">Semantic extraction</text>
+    <text x="28" y="124" class="code">export • kind • signature</text>
+    <text x="28" y="162" class="card-copy">The language parser records</text>
+    <text x="28" y="185" class="card-copy">declarations and direct calls.</text>
+    <text x="28" y="221" class="card-copy">Duplicate names receive</text>
+    <text x="28" y="244" class="card-copy">collision-safe anchors.</text>
+    <rect x="28" y="260" width="214" height="1" fill="#e2e7f3"/>
+    <text x="28" y="282" class="metric-label">BUILD-TIME INVARIANT</text>
+  </g>
+
+  <g transform="translate(665 174)" filter="url(#shadow)">
+    <rect width="275" height="324" rx="24" fill="url(#search)"/>
+    <circle cx="42" cy="42" r="22" fill="#8c74ff"/>
+    <text x="42" y="47" text-anchor="middle" class="step">3</text>
+    <text x="30" y="96" class="search-title">Global symbol lens</text>
+    <rect x="30" y="122" width="215" height="42" rx="10" fill="#fff" fill-opacity="0.12" stroke="#b9c7ff"/>
+    <circle cx="49" cy="143" r="7" fill="none" stroke="#fff" stroke-width="2"/>
+    <line x1="54" y1="148" x2="60" y2="154" stroke="#fff" stroke-width="2"/>
+    <text x="72" y="149" class="search-copy">CompileScript</text>
+    <text x="30" y="202" class="search-copy">Filter by subsystem, kind,</text>
+    <text x="30" y="226" class="search-copy">and evidence strength.</text>
+    <text x="30" y="265" class="search-copy">The URL preserves the query</text>
+    <text x="30" y="289" class="search-copy">for review and collaboration.</text>
+  </g>
+
+  <g transform="translate(985 190)" filter="url(#shadow)">
+    <rect width="270" height="292" rx="22" fill="#fff" stroke="#cad5ef"/>
+    <circle cx="38" cy="38" r="20" fill="#3159c7"/>
+    <text x="38" y="43" text-anchor="middle" class="step">4</text>
+    <text x="28" y="88" class="card-title">Module contract</text>
+    <text x="28" y="124" class="code">#compilescript</text>
+    <text x="28" y="162" class="card-copy">The deep link opens the exact</text>
+    <text x="28" y="185" class="card-copy">declaration with parameters,</text>
+    <text x="28" y="208" class="card-copy">results, failure semantics,</text>
+    <text x="28" y="231" class="card-copy">side effects, and local calls.</text>
+    <rect x="28" y="252" width="214" height="1" fill="#e2e7f3"/>
+    <text x="28" y="274" class="metric-label">BEHAVIORAL CONTEXT</text>
+  </g>
+
+  <g transform="translate(1300 190)" filter="url(#shadow)">
+    <rect width="235" height="292" rx="22" fill="#fff" stroke="#cad5ef"/>
+    <circle cx="38" cy="38" r="20" fill="#3159c7"/>
+    <text x="38" y="43" text-anchor="middle" class="step">5</text>
+    <text x="28" y="88" class="card-title">Immutable lines</text>
+    <text x="28" y="124" class="code">blob/…/#L120-L184</text>
+    <text x="28" y="162" class="card-copy">The final link resolves to</text>
+    <text x="28" y="185" class="card-copy">the exact reviewed revision,</text>
+    <text x="28" y="208" class="card-copy">not a moving branch head.</text>
+    <rect x="28" y="252" width="179" height="1" fill="#e2e7f3"/>
+    <text x="28" y="274" class="metric-label">IMPLEMENTATION PROOF</text>
+  </g>
+
+  <text x="72" y="550" class="card-title">Evidence is a ladder, not one generic “documented” badge</text>
+  <g transform="translate(65 580)">
+    <rect width="470" height="120" rx="18" fill="#e8f8ef" stroke="#88c9a4"/>
+    <circle cx="38" cy="38" r="15" fill="#22905c"/>
+    <path d="M31 38l5 5 10-12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="68" y="36" class="lane-title">Reviewed contract</text>
+    <text x="68" y="61" class="lane-copy">Behavior checked against implementation; may include</text>
+    <text x="68" y="83" class="lane-copy">parameters, results, invariants, failures, and side effects.</text>
+  </g>
+  <g transform="translate(565 580)">
+    <rect width="470" height="120" rx="18" fill="#eef1ff" stroke="#a8b5e8"/>
+    <circle cx="38" cy="38" r="15" fill="#5c67c8"/>
+    <path d="M32 31h12v14H32zM35 35h6M35 39h6" fill="none" stroke="#fff" stroke-width="2"/>
+    <text x="68" y="36" class="lane-title">Source description</text>
+    <text x="68" y="61" class="lane-copy">Authored next to the declaration and extracted verbatim;</text>
+    <text x="68" y="83" class="lane-copy">useful context, but not a separate behavioral review.</text>
+  </g>
+  <g transform="translate(1065 580)">
+    <rect width="470" height="120" rx="18" fill="#fff5e5" stroke="#e8be7a"/>
+    <circle cx="38" cy="38" r="15" fill="#b77a20"/>
+    <text x="38" y="43" text-anchor="middle" class="step">!</text>
+    <text x="68" y="36" class="lane-title">Declaration only</text>
+    <text x="68" y="61" class="lane-copy">Name, kind, signature, export, module, and source are proven;</text>
+    <text x="68" y="83" class="lane-copy">behavior must still be read and documented before reuse.</text>
+  </g>
+
+  <g transform="translate(65 748)">
+    <rect width="1470" height="104" rx="20" fill="#fff" stroke="#cad5ef"/>
+    <text x="30" y="40" class="footer-title">A useful symbol URL answers five questions</text>
+    <text x="30" y="70" class="footer-copy">What is it?  •  Where is it exported?  •  What evidence explains it?  •  What does it call locally?  •  Which immutable lines implement it?</text>
+    <rect x="1125" y="24" width="310" height="56" rx="14" fill="#eff3ff"/>
+    <text x="1280" y="48" text-anchor="middle" class="metric-label">SEARCH → CONTRACT → SOURCE</text>
+    <text x="1280" y="68" text-anchor="middle" class="code">one stable review path</text>
+  </g>
+</svg>

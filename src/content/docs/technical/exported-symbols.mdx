@@ -1,0 +1,75 @@
+---
+title: Exported symbol index
+description: Search every current Dash export by name, signature, subsystem, declaration kind, evidence level, direct call, and immutable source location.
+sidebar:
+  order: 2
+---
+
+import ExportedSymbolReference from '../../../components/ExportedSymbolReference.astro';
+import SourceSnapshot from '../../../components/SourceSnapshot.astro';
+
+<p class="lede">
+  Find a declaration without guessing which of Dash's hundreds of modules owns
+  it. Every result leads to a generated module contract and the exact source
+  lines from which that contract was derived.
+</p>
+
+<SourceSnapshot />
+
+![Five-stage map from the pinned Dash source tree through semantic extraction and global symbol search to a generated module contract and immutable implementation lines. Three lower lanes distinguish reviewed contracts, source descriptions, and declaration-only evidence.](/assets/images/diagrams/dash-exported-symbol-reference.svg)
+
+[Open the exported-symbol reference map at its full 1600 × 900 resolution.](/assets/images/diagrams/dash-exported-symbol-reference.svg)
+
+## Use the index
+
+1. Enter a declaration name such as `CompileScript`, a behavior such as
+   `undo`, a module fragment such as `fields/Doc`, or a direct call name.
+2. Narrow the results by declaration kind, subsystem, or contract evidence.
+3. Expand a result to inspect its exact signature, source range, and local call
+   evidence.
+4. Open the generated module contract for parameters, results, invariants,
+   failures, permissions, undo behavior, and side effects when those have been
+   reviewed.
+5. Open the immutable source link when the implementation itself is required.
+
+The active filter is written into the page URL. Copying the URL preserves the
+query and selected filters, which makes a code-review citation reproducible.
+
+:::caution[Exported does not mean supported public API]
+An exported TypeScript declaration is reachable across module boundaries. It
+may still be an internal implementation detail, an experimental surface, or a
+legacy compatibility hook. Treat only explicitly documented extension points
+as compatibility commitments.
+:::
+
+## Evidence levels
+
+The index does not collapse all declarations into a generic "documented"
+state:
+
+- **Reviewed contract** means the behavioral explanation was checked against
+  the implementation and can include parameters, returns, preconditions,
+  postconditions, invariants, failure semantics, side effects, permissions,
+  and undo behavior.
+- **Source description** means the parser found authored documentation beside
+  the declaration. It preserves useful developer intent but is not presented
+  as an independent runtime review.
+- **Declaration only** means the semantic parser proves the name, signature,
+  kind, export boundary, source range, and containing module. The behavior is
+  intentionally left undescribed until it has been reviewed.
+
+<ExportedSymbolReference />
+
+## Read call evidence correctly
+
+The expanded rows show direct calls made by the declaration and local
+references to it when the parser can resolve those names syntactically inside
+the same module. This is useful implementation evidence, but it is not a full
+runtime call graph. Dynamic dispatch, callbacks, registry lookup, reflection,
+and cross-module aliases can add paths that syntax alone cannot prove.
+
+Use the [runtime contract reference](/reference/runtime-contracts/) for the
+reviewed cross-layer paths behind important operations. Use the
+[module index](/technical/api/) when you already know the source file, and the
+[architecture guide](/architecture/engineering-model/) when you need the
+system-level reason that several declarations cooperate.

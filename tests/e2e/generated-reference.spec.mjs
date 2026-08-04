@@ -18,6 +18,57 @@ test('searches generated modules and opens an immutable symbol reference', async
   await expect(page.locator('a[href*="/blob/"][href*="#L"]').first()).toBeVisible();
 });
 
+test('searches every exported symbol and opens its exact module contract', async ({ page }) => {
+  const shellResponse = await page.request.get('/technical/exported-symbols/');
+  expect(shellResponse.ok()).toBeTruthy();
+  expect(Buffer.byteLength(await shellResponse.text())).toBeLessThan(150_000);
+  const dataResponse = await page.request.get('/assets/data/exported-symbols.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  expect(dataResponse.headers()['content-type']).toContain('application/json');
+  const symbolData = await dataResponse.json();
+  expect(symbolData.rows).toHaveLength(2264);
+
+  await page.goto('/technical/exported-symbols/');
+  await expect(page.getByRole('heading', { name: 'Exported symbol index' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Five-stage map from the pinned Dash source tree/ })).toBeVisible();
+  await expect(page.locator('.exported-symbol-summary strong').first()).toHaveText('2,264');
+  await expect(page.locator('[data-exported-symbol-row]:visible')).toHaveCount(80);
+
+  const query = page.getByLabel('Find a name, signature, module, behavior, or direct call');
+  await query.fill('export function CompileScript(script: string');
+  await expect(page.locator('[data-exported-symbol-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-exported-symbol-count]')).toContainText('1 of 1 matching exports');
+  const result = page.locator('[data-exported-symbol-row]:visible');
+  await result.locator('summary').click();
+  await expect(result.getByText(/CompileScript\(script: string, options: ScriptOptions/)).toBeVisible();
+  const contract = result.getByRole('link', { name: 'Open generated module contract' });
+  await expect(contract).toHaveAttribute('href', /\/technical\/api\/modules\/src-client-util-scripting-ts\/#compilescript$/);
+  await expect(result.getByRole('link', { name: 'Open immutable source' })).toHaveAttribute('href', /\/blob\/.*#L\d+-L\d+$/);
+  await expect(page).toHaveURL(/q=export\+function\+CompileScript/);
+
+  await contract.click();
+  await expect(page).toHaveURL(/\/technical\/api\/modules\/src-client-util-scripting-ts\/#compilescript$/);
+  await expect(page.locator('#compilescript')).toHaveAttribute('open', '');
+  await expect(page.locator('#compilescript').getByText(/Transforms TypeScript-like author source/)).toBeVisible();
+
+  await page.goto('/technical/exported-symbols/?kind=class');
+  await expect(page.getByLabel('Declaration kind')).toHaveValue('class');
+  await expect(page.locator('[data-exported-symbol-count]')).toContainText('80 of 428 matching exports');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-exported-symbol-reference]');
+    if (!root) throw new Error('Exported symbol reference is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+});
+
 test('filters semantic branch deltas', async ({ page }) => {
   await page.goto('/reference/branch-audit/');
   await expect(page.getByText('TypeScript compiler + Python AST')).toBeVisible();

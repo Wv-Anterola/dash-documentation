@@ -12,7 +12,10 @@ import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 The generated API answers “what declarations exist?” This reference answers
 “what must remain true when they are used together?” It is the contract layer
 between the [engineering model](/architecture/engineering-model/) and the
-[source-generated modules](/technical/api/).
+[source-generated modules](/technical/api/). When you know a symbol name rather
+than its owning file, start with the
+[exported symbol index](/technical/exported-symbols/) and follow its exact
+module-contract link into this behavioral layer.
 
 ![A user action crosses input, undo, document, synchronization, storage, and rendering contracts before it is fully integrated.](/assets/images/diagrams/dash-runtime-contracts.svg)
 
