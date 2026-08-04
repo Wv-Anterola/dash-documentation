@@ -69,9 +69,13 @@ conditional rather than broken.
 
 The reference below inventories the persistent top bar, sidebar, context
 toolbar and all nested tool groups, selected-document decorations, properties
-sections, docked footer controls, and source-registry creators. Search by what
-you see—such as **Rotate** or **heart**—or by implementation evidence such as
-`imageRotate90`, `Doc.ActiveInk`, `SharingManager`, or `SelectedDocType`.
+sections, tab and tile chrome, docked footer controls, and source-registry
+creators. Search by what you see, such as **Rotate** or **heart**, or by
+implementation evidence such as `imageRotate90`, `Doc.ActiveInk`,
+`SharingManager`, or `SelectedDocType`.
+
+Controls that only appear when you summon them are in the [right-click menu
+atlas](/reference/context-menus/) instead.
 
 <InterfaceControlReference />
 
@@ -255,17 +259,32 @@ type-specific fields, use the
 
 ## Tabs, tiles, and canvas controls
 
-| Control | Result |
-| :--- | :--- |
-| **Tab title** | Activates the document in that tile. Dragging the title can move it to another tile or the canvas. |
-| **Tab x** | Closes the tab; the document remains recoverable in Recently Closed unless explicitly deleted. |
-| **Tile +** | Creates a new collection tab in the tile. |
-| **Tile x** | Closes the tile. |
-| **Grey side handle** | Opens or closes the adjacent sidebar/properties panel. |
-| **Canvas –** | Zooms out. |
-| **Undo / Redo** | Reverses or reapplies named action batches. Yellow indicates an action is still in flight. |
-| **stack** | Opens the undo-stack/history list so the workspace can jump to an earlier action. |
-| **Toggle** | Switches the relevant mode/control state in the bottom canvas toolbar. Its exact target depends on the active view. |
+The tab and tile chrome is the one part of Dash that Dash does not draw. The
+frame comes from GoldenLayout, and Dash then **unbinds some of its click
+handlers and substitutes its own**. Two controls consequently do something
+other than their upstream name suggests, and knowing that explains behavior
+that otherwise looks arbitrary.
+
+| Control | What actually happens | Worth knowing |
+| :--- | :--- | :--- |
+| **Tab title** | Editing it writes `doc.$title`, in an undo batch named `edit tab title`. | The tab name is the document title. Renaming here renames it everywhere. |
+| **Tab type icon** | Click opens the document's menu; drag places another view of the same document. | One pointer handler serves both gestures, so a small drag during a click changes what happens. |
+| **Tab lightbox icon** | Opens the document full-screen over the workspace. | The tab stays where it is. An iconified document is de-iconified first. |
+| **Tab x** | Routes through `tabDestroyed`, which adds the document to Recently Closed. | Not a delete. A document still embedded elsewhere is *not* added to Recently Closed, and presentation and key/value tabs are excluded. |
+| **Tile +** | This is GoldenLayout's **popout** control with its handler replaced. It creates a freeform canvas named `Untitled Tab N`. | It does not pop the tile into a browser window. The counter lives on the dashboard as `$myPaneCount`. |
+| **Tile x** | Dash replaces GoldenLayout's close handler with its own, batched as `close stack`. | Dash refuses to close the last tile and raises a raw browser alert reading `cant delete the last stack`. |
+| **Tile maximize** | Dash *adds* to GoldenLayout's handler rather than replacing it, then persists the layout. | Upstream maximize still runs, so this one behaves as its name implies. |
+| **Empty tile background** | Clicking the empty-tile message creates the same new canvas tab the plus control would. | The hit test looks for the element under the pointer rather than binding a handler. |
+| **Dragging a tab** | Batched as `tab move`. An aborted drag cancels the batch and rebuilds the layout from the saved configuration. | A cancelled move leaves no undo entry at all, by design. |
+| **Dragging a canvas document to the tab bar** | `StartOtherDrag` builds a GoldenLayout config and hands the gesture to a synthetic drag source. | This is why the drag changes character mid-gesture. Several documents at once dock as a row. |
+| **Grey side handle** | Opens or closes the adjacent sidebar or properties panel. | Panel state only; no document is moved. |
+| **Canvas –** | Zooms out. | Zoom is view state, not document state. |
+| **Undo / Redo** | Reverses or reapplies named action batches. | Yellow indicates an action is still in flight. |
+| **stack** | Opens the undo history so the workspace can jump to an earlier action. | Named batches are what you are jumping between. |
+| **Toggle** | Switches the relevant mode or control state in the bottom canvas toolbar. | Its exact target depends on the active view. |
+
+Each traced row above is in the searchable reference with its source line;
+filter it to **Tabs and tiles** to read the handler expressions.
 
 The full drag-and-drop procedures are in [The Dash
 workspace](/getting-started/environment/). Keyboard equivalents are in

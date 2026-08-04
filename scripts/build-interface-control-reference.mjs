@@ -97,6 +97,8 @@ function slug(value) {
 const currentUserPath = 'src/client/util/CurrentUserUtils.ts';
 const topBarPath = 'src/client/views/topbar/TopBar.tsx';
 const documentButtonBarPath = 'src/client/views/DocumentButtonBar.tsx';
+const dockingPath = 'src/client/views/collections/CollectionDockingView.tsx';
+const tabDocViewPath = 'src/client/views/collections/TabDocView.tsx';
 const propertiesPath = 'src/client/views/PropertiesView.tsx';
 const { sourceFile: currentUserFile } = parse(currentUserPath);
 
@@ -497,6 +499,131 @@ function addReviewed(row) {
   handlerNames: [],
 }));
 
+/**
+ * The tab and tile chrome is the one region of Dash whose controls are not
+ * Dash's own components: GoldenLayout draws them, and Dash rebinds their click
+ * handlers afterwards. Two of them therefore do something other than what their
+ * upstream name implies, which is exactly why they need tracing rather than a
+ * hand-written table.
+ */
+[
+  {
+    label: 'Tab title',
+    file: tabDocViewPath,
+    needle: 'titleEle.onchange = (e: InputEvent) => {',
+    tooltip: 'Rename the tab',
+    controlType: 'EditText',
+    interaction: 'Click the title, type, then commit the edit. Drag the tab to move it to another tile.',
+    beginner: 'The tab name is the document’s title. Editing it renames the document everywhere, not just on this tab.',
+    handlerExpression: "undoable(() => { doc.$title = value }, 'edit tab title')",
+    technicalDetail: 'The title element is GoldenLayout’s own input. Dash replaces its onchange with an undoable write to doc.$title and resizes the input to the title length.',
+  },
+  {
+    label: 'Tab type icon',
+    file: tabDocViewPath,
+    needle: '<Tooltip title="click for menu, drag to embed in document">',
+    tooltip: 'click for menu, drag to embed in document',
+    beginner: 'The small icon shows what kind of document the tab holds. Clicking it opens that document’s menu; dragging it places another view of the same document somewhere else.',
+    visibility: 'Appears once per tab, only while the tab header has not already been given its own controls.',
+    predicate: 'tab.element[0].children[1].children.length === 1',
+    handlerExpression: 'setupMoveUpEvents → DragManager.StartDocumentDrag | DocumentView.SelectView + simulateMouseClick',
+    technicalDetail: 'One pointer-down handler serves both gestures: a move becomes a document drag whose abort closes the split, and a click selects the view and simulates a click on the deepest content element to raise its menu.',
+  },
+  {
+    label: 'Tab lightbox icon',
+    file: tabDocViewPath,
+    needle: '<Tooltip title="click to open in lightbox">',
+    tooltip: 'click to open in lightbox',
+    beginner: 'Opens the tab’s document full-screen over the workspace. The tab stays where it is.',
+    handlerExpression: 'addDocTab(doc, OpenWhere.lightboxAlways)',
+    technicalDetail: 'An iconified document is de-iconified first, reusing an existing free embedding when one exists rather than creating a second one.',
+  },
+  {
+    label: 'Tab close',
+    file: dockingPath,
+    needle: "className.includes('lm_maximise') || className.includes('lm_close_tab')",
+    tooltip: 'Close this tab',
+    beginner: 'Removes the tab from the workspace. The document is kept in Recently Closed unless it is still open somewhere else, so this is not a delete.',
+    handlerExpression: 'tabDestroyed → Doc.AddDocToList(MyRecentlyClosed) → Doc.RemoveDocFromList(dashboard)',
+    technicalDetail: 'Closing routes through tabDestroyed. Presentation documents and key/value tabs are excluded from the Recently Closed write, and a document that is still embedded elsewhere is not added to Recently Closed at all.',
+  },
+  {
+    label: 'Tile close',
+    file: dockingPath,
+    needle: ".find('.lm_close') // get the close icon",
+    tooltip: 'Close this tile',
+    beginner: 'Closes the whole tile and every tab in it. Dash refuses to close the last remaining tile.',
+    visibility: 'Appears on each tile header. Its action is refused when the tile is the only one left.',
+    predicate: '(!stack.parent.isRoot && !stack.parent.parent.isRoot) || stack.parent.contentItems.length > 1',
+    handlerExpression: "UndoManager.StartBatch('close stack') → stack.remove() → stateChanged()",
+    technicalDetail: 'Dash unbinds GoldenLayout’s own close handler and substitutes its own. The refusal path raises a browser alert reading “cant delete the last stack”, which is a raw implementation string rather than reviewed interface copy.',
+  },
+  {
+    label: 'Tile maximize',
+    file: dockingPath,
+    needle: ".find('.lm_maximise') // get the close icon",
+    tooltip: 'Maximize or restore this tile',
+    controlType: 'ToggleButton',
+    beginner: 'Expands the tile to fill the workspace, and expands back when clicked again. Nothing is moved or closed.',
+    handlerExpression: 'GoldenLayout toggleMaximise → requestAnimationFrame(stateChanged)',
+    technicalDetail: 'Dash adds a handler rather than replacing GoldenLayout’s, so the upstream maximize still runs and Dash only persists the resulting layout. CollectionDockingView.HasFullScreen reads _maximisedItem, and CloseFullScreen restores it.',
+  },
+  {
+    label: 'Tile new tab',
+    file: dockingPath,
+    needle: ".find('.lm_popout') // get the popout icon",
+    tooltip: 'Add a new tab to this tile',
+    beginner: 'Adds a new empty freeform canvas as a tab in this tile, named Untitled Tab with the next number.',
+    handlerExpression: "addNewDoc → Docs.Create.FreeformDocument([], { title: 'Untitled Tab N' }) → CollectionDockingView.AddSplit",
+    technicalDetail: 'This is GoldenLayout’s popout control with its click handler unbound and replaced. It does not pop the tile into a browser window; the upstream icon name is the only trace of that behavior. The counter lives on the active dashboard as $myPaneCount.',
+  },
+  {
+    label: 'Empty tile background',
+    file: dockingPath,
+    needle: "ele?.className === 'empty-tabs-message'",
+    tooltip: 'Add the first tab to an empty tile',
+    controlType: 'Click target',
+    beginner: 'Clicking the message in an empty tile creates the same new canvas tab the plus control would.',
+    visibility: 'Appears only while a tile has no tabs.',
+    predicate: 'stack.contentItems.length === 0',
+    handlerExpression: 'addNewDoc',
+    technicalDetail: 'The hit test looks for the empty-tabs-message element under the pointer rather than binding a handler to it.',
+  },
+  {
+    label: 'Tab drag between tiles',
+    file: dockingPath,
+    needle: 'tabDragStart = (proxy: any, finishDrag?: (aborted: boolean) => void) => {',
+    tooltip: 'Move a tab to another tile or split',
+    controlType: 'Drag target',
+    interaction: 'Press the tab and drag it to another tile, edge, or the canvas.',
+    beginner: 'Moves the tab. Dropping it on a tile edge splits that tile; aborting the drag puts the layout back exactly as it was.',
+    handlerExpression: "UndoManager.StartBatch('tab move') → DragManager.CompleteWindowDrag",
+    technicalDetail: 'An aborted drag cancels the undo batch and rebuilds GoldenLayout from the saved configuration, so a cancelled move leaves no undo entry.',
+  },
+  {
+    label: 'Drag a document into the tab bar',
+    file: dockingPath,
+    needle: 'public StartOtherDrag = (e: { pageX: number; pageY: number }, dragDocs: Doc[]',
+    tooltip: 'Dock a canvas document as a tab',
+    controlType: 'Drag target',
+    interaction: 'Drag a document off a freeform canvas and onto the tab bar or a tile edge.',
+    beginner: 'Turns a document on the canvas into its own tab. Dragging several at once docks them as a row.',
+    handlerExpression: 'StartOtherDrag → DashboardView.makeDocumentConfig → GoldenLayout createDragSource',
+    technicalDetail: 'A single document becomes one config; several become a row config. The drag is handed to a synthetic GoldenLayout drag source, which is why the gesture changes character mid-drag.',
+  },
+].forEach((row) =>
+  addReviewed({
+    region: 'Tabs and tiles',
+    group: row.file === tabDocViewPath ? 'Tab header' : 'Tile chrome',
+    controlType: 'Button',
+    interaction: 'Click or tap once.',
+    visibility: 'Appears on the tab and tile chrome that frames the workspace.',
+    evidence: 'reviewed layout-chrome contract',
+    handlerNames: [],
+    ...row,
+  })
+);
+
 for (const creator of documentTypes.paletteTemplates) {
   addControl({
     region: 'Tools palette',
@@ -583,7 +710,7 @@ for (const row of controls) {
   delete row.handlerNames;
 }
 
-const regionOrder = ['Top bar', 'Sidebar', 'Context toolbar', 'Document decorations', 'Properties panel', 'Tools palette', 'Canvas footer'];
+const regionOrder = ['Top bar', 'Sidebar', 'Context toolbar', 'Document decorations', 'Properties panel', 'Tabs and tiles', 'Tools palette', 'Canvas footer'];
 controls.sort((a, b) =>
   regionOrder.indexOf(a.region) - regionOrder.indexOf(b.region) ||
   Number(Boolean(a.parent)) - Number(Boolean(b.parent)) ||

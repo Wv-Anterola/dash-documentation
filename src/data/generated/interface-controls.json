@@ -12,9 +12,9 @@
     "driftRule": "Generation fails when a reviewed source needle or required registry disappears"
   },
   "summary": {
-    "controls": 203,
-    "regions": 7,
-    "groups": 26,
+    "controls": 213,
+    "regions": 8,
+    "groups": 28,
     "nestedControls": 84,
     "handlerResolvedControls": 142,
     "directComponentContracts": 43,
@@ -26,14 +26,17 @@
     "Context toolbar",
     "Document decorations",
     "Properties panel",
+    "Tabs and tiles",
     "Tools palette",
     "Canvas footer"
   ],
   "controlTypes": [
     "Button",
+    "Click target",
     "ClickButton",
     "ColorButton",
     "Creator button",
+    "Drag target",
     "DropdownList",
     "EditText",
     "Embedded status control",
@@ -6942,6 +6945,293 @@
         "names": [],
         "resolved": [],
         "stateOwner": "Appears only for selected AUDIO or VID presentation content."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Dock a canvas document as a tab",
+      "controlType": "Drag target",
+      "interaction": "Drag a document off a freeform canvas and onto the tab bar or a tile edge.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "StartOtherDrag → DashboardView.makeDocumentConfig → GoldenLayout createDragSource",
+      "beginner": "Turns a document on the canvas into its own tab. Dragging several at once docks them as a row.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 82,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L82"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Drag a document into the tab bar",
+      "technicalDetail": "A single document becomes one config; several become a row config. The drag is handed to a synthetic GoldenLayout drag source, which is why the gesture changes character mid-drag.",
+      "id": "tabs-and-tiles-tile-chrome-drag-a-document-into-the-tab-bar",
+      "handler": {
+        "names": [],
+        "resolved": [],
+        "stateOwner": "A single document becomes one config; several become a row config. The drag is handed to a synthetic GoldenLayout drag source, which is why the gesture changes character mid-drag."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Move a tab to another tile or split",
+      "controlType": "Drag target",
+      "interaction": "Press the tab and drag it to another tile, edge, or the canvas.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "UndoManager.StartBatch('tab move') → DragManager.CompleteWindowDrag",
+      "beginner": "Moves the tab. Dropping it on a tile edge splits that tile; aborting the drag puts the layout back exactly as it was.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 96,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L96"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tab drag between tiles",
+      "technicalDetail": "An aborted drag cancels the undo batch and rebuilds GoldenLayout from the saved configuration, so a cancelled move leaves no undo entry.",
+      "id": "tabs-and-tiles-tile-chrome-tab-drag-between-tiles",
+      "handler": {
+        "names": [
+          "StartBatch"
+        ],
+        "resolved": [],
+        "stateOwner": "An aborted drag cancels the undo batch and rebuilds GoldenLayout from the saved configuration, so a cancelled move leaves no undo entry."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Rename the tab",
+      "controlType": "EditText",
+      "interaction": "Click the title, type, then commit the edit. Drag the tab to move it to another tile.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "undoable(() => { doc.$title = value }, 'edit tab title')",
+      "beginner": "The tab name is the document’s title. Editing it renames the document everywhere, not just on this tab.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 365,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L365"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab title",
+      "technicalDetail": "The title element is GoldenLayout’s own input. Dash replaces its onchange with an undoable write to doc.$title and resizes the input to the title length.",
+      "id": "tabs-and-tiles-tab-header-tab-title",
+      "handler": {
+        "names": [
+          "undoable"
+        ],
+        "resolved": [],
+        "stateOwner": "The title element is GoldenLayout’s own input. Dash replaces its onchange with an undoable write to doc.$title and resizes the input to the title length."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "click for menu, drag to embed in document",
+      "controlType": "Button",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears once per tab, only while the tab header has not already been given its own controls.",
+      "predicate": "tab.element[0].children[1].children.length === 1",
+      "handlerExpression": "setupMoveUpEvents → DragManager.StartDocumentDrag | DocumentView.SelectView + simulateMouseClick",
+      "beginner": "The small icon shows what kind of document the tab holds. Clicking it opens that document’s menu; dragging it places another view of the same document somewhere else.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 400,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L400"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab type icon",
+      "technicalDetail": "One pointer-down handler serves both gestures: a move becomes a document drag whose abort closes the split, and a click selects the view and simulates a click on the deepest content element to raise its menu.",
+      "id": "tabs-and-tiles-tab-header-tab-type-icon",
+      "handler": {
+        "names": [],
+        "resolved": [],
+        "stateOwner": "One pointer-down handler serves both gestures: a move becomes a document drag whose abort closes the split, and a click selects the view and simulates a click on the deepest content element to raise its menu."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "click to open in lightbox",
+      "controlType": "Button",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "addDocTab(doc, OpenWhere.lightboxAlways)",
+      "beginner": "Opens the tab’s document full-screen over the workspace. The tab stays where it is.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/TabDocView.tsx",
+        "line": 403,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L403"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tab header",
+      "label": "Tab lightbox icon",
+      "technicalDetail": "An iconified document is de-iconified first, reusing an existing free embedding when one exists rather than creating a second one.",
+      "id": "tabs-and-tiles-tab-header-tab-lightbox-icon",
+      "handler": {
+        "names": [
+          "addDocTab"
+        ],
+        "resolved": [],
+        "stateOwner": "An iconified document is de-iconified first, reusing an existing free embedding when one exists rather than creating a second one."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Close this tab",
+      "controlType": "Button",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "tabDestroyed → Doc.AddDocToList(MyRecentlyClosed) → Doc.RemoveDocFromList(dashboard)",
+      "beginner": "Removes the tab from the workspace. The document is kept in Recently Closed unless it is still open somewhere else, so this is not a delete.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 475,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L475"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tab close",
+      "technicalDetail": "Closing routes through tabDestroyed. Presentation documents and key/value tabs are excluded from the Recently Closed write, and a document that is still embedded elsewhere is not added to Recently Closed at all.",
+      "id": "tabs-and-tiles-tile-chrome-tab-close",
+      "handler": {
+        "names": [
+          "AddDocToList",
+          "RemoveDocFromList"
+        ],
+        "resolved": [],
+        "stateOwner": "Closing routes through tabDestroyed. Presentation documents and key/value tabs are excluded from the Recently Closed write, and a document that is still embedded elsewhere is not added to Recently Closed at all."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Close this tile",
+      "controlType": "Button",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears on each tile header. Its action is refused when the tile is the only one left.",
+      "predicate": "(!stack.parent.isRoot && !stack.parent.parent.isRoot) || stack.parent.contentItems.length > 1",
+      "handlerExpression": "UndoManager.StartBatch('close stack') → stack.remove() → stateChanged()",
+      "beginner": "Closes the whole tile and every tab in it. Dash refuses to close the last remaining tile.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 618,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L618"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tile close",
+      "technicalDetail": "Dash unbinds GoldenLayout’s own close handler and substitutes its own. The refusal path raises a browser alert reading “cant delete the last stack”, which is a raw implementation string rather than reviewed interface copy.",
+      "id": "tabs-and-tiles-tile-chrome-tile-close",
+      "handler": {
+        "names": [
+          "StartBatch",
+          "remove",
+          "stateChanged"
+        ],
+        "resolved": [],
+        "stateOwner": "Dash unbinds GoldenLayout’s own close handler and substitutes its own. The refusal path raises a browser alert reading “cant delete the last stack”, which is a raw implementation string rather than reviewed interface copy."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Add the first tab to an empty tile",
+      "controlType": "Click target",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears only while a tile has no tabs.",
+      "predicate": "stack.contentItems.length === 0",
+      "handlerExpression": "addNewDoc",
+      "beginner": "Clicking the message in an empty tile creates the same new canvas tab the plus control would.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 637,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L637"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Empty tile background",
+      "technicalDetail": "The hit test looks for the empty-tabs-message element under the pointer rather than binding a handler to it.",
+      "id": "tabs-and-tiles-tile-chrome-empty-tile-background",
+      "handler": {
+        "names": [],
+        "resolved": [],
+        "stateOwner": "The hit test looks for the empty-tabs-message element under the pointer rather than binding a handler to it."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Maximize or restore this tile",
+      "controlType": "ToggleButton",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "GoldenLayout toggleMaximise → requestAnimationFrame(stateChanged)",
+      "beginner": "Expands the tile to fill the workspace, and expands back when clicked again. Nothing is moved or closed.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 642,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L642"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tile maximize",
+      "technicalDetail": "Dash adds a handler rather than replacing GoldenLayout’s, so the upstream maximize still runs and Dash only persists the resulting layout. CollectionDockingView.HasFullScreen reads _maximisedItem, and CloseFullScreen restores it.",
+      "id": "tabs-and-tiles-tile-chrome-tile-maximize",
+      "handler": {
+        "names": [
+          "requestAnimationFrame"
+        ],
+        "resolved": [],
+        "stateOwner": "Dash adds a handler rather than replacing GoldenLayout’s, so the upstream maximize still runs and Dash only persists the resulting layout. CollectionDockingView.HasFullScreen reads _maximisedItem, and CloseFullScreen restores it."
+      }
+    },
+    {
+      "parent": "",
+      "icon": "",
+      "tooltip": "Add a new tab to this tile",
+      "controlType": "Button",
+      "interaction": "Click or tap once.",
+      "visibility": "Appears on the tab and tile chrome that frames the workspace.",
+      "predicate": "",
+      "handlerExpression": "addNewDoc → Docs.Create.FreeformDocument([], { title: 'Untitled Tab N' }) → CollectionDockingView.AddSplit",
+      "beginner": "Adds a new empty freeform canvas as a tab in this tile, named Untitled Tab with the next number.",
+      "evidence": "reviewed layout-chrome contract",
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 645,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L645"
+      },
+      "region": "Tabs and tiles",
+      "group": "Tile chrome",
+      "label": "Tile new tab",
+      "technicalDetail": "This is GoldenLayout’s popout control with its click handler unbound and replaced. It does not pop the tile into a browser window; the upstream icon name is the only trace of that behavior. The counter lives on the active dashboard as $myPaneCount.",
+      "id": "tabs-and-tiles-tile-chrome-tile-new-tab",
+      "handler": {
+        "names": [
+          "FreeformDocument"
+        ],
+        "resolved": [],
+        "stateOwner": "This is GoldenLayout’s popout control with its click handler unbound and replaced. It does not pop the tile into a browser window; the upstream icon name is the only trace of that behavior. The counter lives on the active dashboard as $myPaneCount."
       }
     },
     {

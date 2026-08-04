@@ -11,7 +11,7 @@ test('pins the interface atlas to the integrated source baseline', () => {
   assert.equal(controls.repository.baseline, source.repository.baselineTip);
   assert.equal(controls.summary.controls, controls.controls.length);
   assert.ok(controls.summary.controls >= 200);
-  assert.equal(controls.summary.regions, 7);
+  assert.equal(controls.summary.regions, 8);
   assert.ok(controls.summary.groups >= 25);
   assert.ok(controls.summary.handlerResolvedControls >= 140);
   assert.equal(new Set(controls.controls.map((entry) => entry.id)).size, controls.controls.length);
@@ -52,6 +52,7 @@ test('covers every source-registry creator and critical interface region', () =>
 
   for (const [label, region] of [
     ['Home', 'Top bar'],
+    ['Tile new tab', 'Tabs and tiles'],
     ['Help', 'Top bar'],
     ['Search', 'Sidebar'],
     ['Perspective', 'Context toolbar'],
@@ -60,4 +61,28 @@ test('covers every source-registry creator and critical interface region', () =>
     ['Sharing and Permissions', 'Properties panel'],
     ['Toggle UI', 'Canvas footer'],
   ]) assert.ok(byLabel(label, region), `Missing ${region} control ${label}`);
+});
+
+test('traces the GoldenLayout tab and tile chrome Dash rebinds', () => {
+  const chrome = controls.controls.filter((entry) => entry.region === 'Tabs and tiles');
+  assert.ok(chrome.length >= 10, 'lost the tab and tile chrome contracts');
+  assert.deepEqual([...new Set(chrome.map((entry) => entry.group))].sort(), ['Tab header', 'Tile chrome']);
+  for (const control of chrome) {
+    assert.equal(control.evidence, 'reviewed layout-chrome contract');
+    assert.ok(control.technicalDetail, `${control.id} lacks the rebinding detail that makes this region worth tracing`);
+    assert.ok(
+      ['CollectionDockingView.tsx', 'TabDocView.tsx'].includes(control.source.file.split('/').pop()),
+      `${control.id} is not anchored in the docking chrome`
+    );
+  }
+
+  // The two controls whose upstream GoldenLayout name misdescribes what Dash does.
+  const newTab = byLabel('Tile new tab', 'Tabs and tiles');
+  assert.match(newTab.technicalDetail, /popout/i);
+  assert.match(newTab.handlerExpression, /FreeformDocument/);
+  const tileClose = byLabel('Tile close', 'Tabs and tiles');
+  assert.match(tileClose.predicate, /contentItems\.length > 1/);
+
+  // Closing a tab is recoverable, and the atlas has to say so.
+  assert.match(byLabel('Tab close', 'Tabs and tiles').beginner, /Recently Closed/);
 });

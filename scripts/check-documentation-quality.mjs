@@ -229,8 +229,8 @@ if (interfaceControlReference.repository.baseline !== sourceReference.repository
 if (interfaceControlReference.summary.controls !== interfaceControlReference.controls.length || interfaceControlReference.controls.length < 200) {
   errors.push('Interface control inventory is stale or fell below the reviewed 200-control floor');
 }
-if (interfaceControlReference.summary.regions !== 7 || new Set(interfaceControlReference.controls.map((row) => row.region)).size !== 7) {
-  errors.push('Interface control inventory no longer covers all seven reviewed interface regions');
+if (interfaceControlReference.summary.regions !== 8 || new Set(interfaceControlReference.controls.map((row) => row.region)).size !== 8) {
+  errors.push('Interface control inventory no longer covers all eight reviewed interface regions');
 }
 if (new Set(interfaceControlReference.controls.map((row) => row.id)).size !== interfaceControlReference.controls.length) {
   errors.push('Interface control inventory contains duplicate row identities');
