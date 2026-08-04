@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">The two kinds of claim in this documentation, and which one is counted</title>
+  <desc id="desc">Parsed claims such as signatures, source lines, calls and field writes are generated and checked on every build. Written claims such as what a thing is for and when not to use it are produced by a person and checked by nobody. The coverage report counts them separately, because a record can be fully traced and still unexplained.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#25345f" flood-opacity="0.12"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#5269d8"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1460" cy="118" r="180" fill="#dfe5ff" opacity="0.6"/><circle cx="100" cy="832" r="205" fill="#e8ddff" opacity="0.55"/>
+
+  <text x="100" y="102" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="750" fill="#17213f">Traced is not the same as explained</text>
+  <text x="102" y="152" font-family="Inter,Arial,sans-serif" font-size="25" fill="#526078">A record can carry an exact file and line, and still not tell you what the thing is for. So the two are counted apart.</text>
+
+  <!-- Parsed column -->
+  <g filter="url(#shadow)"><rect x="100" y="220" width="640" height="420" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <circle cx="158" cy="282" r="28" fill="#198a83"/><path d="M145 282l9 9 18-20" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="204" y="292" font-size="32" font-weight="730" fill="#17213f">Parsed claim</text>
+    <text x="140" y="345" font-size="23" fill="#526078">Signature, file and line, call, field write</text>
+    <text x="140" y="392" font-size="23" fill="#526078">Written by: a generator</text>
+    <text x="140" y="439" font-size="23" fill="#526078">Checked: on every build</text>
+    <text x="140" y="486" font-size="23" fill="#526078">Fails when: the source moves</text>
+    <rect x="140" y="528" width="560" height="72" rx="16" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+    <text x="170" y="562" font-size="23" font-weight="700" fill="#14532d">100% of records</text>
+    <text x="170" y="592" font-size="21" fill="#166534">Every record on this site carries a source location.</text>
+  </g>
+
+  <!-- Written column -->
+  <g filter="url(#shadow)"><rect x="860" y="220" width="640" height="420" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <circle cx="918" cy="282" r="28" fill="#6d4dd6"/><path d="M906 294l10-24 10 24M910 286h12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <text x="964" y="292" font-size="32" font-weight="730" fill="#17213f">Written claim</text>
+    <text x="900" y="345" font-size="23" fill="#526078">What it is for, and when not to use it</text>
+    <text x="900" y="392" font-size="23" fill="#526078">Written by: a person</text>
+    <text x="900" y="439" font-size="23" fill="#526078">Checked: by nobody</text>
+    <text x="900" y="486" font-size="23" fill="#526078">Fails when: quietly, and much later</text>
+    <rect x="900" y="528" width="560" height="72" rx="16" fill="#fffbeb" stroke="#fcd34d" stroke-width="2"/>
+    <text x="930" y="562" font-size="23" font-weight="700" fill="#78350f">Counted, and published as it stands</text>
+    <text x="930" y="592" font-size="21" fill="#92400e">Two surfaces are far behind. They are named, not averaged away.</text>
+  </g>
+
+  <path d="M740 430h104" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+  <text x="792" y="410" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="21" fill="#7c88ad">still needs</text>
+
+  <g filter="url(#shadow)"><rect x="100" y="690" width="1400" height="150" rx="26" fill="#17213f"/></g>
+  <text x="800" y="748" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="730" fill="#fff">The build never fails because coverage dropped</text>
+  <text x="800" y="796" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="24" fill="#c5d8ff">A gate on the number would buy a sentence, not the right sentence. The number is the finding; the floors live in the tests.</text>
+</svg>

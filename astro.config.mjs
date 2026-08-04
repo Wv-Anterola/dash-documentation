@@ -288,6 +288,7 @@ export default defineConfig({
             { slug: 'reference/context-menus', label: 'Right-click menu atlas' },
             { slug: 'reference/task-routes', label: 'Cross-route task index' },
             { slug: 'reference/open-destinations', label: 'Open destination map' },
+            { slug: 'reference/documentation-coverage', label: 'What this site does not know' },
             { slug: 'reference/generated-data', label: 'Generated data endpoints' },
             { slug: 'reference/document-types', label: 'Document types and schemas' },
             { slug: 'reference/collection-views' },

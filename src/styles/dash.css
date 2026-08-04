@@ -2793,6 +2793,128 @@
   white-space: nowrap;
 }
 
+/* ------------------------------------------------------------------ *
+ * Documentation coverage
+ * ------------------------------------------------------------------ */
+
+.coverage-surface {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-md);
+  margin-block: var(--dash-space-3);
+  padding: var(--dash-space-4);
+}
+
+.coverage-surface-head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dash-space-2);
+  justify-content: space-between;
+}
+
+.sl-markdown-content .coverage-surface-head h3 {
+  margin-block: 0;
+}
+
+.sl-markdown-content .coverage-surface-count {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: 0;
+}
+
+.coverage-bars {
+  display: grid;
+  gap: var(--dash-space-2);
+  margin-block: var(--dash-space-3);
+}
+
+.coverage-bars > div {
+  align-items: center;
+  display: grid;
+  gap: var(--dash-space-2);
+  grid-template-columns: minmax(10rem, 18rem) 1fr;
+}
+
+.sl-markdown-content .coverage-bars dt {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+}
+
+.sl-markdown-content .coverage-bars dd {
+  align-items: center;
+  display: flex;
+  gap: var(--dash-space-3);
+  margin: 0;
+}
+
+.coverage-bar {
+  background: var(--dash-surface-raised);
+  border: 1px solid var(--dash-rule);
+  border-radius: 999px;
+  flex: 1 1 8rem;
+  height: 0.85rem;
+  overflow: clip;
+}
+
+.coverage-bar > span {
+  display: block;
+  height: 100%;
+  /* Level is also stated as text beside every bar, so colour is a second
+     signal rather than the only one. */
+  background: var(--dash-accent);
+}
+
+.coverage-bar > span[data-level='full'] {
+  background: #1a7f4b;
+}
+
+.coverage-bar > span[data-level='low'] {
+  background: #9a3412;
+}
+
+.coverage-figure {
+  color: var(--dash-ink-soft);
+  flex: none;
+  font-size: var(--dash-type-sm);
+  white-space: nowrap;
+}
+
+.sl-markdown-content .coverage-owner,
+.sl-markdown-content .coverage-note,
+.sl-markdown-content .coverage-missing-note {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: var(--dash-space-2) 0;
+}
+
+.coverage-missing {
+  margin-top: var(--dash-space-3);
+}
+
+.coverage-missing > summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.sl-markdown-content .coverage-missing ul {
+  columns: 3 12rem;
+  list-style: none;
+  margin-block: var(--dash-space-2) 0;
+  padding: 0;
+}
+
+.sl-markdown-content .coverage-missing li {
+  margin: 0 0 0.2rem;
+}
+
+@media (max-width: 50rem) {
+  .coverage-bars > div {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
+
 @media (max-width: 64rem) {
   .http-route-summary,
   .http-route-filters,

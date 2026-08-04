@@ -10,6 +10,7 @@
  * regeneration from a schema change.
  */
 import contextMenus from '../../../data/generated/context-menus.json';
+import coverageReport from '../../../data/generated/coverage-report.json';
 import documentTypes from '../../../data/generated/document-types.json';
 import fieldTypes from '../../../data/generated/field-types.json';
 import httpRoutes from '../../../data/generated/http-routes.json';
@@ -97,6 +98,18 @@ const datasets: DatasetEntry[] = [
     recordKey: 'destinations',
     baseline: openDestinations.repository.baseline,
     generator: 'npm run audit:destinations',
+  },
+  {
+    id: 'coverage-report',
+    title: 'Documentation coverage report',
+    description: 'For every generated surface, how many records carry a source line, how many carry a human explanation, and which are still missing one.',
+    path: '/assets/data/coverage-report.json',
+    page: '/reference/documentation-coverage/',
+    schemaVersion: coverageReport.schemaVersion,
+    records: coverageReport.surfaces.length,
+    recordKey: 'surfaces',
+    baseline: coverageReport.repository.baseline,
+    generator: 'npm run audit:coverage-report',
   },
   {
     id: 'inapp-doc-links',

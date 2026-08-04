@@ -1,0 +1,101 @@
+---
+/**
+ * The coverage report, rendered on the server.
+ *
+ * The bars are plain divs with an explicit width, not a chart library, so the
+ * numbers survive with JavaScript off and the percentages are readable as text
+ * either way. Each bar carries its own accessible role and values rather than
+ * relying on colour to carry the meaning.
+ */
+import reference from '../data/generated/coverage-report.json';
+
+const { summary, surfaces } = reference;
+---
+
+<div class="coverage-report">
+  <div class="audit-summary control-contract-summary" aria-label="Documentation coverage totals">
+    <div><strong>{summary.records}</strong><span>traced records</span></div>
+    <div><strong>{summary.surfaces}</strong><span>generated surfaces</span></div>
+    <div><strong>{summary.tracedPct}%</strong><span>carry a source line</span></div>
+    <div><strong>{summary.explainedPct}%</strong><span>carry a human explanation</span></div>
+    <div><strong>{summary.fullyExplainedSurfaces}</strong><span>surfaces fully explained</span></div>
+    <div><strong>{summary.surfacesWithoutExplanationField}</strong><span>with no explanation field at all</span></div>
+  </div>
+
+  {surfaces.map((surface) => (
+    <section class="coverage-surface" id={`coverage-${surface.id}`}>
+      <div class="coverage-surface-head">
+        <h3><a href={surface.page}>{surface.name}</a></h3>
+        <p class="coverage-surface-count">{surface.records} records</p>
+      </div>
+
+      <dl class="coverage-bars">
+        <div>
+          <dt>Explained by a person</dt>
+          <dd>
+            <div
+              class="coverage-bar"
+              role="meter"
+              aria-valuenow={surface.explainedPct}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label={`${surface.name}: ${surface.explainedPct} percent explained`}>
+              <span style={`width: ${surface.explainedPct}%`} data-level={surface.explainedPct === 100 ? 'full' : surface.explainedPct >= 50 ? 'partial' : 'low'}></span>
+            </div>
+            <span class="coverage-figure">{surface.explained} of {surface.records} · {surface.explainedPct}%</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Traced to a source line</dt>
+          <dd>
+            <div
+              class="coverage-bar"
+              role="meter"
+              aria-valuenow={surface.tracedPct}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label={`${surface.name}: ${surface.tracedPct} percent traced to source`}>
+              <span style={`width: ${surface.tracedPct}%`} data-level={surface.tracedPct === 100 ? 'full' : 'partial'}></span>
+            </div>
+            <span class="coverage-figure">{surface.traced} of {surface.records} · {surface.tracedPct}%</span>
+          </dd>
+        </div>
+        <div>
+          <dt>{surface.behaviourName.charAt(0).toUpperCase() + surface.behaviourName.slice(1)}</dt>
+          <dd>
+            <div
+              class="coverage-bar"
+              role="meter"
+              aria-valuenow={surface.behavedPct}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label={`${surface.name}: ${surface.behavedPct} percent with ${surface.behaviourName}`}>
+              <span style={`width: ${surface.behavedPct}%`} data-level={surface.behavedPct === 100 ? 'full' : surface.behavedPct >= 50 ? 'partial' : 'low'}></span>
+            </div>
+            <span class="coverage-figure">{surface.behaved} of {surface.records} · {surface.behavedPct}%</span>
+          </dd>
+        </div>
+      </dl>
+
+      <p class="coverage-owner">
+        <strong>Who writes the explanation:</strong> {surface.explanationSource}.
+        {' '}<a href={surface.dataset}>Full dataset</a>.
+      </p>
+      {surface.note && <p class="coverage-note">{surface.note}</p>}
+
+      {surface.missing > 0 && (
+        <details class="coverage-missing">
+          <summary>{surface.missing} still unexplained</summary>
+          <p class="coverage-missing-note">
+            {surface.missingExamples.length < surface.missing
+              ? `The first ${surface.missingExamples.length}, in dataset order. The rest are in the published JSON.`
+              : 'All of them, in dataset order.'}
+          </p>
+          <ul>
+            {surface.missingExamples.map((name) => <li><code>{name}</code></li>)}
+          </ul>
+        </details>
+      )}
+    </section>
+  ))}
+</div>

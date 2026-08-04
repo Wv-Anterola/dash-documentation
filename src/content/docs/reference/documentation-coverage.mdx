@@ -1,0 +1,88 @@
+---
+title: What this documentation does not know
+description: "A generated report of its own gaps: for every traced surface, how many records carry a source line, how many carry an explanation written by a person, and exactly which ones are still missing one."
+sidebar:
+  order: 5
+---
+
+import CoverageReport from '../../../components/CoverageReport.astro';
+
+<p class="lede">
+  Every reference here mixes two kinds of claim, and only one of them can be
+  generated. This page measures the other one and names what is missing.
+</p>
+
+## Two kinds of claim
+
+A parsed claim is a signature, a file and a line, a call, a field write. It is
+as true as the parser, it is checked on every build, and it breaks loudly when
+the code moves. There is a lot of it here, and it is the part that lets you
+verify anything on this site against the exact commit it came from.
+
+A written claim is what the thing is for, what it means for you, and when not
+to reach for it. Nothing generates that, nothing checks it, and it is the part
+almost every reader actually needs. A documentation set can be complete in the
+first sense and useless in the second, which is why the two are counted
+separately below.
+
+The measurement is deliberately shallow: a record counts as explained when its
+plain-language field contains text. Whether the text is *good* is not something
+a script can judge, and pretending otherwise would make the number worse than
+no number at all.
+
+## The report
+
+Ordered by the size of the gap, so the work queue is at the top.
+
+<CoverageReport />
+
+## Reading the two large gaps
+
+**Scripting globals** are the functions Dash exposes to scripts you write
+inside the application. Their explanation is the second argument to
+`ScriptingGlobals.add`, which means it lives in Dash-Web and Dash shows it to
+the person writing a script. A missing one is a gap in the product before it is
+a gap here: the parsed calls and field writes below each entry are this site
+reconstructing what the registration should have said.
+
+**HTTP routes** have no explanation field at all. Every route is classified by
+method, registration layer, and access path, which answers "is this supervised"
+and "can an unauthenticated caller reach it" but never answers "what is it
+for". That is the honest state of it, and inventing prose to close the column
+would be worse than leaving it open.
+
+Neither is presented as finished. Both are more useful stated than hidden.
+
+## Why publish this
+
+The usual practice is to publish a coverage number only when it is high. That
+makes the number a marketing artifact rather than a measurement, and it removes
+the one signal that would tell a contributor where to start.
+
+There is a second reason, specific to this site. Because so much here is
+generated, it is easy to mistake volume for understanding: nine hundred traced
+records look authoritative whether or not anyone has explained a single one.
+Counting the explanations separately is what keeps that from being a claim this
+documentation makes about itself without evidence.
+
+## How this page stays honest
+
+The report reads the published datasets directly rather than a hand-kept
+tally. Generation fails when a dataset disappears, empties, stops carrying
+source locations, or loses the field this report reads for its explanation.
+
+It deliberately does **not** fail on low coverage. A gate that failed the build
+when a number dropped would create pressure to write a sentence rather than to
+write the right sentence, and the first thing to go would be the honesty of
+this page. Non-regression floors live in the test suite instead, where changing
+one is a visible edit somebody has to justify.
+
+## Where to go next
+
+- [Generated data endpoints](/reference/generated-data/) to read any of these
+  datasets directly.
+- [Scripting](/guides/features/scripting/) for the largest gap, with the parsed
+  effects that stand in for the missing descriptions.
+- [HTTP service interface](/reference/http-service-interface/) for the second.
+- [Writing for this site](/contributing/documentation/) if you want to close
+  one.

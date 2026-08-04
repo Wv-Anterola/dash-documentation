@@ -199,6 +199,10 @@
     "src": "/assets/gifs/gettingstarted/dash-properties-pane.gif",
     "alt": "Dash demonstration of Properties Pane."
   },
+  "/reference/documentation-coverage": {
+    "src": "/assets/images/diagrams/dash-documentation-coverage.svg",
+    "alt": "Parsed claims and written claims side by side: one generated and checked on every build, the other written by a person and checked by nobody, counted separately because a record can be fully traced and still unexplained."
+  },
   "/reference/generated-data": {
     "src": "/assets/gifs/ai/ai-template-csv-2.gif",
     "alt": "Dash demonstration of Ai Template Csv 2."

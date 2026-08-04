@@ -95,6 +95,7 @@ const manual = {
   '/reference/implementation-snapshot': '/assets/images/diagrams/source-evidence-flow.svg',
   '/reference/open-destinations': '/assets/images/diagrams/dash-open-destination-routing.svg',
   '/contributing/inapp-links': '/assets/images/diagrams/dash-inapp-doc-link-path.svg',
+  '/reference/documentation-coverage': '/assets/images/diagrams/dash-documentation-coverage.svg',
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
   '/reference/status-taxonomy': '/assets/gifs/gettingstarted/dash-annotation-icon.gif',
   '/research/cohorts': '/assets/gifs/environment/dash-drag-tab-back.gif',
@@ -125,6 +126,8 @@ const manualAlt = {
     'A destination string splitting into a verb and a modifier, then climbing four routers to the canvas, the lightbox, or the tile layout, with the lightbox and dashboard overrides checked first.',
   '/contributing/inapp-links':
     'A help control in Dash opening an old permalink, the path being resolved against this site and its redirect table, and the three outcomes: it lands, it lands only if the host adds a trailing slash, or it reaches a fragment that no longer exists.',
+  '/reference/documentation-coverage':
+    'Parsed claims and written claims side by side: one generated and checked on every build, the other written by a person and checked by nobody, counted separately because a record can be fully traced and still unexplained.',
 };
 
 const synonymGroups = [
