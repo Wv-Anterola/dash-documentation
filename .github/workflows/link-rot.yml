@@ -1,0 +1,47 @@
+# Weekly reachability report for every outbound link.
+#
+# Deliberately not part of `verify`. Those links are other people's servers, and
+# a push that fails because a university page was briefly down teaches everyone
+# to ignore a red build. This runs on its own schedule, writes the findings into
+# the job summary, and only fails when the unreachable page is one this
+# repository owns.
+name: Link rot
+
+on:
+  schedule:
+    # Monday, early UTC, when the hosts being probed are least busy.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: link-rot
+  cancel-in-progress: false
+
+jobs:
+  external-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Check outbound links
+        run: |
+          npm run links:external | tee link-report.txt
+          {
+            echo '## Outbound link report'
+            echo
+            echo '```'
+            cat link-report.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

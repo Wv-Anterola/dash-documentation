@@ -44,7 +44,12 @@ are worth reading before anything else:
 
 - **`repository.baseline`** is an immutable commit. Every `source.url` in the
   dataset is a permalink into that commit, so a record can be checked against
-  the exact code it describes.
+  the exact code it describes. Note that `brown-dash/Dash-Web` is not publicly
+  visible: those permalinks open for people with access to it and return a 404
+  for everyone else. The file, line, and commit in the record are still exact,
+  and these datasets are public, so the claim stays precise even where the code
+  behind it is not reachable. This is set out under [who can open a source
+  link](/reference/implementation-snapshot/#who-can-open-a-source-link).
 - **`methodology.driftRule`** states what makes generation fail. That is the
   mechanism keeping the dataset honest: when the code it parses moves, the
   build breaks rather than the documentation quietly going stale.

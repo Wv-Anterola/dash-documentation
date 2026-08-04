@@ -128,7 +128,10 @@ const sourceEvidenceForProject = (title: string, status: StatusKey): SourceEvide
   // A documentation artifact preserves the claim without upgrading it to code
   // evidence. The fixed commit keeps the fallback immutable and reviewable.
   return [{
-    repository: 'brown-dash/Dash-Documentation',
+    // The fallback commit lives on this site's own repository, not the lab's
+    // copy, whose main branch has never carried it. Pointing at the lab meant
+    // the permalink resolved to a 404.
+    repository: 'Wv-Anterola/dash-documentation',
     ref: 'docs-unify-2026',
     commit: 'c786bb6be8d68f4249cd2970b8aa6b5ceb525ce3',
     path: 'src/data/projects.ts',
@@ -136,7 +139,7 @@ const sourceEvidenceForProject = (title: string, status: StatusKey): SourceEvide
     evidenceKind: 'research-artifact',
     runtimeOrTestEvidence: null,
     verificationState: 'team-confirmation-needed',
-    sourceUrl: 'https://github.com/brown-dash/Dash-Documentation/blob/c786bb6be8d68f4249cd2970b8aa6b5ceb525ce3/src/data/projects.ts',
+    sourceUrl: 'https://github.com/Wv-Anterola/dash-documentation/blob/c786bb6be8d68f4249cd2970b8aa6b5ceb525ce3/src/data/projects.ts',
   }];
 };
 

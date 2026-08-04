@@ -30,8 +30,15 @@ function walk(dir, out = []) {
 const files = new Set(walk(DIST));
 const pages = [...files].filter((f) => f.endsWith('.html'));
 
+// The site's own origin, so a hand-written absolute link back to it can be
+// told apart from a genuine outbound one. An absolute self-link works in
+// production and breaks in dev and on the GitHub Pages layout, which is the
+// worst way for a link to be wrong.
+const SITE_ORIGIN = (process.env.DOCS_SITE ?? 'https://brown-dash-documentation.vercel.app').replace(/\/$/, '');
+
 const idsOf = new Map();
-const problems = { links: [], anchors: [], duplicateIds: [], images: [], alt: [], headings: [] };
+const externalHosts = new Map();
+const problems = { links: [], anchors: [], duplicateIds: [], images: [], alt: [], headings: [], insecure: [], selfAbsolute: [] };
 
 const html = new Map();
 for (const p of pages) {
@@ -66,6 +73,22 @@ for (const [page, src] of html) {
       if (href.startsWith('#')) {
         const frag = decodeURIComponent(href.slice(1));
         if (frag && !idsOf.get(page)?.has(frag)) problems.anchors.push([page, href]);
+        continue;
+      }
+      if (/^https?:/.test(href)) {
+        // A local development URL is an instruction, not a link that has to be
+        // reachable or secure.
+        const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)/.test(href);
+        if (href.startsWith('http://') && !isLocal) problems.insecure.push([page, href]);
+        if (href.startsWith(`${SITE_ORIGIN}/`)) problems.selfAbsolute.push([page, href]);
+        if (!isLocal) {
+          try {
+            const host = new URL(href).host;
+            externalHosts.set(host, (externalHosts.get(host) ?? 0) + 1);
+          } catch {
+            problems.links.push([page, href]);
+          }
+        }
       }
       continue;
     }
@@ -124,6 +147,13 @@ report('Duplicate element IDs', problems.duplicateIds);
 report('Broken images', problems.images);
 report('Images missing alt', problems.alt);
 report('Heading order problems', problems.headings);
+report('Insecure http links', problems.insecure);
+report('Absolute links back to this site', problems.selfAbsolute);
+
+const hosts = [...externalHosts.entries()].sort((a, b) => b[1] - a[1]);
+console.log(`
+### Outbound links: ${hosts.reduce((total, [, count]) => total + count, 0)} to ${hosts.length} hosts`);
+for (const [host, count] of hosts.slice(0, 12)) console.log('   ', String(count).padStart(5), host);
 
 const fatal = Object.values(problems).reduce((total, rows) => total + rows.length, 0);
 process.exit(fatal ? 1 : 0);
