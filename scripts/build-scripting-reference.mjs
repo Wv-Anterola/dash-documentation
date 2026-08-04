@@ -116,6 +116,38 @@ const purposeOverrides = {
   copyField: 'Copies an ObjectField through its Copy contract and passes primitive or reference values through.',
 };
 
+/**
+ * The comment sitting above a scripting registration, if any.
+ *
+ * Recovered so it can be *audited*, not so it can be used. The HTTP route
+ * reference recovers registration comments and publishes them as descriptions,
+ * which works there because those comments describe their route. Here the same
+ * move would be a mistake, and the audit below is what proves it: one comment
+ * string is repeated above eight different registrations and describes exactly
+ * one of them. Importing it as a description would have put a confident, wrong
+ * sentence on seven entries.
+ */
+function leadingComment(node, sourceFile) {
+  const full = sourceFile.getFullText();
+  let target = node;
+  while (target.parent && !ts.isStatement(target)) target = target.parent;
+  const ranges = ts.getLeadingCommentRanges(full, target.pos) ?? [];
+  return ranges
+    .map((range) => full.slice(range.pos, range.end))
+    .join('\n')
+    .replace(/^\s*\/\*\*?/gm, '')
+    .replace(/\*\/\s*$/gm, '')
+    .replace(/^\s*\*\s?/gm, '')
+    .replace(/^\s*\/\/\s?/gm, '')
+    // Lint pragmas are instructions to a tool, not documentation.
+    .replace(/^\s*eslint-disable.*$/gm, '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+}
+
 function purposeFor(record) {
   if (purposeOverrides[record.name]) return purposeOverrides[record.name];
   if (record.description) return record.description.replace(/^[a-z]/, (letter) => letter.toUpperCase()).replace(/\.?$/, '.');
@@ -293,6 +325,7 @@ for (const [file, parsed] of parsedFiles) {
           parameterMetadata: stringLiteral(third) ?? '',
           owner,
           effects: analyzeEffects(declaration, sourceFile),
+          registrationComment: leadingComment(node, sourceFile),
           source: { file, line, url: sourceUrl(file, line) },
         });
       }
@@ -321,6 +354,51 @@ const globals = staticEntries
     };
   })
   .sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+
+/**
+ * Which registration comments are reused across unrelated globals.
+ *
+ * A comment applied to more than one registration cannot describe all of them
+ * unless they do the same thing, and these do not. Publishing the audit is the
+ * only useful thing to do with them: it tells the reader why this surface is
+ * still the largest documentation gap, and it tells Dash-Web exactly which
+ * lines to fix.
+ */
+const commentedGlobals = globals.filter((entry) => entry.registrationComment);
+const commentGroups = new Map();
+for (const entry of commentedGlobals) {
+  const key = entry.registrationComment;
+  commentGroups.set(key, [...(commentGroups.get(key) ?? []), entry.name]);
+}
+const reusedComments = [...commentGroups.entries()]
+  .filter(([, names]) => names.length > 1)
+  .map(([text, names]) => ({
+    text,
+    appliedTo: names.sort(),
+    // A reused comment is charitably read as describing the registration whose
+    // name its words cover: `toggleOverlay` is plausibly described by
+    // "toggle: Set overlay status", because both of its words appear. Anything
+    // else the comment sits above is mislabelled.
+    plausiblyDescribes: names.filter((name) => {
+      const words = name.replace(/([a-z0-9])([A-Z])/g, '$1 $2').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+      return words.length > 0 && words.every((word) => text.toLowerCase().includes(word));
+    }),
+  }))
+  .sort((a, b) => b.appliedTo.length - a.appliedTo.length);
+
+const commentAudit = {
+  registrationsWithComment: commentedGlobals.length,
+  distinctComments: commentGroups.size,
+  reusedComments,
+  mislabelled: reusedComments.reduce((total, group) => total + (group.appliedTo.length - group.plausiblyDescribes.length), 0),
+  verdict:
+    reusedComments.length > 0
+      ? 'Registration comments are not usable as descriptions on this surface: at least one is repeated above unrelated globals. They are recorded here and deliberately not imported.'
+      : 'No registration comment is reused across globals.',
+};
+if (globals.length && commentAudit.registrationsWithComment === 0 && /\/\//.test(sourceAt('src/client/views/global/globalScripts.ts'))) {
+  throw new Error('The registration-comment audit recovered nothing from a file that plainly contains comments; the parser has drifted.');
+}
 
 const runtimeFiles = ['src/client/util/Scripting.ts', 'src/client/util/ScriptingGlobals.ts', 'src/client/util/ScriptManager.ts', 'src/fields/ScriptField.ts'];
 const runtimeSources = {};
@@ -370,6 +448,7 @@ const output = {
     registryParser: 'TypeScript compiler AST over every ScriptingGlobals.add call and @scriptingGlobal class decorator in the integrated source',
     sourceSemantics: 'Signatures, explicit descriptions, parameter metadata, direct calls, and assignment targets are extracted from the registered declaration when statically resolvable',
     dynamicBoundary: 'Runtime names from saved script documents are recorded as dynamic registration sites, not invented as static globals',
+    registrationComments: 'Comments above each registration are recovered and audited for reuse, but never imported as descriptions: a comment repeated above unrelated globals describes at most one of them',
     candidateFiles: candidateFiles.length,
   },
   summary: {
@@ -381,7 +460,10 @@ const output = {
     explicitDescriptions: globals.filter((entry) => entry.description).length,
     categories: categories.length,
     dynamicRegistrationSites: dynamicEntries.length,
+    registrationsWithComment: commentAudit.registrationsWithComment,
+    mislabelledByReusedComment: commentAudit.mislabelled,
   },
+  commentAudit,
   categories,
   categoryCounts,
   caseInsensitiveNameCollisions,

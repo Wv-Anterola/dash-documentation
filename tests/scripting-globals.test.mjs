@@ -18,6 +18,8 @@ test('pins the complete case-sensitive scripting namespace to integrated source'
     explicitDescriptions: 33,
     categories: 12,
     dynamicRegistrationSites: 2,
+    registrationsWithComment: 12,
+    mislabelledByReusedComment: 7,
   });
   assert.deepEqual(scripting.caseInsensitiveNameCollisions, [['SchemaHeaderField', 'schemaHeaderField']]);
 });
@@ -70,4 +72,38 @@ test('preserves the core query, action, constructor, and namespace roles', () =>
   assert.equal(byName('SchemaHeaderField').kind, 'class');
   assert.equal(byName('makeScript').purposeSource, 'documentation-override');
   assert.match(byName('makeScript').purpose, /persistent ScriptField/);
+});
+
+test('audits reused registration comments instead of importing them', () => {
+  const audit = scripting.commentAudit;
+  assert.ok(audit, 'the registration-comment audit is missing');
+  assert.ok(audit.registrationsWithComment >= 10, `only ${audit.registrationsWithComment} registrations carry a comment`);
+  assert.ok(audit.distinctComments < audit.registrationsWithComment, 'if every comment is unique now, revisit whether they can be used');
+
+  // The finding this audit exists for: one comment above eight unrelated
+  // globals. If Dash-Web fixes those lines, this expectation should be
+  // retired rather than loosened.
+  const worst = audit.reusedComments[0];
+  assert.ok(worst, 'no reused comment found; the parser or the source has changed');
+  assert.ok(worst.appliedTo.length >= 8, `the reused comment now covers ${worst.appliedTo.length} globals`);
+  assert.deepEqual(worst.plausiblyDescribes, ['toggleOverlay']);
+  assert.ok(worst.appliedTo.includes('setBackgroundColor'));
+  assert.ok(worst.appliedTo.includes('setView'));
+  assert.equal(audit.mislabelled, worst.appliedTo.length - 1);
+
+  // The whole point: a recovered comment must never become a description.
+  for (const entry of scripting.globals) {
+    if (!entry.registrationComment) continue;
+    assert.notEqual(entry.description, entry.registrationComment, `${entry.name} imported its registration comment as a description`);
+  }
+});
+
+test('keeps the description count honest about the largest gap', () => {
+  const described = scripting.globals.filter((entry) => entry.description);
+  assert.equal(scripting.summary.explicitDescriptions, described.length);
+  assert.ok(described.length < scripting.globals.length / 2, 'if most globals are described now, update the coverage prose');
+  // Evidence has to stand in where the description is absent.
+  const undescribed = scripting.globals.filter((entry) => !entry.description);
+  const withEvidence = undescribed.filter((entry) => entry.effects?.calls?.length || entry.effects?.writes?.length);
+  assert.ok(withEvidence.length / undescribed.length > 0.6, 'most undescribed globals must at least carry parsed evidence');
 });

@@ -337,6 +337,34 @@ The evidence column describes only the registered declaration. It does not
 claim to enumerate effects inside every transitive callee. Use the linked source
 and the generated call graph for that deeper path.
 
+### Why most rows have no description
+
+Only 33 of the 151 registrations pass a description string, and Dash shows that
+string to whoever is writing a script. The other 118 are blank in the
+application as well as here, which makes this the largest single documentation
+gap on the site.
+
+It cannot be closed the way the [HTTP route
+gap](/reference/http-service-interface/) was. Route registrations often carry a
+comment describing the route, so that reference now recovers those comments
+instead of inventing prose. The equivalent move here would be wrong. There are
+twelve comments above the 151 registrations, five distinct, and one of them is
+repeated above eight different globals:
+
+```ts
+// toggle: Set overlay status of selected document
+```
+
+It sits above `setBackgroundColor`, `setBorderColor`, `setDefaultImageTemplate`,
+`setDefaultTemplate`, `setHeaderColor`, `setInkProperty`, `setView`, and
+`toggleOverlay`. It describes the last one. Importing it would have placed a
+confident, wrong sentence on the other seven.
+
+So the comments are recovered, audited, and deliberately not used. The audit is
+published in the dataset as `commentAudit`, which also names the lines worth
+fixing in Dash-Web. What stands in for a description here is the evidence
+column: the calls each global makes and the fields it writes.
+
 <ScriptingGlobalReference />
 
 ### What is not in the static 151

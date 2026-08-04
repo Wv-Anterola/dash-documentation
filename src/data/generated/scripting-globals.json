@@ -9,6 +9,7 @@
     "registryParser": "TypeScript compiler AST over every ScriptingGlobals.add call and @scriptingGlobal class decorator in the integrated source",
     "sourceSemantics": "Signatures, explicit descriptions, parameter metadata, direct calls, and assignment targets are extracted from the registered declaration when statically resolvable",
     "dynamicBoundary": "Runtime names from saved script documents are recorded as dynamic registration sites, not invented as static globals",
+    "registrationComments": "Comments above each registration are recovered and audited for reuse, but never imported as descriptions: a comment repeated above unrelated globals describes at most one of them",
     "candidateFiles": 37
   },
   "summary": {
@@ -19,7 +20,33 @@
     "objects": 2,
     "explicitDescriptions": 33,
     "categories": 12,
-    "dynamicRegistrationSites": 2
+    "dynamicRegistrationSites": 2,
+    "registrationsWithComment": 12,
+    "mislabelledByReusedComment": 7
+  },
+  "commentAudit": {
+    "registrationsWithComment": 12,
+    "distinctComments": 5,
+    "reusedComments": [
+      {
+        "text": "toggle: Set overlay status of selected document",
+        "appliedTo": [
+          "setBackgroundColor",
+          "setBorderColor",
+          "setDefaultImageTemplate",
+          "setDefaultTemplate",
+          "setHeaderColor",
+          "setInkProperty",
+          "setView",
+          "toggleOverlay"
+        ],
+        "plausiblyDescribes": [
+          "toggleOverlay"
+        ]
+      }
+    ],
+    "mislabelled": 7,
+    "verdict": "Registration comments are not usable as descriptions on this surface: at least one is repeated above unrelated globals. They are recorded here and deliberately not imported."
   },
   "categories": [
     "appearance-and-tools",
@@ -176,6 +203,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 457,
@@ -215,6 +243,7 @@
         ],
         "returns": 4
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 111,
@@ -255,6 +284,7 @@
         ],
         "returns": 3
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 69,
@@ -291,6 +321,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 465,
@@ -327,6 +358,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 332,
@@ -367,6 +399,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 166,
@@ -406,6 +439,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 482,
@@ -442,6 +476,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "Applies (or removes) a filter to the selected document for the specified tag NOTE: this also opens the filter panel if the settings button is clicked (probably should be a different function)",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 307,
@@ -482,6 +517,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 371,
@@ -513,6 +549,7 @@
         "writes": [],
         "returns": 3
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 188,
@@ -544,6 +581,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 558,
@@ -573,6 +611,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 592,
@@ -602,6 +641,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 583,
@@ -633,6 +673,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "WEB webSetURL",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 572,
@@ -661,6 +702,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/documents/DocUtils.ts",
         "line": 985,
@@ -686,6 +728,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/documents/DocUtils.ts",
         "line": 983,
@@ -713,6 +756,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/documents/DocUtils.ts",
         "line": 989,
@@ -740,6 +784,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionTreeView.tsx",
         "line": 368,
@@ -770,6 +815,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2589,
@@ -800,6 +846,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2569,
@@ -827,6 +874,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
         "line": 883,
@@ -854,6 +902,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/CollectionFreeFormDocumentView.tsx",
         "line": 337,
@@ -881,6 +930,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
         "line": 891,
@@ -908,6 +958,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
         "line": 887,
@@ -936,6 +987,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2561,
@@ -967,6 +1019,7 @@
         "writes": [],
         "returns": 3
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionDockingView.tsx",
         "line": 680,
@@ -994,6 +1047,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionDockingView.tsx",
         "line": 672,
@@ -1027,6 +1081,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2576,
@@ -1068,6 +1123,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionPivotView.tsx",
         "line": 116,
@@ -1096,6 +1152,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2565,
@@ -1126,6 +1183,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2593,
@@ -1160,6 +1218,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "STACK groupBy",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 671,
@@ -1195,6 +1254,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 50,
@@ -1238,6 +1298,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 199,
@@ -1267,6 +1328,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/CollectionDockingView.tsx",
         "line": 702,
@@ -1298,6 +1360,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/TemplateMenu.tsx",
         "line": 130,
@@ -1329,6 +1392,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "Schema toggleSchemaPreview",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 641,
@@ -1360,6 +1424,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 656,
@@ -1400,6 +1465,7 @@
         ],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/DocumentView.tsx",
         "line": 2030,
@@ -1442,6 +1508,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/DocumentView.tsx",
         "line": 2051,
@@ -1469,6 +1536,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/DropConverter.ts",
         "line": 116,
@@ -1494,6 +1562,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/apis/GoogleAuthenticationManager.tsx",
         "line": 169,
@@ -1522,6 +1591,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 460,
@@ -1549,6 +1619,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/GestureOverlay.tsx",
         "line": 636,
@@ -1574,6 +1645,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/GestureOverlay.tsx",
         "line": 615,
@@ -1599,6 +1671,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1257,
@@ -1629,6 +1702,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/GestureOverlay.tsx",
         "line": 630,
@@ -1666,6 +1740,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/GestureOverlay.tsx",
         "line": 617,
@@ -1705,6 +1780,7 @@
         ],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
         "line": 2597,
@@ -1735,6 +1811,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 539,
@@ -1766,6 +1843,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 524,
@@ -1797,6 +1875,7 @@
         ],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 549,
@@ -1827,6 +1906,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 532,
@@ -1858,6 +1938,7 @@
         ],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 604,
@@ -1887,6 +1968,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 609,
@@ -1916,6 +1998,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 614,
@@ -1945,6 +2028,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 624,
@@ -1974,6 +2058,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 619,
@@ -2005,6 +2090,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 629,
@@ -2032,6 +2118,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 161,
@@ -2059,6 +2146,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/WebBox.tsx",
         "line": 1348,
@@ -2088,6 +2176,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 598,
@@ -2115,6 +2204,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 205,
@@ -2143,6 +2233,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 209,
@@ -2170,6 +2261,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 213,
@@ -2197,6 +2289,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 217,
@@ -2224,6 +2317,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 228,
@@ -2251,6 +2345,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 200,
@@ -2279,6 +2374,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 246,
@@ -2309,6 +2405,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 221,
@@ -2336,6 +2433,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 232,
@@ -2365,6 +2463,7 @@
         "writes": [],
         "returns": 2
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 237,
@@ -2392,6 +2491,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 191,
@@ -2419,6 +2519,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
         "line": 196,
@@ -2471,6 +2572,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/ScriptField.ts",
         "line": 296,
@@ -2508,6 +2610,7 @@
         ],
         "returns": 3
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/chatbot/chatboxcomponents/ChatMessageBox.tsx",
         "line": 249,
@@ -2535,6 +2638,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/ScriptField.ts",
         "line": 278,
@@ -2562,6 +2666,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/ScriptField.ts",
         "line": 287,
@@ -2616,6 +2721,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/ScriptField.ts",
         "line": 268,
@@ -2643,6 +2749,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/SelectionManager.ts",
         "line": 92,
@@ -2670,6 +2777,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 44,
@@ -2698,6 +2806,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/SelectionManager.ts",
         "line": 111,
@@ -2729,6 +2838,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/SelectionManager.ts",
         "line": 116,
@@ -2762,6 +2872,7 @@
         "writes": [],
         "returns": 3
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/SelectionManager.ts",
         "line": 84,
@@ -2790,6 +2901,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/SelectionManager.ts",
         "line": 96,
@@ -2818,6 +2930,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1255,
@@ -2845,6 +2958,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1271,
@@ -2872,6 +2986,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1267,
@@ -2897,6 +3012,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1261,
@@ -2922,6 +3038,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1263,
@@ -2947,6 +3064,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1259,
@@ -2974,6 +3092,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1269,
@@ -3003,6 +3122,7 @@
         ],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/CurrentUserUtils.ts",
         "line": 1265,
@@ -3032,6 +3152,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1822,
@@ -3059,6 +3180,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1802,
@@ -3086,6 +3208,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1814,
@@ -3140,6 +3263,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/List.ts",
         "line": 323,
@@ -3167,6 +3291,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1794,
@@ -3217,6 +3342,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/DateField.ts",
         "line": 42,
@@ -3294,6 +3420,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1818,
@@ -3321,6 +3448,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1798,
@@ -3349,6 +3477,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1790,
@@ -3376,6 +3505,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1782,
@@ -3403,6 +3533,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1786,
@@ -3430,6 +3561,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1778,
@@ -3482,6 +3614,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1770,
@@ -3532,6 +3665,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/InkField.ts",
         "line": 143,
@@ -3557,6 +3691,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/List.ts",
         "line": 321,
@@ -3582,6 +3717,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/ObjectField.ts",
         "line": 37,
@@ -3661,6 +3797,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1774,
@@ -3713,6 +3850,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1810,
@@ -3738,6 +3876,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/SchemaHeaderField.ts",
         "line": 140,
@@ -3790,6 +3929,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1827,
@@ -3817,6 +3957,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1831,
@@ -3844,6 +3985,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1806,
@@ -3871,6 +4013,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/fields/Doc.ts",
         "line": 1835,
@@ -3999,6 +4142,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/DashboardView.tsx",
         "line": 541,
@@ -4026,6 +4170,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/DashboardView.tsx",
         "line": 525,
@@ -4053,6 +4198,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/MainView.tsx",
         "line": 1137,
@@ -4080,6 +4226,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/MainView.tsx",
         "line": 1129,
@@ -4108,6 +4255,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/DocumentView.tsx",
         "line": 2019,
@@ -4135,6 +4283,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/LightboxView.tsx",
         "line": 365,
@@ -4162,6 +4311,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/DocumentView.tsx",
         "line": 2014,
@@ -4189,6 +4339,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/LinkFollower.ts",
         "line": 136,
@@ -4216,6 +4367,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/documents/DocUtils.ts",
         "line": 994,
@@ -4243,6 +4395,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/MainView.tsx",
         "line": 1125,
@@ -4270,6 +4423,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/util/LinkManager.ts",
         "line": 278,
@@ -4297,6 +4451,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/trails/PresBox.tsx",
         "line": 3014,
@@ -4324,6 +4479,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/MainView.tsx",
         "line": 1133,
@@ -4351,6 +4507,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/DashboardView.tsx",
         "line": 533,
@@ -4378,6 +4535,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/DashboardView.tsx",
         "line": 537,
@@ -4405,6 +4563,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/MainView.tsx",
         "line": 1121,
@@ -4432,6 +4591,7 @@
         "writes": [],
         "returns": 1
       },
+      "registrationComment": "toggle: Set overlay status of selected document",
       "source": {
         "file": "src/client/views/global/globalScripts.ts",
         "line": 156,
@@ -4459,6 +4619,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/DashboardView.tsx",
         "line": 529,
@@ -4486,6 +4647,7 @@
         "writes": [],
         "returns": 0
       },
+      "registrationComment": "",
       "source": {
         "file": "src/client/views/nodes/DocumentView.tsx",
         "line": 2025,

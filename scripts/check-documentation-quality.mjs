@@ -599,6 +599,11 @@ const recomputedScriptingSummary = {
   explicitDescriptions: scriptingReference.globals.filter((entry) => entry.description).length,
   categories: new Set(scriptingReference.globals.map((entry) => entry.category)).size,
   dynamicRegistrationSites: scriptingReference.dynamicRegistrations.length,
+  registrationsWithComment: scriptingReference.globals.filter((entry) => entry.registrationComment).length,
+  mislabelledByReusedComment: scriptingReference.commentAudit.reusedComments.reduce(
+    (total, group) => total + (group.appliedTo.length - group.plausiblyDescribes.length),
+    0
+  ),
 };
 if (JSON.stringify(scriptingReference.summary) !== JSON.stringify(recomputedScriptingSummary)) {
   errors.push('Scripting global summary is stale relative to its generated registry rows');
