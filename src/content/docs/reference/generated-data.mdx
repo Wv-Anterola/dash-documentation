@@ -68,6 +68,27 @@ Two datasets need extra care:
   serve one intent. The routes are machine-verified to exist; the grouping is
   editorial.
 
+## For language models and other automated readers
+
+The rendered HTML is the worst form of this site for a machine. The large
+references build their record lists in the browser from the endpoints above, so
+a crawler that reads the page sees a loading message where the records are.
+Three plain-text entry points exist so that nothing has to guess:
+
+| Endpoint | What it is |
+| :--- | :--- |
+| [`/llms.txt`](/llms.txt) | The [llmstxt.org](https://llmstxt.org) index: one line per page, grouped by section, with the caveats an automated reader needs before quoting anything. |
+| [`/llms-full.txt`](/llms-full.txt) | The full prose corpus of every page in one fetch. Generated tables are not inlined; each is replaced by a pointer to its JSON. |
+| [`/robots.txt`](/robots.txt) | Crawling is allowed, and the sitemap and the two files above are named in it. |
+
+Both text files are built from the content collection and the dataset manifest
+at build time, so a page that is added, retitled, or removed is reflected
+without anyone remembering to update them.
+
+If you are quoting this site, quote the commit rather than the page. Every
+record carries `repository.baseline`, and every `source.url` is a permalink into
+that commit; the pages themselves move whenever the baseline does.
+
 ## What is not published
 
 The full source ledger, the semantic branch deltas, and the TypeDoc export run
