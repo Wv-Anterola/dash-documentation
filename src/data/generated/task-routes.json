@@ -1,0 +1,743 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "taskList": "Reviewed by hand: deciding that two controls serve one intent is a judgement, not a parse",
+    "routeResolution": "Every route is looked up in the generated interface-control, context-menu, and keyboard-shortcut inventories",
+    "driftRule": "Generation fails when any named route disappears, or when a task drops below two surviving routes"
+  },
+  "summary": {
+    "tasks": 14,
+    "routes": 53,
+    "tasksWithThreeKinds": 3,
+    "tasksWithCaution": 12,
+    "controlRoutes": 22,
+    "menuRoutes": 11,
+    "shortcutRoutes": 20
+  },
+  "tasks": [
+    {
+      "id": "undo-an-action",
+      "intent": "Undo or redo what I just did",
+      "plain": "Dash groups work into named batches, so one undo reverses a whole action rather than one keystroke.",
+      "caution": "Plain undo and redo do nothing on the home screen. Shift + Ctrl + Z is the only redo that is not blocked there.",
+      "routeKinds": [
+        "control",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Undo",
+          "where": "Canvas footer → Docked controls",
+          "plain": "Undo ⌘Z. It changes the current workspace action history.",
+          "availability": "Appears in the expandable control strip at the bottom of the Dash window.",
+          "href": "/reference/interface-controls/?control=Undo",
+          "anchor": "control-canvas-footer-docked-controls-undo",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L712"
+        },
+        {
+          "kind": "control",
+          "label": "Redo",
+          "where": "Canvas footer → Docked controls",
+          "plain": "Redo ⌘⇧Z. It changes the current workspace action history.",
+          "availability": "Appears in the expandable control strip at the bottom of the Dash window.",
+          "href": "/reference/interface-controls/?control=Redo",
+          "anchor": "control-canvas-footer-docked-controls-redo",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L713"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + Z",
+          "macLabel": "Cmd + Z",
+          "where": "Anywhere in Dash",
+          "plain": "Undoes the last Dash action batch. It does nothing on the home screen.",
+          "availability": "Dash blocks the browser default in some branches of this case; read the trace for which.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20Z",
+          "anchor": "shortcut-global-ctrl-z",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L284"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + Y",
+          "macLabel": "Cmd + Y",
+          "where": "Anywhere in Dash",
+          "plain": "Redoes the last undone batch. It does nothing on the home screen.",
+          "availability": "Dash blocks the browser default in some branches of this case; read the trace for which.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20Y",
+          "anchor": "shortcut-global-ctrl-y",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L277"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Shift + Ctrl + Z",
+          "macLabel": "Shift + Cmd + Z",
+          "where": "Anywhere in Dash",
+          "plain": "Redoes the last undone batch. Unlike plain redo, this one is not blocked on the home screen.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Shift%20%2B%20Ctrl%20%2B%20Z",
+          "anchor": "shortcut-global-shift-ctrl-z",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L363"
+        }
+      ]
+    },
+    {
+      "id": "remove-from-view",
+      "intent": "Get a document off my screen",
+      "plain": "Closing is not deleting. The document goes to Recently Closed unless it is still open somewhere else.",
+      "caution": "The keyboard route is ignored while you are typing in an input, and dismisses the lightbox first if one is open.",
+      "routeKinds": [
+        "control",
+        "menu",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Tab close",
+          "where": "Tabs and tiles → Tile chrome",
+          "plain": "Removes the tab from the workspace. The document is kept in Recently Closed unless it is still open somewhere else, so this is not a delete.",
+          "availability": "Appears on the tab and tile chrome that frames the workspace.",
+          "href": "/reference/interface-controls/?control=Tab%20close",
+          "anchor": "control-tabs-and-tiles-tile-chrome-tab-close",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L475"
+        },
+        {
+          "kind": "menu",
+          "label": "Close",
+          "where": "Any document → General...",
+          "plain": "Removes the document from this view. Recently Closed keeps it, so this is not a delete.",
+          "availability": "Contributed when the document is not a Dash system document and a dashboard is active.",
+          "href": "/reference/context-menus/?entry=Close",
+          "anchor": "menu-document-close",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L808"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Delete",
+          "macLabel": "Delete",
+          "where": "Anywhere in Dash",
+          "plain": "Closes the selected document, or dismisses the lightbox if nothing is selected. Ignored while you are typing in an input.",
+          "availability": "Dash blocks the browser default in some branches of this case; read the trace for which.",
+          "href": "/reference/keyboard-shortcuts/?key=Delete",
+          "anchor": "shortcut-global-delete",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L150"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Backspace",
+          "macLabel": "Backspace",
+          "where": "Anywhere in Dash",
+          "plain": "Closes the selected document, or dismisses the lightbox if nothing is selected. Ignored while you are typing in an input.",
+          "availability": "Dash blocks the browser default in some branches of this case; read the trace for which.",
+          "href": "/reference/keyboard-shortcuts/?key=Backspace",
+          "anchor": "shortcut-global-backspace",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L150"
+        }
+      ]
+    },
+    {
+      "id": "reorder-overlapping",
+      "intent": "Move a document in front of or behind another",
+      "plain": "Only meaningful on a freeform canvas, where documents can overlap.",
+      "caution": "The two toolbar buttons have tooltips that contradict their labels and their handlers; the labels and handlers agree with each other, so trust those.",
+      "routeKinds": [
+        "control",
+        "menu"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Top",
+          "where": "Context toolbar → Doc",
+          "plain": "Moves the selected freeform document in front of the other documents.",
+          "availability": "Appears when a freeform collection or child is selected.",
+          "href": "/reference/interface-controls/?control=Top",
+          "anchor": "control-context-toolbar-doc-top",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L743"
+        },
+        {
+          "kind": "control",
+          "label": "Bottom",
+          "where": "Context toolbar → Doc",
+          "plain": "Moves the selected freeform document behind the other documents.",
+          "availability": "Appears when a freeform collection or child is selected.",
+          "href": "/reference/interface-controls/?control=Bottom",
+          "anchor": "control-context-toolbar-doc-bottom",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L742"
+        },
+        {
+          "kind": "menu",
+          "label": "Bring to Front",
+          "where": "Any document → Z Order...",
+          "plain": "Draws the document above its overlapping neighbours on a freeform canvas.",
+          "availability": "Contributed only when its guard holds: this._props.bringToFront",
+          "href": "/reference/context-menus/?entry=Bring%20to%20Front",
+          "anchor": "menu-document-bring-to-front",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L749"
+        },
+        {
+          "kind": "menu",
+          "label": "Send to Back",
+          "where": "Any document → Z Order...",
+          "plain": "Draws the document beneath its overlapping neighbours on a freeform canvas.",
+          "availability": "Contributed only when its guard holds: this._props.bringToFront",
+          "href": "/reference/context-menus/?entry=Send%20to%20Back",
+          "anchor": "menu-document-send-to-back",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L750"
+        }
+      ]
+    },
+    {
+      "id": "share-a-document",
+      "intent": "Let someone else see or edit something",
+      "plain": "Sharing is per document. Sharing a dashboard does not automatically share everything inside it.",
+      "caution": "The document decoration only appears when the full link menu is enabled, and the top bar label changes to View Original without admin access.",
+      "routeKinds": [
+        "control",
+        "menu"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Share / View Original",
+          "where": "Top bar → Persistent controls",
+          "plain": "Admins see Share. Other viewers see View Original. The same button opens the sharing surface for the active dashboard.",
+          "availability": "Appears only while a dashboard is active; its label depends on the effective ACL.",
+          "href": "/reference/interface-controls/?control=Share%20%2F%20View%20Original",
+          "anchor": "control-top-bar-persistent-controls-share-view-original",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/topbar/TopBar.tsx#L192"
+        },
+        {
+          "kind": "control",
+          "label": "Document sharing",
+          "where": "Document decorations → Selected-document action bar",
+          "plain": "Chooses who may see or edit this document.",
+          "availability": "Appears only when documentLinksButton_fullMenu is enabled.",
+          "href": "/reference/interface-controls/?control=Document%20sharing",
+          "anchor": "control-document-decorations-selected-document-action-bar-document-sharing",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentButtonBar.tsx#L254"
+        },
+        {
+          "kind": "menu",
+          "label": "Share",
+          "where": "Any document → General...",
+          "plain": "Opens sharing for this document so you can choose who may see or edit it.",
+          "availability": "Contributed when the document is not a Dash system document.",
+          "href": "/reference/context-menus/?entry=Share",
+          "anchor": "menu-document-share",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L802"
+        },
+        {
+          "kind": "menu",
+          "label": "Share Dashboard",
+          "where": "The dashboard itself → top level",
+          "plain": "Runs the handler shown in the technical trace against the dashboard itself.",
+          "availability": "Contributed only when its guard holds: navigator.userAgent.includes('Mozilla') || (Math.abs(this._downX - e.clientX) < 3 && Math.abs(this._downY - e.clientY) < 3)",
+          "href": "/reference/context-menus/?entry=Share%20Dashboard",
+          "anchor": "menu-dashboard-share-dashboard",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L170"
+        }
+      ]
+    },
+    {
+      "id": "find-something",
+      "intent": "Find a document or some text",
+      "plain": "One shortcut serves two different searches depending on what is selected.",
+      "caution": "With exactly one document selected that supports search, the shortcut searches inside it instead of opening the panel. On macOS this is Cmd + F: Ctrl + F floats a document instead.",
+      "routeKinds": [
+        "control",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Search",
+          "where": "Sidebar → Panel buttons",
+          "plain": "Search opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "availability": "Appears in the persistent left sidebar.",
+          "href": "/reference/interface-controls/?control=Search",
+          "anchor": "control-sidebar-panel-buttons-search",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L518"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + F",
+          "macLabel": "Cmd + F",
+          "where": "Anywhere in Dash",
+          "plain": "Searches inside the selected document when that document supports search, and otherwise opens the global search panel.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20F",
+          "anchor": "shortcut-global-ctrl-f",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L261"
+        }
+      ]
+    },
+    {
+      "id": "open-panels",
+      "intent": "Open the Imports or Trails panel",
+      "plain": "The sidebar buttons and their shortcuts drive the same panel state.",
+      "caution": "Ctrl + S opens Trails rather than saving. Dash saves continuously.",
+      "routeKinds": [
+        "control",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Imports",
+          "where": "Sidebar → Panel buttons",
+          "plain": "Imports opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "availability": "Appears in the persistent left sidebar.",
+          "href": "/reference/interface-controls/?control=Imports",
+          "anchor": "control-sidebar-panel-buttons-imports",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L521"
+        },
+        {
+          "kind": "control",
+          "label": "Trails",
+          "where": "Sidebar → Panel buttons",
+          "plain": "Trails opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "availability": "Appears in the persistent left sidebar.",
+          "href": "/reference/interface-controls/?control=Trails",
+          "anchor": "control-sidebar-panel-buttons-trails",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L524"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + I",
+          "macLabel": "Cmd + I",
+          "where": "Anywhere in Dash",
+          "plain": "Opens the Imports panel.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20I",
+          "anchor": "shortcut-global-ctrl-i",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L245"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + S",
+          "macLabel": "Cmd + S",
+          "where": "Anywhere in Dash",
+          "plain": "Opens the Trails panel. This deliberately replaces the browser Save shortcut inside the workspace.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20S",
+          "anchor": "shortcut-global-ctrl-s",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L253"
+        }
+      ]
+    },
+    {
+      "id": "add-to-a-trail",
+      "intent": "Add a document to a presentation trail",
+      "plain": "Pinning adds a step to the active trail. Modifier keys decide how much state the step remembers.",
+      "caution": "",
+      "routeKinds": [
+        "control",
+        "menu"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Pin",
+          "where": "Context toolbar → Primary toolbar",
+          "plain": "Adds the selected view to the active presentation trail.",
+          "availability": "Appears when at least one document is selected.",
+          "href": "/reference/interface-controls/?control=Pin",
+          "anchor": "control-context-toolbar-primary-toolbar-pin",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L891"
+        },
+        {
+          "kind": "control",
+          "label": "Pin to trail",
+          "where": "Document decorations → Selected-document action bar",
+          "plain": "Adds this document as a stop in a presentation trail.",
+          "availability": "Appears when a document is selected and its decorations are visible.",
+          "href": "/reference/interface-controls/?control=Pin%20to%20trail",
+          "anchor": "control-document-decorations-selected-document-action-bar-pin-to-trail",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentButtonBar.tsx#L227"
+        },
+        {
+          "kind": "control",
+          "label": "Pin layout",
+          "where": "Document decorations → Selected-document action bar",
+          "plain": "Adds the document to a trail and remembers its layout.",
+          "availability": "Appears when a document is selected and its decorations are visible.",
+          "href": "/reference/interface-controls/?control=Pin%20layout",
+          "anchor": "control-document-decorations-selected-document-action-bar-pin-layout",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentButtonBar.tsx#L239"
+        },
+        {
+          "kind": "control",
+          "label": "Pin content view",
+          "where": "Document decorations → Selected-document action bar",
+          "plain": "Adds the document to a trail and remembers what it was showing.",
+          "availability": "Appears when a document is selected and its decorations are visible.",
+          "href": "/reference/interface-controls/?control=Pin%20content%20view",
+          "anchor": "control-document-decorations-selected-document-action-bar-pin-content-view",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DocumentButtonBar.tsx#L240"
+        },
+        {
+          "kind": "menu",
+          "label": "Pin",
+          "where": "Any document → Appearance...",
+          "plain": "Adds the document to the active presentation trail as a step.",
+          "availability": "Contributed only when its guard holds: !this.Document.isFolder",
+          "href": "/reference/context-menus/?entry=Pin",
+          "anchor": "menu-document-pin",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L741"
+        }
+      ]
+    },
+    {
+      "id": "group-documents",
+      "intent": "Group several documents together",
+      "plain": "Grouping tags the selected documents with a shared group value; collecting puts them inside a new collection. They are different operations.",
+      "caution": "Shift + G groups the current selection in place. The single-letter marquee commands create a new collection instead, and only work while a marquee is active.",
+      "routeKinds": [
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "shortcut",
+          "label": "Shift + G",
+          "macLabel": "Shift + G",
+          "where": "Anywhere in Dash",
+          "plain": "Puts every selected document into one new group, then clears the selection.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=Shift%20%2B%20G",
+          "anchor": "shortcut-global-shift-g",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L181"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Shift + U",
+          "macLabel": "Shift + U",
+          "where": "Anywhere in Dash",
+          "plain": "Removes the group from every selected document, then clears the selection.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=Shift%20%2B%20U",
+          "anchor": "shortcut-global-shift-u",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L175"
+        },
+        {
+          "kind": "shortcut",
+          "label": "G",
+          "macLabel": "G",
+          "where": "An active marquee selection",
+          "plain": "Collects the marquee’s documents into a new collection and keeps them grouped.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=G",
+          "anchor": "shortcut-marquee-selection-g",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1260"
+        },
+        {
+          "kind": "shortcut",
+          "label": "C",
+          "macLabel": "C",
+          "where": "An active marquee selection",
+          "plain": "Collects the marquee’s documents into a new collection.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=C",
+          "anchor": "shortcut-marquee-selection-c",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L1262"
+        }
+      ]
+    },
+    {
+      "id": "create-a-document",
+      "intent": "Create a new document on a canvas",
+      "plain": "Every route reaches the same creator registry; they differ in where the new document lands.",
+      "caution": "Clicking a creator uses the default destination; dragging one lets you choose the position. Typing an ordinary character starts a text note wherever the pointer is.",
+      "routeKinds": [
+        "control",
+        "menu",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Tools",
+          "where": "Sidebar → Panel buttons",
+          "plain": "Tools opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "availability": "Appears in the persistent left sidebar.",
+          "href": "/reference/interface-controls/?control=Tools",
+          "anchor": "control-sidebar-panel-buttons-tools",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L520"
+        },
+        {
+          "kind": "menu",
+          "label": "Create document",
+          "where": "Any document → top level",
+          "plain": "Opens a submenu of related actions rather than doing something by itself.",
+          "availability": "Contributed whenever this component is part of what you right-clicked.",
+          "href": "/reference/context-menus/?entry=Create%20document",
+          "anchor": "menu-document-create-document",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L410"
+        },
+        {
+          "kind": "shortcut",
+          "label": ":",
+          "macLabel": ":",
+          "where": "A focused freeform canvas",
+          "plain": "Opens the document-creation menu at the pointer.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=%3A",
+          "anchor": "shortcut-freeform-canvas-2",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L159"
+        },
+        {
+          "kind": "shortcut",
+          "label": "(any other printable key)",
+          "macLabel": "(any other printable key)",
+          "where": "A focused freeform canvas",
+          "plain": "Any ordinary character starts a new text note at the pointer and puts that character into it. This is the fallback branch, so it runs only when no earlier branch matched, neither Ctrl nor Cmd is held, and fewer than two documents are selected.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=(any%20other%20printable%20key)",
+          "anchor": "shortcut-freeform-canvas-any-other-printable-key",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeView.tsx#L224"
+        }
+      ]
+    },
+    {
+      "id": "open-full-screen",
+      "intent": "See one document full screen",
+      "plain": "The lightbox floats a document over the workspace without moving it.",
+      "caution": "Escape dismisses the lightbox, but only after it has finished cancelling any link, drag, ink tool, or open menu.",
+      "routeKinds": [
+        "control",
+        "menu",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Tab lightbox icon",
+          "where": "Tabs and tiles → Tab header",
+          "plain": "Opens the tab’s document full-screen over the workspace. The tab stays where it is.",
+          "availability": "Appears on the tab and tile chrome that frames the workspace.",
+          "href": "/reference/interface-controls/?control=Tab%20lightbox%20icon",
+          "anchor": "control-tabs-and-tiles-tab-header-tab-lightbox-icon",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/TabDocView.tsx#L403"
+        },
+        {
+          "kind": "menu",
+          "label": "Open in Lightbox",
+          "where": "Any document → Appearance...",
+          "plain": "Opens the document full-screen over the workspace without moving it.",
+          "availability": "Contributed only when its guard holds: this._props.renderDepth === 0",
+          "href": "/reference/context-menus/?entry=Open%20in%20Lightbox",
+          "anchor": "menu-document-open-in-lightbox",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L739"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Esc",
+          "macLabel": "Esc",
+          "where": "Anywhere in Dash",
+          "plain": "The universal way out. It cancels a link in progress, the active ink tool, a drag, a timeline region selection, and the Google sign-in flow; closes the context menu, sharing, and settings; and only then clears the selection and any lightbox.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=Esc",
+          "anchor": "shortcut-global-esc",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L114"
+        }
+      ]
+    },
+    {
+      "id": "inspect-fields",
+      "intent": "See a document’s raw fields",
+      "plain": "The properties panel and the metadata view show the same underlying fields with different affordances.",
+      "caution": "",
+      "routeKinds": [
+        "control",
+        "menu"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Fields & Tags",
+          "where": "Properties panel → Document properties",
+          "plain": "Inspect or edit the selected document’s typed data fields and tags.",
+          "availability": "Appears when a compatible document is selected.",
+          "href": "/reference/interface-controls/?control=Fields%20%26%20Tags",
+          "anchor": "control-properties-panel-document-properties-fields-tags",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesView.tsx#L1336"
+        },
+        {
+          "kind": "menu",
+          "label": "Show Metadata",
+          "where": "Any document → General...",
+          "plain": "Opens the document’s raw fields in a key/value pane on the right.",
+          "availability": "Contributed whenever this component is part of what you right-clicked.",
+          "href": "/reference/context-menus/?entry=Show%20Metadata",
+          "anchor": "menu-document-show-metadata",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L812"
+        }
+      ]
+    },
+    {
+      "id": "draw-and-erase",
+      "intent": "Draw or erase ink",
+      "plain": "The toolbar group and the shortcuts set the same active-tool state.",
+      "caution": "Shift + Ctrl + P selects handwriting ink specifically. On a focused freeform canvas, Ctrl + P is claimed first for pasting a table.",
+      "routeKinds": [
+        "control",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Pen",
+          "where": "Context toolbar → Ink",
+          "plain": "Pen (Ctrl+P). It changes the active drawing tool.",
+          "availability": "Appears when Explore mode is off and the DocumentType.INK tool context is selected.",
+          "href": "/reference/interface-controls/?control=Pen",
+          "anchor": "control-context-toolbar-ink-pen",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L840"
+        },
+        {
+          "kind": "control",
+          "label": "Eraser",
+          "where": "Context toolbar → Ink",
+          "plain": "Eraser (Ctrl+E). It changes the active drawing tool.",
+          "availability": "Appears when Explore mode is off and the DocumentType.INK tool context is selected.",
+          "href": "/reference/interface-controls/?control=Eraser",
+          "anchor": "control-context-toolbar-ink-eraser",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L847"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + P",
+          "macLabel": "Cmd + P",
+          "where": "Anywhere in Dash",
+          "plain": "Turns the pen on, or off if it is already on.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20P",
+          "anchor": "shortcut-global-ctrl-p",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L271"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + E",
+          "macLabel": "Cmd + E",
+          "where": "Anywhere in Dash",
+          "plain": "Turns the eraser on, or off if it is already on.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20E",
+          "anchor": "shortcut-global-ctrl-e",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L268"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Shift + Ctrl + P",
+          "macLabel": "Shift + Cmd + P",
+          "where": "Anywhere in Dash",
+          "plain": "Switches the ink to handwriting mode and turns the pen on.",
+          "availability": "Dash blocks the browser default for this chord.",
+          "href": "/reference/keyboard-shortcuts/?key=Shift%20%2B%20Ctrl%20%2B%20P",
+          "anchor": "shortcut-global-shift-ctrl-p",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L366"
+        }
+      ]
+    },
+    {
+      "id": "add-a-tab",
+      "intent": "Add another tab or tile to the workspace",
+      "plain": "The plus control on a tile is GoldenLayout’s popout button with its handler replaced; it creates a freeform canvas tab.",
+      "caution": "It does not pop the tile out into a browser window, despite the upstream icon name.",
+      "routeKinds": [
+        "control"
+      ],
+      "routes": [
+        {
+          "kind": "control",
+          "label": "Tile new tab",
+          "where": "Tabs and tiles → Tile chrome",
+          "plain": "Adds a new empty freeform canvas as a tab in this tile, named Untitled Tab with the next number.",
+          "availability": "Appears on the tab and tile chrome that frames the workspace.",
+          "href": "/reference/interface-controls/?control=Tile%20new%20tab",
+          "anchor": "control-tabs-and-tiles-tile-chrome-tile-new-tab",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L645"
+        },
+        {
+          "kind": "control",
+          "label": "Empty tile background",
+          "where": "Tabs and tiles → Tile chrome",
+          "plain": "Clicking the message in an empty tile creates the same new canvas tab the plus control would.",
+          "availability": "Appears only while a tile has no tabs.",
+          "href": "/reference/interface-controls/?control=Empty%20tile%20background",
+          "anchor": "control-tabs-and-tiles-tile-chrome-empty-tile-background",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L637"
+        },
+        {
+          "kind": "control",
+          "label": "Drag a document into the tab bar",
+          "where": "Tabs and tiles → Tile chrome",
+          "plain": "Turns a document on the canvas into its own tab. Dragging several at once docks them as a row.",
+          "availability": "Appears on the tab and tile chrome that frames the workspace.",
+          "href": "/reference/interface-controls/?control=Drag%20a%20document%20into%20the%20tab%20bar",
+          "anchor": "control-tabs-and-tiles-tile-chrome-drag-a-document-into-the-tab-bar",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L82"
+        }
+      ]
+    },
+    {
+      "id": "export-something",
+      "intent": "Get content out of Dash",
+      "plain": "Export writes a file; copy writes document identifiers, not content.",
+      "caution": "Copy and cut place `__DashCloneId` / `__DashDocId` markers on the clipboard. Pasting them into another application yields an identifier string, not your content.",
+      "routeKinds": [
+        "menu",
+        "shortcut"
+      ],
+      "routes": [
+        {
+          "kind": "menu",
+          "label": "Zip Export",
+          "where": "Any document → General...",
+          "plain": "Downloads the document, and what it contains, as a zip archive.",
+          "availability": "Contributed when the document is not a Dash system document.",
+          "href": "/reference/context-menus/?entry=Zip%20Export",
+          "anchor": "menu-document-zip-export",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L801"
+        },
+        {
+          "kind": "menu",
+          "label": "Copy ID",
+          "where": "Any document → More...",
+          "plain": "Copies the document’s server path so you can reference it elsewhere.",
+          "availability": "Contributed when the document is not a Dash system document and Developer mode is on.",
+          "href": "/reference/context-menus/?entry=Copy%20ID",
+          "anchor": "menu-document-copy-id",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L793"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + C",
+          "macLabel": "Cmd + C",
+          "where": "Anywhere in Dash",
+          "plain": "Copies the selected documents as clone references, together with the selection centre, rather than copying their contents.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20C",
+          "anchor": "shortcut-global-ctrl-c",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L318"
+        },
+        {
+          "kind": "shortcut",
+          "label": "Ctrl + X",
+          "macLabel": "Cmd + X",
+          "where": "Anywhere in Dash",
+          "plain": "Cuts the selected documents: it writes their identifiers and the selection centre to the clipboard, then closes them.",
+          "availability": "The browser default still runs.",
+          "href": "/reference/keyboard-shortcuts/?key=Ctrl%20%2B%20X",
+          "anchor": "shortcut-global-ctrl-x",
+          "source": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GlobalKeyHandler.ts#L301"
+        }
+      ]
+    }
+  ]
+}

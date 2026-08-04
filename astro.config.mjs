@@ -120,6 +120,7 @@ export default defineConfig({
             { slug: 'getting-started/using-dash', label: '5. Make your first board' },
             { slug: 'reference/interface-controls', label: 'Every button and node' },
             { slug: 'reference/context-menus', label: 'Every right-click menu' },
+            { slug: 'reference/task-routes', label: 'Every way to do a thing' },
             { slug: 'overview/current-state', label: 'What works right now' },
           ],
         },
@@ -280,6 +281,7 @@ export default defineConfig({
           items: [
             { slug: 'reference/keyboard-shortcuts' },
             { slug: 'reference/context-menus', label: 'Right-click menu atlas' },
+            { slug: 'reference/task-routes', label: 'Cross-route task index' },
             { slug: 'reference/document-types', label: 'Document types and schemas' },
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },

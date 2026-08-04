@@ -117,6 +117,7 @@ const interfaceControlReferenceSource = await readFile(path.join(root, 'src', 'd
 const contextMenuReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'context-menus.json'), 'utf8');
 const keyboardReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'keyboard-shortcuts.json'), 'utf8');
 const projectControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'project-controls.json'), 'utf8');
+const taskRouteReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'task-routes.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
@@ -127,6 +128,7 @@ const interfaceControlReference = JSON.parse(interfaceControlReferenceSource);
 const contextMenuReference = JSON.parse(contextMenuReferenceSource);
 const keyboardReference = JSON.parse(keyboardReferenceSource);
 const projectControlReference = JSON.parse(projectControlReferenceSource);
+const taskRouteReference = JSON.parse(taskRouteReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -368,6 +370,35 @@ for (const row of projectControlReference.controls) {
     errors.push(`${row.id}: project control source is not line-addressed on its own branch tip`);
   }
 }
+// The cross-route index is the first thing that rots in a documentation set,
+// so every route it names must still resolve inside the generated inventories.
+const controlKeys = new Set(interfaceControlReference.controls.map((row) => `control:${row.id}`));
+const menuKeys = new Set(contextMenuReference.items.map((row) => `menu:${row.id}`));
+const shortcutKeys = new Set(keyboardReference.shortcuts.map((row) => `shortcut:${row.id}`));
+if (taskRouteReference.summary.tasks !== taskRouteReference.tasks.length || taskRouteReference.tasks.length < 12) {
+  errors.push('Cross-route task index is stale or fell below the reviewed 12-task floor');
+}
+for (const task of taskRouteReference.tasks) {
+  if (!task.intent || !task.plain) errors.push(`${task.id}: task route entry is missing its intent or explanation`);
+  if (task.routes.length < 2) errors.push(`${task.id}: a cross-route task needs at least two routes`);
+  for (const route of task.routes) {
+    const key =
+      route.kind === 'control' ? `control:${String(route.anchor).replace(/^control-/, '')}`
+      : route.kind === 'menu' ? `menu:${String(route.anchor).replace(/^menu-/, '')}`
+      : `shortcut:${String(route.anchor).replace(/^shortcut-/, '')}`;
+    const known = route.kind === 'control' ? controlKeys : route.kind === 'menu' ? menuKeys : shortcutKeys;
+    if (!known.has(key)) errors.push(`${task.id}: route ${route.label} no longer resolves in the ${route.kind} inventory`);
+    if (!route.plain || !route.where) errors.push(`${task.id}: route ${route.label} lost its explanation or location`);
+  }
+}
+const taskRoutePage = await readFile(path.join(docsRoot, 'reference', 'task-routes.mdx'), 'utf8');
+if (!taskRoutePage.includes('<TaskRouteReference />')) {
+  errors.push('Cross-route task page lost its generated index');
+}
+if (!astroConfigSource.includes("slug: 'reference/task-routes'")) {
+  errors.push('Cross-route task index is no longer discoverable in the primary navigation');
+}
+
 const tripPlannerPage = await readFile(path.join(docsRoot, 'guides', 'features', 'trip-planner.mdx'), 'utf8');
 if (!tripPlannerPage.includes('<ProjectControlReference project="trip-planner" />')) {
   errors.push('Trip Planner guide lost its generated project-control reference');
@@ -668,7 +699,8 @@ if (errors.length) {
       `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, ` +
       `${interfaceControlReference.controls.length} interface controls, ` +
       `${contextMenuReference.items.length} context-menu entries, ` +
-      `${keyboardReference.shortcuts.length} keyboard shortcuts, and ` +
-      `${projectControlReference.controls.length} project controls pass inventory invariants.`
+      `${keyboardReference.shortcuts.length} keyboard shortcuts, ` +
+      `${projectControlReference.controls.length} project controls, and ` +
+      `${taskRouteReference.summary.routes} cross-route links pass inventory invariants.`
   );
 }

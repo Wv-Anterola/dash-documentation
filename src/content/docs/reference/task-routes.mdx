@@ -1,0 +1,63 @@
+---
+title: Every way to do the same thing
+description: For each everyday Dash task, the visible control, the right-click entry, and the keyboard shortcut that reach it, with the differences between them stated rather than glossed over.
+sidebar:
+  order: 3
+---
+
+import TaskRouteReference from '../../../components/TaskRouteReference.astro';
+
+<p class="lede">
+  Dash usually gives you more than one way to do something, and the ways are
+  not always equivalent. This page starts from what you are trying to do and
+  names every route to it, then says where the routes differ.
+</p>
+
+## Why this page exists
+
+The other references start from a thing and tell you what it does. That is the
+wrong direction for someone who knows what they want and cannot find it. Worse,
+when two routes look interchangeable but are not, no per-thing reference will
+tell you, because neither entry knows about the other.
+
+The most common way people get this wrong in Dash:
+
+- **Closing is not deleting.** The tab close, the menu entry, and
+  <kbd>Delete</kbd> all remove a document from view; none of them destroys it.
+- **Grouping is not collecting.** <kbd>Shift</kbd> + <kbd>G</kbd> tags the
+  selection with a shared group. The marquee's <kbd>G</kbd> and <kbd>C</kbd>
+  build a new collection instead.
+- **Copy does not copy content.** It writes document identifiers, so pasting
+  outside Dash gives you a marker string.
+
+Each of those is called out below, on the task it belongs to.
+
+## Every task, every route
+
+Each route links straight to its full entry in the control atlas, the menu
+atlas, or the shortcut reference. Keyboard chords are shown for Windows and
+Linux, with the macOS chord underneath whenever the two differ.
+
+<TaskRouteReference />
+
+## How this page stays honest
+
+The task list is written by hand: deciding that two controls serve one intent
+is a judgement, not something a parser can decide. What is checked
+automatically is whether each named route still exists. Every entry above is
+resolved against the generated control, menu, and shortcut inventories when the
+site is built, and generation fails if any route disappears or if a task drops
+below two surviving routes.
+
+That matters because a cross-reference is the first thing to rot in a
+documentation set, and a rotted one is worse than none: it sends people looking
+for a button that was renamed two releases ago.
+
+## Where to go next
+
+- [Interface control and node atlas](/reference/interface-controls/) for
+  anything visible on screen.
+- [Right-click menu atlas](/reference/context-menus/) for anything you have to
+  summon.
+- [Keyboard shortcuts](/reference/keyboard-shortcuts/) for the routing rules,
+  including the macOS differences.

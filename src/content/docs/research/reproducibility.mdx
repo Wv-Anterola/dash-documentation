@@ -13,6 +13,9 @@ npm run audit:branches
 npm run audit:source
 npm run audit:http
 npm run audit:controls
+npm run audit:menus
+npm run audit:keys
+npm run audit:projects
 npm run audit:typedoc
 npm run verify
 ```
@@ -26,8 +29,19 @@ immutable registration source for the complete integrated HTTP surface.
 `audit:controls` parses the document-backed interface registries, validates
 reviewed JSX control contracts, and joins button scripts to their implementation
 effects in the scripting-global index.
+`audit:menus` parses every source that touches the context-menu singleton,
+reconstructs submenu nesting through both the inline and deferred registration
+idioms, and records the guard expressions that decide whether an entry is
+contributed at all.
+`audit:keys` decodes the four-bit modifier router, including its macOS branch,
+and reports both platform chords plus whether each keystroke is allowed to reach
+the browser.
+`audit:projects` is the one generator that reads a revision other than the
+pinned baseline: it parses each project's own feature branch tip and records
+whether that branch has been merged, so branch-only work can be documented
+without being presented as shipped.
 `audit:typedoc` creates an immutable temporary archive and emits TypeDoc JSON.
-Neither command checks out or edits Dash-Web.
+No command checks out or edits Dash-Web.
 
 ## Minimum research package
 

@@ -70,7 +70,10 @@ for (const [page, src] of html) {
     }
     if (!href.startsWith('/')) continue;
 
-    const [pathname, frag] = href.split('#');
+    // A query string is a filter for the page's own script, not part of the
+    // route, so it has to come off before the file is resolved.
+    const [beforeFragment, frag] = href.split('#');
+    const pathname = beforeFragment.split('?')[0];
     const file = targetFile(decodeURIComponent(pathname));
     if (!files.has(file)) {
       problems.links.push([page, href]);

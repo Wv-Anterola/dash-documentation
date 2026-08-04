@@ -533,3 +533,38 @@ test('documents a project workspace without presenting branch work as shipped', 
   expect(geometry.pageWidth).toBe(geometry.viewportWidth);
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
+
+test('routes an everyday task to its control, menu, and keyboard equivalents', async ({ page }) => {
+  await page.goto('/reference/task-routes/');
+  await expect(page.getByRole('heading', { name: 'Every way to do the same thing' })).toBeVisible();
+  await expect(page.locator('.task-route')).toHaveCount(14);
+
+  const undo = page.locator('#task-undo-an-action');
+  await expect(undo.getByRole('heading', { name: 'Undo or redo what I just did' })).toBeVisible();
+  await expect(undo.getByRole('link', { name: 'Undo' })).toHaveAttribute('href', /\/reference\/interface-controls\/\?control=Undo$/);
+  await expect(undo.getByRole('link', { name: 'Ctrl + Z', exact: true })).toHaveAttribute('href', /\/reference\/keyboard-shortcuts\/\?key=Ctrl%20%2B%20Z$/);
+  await expect(undo.getByText(/nothing on the home screen/)).toBeVisible();
+
+  // The differences between routes are the point of the page, so they must show.
+  await expect(page.locator('#task-export-something').getByText(/identifier string/)).toBeVisible();
+  await expect(page.locator('#task-group-documents').getByText(/create a new collection instead/)).toBeVisible();
+
+  // Following a route must land on the target reference already filtered.
+  await page.locator('#task-remove-from-view').getByRole('link', { name: 'Close', exact: true }).click();
+  await expect(page).toHaveURL(/\/reference\/context-menus\/\?entry=Close/);
+  await expect(page.locator('#menu-list .control-contract-row').first()).toContainText('Close');
+
+  await page.goto('/reference/task-routes/');
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('.task-route-reference');
+    if (!root) throw new Error('Task route reference is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+});

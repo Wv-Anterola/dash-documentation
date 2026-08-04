@@ -1,0 +1,55 @@
+---
+import reference from '../data/generated/task-routes.json';
+import { siteHref } from '../data/sourceReference';
+
+const { summary, tasks } = reference;
+const kindLabels: Record<string, string> = {
+  control: 'Visible control',
+  menu: 'Right-click menu',
+  shortcut: 'Keyboard',
+};
+---
+
+<div class="task-route-reference">
+  <div class="audit-summary control-contract-summary" aria-label="Task route totals">
+    <div><strong>{summary.tasks}</strong><span>everyday tasks</span></div>
+    <div><strong>{summary.routes}</strong><span>live routes</span></div>
+    <div><strong>{summary.tasksWithThreeKinds}</strong><span>reachable all three ways</span></div>
+    <div><strong>{summary.controlRoutes}</strong><span>via a visible control</span></div>
+    <div><strong>{summary.menuRoutes}</strong><span>via a menu entry</span></div>
+    <div><strong>{summary.shortcutRoutes}</strong><span>via the keyboard</span></div>
+  </div>
+
+  {tasks.map((task) => (
+    <section class="task-route" id={`task-${task.id}`}>
+      <h3>{task.intent}</h3>
+      <p class="task-route-plain">{task.plain}</p>
+      <div class="task-route-grid">
+        {['control', 'menu', 'shortcut'].map((kind) => {
+          const routes = task.routes.filter((route) => route.kind === kind);
+          return routes.length ? (
+            <div class={`task-route-column task-route-column--${kind}`}>
+              <h4>{kindLabels[kind]}</h4>
+              <ul>
+                {routes.map((route) => (
+                  <li>
+                    <a href={siteHref(route.href)}>
+                      {route.kind === 'shortcut' ? <kbd>{route.label}</kbd> : <strong>{route.label}</strong>}
+                    </a>
+                    <span class="task-route-where">{route.where}</span>
+                    {route.kind === 'shortcut' && route.macLabel !== route.label && (
+                      <span class="task-route-where">macOS: {route.macLabel}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null;
+        })}
+      </div>
+      {task.caution && (
+        <p class="task-route-caution"><strong>Not quite the same: </strong>{task.caution}</p>
+      )}
+    </section>
+  ))}
+</div>
