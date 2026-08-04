@@ -82,6 +82,29 @@ the resulting batch, and the undo result. Test partial external failures; a
 tool must not leave half a collection changed merely because its final service
 call failed.
 
+## Scripting-runtime matrix
+
+- All 151 exact static global names, 12 capability families, 16 decorator
+  registrations, and both saved-function dynamic registration sites; use the
+  [generated catalogue](/guides/features/scripting/#complete-integrated-global-catalogue)
+  as the inventory
+- Compile, Apply, Save, Create Function, Edit, Run, and event-only Finish state
+  transitions
+- `Doc`, string, integer, boolean, and literal-union parameter controls
+- Filtered and retained TypeScript diagnostics plus JavaScript function-construction failure
+- Ordinary arguments, explicit `undefined`, captures, and `this` precedence
+- Primitive capture cache reuse and reference-capture cache exclusion
+- Capture persistence for booleans, numbers, strings, document IDs, colon-bearing
+  strings, missing documents, and asynchronous hydration
+- `{success,result}` and `{success,error,result}` outcomes, including promises
+  that reject after synchronous invocation returns
+- Computed prior result, explicit cache, array-to-`List` conversion, setter script,
+  and advisory `_readOnly_` behavior
+- Saved-function startup load, replacement, deletion, case sensitivity, invalid
+  identifiers, and already compiled dependents
+- Custom-global swap/reset on success and on exceptions
+- Permissions, external services, and one named undo boundary for every mutating global
+
 ## Server and persistence matrix
 
 - New account and returning account

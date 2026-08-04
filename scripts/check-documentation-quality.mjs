@@ -111,10 +111,12 @@ const referenceSource = await readFile(path.join(root, 'src', 'data', 'generated
 const httpReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'http-routes.json'), 'utf8');
 const documentReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'document-types.json'), 'utf8');
 const fieldReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'field-types.json'), 'utf8');
+const scriptingReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'scripting-globals.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
 const fieldReference = JSON.parse(fieldReferenceSource);
+const scriptingReference = JSON.parse(scriptingReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -275,6 +277,72 @@ if (JSON.stringify(fieldReference.summary) !== JSON.stringify(recomputedFieldSum
   errors.push('Field type summary is stale relative to its generated registry rows');
 }
 
+if (scriptingReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Scripting global reference and generated source reference use different baseline revisions');
+}
+const scriptingNames = scriptingReference.globals.map((entry) => entry.name);
+if (scriptingReference.globals.length !== 151 || new Set(scriptingNames).size !== 151) {
+  errors.push(`Static scripting namespace changed from the reviewed 151 case-sensitive names (${scriptingReference.globals.length} rows)`);
+}
+const recomputedScriptingSummary = {
+  staticGlobals: scriptingReference.globals.length,
+  decoratedClasses: scriptingReference.globals.filter((entry) => entry.registration === 'decorator').length,
+  functions: scriptingReference.globals.filter((entry) => entry.kind === 'function').length,
+  constructors: scriptingReference.globals.filter((entry) => entry.kind === 'class').length,
+  objects: scriptingReference.globals.filter((entry) => entry.kind === 'namespace-or-object').length,
+  explicitDescriptions: scriptingReference.globals.filter((entry) => entry.description).length,
+  categories: new Set(scriptingReference.globals.map((entry) => entry.category)).size,
+  dynamicRegistrationSites: scriptingReference.dynamicRegistrations.length,
+};
+if (JSON.stringify(scriptingReference.summary) !== JSON.stringify(recomputedScriptingSummary)) {
+  errors.push('Scripting global summary is stale relative to its generated registry rows');
+}
+const recomputedCategoryCounts = Object.fromEntries(
+  scriptingReference.categories.map((category) => [category, scriptingReference.globals.filter((entry) => entry.category === category).length]),
+);
+if (JSON.stringify(scriptingReference.categoryCounts) !== JSON.stringify(recomputedCategoryCounts)) {
+  errors.push('Scripting capability-family counts are stale relative to the generated namespace');
+}
+if (JSON.stringify(scriptingReference.caseInsensitiveNameCollisions) !== JSON.stringify([['SchemaHeaderField', 'schemaHeaderField']])) {
+  errors.push('The reviewed case-sensitive SchemaHeaderField factory/constructor boundary changed');
+}
+const allowedScriptingRegistrations = new Set(['call', 'named-call', 'decorator']);
+const allowedScriptingModes = new Set(['action', 'query', 'constructor', 'object']);
+const allowedScriptingPurposeSources = new Set(['source-description', 'documentation-override', 'identifier-inference']);
+for (const entry of scriptingReference.globals) {
+  const label = `Scripting global ${entry.name}`;
+  if (!entry.name || !entry.signature || !entry.purpose || !entry.category || !entry.owner) {
+    errors.push(`${label}: generated row is missing its callable contract or reviewed explanation`);
+  }
+  if (!allowedScriptingRegistrations.has(entry.registration) || !allowedScriptingModes.has(entry.mode)) {
+    errors.push(`${label}: registration mechanism or runtime role is unknown`);
+  }
+  if (!allowedScriptingPurposeSources.has(entry.purposeSource)) {
+    errors.push(`${label}: explanation provenance is missing or unknown`);
+  }
+  if (!sourceModules.has(entry.source.file) || !entry.source.url.includes(scriptingReference.repository.baseline) || !entry.source.url.endsWith(`#L${entry.source.line}`)) {
+    errors.push(`${label}: registration source is absent, mutable, or not line-addressed`);
+  }
+  if (!Array.isArray(entry.effects.calls) || !Array.isArray(entry.effects.writes) || !Number.isInteger(entry.effects.returns)) {
+    errors.push(`${label}: direct syntactic-effect evidence is malformed`);
+  }
+}
+for (const forbidden of ['constructor', 'f']) {
+  if (scriptingNames.includes(forbidden)) errors.push(`Dynamic or decorator-infrastructure name was misclassified as a static scripting global: ${forbidden}`);
+}
+for (const required of [
+  'Docs', 'List', 'Doc', 'ScriptField', 'ComputedField', 'selectedDocs', 'undo', 'redo',
+  'setBackgroundColor', 'followLink', 'replayWorkspace', 'imageRemoveBackground',
+  'dashCallChat', 'GoogleAuthenticationManager',
+]) {
+  if (!scriptingNames.includes(required)) errors.push(`Reviewed scripting global disappeared: ${required}`);
+}
+if (scriptingReference.dynamicRegistrations.length !== 2 || scriptingReference.dynamicRegistrations.some((site) =>
+  site.expression !== 'f' || site.owner !== 'addScriptToGlobals' || site.source.file !== 'src/client/util/ScriptManager.ts'
+)) {
+  errors.push('Saved-script runtime registration no longer matches the two reviewed ScriptManager call sites');
+}
+
 if (httpReference.repository.baseline !== sourceReference.repository.baselineTip) {
   errors.push('HTTP route reference and generated source reference use different baseline revisions');
 }
@@ -358,6 +426,6 @@ if (errors.length) {
       `${images} inline images have reproducible sources and intentional alt text; ` +
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
       `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, and ` +
-      `${fieldReference.registrations.length} serialized field types pass inventory invariants.`
+      `${fieldReference.registrations.length} serialized field types plus ${scriptingReference.globals.length} scripting globals pass inventory invariants.`
   );
 }

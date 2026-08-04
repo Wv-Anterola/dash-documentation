@@ -251,3 +251,41 @@ test('maps every serialized field tag through storage, hydration, and conversion
   await page.getByLabel('Runtime family').selectOption('media');
   await expect(page.locator('[data-field-type-row]:visible')).toHaveCount(8);
 });
+
+test('exposes every scripting global with source, role, and responsive filters', async ({ page }) => {
+  await page.goto('/guides/features/scripting/');
+  await expect(page.getByRole('heading', { name: 'Scripting', exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: /editable, applied, and saved-function states/ })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Seven-stage Dash scripting pipeline/ })).toBeVisible();
+  await expect(page.locator('.script-global-summary strong').first()).toHaveText('151');
+
+  const query = page.getByLabel('Find a name, parameter, operation, call, field write, or source file');
+  await query.fill('selectedDocs(container');
+  await expect(page.locator('[data-script-global-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-script-global-count]')).toHaveText('1 global shown');
+  const selectedDocs = page.locator('[data-script-global-row]:visible');
+  await selectedDocs.locator('summary').click();
+  await expect(selectedDocs.getByText(/selectedDocs\(container: Doc/)).toBeVisible();
+  await expect(selectedDocs.getByRole('link', { name: /registration source/ })).toHaveAttribute('href', /\/blob\/.*#L\d+$/);
+
+  await query.fill('');
+  await page.getByLabel('Runtime role').selectOption('constructor');
+  await expect(page.locator('[data-script-global-row]:visible')).toHaveCount(22);
+  await page.getByLabel('Registration path').selectOption('decorator');
+  await expect(page.locator('[data-script-global-row]:visible')).toHaveCount(16);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-script-global-reference]');
+    const filters = document.querySelector('.script-global-filters');
+    if (!root || !filters) throw new Error('Scripting global reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+});

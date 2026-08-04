@@ -507,18 +507,111 @@ export const symbolOverlays: Record<string, SymbolOverlay> = {
     permissions: 'Each tool is responsible for bounding and authorizing its own document or external scope.',
     undo: 'Workspace write tools must group all related mutations in one named batch.',
   },
+  'src/client/util/Scripting.ts#Run': {
+    summary:
+      'Turns emitted JavaScript into a callable closure over the current scripting registry, then supplies explicit arguments, captured values, and the script document as this.',
+    parameters: {
+      script: 'Emitted JavaScript expression for the generated inner function.',
+      customParams: 'Ordered names supplied to the generated inner function at invocation time.',
+      diagnostics: 'TypeScript diagnostics filtered by the dynamic-field policy before construction.',
+      originalScript: 'Untransformed author source retained in results and error messages.',
+      options: 'Execution policy, captures, and editable/read-only setting.',
+    },
+    returns: 'A compile error or a compiled object whose run method returns {success, result} and, on failure, error.',
+    invariants: ['Global names and global values are snapshotted in matching insertion order when the outer function is constructed.'],
+    failureSemantics: [
+      'Function-construction failure returns compiled:false; invocation failure is caught and returned as success:false.',
+      'The optional errorVal becomes result on invocation failure; the thrown value remains available as error.',
+    ],
+    sideEffects: ['A run may call any registered global and, when editable is false, opens and ends a Doc.MakeReadOnly boundary.'],
+    permissions: 'The function is not sandboxed; effective access is the application authority of the current client and the checks inside each called operation.',
+    undo: 'Run does not create a normal named undo batch. Callers that expose user-visible mutations must supply one at the workflow boundary.',
+  },
+  'src/client/util/ScriptingGlobals.ts#add': {
+    summary:
+      'Registers one case-sensitive global value by explicit name or by a function/class name, with optional suggestion description and parameter text.',
+    parameters: {
+      first: 'An explicit string name, or a function/class object whose name property becomes the registry key.',
+      second: 'The explicitly named value, or suggestion description for a function/class registration.',
+      params: 'Optional display-only parameter signature stored for scripting suggestions.',
+    },
+    returns: 'Nothing after registration; invalid shapes and duplicate exact names throw.',
+    preconditions: ['The exact case-sensitive name is not already present in the process-local static registry.'],
+    postconditions: ['The value is available to later compilations once its registering module has evaluated.'],
+    failureSemantics: [
+      'An invalid overload shape throws; an undefined or literal "undefined" derived name is ignored.',
+      'A duplicate exact name throws during registration. Names that differ only by case are distinct.',
+    ],
+    sideEffects: ['Mutates the process-local value registry and, for described functions, its suggestion metadata maps.'],
+  },
+  'src/client/util/ScriptingGlobals.ts#setScriptingGlobals': {
+    summary: 'Temporarily replaces the live global object used by script compilation without changing the underlying static registry.',
+    parameters: { globals: 'Complete name-to-value object to expose to the next compilation path.' },
+    returns: 'Nothing.',
+    postconditions: ['resetScriptingGlobals is required to restore the ordinary integrated registry.'],
+    failureSemantics: ['The CompileScript caller restores this value only on its normal straight-line exit, not through a finally block.'],
+    sideEffects: ['Changes which names and values a concurrently compiled script captures.'],
+    permissions: 'Supplying a reduced map is a dependency boundary, not a security sandbox around the resulting JavaScript.',
+  },
+  'src/client/util/ScriptingGlobals.ts#removeGlobal': {
+    summary: 'Removes one exact name and its suggestion metadata from the underlying static scripting registry.',
+    parameters: { name: 'Case-sensitive global key to remove.' },
+    returns: 'True when an existing key was removed; false when it was absent.',
+    postconditions: ['Future compilations no longer capture the removed static value; already compiled closures retain their captured parameter value.'],
+    sideEffects: ['Deletes the value, description, and parameter metadata when present.'],
+  },
+  'src/client/util/ScriptManager.ts#ScriptManager.addScriptToGlobals': {
+    summary:
+      'Rebuilds a saved script document as a named JavaScript function and installs it in the shared scripting registry.',
+    parameters: { scriptDoc: 'Document containing name, raw script source, description, and data-params strings.' },
+    returns: 'Nothing.',
+    preconditions: ['The document name and comma-joined parameter names form a valid Function constructor signature.'],
+    postconditions: ['Any existing exact name is removed before the new function is registered.'],
+    failureSemantics: ['Function-construction or invalid-name errors propagate; this path does not re-run the TypeScript compiler used by ScriptingBox before save.'],
+    sideEffects: ['Creates executable code with new Function and mutates the process-local shared registry.'],
+    permissions: 'Loading the main script collection is active-code loading, not passive data hydration.',
+  },
   'src/client/util/Scripting.ts#CompileScript': {
     summary:
-      'Compiles a Dash document script with the configured parameters, captured variables, globals, traversal hooks, and required return type.',
+      'Transforms TypeScript-like author source into a generated function, emits JavaScript in the browser, applies Dash diagnostic policy, and delegates closure construction to Run.',
     parameters: {
       script: 'TypeScript-like script source stored by the document.',
       options: 'Compilation, capture, parameter, global, traversal, and result-shape options.',
     },
-    returns: 'A compiled script or structured compile error result, with successful results cached by source and capture signature.',
-    errors: ['Compilation or runtime failures are returned through the scripting result/error model.'],
-    sideEffects: ['A script can mutate documents when its registered globals expose mutation operations.'],
+    returns: 'A compiled script or structured compile-error result; eligible results are inserted under the current, possibly transformed source plus a primitive-capture signature.',
+    invariants: [
+      'this is inserted as a Doc parameter when an options.params object exists and does not already declare it.',
+      'Captures override same-named ordinary parameters in the generated positional argument list.',
+    ],
+    failureSemantics: [
+      'Diagnostics 2304, 2339, 2693, and 2314 are filtered; 2552 is conditionally filtered for registered names.',
+      'A RefField capture contributes XXX to the signature and prevents cache insertion, avoiding identity-unsafe reuse.',
+      'A temporary globals object is reset only on the normal exit path, because restoration is not guarded by finally.',
+    ],
+    sideEffects: ['Mutates options.typecheck, can run an AST traverser/transformer, temporarily swaps globals, and may update the script cache.'],
     permissions: 'Treat script documents as active code and do not expose privileged globals without review.',
-    undo: 'Script-triggered persistent user actions should enter an undo batch.',
+  },
+  'src/fields/ScriptField.ts#ScriptField.CompileScript': {
+    summary:
+      'Adapts the generic compiler to Dash field execution by supplying this, documentView, prior-result, cache-setter, and read-only parameters.',
+    parameters: {
+      script: 'Author source to compile.',
+      params: 'Additional named TypeScript parameter declarations.',
+      addReturn: 'Whether an expression is wrapped in an automatic return statement.',
+      capturedVariables: 'Document or primitive values stored into the generated closure contract.',
+      transformer: 'Optional document-icon transformer used by interactive editors.',
+    },
+    returns: 'The generic CompileResult from Scripting.CompileScript.',
+    invariants: ['The adapter sets editable:true; computed execution supplies _readOnly_:true separately at invocation time.'],
+  },
+  'src/fields/ScriptField.ts#ComputedField.value': {
+    summary:
+      'Evaluates a computed script for one owning document, preserving its prior value, controlled result cache, and MobX dependency tracking.',
+    parameters: { doc: 'Owning document bound as this during the computation.' },
+    returns: 'The cached or newly computed FieldResult; a JavaScript array is converted to a Dash List.',
+    invariants: ['A stored _cachedResult takes precedence over re-execution.'],
+    failureSemantics: ['The run result field is consumed even when success is false, so the default undefined error result becomes the computed value.'],
+    sideEffects: ['Calls the script with _readOnly_:true and exposes setCacheResult for an explicit durable cached result.'],
   },
 };
 

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dash Script document interface anatomy and state transitions</title>
+  <desc id="desc">A source-derived interface map showing the editable code and parameters state, the applied parameter controls and Run state, and the saved function name and description state. Numbered callouts explain Compile, Apply, Save, Finish, Edit, Run, and Create Function.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0a1020"/><stop offset="1" stop-color="#151b34"/></linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#7c5cff"/><stop offset="1" stop-color="#ae7bff"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#29c7d8"/><stop offset="1" stop-color="#68e0c3"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#02040d" flood-opacity=".42"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 12 6 0 12Z" fill="#8690b8"/></marker>
+    <style>
+      .sans{font-family:Inter,Segoe UI,Arial,sans-serif}.mono{font-family:Consolas,SFMono-Regular,monospace}.muted{fill:#aab2d0}.tiny{font-size:16px}.label{font-size:18px;font-weight:700}.button{font-size:17px;font-weight:750}.call{fill:#f6f7ff;font-size:18px;font-weight:650}.number{fill:#0b1020;font-size:17px;font-weight:850;text-anchor:middle;dominant-baseline:middle}.panel{fill:#151c33;stroke:#353e63;stroke-width:2}.input{fill:#0e1427;stroke:#424d78;stroke-width:2}.code{font-size:17px;fill:#dae0ff}.keyword{fill:#c792ea}.string{fill:#c3e88d}.property{fill:#82aaff}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1420" cy="90" r="250" fill="#7c5cff" opacity=".08"/><circle cx="170" cy="840" r="260" fill="#29c7d8" opacity=".06"/>
+  <g class="sans">
+    <text x="80" y="82" fill="#f7f8ff" font-size="42" font-weight="800">One Script document, three visible states</text>
+    <text x="80" y="122" class="muted" font-size="20">Source-derived UI anatomy • every control maps to ScriptingBox behavior</text>
+    <g transform="translate(1190 61)"><rect width="330" height="48" rx="24" fill="#1e2747" stroke="#48557e"/><text x="165" y="31" text-anchor="middle" fill="#dfe4ff" font-size="17" font-weight="700">SCRIPTING document renderer</text></g>
+
+    <g transform="translate(70 175)" filter="url(#shadow)">
+      <rect class="panel" width="720" height="560" rx="22"/>
+      <rect width="720" height="58" rx="22" fill="#202945"/><rect y="38" width="720" height="20" fill="#202945"/>
+      <circle cx="28" cy="29" r="7" fill="#ff6d7a"/><circle cx="50" cy="29" r="7" fill="#f7c65e"/><circle cx="72" cy="29" r="7" fill="#64d795"/>
+      <text x="104" y="37" fill="#f4f6ff" class="label">EDIT SOURCE</text><text x="600" y="36" class="muted tiny">canvas node</text>
+      <rect class="input" x="28" y="82" width="510" height="304" rx="12"/>
+      <text x="50" y="118" class="mono code"><tspan class="keyword">const</tspan><tspan> selected = selectedDocs(</tspan><tspan class="keyword">this</tspan><tspan>, false, []);</tspan></text>
+      <text x="50" y="151" class="mono code"><tspan class="keyword">this</tspan><tspan class="property">.status</tspan><tspan> = </tspan><tspan class="string">"reviewed"</tspan><tspan>;</tspan></text>
+      <text x="50" y="184" class="mono code"><tspan>setBackgroundColor(</tspan><tspan class="string">"#fff4cc"</tspan><tspan>);</tspan></text>
+      <text x="50" y="217" class="mono code"><tspan class="keyword">return</tspan><tspan> selected.length;</tspan></text>
+      <rect x="555" y="82" width="137" height="304" rx="12" fill="#11182c" stroke="#424d78" stroke-width="2"/>
+      <text x="573" y="113" fill="#f0f2ff" font-size="16" font-weight="700">Parameters</text>
+      <rect x="570" y="132" width="107" height="48" rx="8" fill="#222b49"/><text x="582" y="162" class="mono" fill="#dfe4ff" font-size="14">source:Doc</text>
+      <rect x="570" y="190" width="107" height="48" rx="8" fill="#222b49"/><text x="582" y="220" class="mono" fill="#dfe4ff" font-size="14">score:number</text>
+      <text x="573" y="272" class="muted" font-size="14">Each row becomes</text><text x="573" y="292" class="muted" font-size="14">one Run control.</text>
+      <rect class="input" x="28" y="404" width="664" height="52" rx="10"/><text x="48" y="437" class="muted" font-size="17">enter one parameter as name:type</text>
+      <g transform="translate(28 480)">
+        <rect width="145" height="52" rx="10" fill="url(#violet)"/><text x="72.5" y="33" text-anchor="middle" fill="white" class="button">1  Compile</text>
+        <rect x="161" width="145" height="52" rx="10" fill="#24304f" stroke="#4b5985"/><text x="233.5" y="33" text-anchor="middle" fill="white" class="button">2  Apply</text>
+        <rect x="322" width="145" height="52" rx="10" fill="#24304f" stroke="#4b5985"/><text x="394.5" y="33" text-anchor="middle" fill="white" class="button">3  Save</text>
+        <rect x="483" width="145" height="52" rx="10" fill="#24304f" stroke="#4b5985"/><text x="555.5" y="33" text-anchor="middle" fill="white" class="button">4  Finish*</text>
+      </g>
+    </g>
+
+    <path d="M815 376 H868" fill="none" stroke="#8690b8" stroke-width="4" marker-end="url(#arrow)"/>
+    <text x="842" y="352" text-anchor="middle" class="muted tiny">Apply</text>
+
+    <g transform="translate(890 175)" filter="url(#shadow)">
+      <rect class="panel" width="640" height="260" rx="22"/>
+      <rect width="640" height="58" rx="22" fill="#202945"/><rect y="38" width="640" height="20" fill="#202945"/>
+      <text x="28" y="37" fill="#f4f6ff" class="label">APPLIED PARAMETERS</text>
+      <text x="30" y="103" fill="#f3f5ff" class="mono" font-size="17">source:Doc =</text><rect class="input" x="176" y="75" width="430" height="48" rx="9"/><text x="194" y="106" fill="#d8ddf7" font-size="16">drop a document or enter an expression</text>
+      <text x="30" y="160" fill="#f3f5ff" class="mono" font-size="17">score:number =</text><rect class="input" x="176" y="132" width="190" height="48" rx="9"/><text x="194" y="163" fill="#f3f5ff" font-size="17">3</text>
+      <g transform="translate(376 132)"><rect width="104" height="48" rx="10" fill="#24304f" stroke="#4b5985"/><text x="52" y="31" text-anchor="middle" fill="white" class="button">5  Edit</text><rect x="116" width="114" height="48" rx="10" fill="url(#cyan)"/><text x="173" y="31" text-anchor="middle" fill="#07151b" class="button">6  Run</text></g>
+      <text x="30" y="221" class="muted tiny">Boolean and literal-union parameters render as selectors.</text>
+    </g>
+
+    <path d="M1210 452 V490" fill="none" stroke="#8690b8" stroke-width="4" marker-end="url(#arrow)"/>
+    <text x="1234" y="476" class="muted tiny">Save</text>
+    <g transform="translate(890 510)" filter="url(#shadow)">
+      <rect class="panel" width="640" height="225" rx="22"/>
+      <rect width="640" height="55" rx="22" fill="#202945"/><rect y="36" width="640" height="19" fill="#202945"/>
+      <text x="28" y="36" fill="#f4f6ff" class="label">SAVE AS SHARED FUNCTION</text>
+      <text x="30" y="92" class="muted tiny">Name</text><rect class="input" x="120" y="65" width="486" height="44" rx="8"/><text x="137" y="94" class="mono" fill="#f3f5ff" font-size="16">markReviewed</text>
+      <text x="30" y="144" class="muted tiny">Description</text><rect class="input" x="120" y="117" width="486" height="44" rx="8"/><text x="137" y="146" fill="#d8ddf7" font-size="16">Marks a document and updates its color.</text>
+      <rect x="376" y="174" width="230" height="38" rx="9" fill="url(#violet)"/><text x="491" y="199" text-anchor="middle" fill="white" class="button">7  Create Function</text>
+    </g>
+
+    <g transform="translate(80 765)">
+      <circle cx="18" cy="14" r="14" fill="#8c76ff"/><text x="18" y="15" class="number">1</text><text x="44" y="20" class="call">Compile = build and report diagnostics; it does not run the script.</text>
+      <circle cx="18" cy="56" r="14" fill="#55d8cf"/><text x="18" y="57" class="number">2</text><text x="44" y="62" class="call">Apply = replace source editing with controls for the declared inputs.</text>
+      <text x="850" y="20" class="call">Save = open name/description entry, then store and register executable source.</text>
+      <text x="850" y="62" class="muted tiny">* Finish appears only while editing an event layout such as onClick or onChecked.</text>
+    </g>
+  </g>
+</svg>

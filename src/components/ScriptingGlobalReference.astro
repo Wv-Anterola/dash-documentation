@@ -1,0 +1,257 @@
+---
+import reference from '../data/generated/scripting-globals.json';
+
+const globals = reference.globals as any[];
+const categoryLabels: Record<string, string> = {
+  'appearance-and-tools': 'Appearance and tools',
+  'application-services': 'Application services',
+  'collections-and-layout': 'Collections and layout',
+  'imports-and-services': 'Imports and services',
+  'ink-and-gesture': 'Ink and gesture',
+  'media-and-specialized-content': 'Media and specialized content',
+  'recording-and-replay': 'Recording and replay',
+  'scripting-and-automation': 'Scripting and automation',
+  'selection-and-history': 'Selection and history',
+  'user-state-and-modes': 'User state and modes',
+  'values-and-documents': 'Values and documents',
+  'workspace-and-navigation': 'Workspace and navigation',
+};
+const modeLabels: Record<string, string> = {
+  action: 'Action',
+  query: 'Query',
+  constructor: 'Construct / allocate',
+  object: 'Namespace or object',
+};
+const registrationLabels: Record<string, string> = {
+  call: 'Direct add',
+  'named-call': 'Named add',
+  decorator: 'Class decorator',
+};
+const purposeSourceLabels: Record<string, string> = {
+  'source-description': 'Explicit registry or source description',
+  'documentation-override': 'Source behavior reviewed against the implementation',
+  'identifier-inference': 'Documentation summary inferred from the identifier',
+};
+// Preserve case so schemaHeaderField and SchemaHeaderField receive distinct ids.
+const anchorFor = (name: string) => `script-global-${name.replace(/[^A-Za-z0-9_-]+/g, '-')}`;
+---
+
+<section class="script-global-reference" data-script-global-reference>
+  <div class="script-global-summary" aria-label="Scripting global inventory summary">
+    <div><strong>{reference.summary.staticGlobals}</strong><span>static globals</span></div>
+    <div><strong>{reference.summary.functions}</strong><span>functions</span></div>
+    <div><strong>{reference.summary.constructors}</strong><span>class values</span></div>
+    <div><strong>{reference.summary.objects}</strong><span>namespaces / objects</span></div>
+    <div><strong>{reference.summary.decoratedClasses}</strong><span>decorator registrations</span></div>
+    <div><strong>{reference.summary.categories}</strong><span>capability families</span></div>
+  </div>
+
+  <div class="script-global-filters" aria-label="Filter scripting globals">
+    <label for="script-global-query">
+      Find a name, parameter, operation, call, field write, or source file
+      <input id="script-global-query" type="search" placeholder="Try selectedDocs, image, undo, Doc, or border" data-script-global-query />
+    </label>
+    <label for="script-global-category">
+      Capability family
+      <select id="script-global-category" data-script-global-category>
+        <option value="">All families</option>
+        {reference.categories.map((category) => <option value={category}>{categoryLabels[category] ?? category}</option>)}
+      </select>
+    </label>
+    <label for="script-global-mode">
+      Runtime role
+      <select id="script-global-mode" data-script-global-mode>
+        <option value="">All roles</option>
+        {reference.modes.map((mode) => <option value={mode}>{modeLabels[mode] ?? mode}</option>)}
+      </select>
+    </label>
+    <label for="script-global-registration">
+      Registration path
+      <select id="script-global-registration" data-script-global-registration>
+        <option value="">All registration paths</option>
+        <option value="call">Direct add</option>
+        <option value="named-call">Named add</option>
+        <option value="decorator">Class decorator</option>
+      </select>
+    </label>
+  </div>
+
+  <p class="script-global-count" aria-live="polite" data-script-global-count>{globals.length} globals shown</p>
+
+  <p class="script-global-case-note">
+    Names are case-sensitive. <code>schemaHeaderField</code> is a factory function;
+    <code>SchemaHeaderField</code> is the class constructor. The Construct / allocate
+    role contains 22 rows because two ordinary functions are allocation factories.
+  </p>
+
+  <div class="script-global-list">
+    {globals.map((entry) => {
+      const searchText = [
+        entry.name,
+        entry.kind,
+        entry.mode,
+        entry.category,
+        entry.signature,
+        entry.purpose,
+        entry.description,
+        entry.parameterMetadata,
+        entry.owner,
+        entry.path,
+        ...entry.effects.calls,
+        ...entry.effects.writes,
+      ].filter(Boolean).join(' ').toLowerCase();
+      return (
+        <details
+          id={anchorFor(entry.name)}
+          class="script-global-card"
+          data-script-global-row
+          data-category={entry.category}
+          data-mode={entry.mode}
+          data-registration={entry.registration}
+          data-search={searchText}
+        >
+          <summary>
+            <span class="script-global-identity">
+              <code>{entry.name}</code>
+              <span>{entry.purpose}</span>
+            </span>
+            <span class="script-global-role"><small>{entry.kind}</small><strong>{modeLabels[entry.mode]}</strong></span>
+            <span class="script-global-category">{categoryLabels[entry.category] ?? entry.category}</span>
+            <span class="script-global-chevron" aria-hidden="true">⌄</span>
+          </summary>
+
+          <div class="script-global-detail">
+            <div>
+              <h3>Call contract</h3>
+              <p class="script-global-signature"><code>{entry.signature}</code></p>
+              <p>{entry.purpose}</p>
+              {entry.parameterMetadata && <p><strong>Saved-function parameter metadata:</strong> <code>{entry.parameterMetadata}</code></p>}
+              <dl class="script-global-facts">
+                <div><dt>Role</dt><dd>{modeLabels[entry.mode]}</dd></div>
+                <div><dt>Value kind</dt><dd>{entry.kind}</dd></div>
+                <div><dt>Family</dt><dd>{categoryLabels[entry.category] ?? entry.category}</dd></div>
+              </dl>
+            </div>
+
+            <div>
+              <h3>Registration and availability</h3>
+              <dl class="script-global-facts">
+                <div><dt>Mechanism</dt><dd>{registrationLabels[entry.registration]}</dd></div>
+                <div><dt>Registered by</dt><dd><code>{entry.owner}</code></dd></div>
+                <div><dt>Module</dt><dd><code>{entry.path}</code></dd></div>
+                <div><dt>Description source</dt><dd>{purposeSourceLabels[entry.purposeSource]}</dd></div>
+              </dl>
+              <p><a href={entry.source.url}>registration source, line {entry.source.line}</a></p>
+              <p class="script-global-note">Availability begins when this module evaluates. It is not a separately versioned or permission-scoped public API.</p>
+            </div>
+
+            <div>
+              <h3>Direct implementation evidence</h3>
+              {entry.effects.calls.length ? (
+                <p><strong>Calls:</strong>{' '}{entry.effects.calls.map((call: string, index: number) => <>{index ? ', ' : ''}<code>{call}</code></>)}</p>
+              ) : (
+                <p>No direct call expression was extractable from the registered declaration. Constructors, imported objects, and deeper callees may still perform work.</p>
+              )}
+              {entry.effects.writes.length > 0 && (
+                <p><strong>Direct assignment targets:</strong>{' '}{entry.effects.writes.map((write: string, index: number) => <>{index ? ', ' : ''}<code>{write}</code></>)}</p>
+              )}
+              <p><strong>Return statements:</strong> {entry.effects.returns}</p>
+              <p class="script-global-note">This evidence is syntactic and intentionally bounded to the registered declaration. Follow the source link and generated call graph for transitive side effects.</p>
+            </div>
+          </div>
+        </details>
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  for (const root of document.querySelectorAll('[data-script-global-reference]')) {
+    const query = root.querySelector<HTMLInputElement>('[data-script-global-query]');
+    const category = root.querySelector<HTMLSelectElement>('[data-script-global-category]');
+    const mode = root.querySelector<HTMLSelectElement>('[data-script-global-mode]');
+    const registration = root.querySelector<HTMLSelectElement>('[data-script-global-registration]');
+    const count = root.querySelector('[data-script-global-count]');
+    const rows = [...root.querySelectorAll<HTMLDetailsElement>('[data-script-global-row]')];
+    if (!query || !category || !mode || !registration || !count) continue;
+    const update = () => {
+      const needle = query.value.trim().toLowerCase();
+      let visible = 0;
+      for (const row of rows) {
+        const show =
+          (!needle || row.dataset.search?.includes(needle)) &&
+          (!category.value || row.dataset.category === category.value) &&
+          (!mode.value || row.dataset.mode === mode.value) &&
+          (!registration.value || row.dataset.registration === registration.value);
+        row.hidden = !show;
+        if (show) visible++;
+      }
+      count.textContent = `${visible} global${visible === 1 ? '' : 's'} shown`;
+    };
+    query.addEventListener('input', update);
+    category.addEventListener('change', update);
+    mode.addEventListener('change', update);
+    registration.addEventListener('change', update);
+  }
+</script>
+
+<style>
+  .script-global-reference { container-type: inline-size; margin-block: 1.25rem 2rem; }
+  .script-global-summary { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-block: 1rem 1.25rem; }
+  .script-global-summary div { border: 1px solid var(--sl-color-gray-5); border-radius: .65rem; padding: .75rem; background: var(--sl-color-gray-7); }
+  .script-global-summary strong { display: block; color: var(--sl-color-accent-high); font-size: 1.35rem; line-height: 1; }
+  .script-global-summary span { display: block; margin-top: .35rem; color: var(--sl-color-gray-2); font-size: .7rem; }
+  .script-global-filters { display: grid; grid-template-columns: minmax(16rem, 2fr) repeat(3, minmax(8.5rem, 1fr)); gap: .75rem; align-items: end; }
+  .script-global-filters label { min-width: 0; color: var(--sl-color-gray-2); font-size: .76rem; font-weight: 650; }
+  .script-global-filters :is(input, select) { width: 100%; min-width: 0; min-height: 2.6rem; margin-top: .3rem; border: 1px solid var(--sl-color-gray-4); border-radius: .5rem; padding: .5rem .65rem; background: var(--sl-color-bg); color: var(--sl-color-white); font: inherit; font-weight: 450; }
+  .script-global-count { margin-block: .85rem; color: var(--sl-color-gray-2); font-size: .85rem; }
+  .script-global-case-note { margin-block: -.35rem .9rem; border-left: 3px solid var(--sl-color-accent); padding-left: .65rem; color: var(--sl-color-gray-2); font-size: .76rem; }
+  .script-global-list { display: grid; gap: .5rem; }
+  .script-global-card { scroll-margin-top: 7rem; overflow: clip; border: 1px solid var(--sl-color-gray-5); border-radius: .65rem; background: var(--sl-color-gray-7); }
+  .script-global-card[hidden] { display: none; }
+  .script-global-card[open] { border-color: var(--sl-color-accent); background: var(--sl-color-bg); }
+  .script-global-card summary { display: grid; grid-template-columns: minmax(14rem, 1.6fr) minmax(7rem, .45fr) minmax(9rem, .7fr) auto; gap: .8rem; align-items: center; padding: .75rem .9rem; cursor: pointer; list-style: none; }
+  .script-global-card summary::-webkit-details-marker { display: none; }
+  .script-global-card summary::marker { content: ''; font-size: 0; }
+  .script-global-card summary::before { display: none !important; }
+  .script-global-identity { display: grid; grid-template-columns: minmax(6rem, auto) 1fr; gap: .65rem; align-items: baseline; min-width: 0; }
+  .script-global-identity > span { overflow: hidden; color: var(--sl-color-gray-2); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+  .script-global-role { display: flex; gap: .4rem; align-items: baseline; color: var(--sl-color-gray-2); font-size: .7rem; }
+  .script-global-role strong { color: var(--sl-color-white); }
+  .script-global-category { justify-self: start; border-radius: 999px; padding: .22rem .5rem; background: var(--sl-color-blue-low); color: var(--sl-color-blue-high); font-size: .66rem; font-weight: 700; }
+  .script-global-chevron { transition: transform .15s ease; }
+  details[open] .script-global-chevron { transform: rotate(180deg); }
+  .script-global-detail { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-top: 1px solid var(--sl-color-gray-5); padding: 1rem; }
+  .script-global-detail > div { min-width: 0; }
+  .script-global-detail h3 { margin: 0 0 .6rem; font-size: .92rem; }
+  .script-global-detail p { margin-block: .4rem; font-size: .78rem; overflow-wrap: anywhere; }
+  .script-global-signature code { white-space: normal; overflow-wrap: anywhere; }
+  .script-global-facts { display: grid; gap: .3rem; margin: 0; font-size: .75rem; }
+  .script-global-facts div { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: .4rem; }
+  .script-global-facts dt { color: var(--sl-color-gray-2); font-weight: 700; }
+  .script-global-facts dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+  .script-global-note { border-left: 3px solid var(--sl-color-gray-4); padding-left: .55rem; color: var(--sl-color-gray-2); }
+  @container (max-width: 850px) {
+    .script-global-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .script-global-detail { grid-template-columns: 1fr; }
+  }
+  @container (max-width: 680px) {
+    .script-global-filters { grid-template-columns: 1fr 1fr; }
+    .script-global-filters label:first-child { grid-column: 1 / -1; }
+  }
+  @container (max-width: 560px) {
+    .script-global-card summary { grid-template-columns: minmax(0, 1fr) auto; }
+    .script-global-role, .script-global-category { grid-column: 1; }
+    .script-global-chevron { grid-column: 2; grid-row: 1 / span 3; }
+    .script-global-identity { grid-template-columns: 1fr; gap: .2rem; }
+    .script-global-identity > span { white-space: normal; }
+  }
+  @container (max-width: 430px) {
+    .script-global-filters { grid-template-columns: 1fr; }
+    .script-global-filters label:first-child { grid-column: auto; }
+    .script-global-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @container (max-width: 320px) {
+    .script-global-summary { grid-template-columns: 1fr; }
+  }
+</style>

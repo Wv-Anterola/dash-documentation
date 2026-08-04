@@ -1,0 +1,4500 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-22T16:45:55-04:00",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "registryParser": "TypeScript compiler AST over every ScriptingGlobals.add call and @scriptingGlobal class decorator in the integrated source",
+    "sourceSemantics": "Signatures, explicit descriptions, parameter metadata, direct calls, and assignment targets are extracted from the registered declaration when statically resolvable",
+    "dynamicBoundary": "Runtime names from saved script documents are recorded as dynamic registration sites, not invented as static globals",
+    "candidateFiles": 37
+  },
+  "summary": {
+    "staticGlobals": 151,
+    "decoratedClasses": 16,
+    "functions": 129,
+    "constructors": 20,
+    "objects": 2,
+    "explicitDescriptions": 33,
+    "categories": 12,
+    "dynamicRegistrationSites": 2
+  },
+  "categories": [
+    "appearance-and-tools",
+    "application-services",
+    "collections-and-layout",
+    "imports-and-services",
+    "ink-and-gesture",
+    "media-and-specialized-content",
+    "recording-and-replay",
+    "scripting-and-automation",
+    "selection-and-history",
+    "user-state-and-modes",
+    "values-and-documents",
+    "workspace-and-navigation"
+  ],
+  "categoryCounts": {
+    "appearance-and-tools": 14,
+    "application-services": 3,
+    "collections-and-layout": 23,
+    "imports-and-services": 2,
+    "ink-and-gesture": 6,
+    "media-and-specialized-content": 14,
+    "recording-and-replay": 12,
+    "scripting-and-automation": 7,
+    "selection-and-history": 6,
+    "user-state-and-modes": 8,
+    "values-and-documents": 37,
+    "workspace-and-navigation": 19
+  },
+  "caseInsensitiveNameCollisions": [
+    [
+      "SchemaHeaderField",
+      "schemaHeaderField"
+    ]
+  ],
+  "modes": [
+    "action",
+    "query",
+    "constructor",
+    "object"
+  ],
+  "runtimeSources": {
+    "Run": {
+      "file": "src/client/util/Scripting.ts",
+      "line": 45,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/Scripting.ts#L45"
+    },
+    "CompileScript": {
+      "file": "src/client/util/Scripting.ts",
+      "line": 189,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/Scripting.ts#L189"
+    },
+    "add": {
+      "file": "src/client/util/ScriptingGlobals.ts",
+      "line": 16,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptingGlobals.ts#L16"
+    },
+    "module initialization.add": {
+      "file": "src/client/util/ScriptingGlobals.ts",
+      "line": 18,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptingGlobals.ts#L18"
+    },
+    "setScriptingGlobals": {
+      "file": "src/client/util/ScriptingGlobals.ts",
+      "line": 54,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptingGlobals.ts#L54"
+    },
+    "removeGlobal": {
+      "file": "src/client/util/ScriptingGlobals.ts",
+      "line": 58,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptingGlobals.ts#L58"
+    },
+    "resetScriptingGlobals": {
+      "file": "src/client/util/ScriptingGlobals.ts",
+      "line": 72,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptingGlobals.ts#L72"
+    },
+    "deserializeScript": {
+      "file": "src/fields/ScriptField.ts",
+      "line": 62,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L62"
+    },
+    "ScriptField.CompileScript": {
+      "file": "src/fields/ScriptField.ts",
+      "line": 139,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L139"
+    },
+    "MakeFunction": {
+      "file": "src/fields/ScriptField.ts",
+      "line": 156,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L156"
+    },
+    "MakeScript": {
+      "file": "src/fields/ScriptField.ts",
+      "line": 161,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L161"
+    },
+    "ComputedField.MakeFunction": {
+      "file": "src/fields/ScriptField.ts",
+      "line": 226,
+      "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L226"
+    }
+  },
+  "dynamicRegistrations": [
+    {
+      "expression": "f",
+      "valueExpression": "StrCast(scriptDoc.description)",
+      "owner": "addScriptToGlobals",
+      "source": {
+        "file": "src/client/util/ScriptManager.ts",
+        "line": 83,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptManager.ts#L83"
+      },
+      "reason": "Saved script name, description, and parameter string are read from a document at runtime."
+    },
+    {
+      "expression": "f",
+      "valueExpression": "StrCast(scriptDoc.description)",
+      "owner": "addScriptToGlobals",
+      "source": {
+        "file": "src/client/util/ScriptManager.ts",
+        "line": 85,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/ScriptManager.ts#L85"
+      },
+      "reason": "Saved script name, description, and parameter string are read from a document at runtime."
+    }
+  ],
+  "globals": [
+    {
+      "name": "setActiveTool",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 457,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setActiveTool(tool: InkTool | InkEraserTool | InkInkTool | Gestures, keepPrim: boolean, checkResult?: boolean)",
+      "description": "sets the active ink tool mode",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "InkTranscription.Instance?.createInkGroup",
+          "runInAction",
+          "[InkEraserTool.Stroke, InkEraserTool.Radius, InkEraserTool.Segment].includes",
+          "[InkInkTool.Pen, InkInkTool.Write, InkInkTool.Math, InkInkTool.Highlight].includes",
+          "SnappingManager.SetKeepGestureMode",
+          "Object.values(Gestures).includes",
+          "Object.values",
+          "SnappingManager.SetInkShape"
+        ],
+        "writes": [
+          "Doc.ActiveTool",
+          "Doc.ActiveEraser",
+          "Doc.ActiveInk"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 457,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L457"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets the active ink tool mode.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "setBackgroundColor",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 111,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setBackgroundColor(color?: string, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected",
+          "selectedViews.lastElement",
+          "StrCast",
+          "Doc.UserDoc",
+          "ActiveInkFillColor",
+          "defaultFill",
+          "setDefaultFill",
+          "Cast"
+        ],
+        "writes": [
+          "Doc.UserDoc().textBackgroundColor",
+          "obj[fieldKey]",
+          "colorDoc[fieldKey + alternate]",
+          "doc[doc._layout_isSvg ? '$fillColor' : '$backgroundColor']"
+        ],
+        "returns": 4
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 111,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L111"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets background color.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setBorderColor",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 69,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setBorderColor(color?: string, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected",
+          "StrCast",
+          "Doc.UserDoc",
+          "selectedViews.lastElement",
+          "(dv.layoutDoc[dv.LayoutFieldKey + '_usePath'] ? '_' + dv.layoutDoc[dv.LayoutFieldKey + '_usePath'] …",
+          "Cast",
+          "selView?.containerViewPath?.().lastElement",
+          "selView?.containerViewPath"
+        ],
+        "writes": [
+          "Doc.UserDoc().borderColor",
+          "obj[fieldKey]",
+          "dv.layoutDoc[fieldKey + alternate]",
+          "dv.dataDoc[fieldKey + alternate]",
+          "doc.$borderColor"
+        ],
+        "returns": 3
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 69,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L69"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets border color.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setBorderWidth",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 465,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setBorderWidth(value: number, checkResult?: boolean)",
+      "description": "sets the border width of the selected document",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "NumCast",
+          "Doc.UserDoc",
+          "DocumentView.SelectedDocs().map"
+        ],
+        "writes": [
+          "Doc.UserDoc().borderWidth",
+          "doc._height",
+          "doc._width",
+          "doc.borderWidth"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 465,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L465"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets the border width of the selected document.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "setFontAttr",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 332,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setFontAttr(attr: 'font' | 'fontColor' | 'highlight' | 'fontSize', value: string | number, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RichTextMenu.Instance?.setFontField",
+          "value.toString",
+          "RichTextMenu.Instance?.fontSize.replace",
+          "fsize.toString",
+          "Number(fsize).toString",
+          "Number",
+          "map.get(attr)?.checkResult",
+          "map.get"
+        ],
+        "writes": [
+          "fsize"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 332,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L332"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets font attr.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setHeaderColor",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 166,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setHeaderColor(color?: string, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected",
+          "StrCast",
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "Doc.SharingDoc",
+          "DocumentView.SelectedDocs().forEach",
+          "Doc.GetProto",
+          "Doc.UserDoc"
+        ],
+        "writes": [
+          "doc.$layout_headingColor",
+          "doc.layout_showTitle",
+          "sharing.headingColor",
+          "Doc.GetProto(sharing).headingColor",
+          "Doc.UserDoc().layout_showTitle"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 166,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L166"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets header color.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setInkProperty",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 482,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setInkProperty(option: InkProperty, value: string | number, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "BoolCast",
+          "ActiveIsInkMask",
+          "SetActiveIsInkMask",
+          "ActiveHideTextLabels",
+          "SetactiveHideTextLabels",
+          "NumCast"
+        ],
+        "writes": [
+          "doc.$stroke_isInkMask",
+          "doc.$stroke_showLabel",
+          "doc.$stroke_width",
+          "doc.$color"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 482,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L482"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets ink property.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setTagFilter",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 307,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setTagFilter(tag: string, added: boolean, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "StrListCast(selected?._childFilters) // check all filters for one that filters tags:value where val…",
+          "StrListCast",
+          "filter.split",
+          "Doc.setDocFilter",
+          "SnappingManager.SetPropertiesWidth",
+          "PropertiesView.Instance?.CloseAll"
+        ],
+        "writes": [
+          "PropertiesView.Instance.openFilters"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 307,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L307"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Sets tag filter.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleCharStyle",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 371,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleCharStyle(charStyle: attrname, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "([...Object.values(para_alignment),'vcent'] as (para_alignment|\"vcent\")[]).map",
+          "Object.values",
+          "RichTextMenu.Instance?.vcenterToggle",
+          "RichTextMenu.Instance?.align",
+          "(['bullet','decimal', 'multi'] as attrname[]).map",
+          "RichTextMenu.Instance?.changeListType",
+          "runInAction",
+          "RichTextMenu.Instance?.toggleFitBox"
+        ],
+        "writes": [
+          "textView.recordingDictation",
+          "Doc.UserDoc().fontWeight",
+          "Doc.UserDoc().fontStyle",
+          "Doc.UserDoc().fontDecoration",
+          "Doc.UserDoc().fontStrikeThrough"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 371,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L371"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Toggles char style.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleOverlay",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 188,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleOverlay(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected",
+          "NumCast",
+          "CollectionFreeFormDocumentView.from(selected)?.float",
+          "CollectionFreeFormDocumentView.from",
+          "console.log"
+        ],
+        "writes": [],
+        "returns": 3
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 188,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L188"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Toggles overlay.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleRaiseOnDrag",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 558,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleRaiseOnDrag(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().some",
+          "DocumentView.Selected",
+          "DocumentView.Selected().forEach"
+        ],
+        "writes": [
+          "dv.Document.keepZWhenDragged"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 558,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L558"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Toggles raise on drag.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "webBack",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 592,
+      "registration": "call",
+      "kind": "function",
+      "signature": "webBack()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.back"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 592,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L592"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Runs the web back application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "webForward",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 583,
+      "registration": "call",
+      "kind": "function",
+      "signature": "webForward(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.forward"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 583,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L583"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Runs the web forward application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "webSetURL",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 572,
+      "registration": "call",
+      "kind": "function",
+      "signature": "webSetURL(url: string, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "StrCast",
+          "Cast",
+          "selected.ComponentView?.setData"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 572,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L572"
+      },
+      "mode": "action",
+      "category": "appearance-and-tools",
+      "purpose": "Runs the web set url application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "copyDragFactory",
+      "path": "src/client/documents/DocUtils.ts",
+      "line": 985,
+      "registration": "call",
+      "kind": "function",
+      "signature": "copyDragFactory(dragFactory: Doc, asDelegate?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocUtils.delegateDragFactory",
+          "DocUtils.copyDragFactory"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/documents/DocUtils.ts",
+        "line": 985,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L985"
+      },
+      "mode": "action",
+      "category": "application-services",
+      "purpose": "Runs the copy drag factory application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "Docs",
+      "path": "src/client/documents/DocUtils.ts",
+      "line": 983,
+      "registration": "named-call",
+      "kind": "namespace-or-object",
+      "signature": "Docs",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/documents/DocUtils.ts",
+        "line": 983,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L983"
+      },
+      "mode": "object",
+      "category": "application-services",
+      "purpose": "Exposes the document construction namespace to scripts.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "makeDelegate",
+      "path": "src/client/documents/DocUtils.ts",
+      "line": 989,
+      "registration": "call",
+      "kind": "function",
+      "signature": "makeDelegate(proto: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Docs.Create.DelegateDocument"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/documents/DocUtils.ts",
+        "line": 989,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L989"
+      },
+      "mode": "action",
+      "category": "application-services",
+      "purpose": "Runs the make delegate application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "addTreeFolder",
+      "path": "src/client/views/collections/CollectionTreeView.tsx",
+      "line": 368,
+      "registration": "call",
+      "kind": "function",
+      "signature": "addTreeFolder(doc: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "CollectionTreeView.addTreeFolder"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionTreeView.tsx",
+        "line": 368,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionTreeView.tsx#L368"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Adds tree folder.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "bringToFront",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2589,
+      "registration": "call",
+      "kind": "function",
+      "signature": "bringToFront()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().forEach",
+          "DocumentView.Selected",
+          "CollectionFreeFormView.from(view)?.bringToFront",
+          "CollectionFreeFormView.from"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2589,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2589"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the bring to front application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "curKeyFrame",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2569,
+      "registration": "call",
+      "kind": "function",
+      "signature": "curKeyFrame(readOnly: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected",
+          "selView[0].ComponentView?.getKeyFrameEditing",
+          "runInAction",
+          "selView[0].ComponentView?.setKeyFrameEditing"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2569,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2569"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the cur key frame application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "formatToTime",
+      "path": "src/client/views/collections/CollectionStackedTimeline.tsx",
+      "line": 883,
+      "registration": "call",
+      "kind": "function",
+      "signature": "formatToTime(time: number): string",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "formatTime"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
+        "line": 883,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionStackedTimeline.tsx#L883"
+      },
+      "mode": "query",
+      "category": "collections-and-layout",
+      "purpose": "Returns or evaluates format to time.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "gotoFrame",
+      "path": "src/client/views/nodes/CollectionFreeFormDocumentView.tsx",
+      "line": 337,
+      "registration": "call",
+      "kind": "function",
+      "signature": "gotoFrame(doc: Doc, newFrame: number)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "CollectionFreeFormDocumentView.gotoKeyFrame"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/CollectionFreeFormDocumentView.tsx",
+        "line": 337,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/CollectionFreeFormDocumentView.tsx#L337"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Navigates using goto frame.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "max",
+      "path": "src/client/views/collections/CollectionStackedTimeline.tsx",
+      "line": 891,
+      "registration": "call",
+      "kind": "function",
+      "signature": "max(num1: number, num2: number): number",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Math.max"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
+        "line": 891,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionStackedTimeline.tsx#L891"
+      },
+      "mode": "query",
+      "category": "collections-and-layout",
+      "purpose": "Returns or evaluates max.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "min",
+      "path": "src/client/views/collections/CollectionStackedTimeline.tsx",
+      "line": 887,
+      "registration": "call",
+      "kind": "function",
+      "signature": "min(num1: number, num2: number): number",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Math.min"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionStackedTimeline.tsx",
+        "line": 887,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionStackedTimeline.tsx#L887"
+      },
+      "mode": "query",
+      "category": "collections-and-layout",
+      "purpose": "Returns or evaluates min.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "nextKeyFrame",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2561,
+      "registration": "call",
+      "kind": "function",
+      "signature": "nextKeyFrame(readOnly: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "(DocumentView.Selected()[0].ComponentView as CollectionFreeFormView)?.changeKeyFrame",
+          "DocumentView.Selected"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2561,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2561"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Navigates using next key frame.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "openDoc",
+      "path": "src/client/views/collections/CollectionDockingView.tsx",
+      "line": 680,
+      "registration": "call",
+      "kind": "function",
+      "signature": "openDoc(doc: Doc | string, where: OpenWhere)",
+      "description": "opens up document in location specified",
+      "parameterMetadata": "(doc: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "CollectionDockingView.AddSplit",
+          "StrCast",
+          "console.log",
+          "OverlayView.Instance.addWindow",
+          "Doc.AddToMyOverlay"
+        ],
+        "writes": [],
+        "returns": 3
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 680,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L680"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Opens up document in location specified.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "openInLightbox",
+      "path": "src/client/views/collections/CollectionDockingView.tsx",
+      "line": 672,
+      "registration": "call",
+      "kind": "function",
+      "signature": "openInLightbox(doc: Doc)",
+      "description": "opens up document in a lightbox",
+      "parameterMetadata": "(doc: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "CollectionDockingView.Instance?._props.addDocTab"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 672,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L672"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Opens up document in a lightbox.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "pinWithView",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2576,
+      "registration": "call",
+      "kind": "function",
+      "signature": "pinWithView(pinContent: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().forEach",
+          "DocumentView.Selected",
+          "view._props.pinToPres",
+          "Cast",
+          "MarqueeView.CurViewBounds",
+          "view._props.PanelWidth",
+          "view._props.PanelHeight"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2576,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2576"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the pin with view application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "pivotColumnClick",
+      "path": "src/client/views/collections/CollectionPivotView.tsx",
+      "line": 116,
+      "registration": "call",
+      "kind": "function",
+      "signature": "pivotColumnClick(pivotDoc: Doc, bounds: ViewDefBounds)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "StrCast",
+          "NumCast",
+          "StrListCast",
+          "ObjectField.MakeCopy",
+          "setTimeout",
+          "action",
+          "filterVals.map",
+          "Doc.setDocFilter"
+        ],
+        "writes": [
+          "pivotDoc['_prevDocFilter' + prevFilterIndex]",
+          "pivotDoc['_prevDocRangeFilters' + prevFilterIndex]",
+          "pivotDoc['_prevPivotFields' + prevFilterIndex]",
+          "pivotDoc._prevFilterIndex",
+          "pivotDoc._childFilters",
+          "pivotDoc._pivotField"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionPivotView.tsx",
+        "line": 116,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionPivotView.tsx#L116"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the pivot column click application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "prevKeyFrame",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2565,
+      "registration": "call",
+      "kind": "function",
+      "signature": "prevKeyFrame(readOnly: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "(DocumentView.Selected()[0].ComponentView as CollectionFreeFormView)?.changeKeyFrame",
+          "DocumentView.Selected"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2565,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2565"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Navigates using prev key frame.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "sendToBack",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2593,
+      "registration": "call",
+      "kind": "function",
+      "signature": "sendToBack()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().forEach",
+          "DocumentView.Selected",
+          "CollectionFreeFormView.from(view)?.bringToFront",
+          "CollectionFreeFormView.from"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2593,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2593"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the send to back application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setGroupBy",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 671,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setGroupBy(key: string, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().forEach",
+          "DocumentView.SelectedDocs",
+          "StrCast",
+          "Doc.UserDoc",
+          "RichTextMenu.Instance?.setFontField"
+        ],
+        "writes": [
+          "doc._text_fontFamily",
+          "Doc.UserDoc().fontFamily"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 671,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L671"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Sets group by.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setView",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 50,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setView(view: string, shiftKey: boolean, checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs",
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "Doc.MakeEmbedding",
+          "selected._props.addDocTab",
+          "console.log"
+        ],
+        "writes": [
+          "newCol._type_collection",
+          "selected.Document._type_collection"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 50,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L50"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Sets view.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "showFreeform",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 199,
+      "registration": "call",
+      "kind": "function",
+      "signature": "showFreeform(attr: 'autoCols' | 'flashcards' | 'hcenter' | 'vcenter' | 'stagger' | 'grid' | 'snaplines' | 'clusters' | 'viewAll' | '…, checkResult?: boolean, persist?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "BoolCast",
+          "Doc.LayoutDataKey",
+          "(dv.ComponentView as CollectionFreeFormView)?.fitContentOnce",
+          "StrCast(doc?._layout_dontCenter).includes",
+          "StrCast",
+          "StrCast(doc.layout_dontCenter).includes"
+        ],
+        "writes": [
+          "doc[Doc.LayoutDataKey(doc) + \"_columnHeaders_autoCreate\"]",
+          "doc._freeform_backgroundGrid",
+          "doc._freeform_snapLines",
+          "doc._freeform_wraparound",
+          "doc._freeform_fitContentsToBox",
+          "doc._layout_dontCenter",
+          "doc._layout_stagger",
+          "doc._freeform_useClusters"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 199,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L199"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the show freeform application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "snapshotDashboard",
+      "path": "src/client/views/collections/CollectionDockingView.tsx",
+      "line": 702,
+      "registration": "call",
+      "kind": "function",
+      "signature": "async snapshotDashboard()",
+      "description": "creates a snapshot copy of a dashboard",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "undoable(() => CollectionDockingView.TakeSnapshot(Doc.ActiveDashboard), 'snapshot dashboard')",
+          "undoable",
+          "CollectionDockingView.TakeSnapshot"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 702,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L702"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Creates a snapshot copy of a dashboard.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "switchView",
+      "path": "src/client/views/TemplateMenu.tsx",
+      "line": 130,
+      "registration": "call",
+      "kind": "function",
+      "signature": "switchView(templateIn: Doc | undefined)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected?.().forEach",
+          "DocumentView.Selected",
+          "dv.switchViews",
+          "StrCast",
+          "DocCast"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/TemplateMenu.tsx",
+        "line": 130,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/TemplateMenu.tsx#L130"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the switch view application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleSchemaPreview",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 641,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleSchemaPreview(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "NumCast"
+        ],
+        "writes": [
+          "selected.schema_previewWidth"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 641,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L641"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Toggles schema preview.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleSingleLineSchema",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 656,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleSingleLineSchema(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.SelectedDocs().lastElement",
+          "DocumentView.SelectedDocs",
+          "BoolCast"
+        ],
+        "writes": [
+          "selected._schema_singleLine"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 656,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L656"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Toggles single line schema.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "updateLinkCollection",
+      "path": "src/client/views/nodes/DocumentView.tsx",
+      "line": 2030,
+      "registration": "call",
+      "kind": "function",
+      "signature": "updateLinkCollection(linkCollection: Doc, linkSource: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocListCast",
+          "NumCast",
+          "Doc.Links",
+          "links.forEach",
+          "Doc.getOppositeAnchor",
+          "DocCast",
+          "collectedLinks?.some",
+          "Doc.AreProtosEqual"
+        ],
+        "writes": [
+          "embedding",
+          "embedding.x",
+          "embedding.y",
+          "embedding._lockedPosition",
+          "wid"
+        ],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 2030,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2030"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the update link collection application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "updateTagsCollection",
+      "path": "src/client/views/nodes/DocumentView.tsx",
+      "line": 2051,
+      "registration": "call",
+      "kind": "function",
+      "signature": "updateTagsCollection(collection: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "StrCast(collection.title).split",
+          "StrCast",
+          "Array.from",
+          "SearchUtil.SearchCollection(Doc.MyFilesystem, tag, false, ['tags']).keys",
+          "SearchUtil.SearchCollection",
+          "DocListCast(collection.$data).concat",
+          "DocListCast",
+          "matchedTags .filter(tagDoc => !Doc.AreProtosEqual(collection, tagDoc)) .reduce"
+        ],
+        "writes": [
+          "embedding",
+          "embedding.x",
+          "embedding.y",
+          "embedding._lockedPosition",
+          "wid",
+          "created",
+          "collection.$data"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 2051,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2051"
+      },
+      "mode": "action",
+      "category": "collections-and-layout",
+      "purpose": "Runs the update tags collection application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "convertToButtons",
+      "path": "src/client/util/DropConverter.ts",
+      "line": 116,
+      "registration": "call",
+      "kind": "function",
+      "signature": "convertToButtons(dragData: DragManager.DocumentDragData)",
+      "description": "converts the dropped data to buttons",
+      "parameterMetadata": "(dragData: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "convertDropDataToButtons"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/util/DropConverter.ts",
+        "line": 116,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/DropConverter.ts#L116"
+      },
+      "mode": "action",
+      "category": "imports-and-services",
+      "purpose": "Converts the dropped data to buttons.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "GoogleAuthenticationManager",
+      "path": "src/client/apis/GoogleAuthenticationManager.tsx",
+      "line": 169,
+      "registration": "named-call",
+      "kind": "class",
+      "signature": "new GoogleAuthenticationManager(props: object)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/apis/GoogleAuthenticationManager.tsx",
+        "line": 169,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/apis/GoogleAuthenticationManager.tsx#L169"
+      },
+      "mode": "constructor",
+      "category": "imports-and-services",
+      "purpose": "Constructs a GoogleAuthenticationManager runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "activeEraserTool",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 460,
+      "registration": "call",
+      "kind": "function",
+      "signature": "activeEraserTool()",
+      "description": "returns the current eraser tool",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "StrCast",
+          "Doc.UserDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 460,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L460"
+      },
+      "mode": "query",
+      "category": "ink-and-gesture",
+      "purpose": "Returns the current eraser tool.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "createText",
+      "path": "src/client/views/GestureOverlay.tsx",
+      "line": 636,
+      "registration": "call",
+      "kind": "function",
+      "signature": "createText(text: string, X: number, Y: number)",
+      "description": "creates a text document with inputted text and coordinates",
+      "parameterMetadata": "(text: any, x: any, y: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "GestureOverlay.Instance.dispatchGesture"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/GestureOverlay.tsx",
+        "line": 636,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GestureOverlay.tsx#L636"
+      },
+      "mode": "action",
+      "category": "ink-and-gesture",
+      "purpose": "Creates a text document with inputted text and coordinates.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "GestureOverlay",
+      "path": "src/client/views/GestureOverlay.tsx",
+      "line": 615,
+      "registration": "named-call",
+      "kind": "class",
+      "signature": "new GestureOverlay(props: GestureOverlayProps)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/GestureOverlay.tsx",
+        "line": 615,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GestureOverlay.tsx#L615"
+      },
+      "mode": "constructor",
+      "category": "ink-and-gesture",
+      "purpose": "Constructs a GestureOverlay runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "NotRadiusEraser",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1257,
+      "registration": "call",
+      "kind": "function",
+      "signature": "NotRadiusEraser()",
+      "description": "is the active tool anything but the radius eraser",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1257,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1257"
+      },
+      "mode": "query",
+      "category": "ink-and-gesture",
+      "purpose": "Is the active tool anything but the radius eraser.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "resetPen",
+      "path": "src/client/views/GestureOverlay.tsx",
+      "line": 630,
+      "registration": "call",
+      "kind": "function",
+      "signature": "resetPen()",
+      "description": "resets the pen tool",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "runInAction",
+          "SetActiveInkColor",
+          "SetActiveInkWidth",
+          "GestureOverlay.Instance.SavedWidth?.toString"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/GestureOverlay.tsx",
+        "line": 630,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GestureOverlay.tsx#L630"
+      },
+      "mode": "action",
+      "category": "ink-and-gesture",
+      "purpose": "Resets the pen tool.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "setPen",
+      "path": "src/client/views/GestureOverlay.tsx",
+      "line": 617,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setPen(width: string, color: string, fill: string, arrowStart: string, arrowEnd: string, dash: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "runInAction",
+          "ActiveInkColor",
+          "SetActiveInkColor",
+          "ActiveInkWidth",
+          "SetActiveInkWidth",
+          "SetActiveInkFillColor",
+          "SetActiveInkArrowStart",
+          "SetActiveInkDash"
+        ],
+        "writes": [
+          "GestureOverlay.Instance.SavedColor",
+          "GestureOverlay.Instance.SavedWidth"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/GestureOverlay.tsx",
+        "line": 617,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/GestureOverlay.tsx#L617"
+      },
+      "mode": "action",
+      "category": "ink-and-gesture",
+      "purpose": "Sets pen.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "datavizFromSchema",
+      "path": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+      "line": 2597,
+      "registration": "call",
+      "kind": "function",
+      "signature": "datavizFromSchema()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().forEach",
+          "DocumentView.Selected",
+          "Cast(view.layoutDoc.schema_columnKeys, listSpec('string'))?.filter",
+          "Cast",
+          "listSpec",
+          "DocListCast",
+          "Doc.LayoutDataKey",
+          "csvRows.push"
+        ],
+        "writes": [
+          "view.layoutDoc.schema_columnKeys",
+          "cell",
+          "loading.presentation_openInLightbox",
+          "loading._dataViz_asSchema"
+        ],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2597,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2597"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the dataviz from schema application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "equation_colorizer",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 539,
+      "registration": "call",
+      "kind": "function",
+      "signature": "equation_colorizer(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected() .filter(dv => dv.ComponentView instanceof EquationBox) .forEach",
+          "DocumentView.Selected() .filter",
+          "DocumentView.Selected",
+          "(dv.ComponentView as EquationBox).colorize"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 539,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L539"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the equation colorizer application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "equation_slider",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 524,
+      "registration": "call",
+      "kind": "function",
+      "signature": "equation_slider(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().some",
+          "DocumentView.Selected",
+          "DocumentView.Selected().forEach"
+        ],
+        "writes": [
+          "dv.Document._showSlider"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 524,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L524"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the equation slider application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "equation_titles",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 549,
+      "registration": "call",
+      "kind": "function",
+      "signature": "equation_titles(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().some",
+          "DocumentView.Selected",
+          "DocumentView.Selected().forEach"
+        ],
+        "writes": [
+          "dv.Document.layout_hideDecorationTitle"
+        ],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 549,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L549"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the equation titles application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "equation_variables",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 532,
+      "registration": "call",
+      "kind": "function",
+      "signature": "equation_variables(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected() .filter(dv => dv.ComponentView instanceof EquationBox) .forEach",
+          "DocumentView.Selected() .filter",
+          "DocumentView.Selected",
+          "(dv.ComponentView as EquationBox).findVars"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 532,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L532"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the equation variables application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageDontBlend",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 604,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageDontBlend(readOnly?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().some",
+          "DocumentView.Selected",
+          "DocumentView.Selected().forEach"
+        ],
+        "writes": [
+          "dv.Document._disableMixBlend"
+        ],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 604,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L604"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image dont blend application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageMaskForeground",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 609,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageMaskForeground()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.maskForeground"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 609,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L609"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image mask foreground application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageRemoveBackground",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 614,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageRemoveBackground()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.removeBackground"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 614,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L614"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image remove background application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageRotate90",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 624,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageRotate90()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.rotate"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 624,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L624"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image rotate90 application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageSetPixelSize",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 619,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageSetPixelSize()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.setNativeSize"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 619,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L619"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image set pixel size application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "imageStretch",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 629,
+      "registration": "call",
+      "kind": "function",
+      "signature": "imageStretch()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected"
+        ],
+        "writes": [
+          "selected.layoutDoc._layout_reflowHorizontal",
+          "selected.layoutDoc._layout_reflowVertical"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 629,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L629"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the image stretch application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setDefaultImageTemplate",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 161,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setDefaultImageTemplate(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.setDefaultImageTemplate"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 161,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L161"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Sets default image template.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "urlHash",
+      "path": "src/client/views/nodes/WebBox.tsx",
+      "line": 1348,
+      "registration": "call",
+      "kind": "function",
+      "signature": "urlHash(url: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "stringHash"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/WebBox.tsx",
+        "line": 1348,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/WebBox.tsx#L1348"
+      },
+      "mode": "query",
+      "category": "media-and-specialized-content",
+      "purpose": "Returns or evaluates url hash.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "videoSnapshot",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 598,
+      "registration": "call",
+      "kind": "function",
+      "signature": "videoSnapshot()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "selected?.Snapshot"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 598,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L598"
+      },
+      "mode": "action",
+      "category": "media-and-specialized-content",
+      "purpose": "Runs the video snapshot application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getCurrentRecording",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 205,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getCurrentRecording()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.UserDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 205,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L205"
+      },
+      "mode": "query",
+      "category": "recording-and-replay",
+      "purpose": "Returns current recording.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getWorkspaceRecordings",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 209,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getWorkspaceRecordings()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocListCast",
+          "Doc.UserDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 209,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L209"
+      },
+      "mode": "query",
+      "category": "recording-and-replay",
+      "purpose": "Returns workspace recordings.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "isWorkspaceRecording",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 213,
+      "registration": "call",
+      "kind": "function",
+      "signature": "isWorkspaceRecording()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.UserDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 213,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L213"
+      },
+      "mode": "query",
+      "category": "recording-and-replay",
+      "purpose": "Reports whether workspace recording.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "isWorkspaceReplaying",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 217,
+      "registration": "call",
+      "kind": "function",
+      "signature": "isWorkspaceReplaying()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.UserDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 217,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L217"
+      },
+      "mode": "query",
+      "category": "recording-and-replay",
+      "purpose": "Reports whether workspace replaying.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "pauseWorkspaceReplaying",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 228,
+      "registration": "call",
+      "kind": "function",
+      "signature": "pauseWorkspaceReplaying(value: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RecordingBox.pauseWorkspaceReplaying"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 228,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L228"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the pause workspace replaying application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "removeWorkspaceReplaying",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 200,
+      "registration": "call",
+      "kind": "function",
+      "signature": "removeWorkspaceReplaying(value: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RecordingBox.removeWorkspaceReplaying"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 200,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L200"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Removes workspace replaying.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "renderDropdown",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 246,
+      "registration": "call",
+      "kind": "function",
+      "signature": "renderDropdown()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.UserDoc",
+          "DocListCast"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 246,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L246"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the render dropdown application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "replayWorkspace",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 221,
+      "registration": "call",
+      "kind": "function",
+      "signature": "replayWorkspace(value: Doc | string, _readOnly_: boolean)",
+      "description": "This method changes the menu depending on whether or not we are in playback mode\n@param value  RecordingBox rootdoc",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocCast",
+          "Doc.UserDoc",
+          "RecordingBox.WorkspaceStartRecording",
+          "RecordingBox.replayWorkspace"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 221,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L221"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "This method changes the menu depending on whether or not we are in playback mode\n@param value  RecordingBox rootdoc.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "resumeWorkspaceReplaying",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 232,
+      "registration": "call",
+      "kind": "function",
+      "signature": "resumeWorkspaceReplaying(value: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RecordingBox.resumeWorkspaceReplaying"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 232,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L232"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the resume workspace replaying application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "startRecordingDrag",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 237,
+      "registration": "call",
+      "kind": "function",
+      "signature": "startRecordingDrag(value: { doc: Doc | string; e: React.PointerEvent })",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocCast",
+          "DragManager.StartDocumentDrag",
+          "value.e.preventDefault"
+        ],
+        "writes": [],
+        "returns": 2
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 237,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L237"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the start recording drag application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "stopWorkspaceRecording",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 191,
+      "registration": "call",
+      "kind": "function",
+      "signature": "stopWorkspaceRecording()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RecordingBox.WorkspaceStopRecording"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 191,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L191"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the stop workspace recording application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "stopWorkspaceReplaying",
+      "path": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+      "line": 196,
+      "registration": "call",
+      "kind": "function",
+      "signature": "stopWorkspaceReplaying(value: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "RecordingBox.stopWorkspaceReplaying"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/RecordingBox/RecordingBox.tsx",
+        "line": 196,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/RecordingBox/RecordingBox.tsx#L196"
+      },
+      "mode": "action",
+      "category": "recording-and-replay",
+      "purpose": "Runs the stop workspace replaying application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "ComputedField",
+      "path": "src/fields/ScriptField.ts",
+      "line": 183,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new ComputedField(script: CompiledScript | undefined, setterscript?: CompiledScript, rawscript?: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "ComputedField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 183,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L183"
+      },
+      "mode": "constructor",
+      "category": "scripting-and-automation",
+      "purpose": "Constructs a ComputedField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "dashCallChat",
+      "path": "src/fields/ScriptField.ts",
+      "line": 296,
+      "registration": "call",
+      "kind": "function",
+      "signature": "dashCallChat(setVal: (val: FieldResult) => void, target: Doc, queryText: string)",
+      "description": "calls chat gpt for the query string and then calls setVal with the result",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "ScriptField.CallGpt"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 296,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L296"
+      },
+      "mode": "action",
+      "category": "scripting-and-automation",
+      "purpose": "Starts the legacy GPT completion helper and writes its pending and final value through the supplied setter.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "dragChatBox",
+      "path": "src/client/views/nodes/chatbot/chatboxcomponents/ChatMessageBox.tsx",
+      "line": 249,
+      "registration": "call",
+      "kind": "function",
+      "signature": "dragChatBox(chatMsgDoc?: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.getFirstDocumentView",
+          "Docs.Create.ChatDocument",
+          "StrCast",
+          "chatBoxView.historyDocs.slice(0, chatBoxView.historyDocs.indexOf(chatMsgDoc)).map",
+          "chatBoxView.historyDocs.slice",
+          "chatBoxView.historyDocs.indexOf",
+          "Doc.MakeEmbedding",
+          "DocumentView.SetSelectOnLoad"
+        ],
+        "writes": [
+          "anchor.$data",
+          "ChatBox.DefaultPrompt"
+        ],
+        "returns": 3
+      },
+      "source": {
+        "file": "src/client/views/nodes/chatbot/chatboxcomponents/ChatMessageBox.tsx",
+        "line": 249,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/chatbot/chatboxcomponents/ChatMessageBox.tsx#L249"
+      },
+      "mode": "action",
+      "category": "scripting-and-automation",
+      "purpose": "Runs the drag chat box application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getIndexVal",
+      "path": "src/fields/ScriptField.ts",
+      "line": 278,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getIndexVal(list: unknown[], index: number, defaultVal: Opt<number> = undefined)",
+      "description": "returns the value at a given index of a list",
+      "parameterMetadata": "(list: any[], index: number)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "list?.reduce"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 278,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L278"
+      },
+      "mode": "query",
+      "category": "scripting-and-automation",
+      "purpose": "Returns the value at a given index of a list.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "makeScript",
+      "path": "src/fields/ScriptField.ts",
+      "line": 287,
+      "registration": "call",
+      "kind": "function",
+      "signature": "makeScript(script: string)",
+      "description": "returns the value at a given index of a list",
+      "parameterMetadata": "(list: any[], index: number)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "ScriptField.MakeScript"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 287,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L287"
+      },
+      "mode": "action",
+      "category": "scripting-and-automation",
+      "purpose": "Compiles a statement body and returns a persistent ScriptField when compilation succeeds.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "ScriptField",
+      "path": "src/fields/ScriptField.ts",
+      "line": 86,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new ScriptField(script: CompiledScript | undefined, setterscript?: CompiledScript, rawscript?: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "ScriptField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 86,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L86"
+      },
+      "mode": "constructor",
+      "category": "scripting-and-automation",
+      "purpose": "Constructs a ScriptField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setIndexVal",
+      "path": "src/fields/ScriptField.ts",
+      "line": 268,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setIndexVal(list: FieldResult[], index: number, value: FieldType)",
+      "description": "sets the value at a given index of a list",
+      "parameterMetadata": "(list: any[], index: number, value: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "list.push"
+        ],
+        "writes": [
+          "list[index]"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/ScriptField.ts",
+        "line": 268,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ScriptField.ts#L268"
+      },
+      "mode": "action",
+      "category": "scripting-and-automation",
+      "purpose": "Sets the value at a given index of a list.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "deselectAll",
+      "path": "src/client/util/SelectionManager.ts",
+      "line": 92,
+      "registration": "call",
+      "kind": "function",
+      "signature": "deselectAll()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "SelectionManager.DeselectAll"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 92,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L92"
+      },
+      "mode": "action",
+      "category": "selection-and-history",
+      "purpose": "Runs the deselect all application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "IsNoneSelected",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 44,
+      "registration": "call",
+      "kind": "function",
+      "signature": "IsNoneSelected()",
+      "description": "are no document selected",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 44,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L44"
+      },
+      "mode": "query",
+      "category": "selection-and-history",
+      "purpose": "Are no document selected.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "redo",
+      "path": "src/client/util/SelectionManager.ts",
+      "line": 111,
+      "registration": "call",
+      "kind": "function",
+      "signature": "redo()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "SelectionManager.DeselectAll",
+          "UndoManager.Redo"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 111,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L111"
+      },
+      "mode": "action",
+      "category": "selection-and-history",
+      "purpose": "Runs the redo application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "selectedDocs",
+      "path": "src/client/util/SelectionManager.ts",
+      "line": 116,
+      "registration": "call",
+      "kind": "function",
+      "signature": "selectedDocs(container: Doc, excludeCollections: boolean, prevValue: Doc[])",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "SelectionManager.Docs().filter",
+          "SelectionManager.Docs",
+          "Doc.AreProtosEqual",
+          "Cast",
+          "listSpec"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 116,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L116"
+      },
+      "mode": "query",
+      "category": "selection-and-history",
+      "purpose": "Returns the current selection with optional collection exclusion and prior-value fallback.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "SelectedDocType",
+      "path": "src/client/util/SelectionManager.ts",
+      "line": 84,
+      "registration": "call",
+      "kind": "function",
+      "signature": "SelectedDocType(type: string, expertMode: boolean, checkContext?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().lastElement",
+          "DocumentView.Selected",
+          "(sel => (checkContext ? DocCast(sel?.embedContainer) : sel))",
+          "DocCast",
+          "DocumentView.SelectedSchemaDoc",
+          "SelectionManager.Docs().lastElement",
+          "SelectionManager.Docs"
+        ],
+        "writes": [],
+        "returns": 3
+      },
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 84,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L84"
+      },
+      "mode": "query",
+      "category": "selection-and-history",
+      "purpose": "Returns or evaluates selected doc type.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "undo",
+      "path": "src/client/util/SelectionManager.ts",
+      "line": 96,
+      "registration": "call",
+      "kind": "function",
+      "signature": "undo()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "SelectionManager.DeselectAll",
+          "UndoManager.Undo"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 96,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L96"
+      },
+      "mode": "action",
+      "category": "selection-and-history",
+      "purpose": "Runs the undo application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "activeInkTool",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1255,
+      "registration": "call",
+      "kind": "function",
+      "signature": "activeInkTool()",
+      "description": "is a pen tool or an ink stroke active",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.Selected().some",
+          "DocumentView.Selected"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1255,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1255"
+      },
+      "mode": "query",
+      "category": "user-state-and-modes",
+      "purpose": "Is a pen tool or an ink stroke active.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "getSharingDoc",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1271,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getSharingDoc()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.SharingDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1271,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1271"
+      },
+      "mode": "query",
+      "category": "user-state-and-modes",
+      "purpose": "Returns sharing doc.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "importDocument",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1267,
+      "registration": "call",
+      "kind": "function",
+      "signature": "importDocument()",
+      "description": "imports files from device directly into the import sidebar",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "CurrentUserUtils.importDocument"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1267,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1267"
+      },
+      "mode": "action",
+      "category": "user-state-and-modes",
+      "purpose": "Imports files from device directly into the import sidebar.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "IsExploreMode",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1261,
+      "registration": "call",
+      "kind": "function",
+      "signature": "IsExploreMode()",
+      "description": "is Dash in exploration mode",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1261,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1261"
+      },
+      "mode": "query",
+      "category": "user-state-and-modes",
+      "purpose": "Is Dash in exploration mode.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "IsNoviceMode",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1263,
+      "registration": "call",
+      "kind": "function",
+      "signature": "IsNoviceMode()",
+      "description": "is Dash in novice mode",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1263,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1263"
+      },
+      "mode": "query",
+      "category": "user-state-and-modes",
+      "purpose": "Is Dash in novice mode.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "MySharedDocs",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1259,
+      "registration": "call",
+      "kind": "function",
+      "signature": "MySharedDocs()",
+      "description": "document containing all shared Docs",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1259,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1259"
+      },
+      "mode": "query",
+      "category": "user-state-and-modes",
+      "purpose": "Document containing all shared Docs.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "setInkToolDefaults",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1269,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setInkToolDefaults()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [
+          "Doc.ActiveTool"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1269,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1269"
+      },
+      "mode": "action",
+      "category": "user-state-and-modes",
+      "purpose": "Sets ink tool defaults.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "toggleComicMode",
+      "path": "src/client/util/CurrentUserUtils.ts",
+      "line": 1265,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleComicMode()",
+      "description": "switches between comic and normal document rendering",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.UserDoc"
+        ],
+        "writes": [
+          "Doc.UserDoc().renderStyle"
+        ],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1265,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1265"
+      },
+      "mode": "action",
+      "category": "user-state-and-modes",
+      "purpose": "Switches between comic and normal document rendering.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "activePresentationItem",
+      "path": "src/fields/Doc.ts",
+      "line": 1822,
+      "registration": "call",
+      "kind": "function",
+      "signature": "activePresentationItem()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocListCast",
+          "Doc.LayoutDataKey",
+          "NumCast"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1822,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1822"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns or evaluates active presentation item.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "addDocToList",
+      "path": "src/fields/Doc.ts",
+      "line": 1802,
+      "registration": "call",
+      "kind": "function",
+      "signature": "addDocToList(doc: Doc, field: string, added: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.AddDocToList"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1802,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1802"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Adds doc to list.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "assignDoc",
+      "path": "src/fields/Doc.ts",
+      "line": 1814,
+      "registration": "call",
+      "kind": "function",
+      "signature": "assignDoc(doc: Doc, field: string, id: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.assignDocToField"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1814,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1814"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Runs the assign doc application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "AudioField",
+      "path": "src/fields/URLField.ts",
+      "line": 60,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new AudioField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "AudioField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 60,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L60"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a AudioField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "compareLists",
+      "path": "src/fields/List.ts",
+      "line": 323,
+      "registration": "call",
+      "kind": "function",
+      "signature": "compareLists(l1: List<FieldType>, l2: List<FieldType>)",
+      "description": "compare two lists",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "StrListCast",
+          "L2.reduce",
+          "L1.includes"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/List.ts",
+        "line": 323,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L323"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Compare two lists.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "copyField",
+      "path": "src/fields/Doc.ts",
+      "line": 1794,
+      "registration": "call",
+      "kind": "function",
+      "signature": "copyField(field: FieldResult)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Field.Copy"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1794,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1794"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Copies an ObjectField through its Copy contract and passes primitive or reference values through.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "CsvField",
+      "path": "src/fields/URLField.ts",
+      "line": 75,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new CsvField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "CsvField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 75,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L75"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a CsvField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "d",
+      "path": "src/fields/DateField.ts",
+      "line": 42,
+      "registration": "call",
+      "kind": "function",
+      "signature": "d(...dateArgs: ConstructorParameters<typeof Date>)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/DateField.ts",
+        "line": 42,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/DateField.ts#L42"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a DateField from the same arguments accepted by JavaScript Date.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "DateField",
+      "path": "src/fields/DateField.ts",
+      "line": 7,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new DateField(date: Date = new Date())",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "DateField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/DateField.ts",
+        "line": 7,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/DateField.ts#L7"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a DateField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "Doc",
+      "path": "src/fields/Doc.ts",
+      "line": 202,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new Doc(id?: FieldId, forceSave?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "Doc",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 202,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L202"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a Doc runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "docCastAsync",
+      "path": "src/fields/Doc.ts",
+      "line": 1818,
+      "registration": "call",
+      "kind": "function",
+      "signature": "docCastAsync(doc: FieldResult): FieldResult<Doc>",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Cast"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1818,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1818"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns or evaluates doc cast async.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "docList",
+      "path": "src/fields/Doc.ts",
+      "line": 1798,
+      "registration": "call",
+      "kind": "function",
+      "signature": "docList(field: FieldResult)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocListCast"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1798,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1798"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Converts a field result into the document-list form used by Dash helpers.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "getCopy",
+      "path": "src/fields/Doc.ts",
+      "line": 1790,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getCopy(doc: Doc, copyProto: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.MakeDelegateWithProto",
+          "Doc.MakeCopy"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1790,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1790"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns copy.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getDocTemplate",
+      "path": "src/fields/Doc.ts",
+      "line": 1782,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getDocTemplate(doc?: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.getDocTemplate"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1782,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1782"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns doc template.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getEmbedding",
+      "path": "src/fields/Doc.ts",
+      "line": 1786,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getEmbedding(doc: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.MakeEmbedding"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1786,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1786"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns embedding.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "getProto",
+      "path": "src/fields/Doc.ts",
+      "line": 1778,
+      "registration": "call",
+      "kind": "function",
+      "signature": "getProto(doc: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.GetProto"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1778,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1778"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns proto.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "HtmlField",
+      "path": "src/fields/HtmlField.ts",
+      "line": 7,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new HtmlField(html: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "HtmlField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/HtmlField.ts",
+        "line": 7,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/HtmlField.ts#L7"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a HtmlField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "idToDoc",
+      "path": "src/fields/Doc.ts",
+      "line": 1770,
+      "registration": "call",
+      "kind": "function",
+      "signature": "idToDoc(id: string): Doc | undefined",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "IdToDoc"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1770,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1770"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns the currently cached document for a persistent ID, when available.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "ImageField",
+      "path": "src/fields/URLField.ts",
+      "line": 63,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new ImageField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "ImageField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 63,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L63"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a ImageField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "InkField",
+      "path": "src/fields/InkField.ts",
+      "line": 143,
+      "registration": "named-call",
+      "kind": "class",
+      "signature": "new InkField(data: InkData)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/InkField.ts",
+        "line": 143,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/InkField.ts#L143"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a InkField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "List",
+      "path": "src/fields/List.ts",
+      "line": 321,
+      "registration": "named-call",
+      "kind": "namespace-or-object",
+      "signature": "List",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/List.ts",
+        "line": 321,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L321"
+      },
+      "mode": "object",
+      "category": "values-and-documents",
+      "purpose": "Constructs an observable Dash List rather than a plain JavaScript array.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "ObjectField",
+      "path": "src/fields/ObjectField.ts",
+      "line": 37,
+      "registration": "call",
+      "kind": "class",
+      "signature": "new ObjectField()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/ObjectField.ts",
+        "line": 37,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ObjectField.ts#L37"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a ObjectField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "PdfField",
+      "path": "src/fields/URLField.ts",
+      "line": 69,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new PdfField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "PdfField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 69,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L69"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a PdfField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "PrefetchProxy",
+      "path": "src/fields/Proxy.ts",
+      "line": 115,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new PrefetchProxy(value?: Doc | string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "PrefetchProxy",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/Proxy.ts",
+        "line": 115,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Proxy.ts#L115"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a PrefetchProxy runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "renameEmbedding",
+      "path": "src/fields/Doc.ts",
+      "line": 1774,
+      "registration": "call",
+      "kind": "function",
+      "signature": "renameEmbedding(doc: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "StrCast(DocCast(doc.proto)?.title).replace",
+          "StrCast",
+          "DocCast"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1774,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1774"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Runs the rename embedding application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "RichTextField",
+      "path": "src/fields/RichTextField.ts",
+      "line": 8,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new RichTextField(data: string, text: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "RichTextField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/RichTextField.ts",
+        "line": 8,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/RichTextField.ts#L8"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a RichTextField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "sameDocs",
+      "path": "src/fields/Doc.ts",
+      "line": 1810,
+      "registration": "call",
+      "kind": "function",
+      "signature": "sameDocs(doc1: Doc, doc2: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.AreProtosEqual"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1810,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1810"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns or evaluates same docs.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "schemaHeaderField",
+      "path": "src/fields/SchemaHeaderField.ts",
+      "line": 140,
+      "registration": "call",
+      "kind": "function",
+      "signature": "schemaHeaderField(heading: string, color: string, type: number, width: number, desc?: boolean, collapsed?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/SchemaHeaderField.ts",
+        "line": 140,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L140"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Runs the schema header field application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "SchemaHeaderField",
+      "path": "src/fields/SchemaHeaderField.ts",
+      "line": 67,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new SchemaHeaderField(heading: string = '', color: string = RandomPastel(), type?: ColumnType, width?: number, desc?: boolean, collapsed?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "SchemaHeaderField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/SchemaHeaderField.ts",
+        "line": 67,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/SchemaHeaderField.ts#L67"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a SchemaHeaderField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setDocFilter",
+      "path": "src/fields/Doc.ts",
+      "line": 1827,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setDocFilter(container: Doc, key: string, value: string, modifiers: 'match' | 'check' | 'x' | 'remove')",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.setDocFilter"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1827,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1827"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Sets doc filter.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setDocRangeFilter",
+      "path": "src/fields/Doc.ts",
+      "line": 1831,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setDocRangeFilter(container: Doc, key: string, range: number[])",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.setDocRangeFilter"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1831,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1831"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Sets doc range filter.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setInPlace",
+      "path": "src/fields/Doc.ts",
+      "line": 1806,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setInPlace(doc: Doc, field: string, value: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Doc.SetInPlace"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1806,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1806"
+      },
+      "mode": "action",
+      "category": "values-and-documents",
+      "purpose": "Writes a field according to Dash data-versus-layout ownership instead of blindly replacing the delegate field.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "toJavascriptString",
+      "path": "src/fields/Doc.ts",
+      "line": 1835,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toJavascriptString(str: string)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Field.toJavascriptString"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/fields/Doc.ts",
+        "line": 1835,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1835"
+      },
+      "mode": "query",
+      "category": "values-and-documents",
+      "purpose": "Returns or evaluates to javascript string.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "VideoField",
+      "path": "src/fields/URLField.ts",
+      "line": 66,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new VideoField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "VideoField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 66,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L66"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a VideoField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "Viewer3DField",
+      "path": "src/fields/URLField.ts",
+      "line": 81,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new Viewer3DField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "Viewer3DField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 81,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L81"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a Viewer3DField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "WebField",
+      "path": "src/fields/URLField.ts",
+      "line": 72,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new WebField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "WebField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 72,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L72"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a WebField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "YoutubeField",
+      "path": "src/fields/URLField.ts",
+      "line": 78,
+      "registration": "decorator",
+      "kind": "class",
+      "signature": "new YoutubeField(urlVal: string | URL)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "YoutubeField",
+      "effects": {
+        "calls": [],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/fields/URLField.ts",
+        "line": 78,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/URLField.ts#L78"
+      },
+      "mode": "constructor",
+      "category": "values-and-documents",
+      "purpose": "Constructs a YoutubeField runtime value for use by a script.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "addToDashboards",
+      "path": "src/client/views/DashboardView.tsx",
+      "line": 541,
+      "registration": "call",
+      "kind": "function",
+      "signature": "addToDashboards(dashboard: Doc)",
+      "description": "adds Dashboard to set of Dashboards",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DashboardView.openDashboard",
+          "Doc.MakeEmbedding"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/DashboardView.tsx",
+        "line": 541,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L541"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Adds Dashboard to set of Dashboards.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "createNewDashboard",
+      "path": "src/client/views/DashboardView.tsx",
+      "line": 525,
+      "registration": "call",
+      "kind": "function",
+      "signature": "createNewDashboard()",
+      "description": "creates a new dashboard when called",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DashboardView.createNewDashboard"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/DashboardView.tsx",
+        "line": 525,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L525"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Creates a new dashboard when called.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "createNewFolder",
+      "path": "src/client/views/MainView.tsx",
+      "line": 1137,
+      "registration": "call",
+      "kind": "function",
+      "signature": "createNewFolder()",
+      "description": "creates a new folder in myFiles when called",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "MainView.Instance.createNewFolder"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1137,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1137"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Creates a new folder in myFiles when called.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "createNewPresentation",
+      "path": "src/client/views/MainView.tsx",
+      "line": 1129,
+      "registration": "call",
+      "kind": "function",
+      "signature": "createNewPresentation()",
+      "description": "creates a new presentation when called",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "MainView.Instance.createNewPresentation"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1129,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1129"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Creates a new presentation when called.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "deiconifyView",
+      "path": "src/client/views/nodes/DocumentView.tsx",
+      "line": 2019,
+      "registration": "call",
+      "kind": "function",
+      "signature": "deiconifyView(documentView: DocumentView)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "documentView.iconify",
+          "documentView.select"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 2019,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2019"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Runs the deiconify view application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "deiconifyViewToLightbox",
+      "path": "src/client/views/LightboxView.tsx",
+      "line": 365,
+      "registration": "call",
+      "kind": "function",
+      "signature": "deiconifyViewToLightbox(documentView: DocumentView)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "LightboxView.Instance.AddDocTab"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/LightboxView.tsx",
+        "line": 365,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/LightboxView.tsx#L365"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Runs the deiconify view to lightbox application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "DocFocusOrOpen",
+      "path": "src/client/views/nodes/DocumentView.tsx",
+      "line": 2014,
+      "registration": "call",
+      "kind": "function",
+      "signature": "DocFocusOrOpen(docIn: Doc, optionsIn?: FocusViewOptions, containingDoc?: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.FocusOrOpen"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 2014,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2014"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Focuses an existing document view or opens the document when no mounted view can receive focus.",
+      "purposeSource": "documentation-override"
+    },
+    {
+      "name": "followLink",
+      "path": "src/client/util/LinkFollower.ts",
+      "line": 136,
+      "registration": "call",
+      "kind": "function",
+      "signature": "followLink(doc: Doc, altKey: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "LinkFollower.FollowLink"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/LinkFollower.ts",
+        "line": 136,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/LinkFollower.ts#L136"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Navigates using follow link.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "generateLinkTitle",
+      "path": "src/client/documents/DocUtils.ts",
+      "line": 994,
+      "registration": "call",
+      "kind": "function",
+      "signature": "generateLinkTitle(link: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "Cast"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/documents/DocUtils.ts",
+        "line": 994,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L994"
+      },
+      "mode": "query",
+      "category": "workspace-and-navigation",
+      "purpose": "Returns or evaluates generate link title.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "hideUI",
+      "path": "src/client/views/MainView.tsx",
+      "line": 1125,
+      "registration": "call",
+      "kind": "function",
+      "signature": "hideUI()",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "SnappingManager.SetHideUI"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1125,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1125"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Runs the hide ui application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "links",
+      "path": "src/client/util/LinkManager.ts",
+      "line": 278,
+      "registration": "call",
+      "kind": "function",
+      "signature": "links(doc: Doc)",
+      "description": "returns all the links to the document or its annotations",
+      "parameterMetadata": "(doc: any)",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "LinkManager.Links"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/util/LinkManager.ts",
+        "line": 278,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/LinkManager.ts#L278"
+      },
+      "mode": "query",
+      "category": "workspace-and-navigation",
+      "purpose": "Returns all the links to the document or its annotations.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "navigateToDoc",
+      "path": "src/client/views/nodes/trails/PresBox.tsx",
+      "line": 3014,
+      "registration": "call",
+      "kind": "function",
+      "signature": "navigateToDoc(bestTarget: Doc, activeItem: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "PresBox.NavigateToTarget"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/trails/PresBox.tsx",
+        "line": 3014,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/trails/PresBox.tsx#L3014"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Navigates using navigate to doc.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "openPresentation",
+      "path": "src/client/views/MainView.tsx",
+      "line": 1133,
+      "registration": "call",
+      "kind": "function",
+      "signature": "openPresentation(pres: Doc)",
+      "description": "creates a new presentation when called",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "MainView.Instance.openPresentation"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1133,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1133"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Creates a new presentation when called.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "removeDashboard",
+      "path": "src/client/views/DashboardView.tsx",
+      "line": 533,
+      "registration": "call",
+      "kind": "function",
+      "signature": "removeDashboard(dashboard: Doc)",
+      "description": "Remove Dashboard from Dashboards",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DashboardView.removeDashboard"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/DashboardView.tsx",
+        "line": 533,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L533"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Remove Dashboard from Dashboards.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "resetDashboard",
+      "path": "src/client/views/DashboardView.tsx",
+      "line": 537,
+      "registration": "call",
+      "kind": "function",
+      "signature": "resetDashboard(dashboard: Doc)",
+      "description": "move all dashboard tabs to single stack",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DashboardView.resetDashboard"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/DashboardView.tsx",
+        "line": 537,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L537"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Move all dashboard tabs to single stack.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "selectMainMenu",
+      "path": "src/client/views/MainView.tsx",
+      "line": 1121,
+      "registration": "call",
+      "kind": "function",
+      "signature": "selectMainMenu(doc: Doc)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "MainView.Instance.selectLeftSidebarButton"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1121,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1121"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Runs the select main menu application operation.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "setDefaultTemplate",
+      "path": "src/client/views/global/globalScripts.ts",
+      "line": 156,
+      "registration": "call",
+      "kind": "function",
+      "signature": "setDefaultTemplate(checkResult?: boolean)",
+      "description": "",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.setDefaultTemplate"
+        ],
+        "writes": [],
+        "returns": 1
+      },
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 156,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L156"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Sets default template.",
+      "purposeSource": "identifier-inference"
+    },
+    {
+      "name": "shareDashboard",
+      "path": "src/client/views/DashboardView.tsx",
+      "line": 529,
+      "registration": "call",
+      "kind": "function",
+      "signature": "shareDashboard(dashboard: Doc)",
+      "description": "opens sharing dialog for Dashboard",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "DocumentView.ShareOpen"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/DashboardView.tsx",
+        "line": 529,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L529"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "Opens sharing dialog for Dashboard.",
+      "purposeSource": "source-description"
+    },
+    {
+      "name": "toggleDetail",
+      "path": "src/client/views/nodes/DocumentView.tsx",
+      "line": 2025,
+      "registration": "call",
+      "kind": "function",
+      "signature": "toggleDetail(dv: DocumentView, detailLayoutKeySuffix: string, shiftKey: boolean)",
+      "description": "This switches between the current view of a Doc and a specified alternate layout view.\nThe current view of the Doc is stored in the layout_default field so that it can be restored.\nIf the current view of the Doc is already the specified alternate layout, this will switch\nback to the original layout (stored in layout_default)\n@param detailLayoutKeySuffix the name of the alternate layout field key (NOTE: 'layout_' will be prepended to this string to get the actual field name)\n@param addInSidebar opens the toggled view in a sidebar tab without changing the current view",
+      "parameterMetadata": "",
+      "owner": "module initialization",
+      "effects": {
+        "calls": [
+          "dv.toggleDetail"
+        ],
+        "writes": [],
+        "returns": 0
+      },
+      "source": {
+        "file": "src/client/views/nodes/DocumentView.tsx",
+        "line": 2025,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2025"
+      },
+      "mode": "action",
+      "category": "workspace-and-navigation",
+      "purpose": "This switches between the current view of a Doc and a specified alternate layout view.\nThe current view of the Doc is stored in the layout_default field so that it can be restored.\nIf the current view of the Doc is already the specified alternate layout, this will switch\nback to the original layout (stored in layout_default)\n@param detailLayoutKeySuffix the name of the alternate layout field key (NOTE: 'layout_' will be prepended to this string to get the actual field name)\n@param addInSidebar opens the toggled view in a sidebar tab without changing the current view.",
+      "purposeSource": "source-description"
+    }
+  ]
+}

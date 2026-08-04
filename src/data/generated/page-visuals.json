@@ -120,8 +120,8 @@
     "alt": "Dash demonstration of Report."
   },
   "/getting-started/basic-interactions": {
-    "src": "/assets/gifs/ai/ai-template-csv-2.gif",
-    "alt": "Dash demonstration of Ai Template Csv 2."
+    "src": "/assets/gifs/ai/ai-edit-3.gif",
+    "alt": "Dash demonstration of Ai Edit 3."
   },
   "/getting-started/modes": {
     "src": "/assets/gifs/gettingstarted/dash-shift-click.gif",
@@ -138,10 +138,6 @@
   "/guides/features/collaboration": {
     "src": "/assets/gifs/gettingstarted/dash-create-link-board.gif",
     "alt": "Dash demonstration of Create Link Board."
-  },
-  "/guides/features/scripting": {
-    "src": "/assets/gifs/ai/ai-edit-3.gif",
-    "alt": "Dash demonstration of Ai Edit 3."
   },
   "/guides/properties/fieldsandtags": {
     "src": "/assets/gifs/dataViz/titleCol.gif",
@@ -240,8 +236,8 @@
     "alt": "Dash demonstration of Pdf."
   },
   "/technical/api": {
-    "src": "/assets/gifs/animation/animateaddremove.gif",
-    "alt": "Dash demonstration of Animateaddremove."
+    "src": "/assets/gifs/ai/ai-template-csv-2.gif",
+    "alt": "Dash demonstration of Ai Template Csv 2."
   },
   "/workflows": {
     "src": "/assets/gifs/gettingstarted/dash-present-trail.gif",

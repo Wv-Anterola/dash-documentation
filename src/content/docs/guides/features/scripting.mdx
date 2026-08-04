@@ -1,77 +1,118 @@
 ---
 title: Scripting
-description: How Dash script documents compile and run TypeScript-like code, accept typed parameters, become reusable functions, and interact with document state.
+description: The complete user and runtime reference for Script documents, inline field expressions, computed fields, the REPL, saved functions, compiler behavior, captures, globals, and safety boundaries.
 ---
 
+import ScriptingGlobalReference from '../../../../components/ScriptingGlobalReference.astro';
 import SourceSnapshot from '../../../../components/SourceSnapshot.astro';
 
 <SourceSnapshot />
 
-Dash has two built-in programming surfaces:
+Dash scripting is the bridge between a visible canvas document and executable
+behavior. A beginner can use it to make a button change a field. A developer can
+use the same runtime to define computed values, expose reusable functions, walk
+the TypeScript syntax tree, or call any workspace operation registered as a
+scripting global.
 
-- a **script document**, for behavior that should live on the canvas, accept
-  inputs, or become a reusable function;
-- a **calculator REPL**, for inspecting values and running one expression at a
-  time.
+That power has a precise boundary: the source is transpiled in the browser and
+executed with JavaScript's `Function` constructor. It is application code, not a
+sandbox.
 
-Both compile through `src/client/util/Scripting.ts`. The editor accepts
-TypeScript syntax, transpiles it in the browser, and executes the result against
-Dash's registered scripting globals. It is an advanced feature, not a sandbox.
+![Source-derived anatomy of the editable, applied, and saved-function states of a Dash Script document](/assets/images/diagrams/dash-scripting-ui-anatomy.svg)
 
-## Create and run a script
+[Open the Script document anatomy at full 1600 x 900 resolution.](/assets/images/diagrams/dash-scripting-ui-anatomy.svg)
 
-Create a Script document from the <kbd>:</kbd> document menu. The editor has a
-code area, a parameter field, and three actions:
+## The seven scripting surfaces
 
-| Action | What it does |
+Dash does not have only one “script box.” The same compiler and field runtime
+appear through several interfaces:
+
+| Surface | What a person sees | Stored/runtime form | Best use |
+| :--- | :--- | :--- | :--- |
+| Script document | Code editor, parameter list, Compile, Apply, and Save | `DocumentType.SCRIPTING` containing a `ScriptField` | Visible, inspectable actions with inputs |
+| Applied Script document | Type-specific input controls, Edit, and Run | The same document plus parameter values stored as fields | Let a non-programmer run a prepared action |
+| Event field | Script editor with Finish, reached from a field such as `onClick` | `ScriptField` in a layout/event property | Small behavior attached to a button or node event |
+| Key–Value field editor | A value beginning with scripting prefixes | Immediate value, `ScriptField`, or `ComputedField` | Define a field without creating a separate Script document |
+| Computed field | No separate visible editor after assignment | `ComputedField`, optionally with a setter script | Derive a value from observable document state |
+| Calculator REPL | One-line command entry and expandable result | Ephemeral compiled expression | Inspect and experiment with mounted documents |
+| Saved function | Name and description form after Save | Script document in the main script collection plus a process-local global | Reuse one action from other scripts and events |
+
+The distinctions matter. A Script document is visible research material; a
+computed field runs when read; a saved function changes the shared name space;
+and a REPL command is an exploratory action rather than a durable script object.
+
+## Script document controls
+
+Create a **Script** document from the <kbd>:</kbd> document menu. In its initial
+state, the large area is source code, the narrow column lists declared
+parameters, and the bottom field accepts one new `name:type` declaration.
+
+| Control | Exact behavior |
 | :--- | :--- |
-| **Compile** | Parse and transpile the current source, store the resulting `ScriptField`, and show diagnostics without running the script. |
-| **Apply** | Compile, then replace the code editor with controls for the declared parameters. |
-| **Save** | Compile, then ask for a function name and description so the script can be registered as a reusable global. |
+| **Compile** | Builds a parameter map, compiles the source, replaces the document's field with a new `ScriptField` on success, and displays diagnostics. It does not invoke the compiled function. |
+| **Apply** | Runs the same compile path and, on success, replaces the editor with controls for parameter values. |
+| **Save** | Runs the same compile path and, on success, opens name and description fields. It does not register the function until **Create Function**. |
+| **Finish** | Appears only when the Script view is editing an event layout whose field key starts with `layout_on`; it restores the document's ordinary `layout` field. |
+| **Edit** | Clears the visible error and returns from the applied or save form to source editing. |
+| **Run** | Recompiles the current source, reads parameter values from fields on the script's data document, binds the visible Script document as `this`, and invokes the script. |
+| **Create Function** | Copies the name, description, and raw source into the script document, adds it to the main script collection, and registers a JavaScript function under the chosen name. |
 
-After **Apply**, set the parameter values and choose **Run**. Choose **Edit** to
-return to the source.
+The Script document deliberately recompiles on every **Run**. Editing source in
+the document and then pressing Run cannot silently execute an older compiled
+body.
 
-A script runs with its own document bound as `this`. A simple script can
-therefore read and write fields directly:
+### Your first script
+
+This statement body changes fields on the Script document itself:
 
 ```ts
 this.status = "reviewed";
 this.reviewedAt = new DateField();
+setBackgroundColor("#fff4cc");
 ```
 
-Field assignments use the same document proxy as the rest of Dash. Ordinary
-data fields, layout fields, computed fields, permissions, and undo behavior
-still follow their respective runtime rules.
+Think of `this` as “the document running this code.” Normal proxy rules still
+apply: `$name` addresses the data side, `_name` addresses the layout side,
+ordinary fields follow ownership/prototype rules, and persistent writes still
+pass through access checks and undo recording.
 
-## Parameters
+## Parameters, one control at a time
 
-Enter parameters as `name: type`. Multiple declarations may be separated with
-semicolons.
+Enter a declaration as `name:type` and confirm it before entering the next one:
 
-```ts
-source: Doc; label: string; score: number; visible: boolean
+```text
+source:Doc
+label:string
+score:number
+visible:boolean
+state:draft | reviewed | published
 ```
 
-The script document supports:
+The renderer chooses the applied control from the declared type:
 
-- `Doc`
-- `string`
-- `number`
-- `boolean`
-- literal unions such as `draft | reviewed | published`
+| Declared type | Applied control | Conversion behavior |
+| :--- | :--- | :--- |
+| `Doc` | Drop/entry target | A dropped document is stored directly. Typed text is compiled as an expression and must return a field value. |
+| `string` | Editable text | Stored exactly as entered. |
+| `number` | Editable text | Converted with `parseInt`; decimal text is therefore truncated to an integer. |
+| `boolean` | Selector | Stores `true` or `false`. |
+| Literal union | Selector | Pipe-separated members become choices; members parseable by `parseInt` become numbers and the rest stay strings. |
 
-Applied parameter controls match the type. Strings and numbers get editable
-fields, booleans and literal unions get selectors, and a `Doc` accepts a Dash
-document dropped onto the parameter control. While a document parameter has
-focus, Dash overlays identifiers such as `d0` and `d1` on visible documents so
-they can also be referred to from code.
+Names must be unique. The current parser accepts `Doc`, `string`, `number`,
+`boolean`, or any type text containing a pipe. An absent colon reports “must set
+type of parameter.” An unsupported type and a duplicate name have separate
+errors.
 
-Parameter names must be unique. A missing colon produces “must set type of
-parameter”; an unsupported type and a duplicate name produce separate
-diagnostics in the script document.
+Although the implementation later splits accepted input on semicolons, its
+validation first treats all text after the first colon as one type. Entering
+several declarations in one edit can therefore be rejected. One declaration per
+confirmed entry is the reliable interface contract.
 
-Example:
+When a document input receives focus, Dash overlays labels such as `d0` and `d1`
+on mounted document views. Those labels make it easy to enter a document
+expression; they are view-relative and are not durable identifiers.
+
+After Apply, this source can use the named values directly:
 
 ```ts
 source.title = label;
@@ -79,128 +120,420 @@ source.priority = score;
 source.hidden = !visible;
 ```
 
-## Autocomplete and globals
+If a parameter name is also captured by a compiled script, the capture occupies
+that parameter slot and the ordinary declared parameter is omitted from the
+generated signature.
 
-The editor suggests names registered through `ScriptingGlobals`. The registry
-contains document constructors and field classes as well as workspace
-operations. Current registrations include functions for:
+## Inline field syntax in the Key–Value view
 
-- selecting documents, undo, and redo;
-- creating, opening, sharing, and removing dashboards;
-- changing views, colors, borders, fonts, grouping, and filters;
-- following links and moving through trail keyframes;
-- controlling ink, equations, images, web documents, and video snapshots;
-- starting, pausing, and replaying workspace recordings;
-- resolving a document ID, copying a field, and editing document lists.
+The Key–Value editor calls `KeyValueBox.CompileKVPScript`, which interprets a
+small prefix language before invoking the same compiler.
 
-The registry is broad and internal-facing. Autocomplete is the authoritative
-list for the running build; names can be added or removed by features without a
-separate API-version boundary.
+| Value text | Meaning |
+| :--- | :--- |
+| `expression` | Try the text as a returned expression. If it does not compile, try it again as a template-literal string. Execute immediately and store the result. |
+| `=expression` | Execute immediately, but direct the resulting field toward the contextual/delegate document. |
+| `:=expression` | Store a `ComputedField`; reading the field evaluates the expression. |
+| `$=statements` | Store a `ScriptField` instead of executing and replacing it with the result. |
+| `=:=expression` | Store the computed field on the delegate path. The first `=` selects ownership; the remaining `:=` selects computed behavior. |
+| `=$=statements` | Store the script field on the delegate path. |
+| `((prompt text))` | Rewrite the matching text to `dashCallChat(_setCacheResult_, this, \`prompt text\`)`, allowing an asynchronous completion to set the field cache. |
 
-Some useful primitives visible in the current registry:
+Field keys beginning with `_` also select the layout side. A value prefix and a
+field-key prefix interact, so use the explicit forms above only when the data
+versus layout ownership is intentional.
+
+The immediate path converts a JavaScript array result to a Dash `List`. If the
+result is a function, it stores the function's name. If execution fails, it
+restores the original source text into a named target rather than pretending a
+field value was produced.
+
+### Computed setters
+
+A `ComputedField` may carry a separate setter script. Assigning a non-computed,
+non-`undefined` value to that field does not replace it: the document proxy calls
+the setter with `this`, `self`, and `value`. A successful setter can update the
+underlying fields from which the computed value is derived.
+
+## Compiler and execution pipeline
+
+![Seven-stage Dash scripting pipeline from source and options through TypeScript AST hooks, JavaScript emission, diagnostics, registry closure construction, argument binding, execution, and structured results](/assets/images/diagrams/dash-scripting-runtime.svg)
+
+[Open the scripting runtime diagram at full 1600 x 900 resolution.](/assets/images/diagrams/dash-scripting-runtime.svg)
+
+`CompileScript` performs these steps in the browser:
+
+1. Build a capture signature and look for a cached `CompileResult`.
+2. Mutate `options.typecheck` to `true` and add `this: Doc` to an existing
+   `options.params` object that does not declare it.
+3. Temporarily replace the live global object when `options.globals` is present.
+4. Parse a TypeScript source file for an optional enter/leave traverser.
+5. Run an optional transformer and print its transformed source.
+6. Construct the ordered generated parameter list. A declared `Doc` is emitted
+   as `any`; captured values use their runtime constructor name or primitive
+   `typeof`.
+7. Wrap the body as either statements or an automatically returned expression,
+   add an optional required result type, and emit JavaScript with the in-browser
+   TypeScript compiler host.
+8. Collect pre-emit and emit diagnostics, apply Dash's diagnostic policy, and
+   construct the executable closure.
+9. Restore ordinary globals on the normal custom-global path and cache an
+   eligible result.
+
+The generated structure is conceptually:
 
 ```ts
-const selected = selectedDocs(this, false, []);
-setBackgroundColor("#fff4cc");
-setBorderWidth(2);
-undo();
+(function(this: any, source: any, score: number) {
+  // author body
+})
 ```
 
-Do not assume a global mutates `this`. Many functions operate on the current
-selection or active dashboard. Test a script in the same context in which its
-button or event will run.
+The emitted expression is then wrapped again:
 
-## Save a reusable function
+```ts
+new Function(...globalNames, `return ${emittedFunctionExpression}`)
+```
 
-Choose **Save**, enter a function name and description, then choose **Create
-Function**.
+Calling that outer function with all global values produces the inner script
+function. Calling the inner function with parameters executes the author body.
 
-Names cannot contain spaces or periods. Dash stores the script document in the
-main script collection and registers a JavaScript function under that name.
-Its description and parameter signature then appear in scripting suggestions.
+## `ScriptOptions` contract
 
-If a saved function is recreated with the same name, the registry removes the
-old global before adding the new one. Deleting the script through
-`ScriptManager` removes its global registration as well.
+| Option | Compiler behavior | Important boundary |
+| :--- | :--- | :--- |
+| `requiredType` | Adds a TypeScript return annotation to the generated function. | This is compile-time syntax, not runtime validation of the returned value. |
+| `addReturn` | Wraps an expression in `{ return …; }`; a body beginning exactly with `{ return` is kept. | `MakeFunction` uses it; `MakeScript` does not. |
+| `params` | Declares named argument types and may be mutated to include `this`. | Captured names remove same-named ordinary parameters. |
+| `capturedVariables` | Adds primitive or document values after ordinary parameters. | Their serialization and cache semantics are described below. |
+| `typecheck` | Intended to control diagnostic enforcement. | `CompileScript` currently writes it to `true` before destructuring, so callers passing `false` do not disable the check. |
+| `editable` | When falsy, `Run` opens a `Doc.MakeReadOnly()` boundary around synchronous invocation. | `ScriptField.CompileScript` sets `editable:true`; `_readOnly_` in a computed call is an argument signal, not enforcement by `Run`. |
+| `traverser` | Visits each AST node on entry and optionally on exit. | It observes source but does not rewrite it. |
+| `transformer` | Applies a TypeScript transformer and may report captured variables. | The current compiler reads reported variables but does not merge them into captures; the merge line is commented out. |
+| `globals` | Temporarily replaces the live name/value object used to construct the closure. | This is dependency injection, not security isolation. Restoration is not guarded by `finally`. |
 
-:::caution[Saved functions are shared application state]
-Reusable scripts are loaded from Dash's main script document when
-`ScriptManager` initializes. Rename and delete them deliberately: another
-document, button, or event may call the registered name.
+## Diagnostic policy
+
+Dash filters several TypeScript error codes so document-shaped and
+module-registered runtime names can be used without exhaustive static
+declarations:
+
+| Code | TypeScript category represented in this path | Dash behavior |
+| :--- | :--- | :--- |
+| `2304` | Cannot find name | Filtered |
+| `2339` | Property does not exist on type | Filtered |
+| `2693` | Type used as a value | Filtered |
+| `2314` | Generic type requires arguments | Filtered |
+| `2552` | Cannot find name; possible alternative | Filtered only when the name extracted from the first diagnostic is a registered scripting global |
+
+All remaining error-category diagnostics make compilation fail while
+`typecheck` is enabled. If JavaScript `Function` construction itself throws, the
+compiler also returns `{ compiled: false, errors }`; the thrown constructor error
+is logged but is not added to the diagnostic array.
+
+A compiled result means the generated function could be built under this
+permissive policy. It does not prove that a dynamic field exists, an asynchronous
+service will succeed, or a mutation is authorized.
+
+## Invocation, `this`, arguments, and results
+
+For every generated custom parameter except `this`, `run(args)` uses the supplied
+argument when the key exists—even when its value is explicitly `undefined`—and
+otherwise uses the captured value. The receiver is `args.this ||
+capturedVariables.this`.
+
+The two result shapes are:
+
+```ts
+{ success: true, result }
+{ success: false, error, result: errorVal }
+```
+
+The thrown value is preserved in `error`. The caller-controlled `errorVal`
+becomes `result` on failure. `ComputedField.value` consumes `.result` in both
+cases, so its default failure value is `undefined` unless a different error value
+was supplied.
+
+`run` is synchronous. If the script returns a promise, the promise itself is the
+successful `result`; rejection after return is not converted into
+`success:false`. A read-only boundary, when enabled, also ends immediately after
+the synchronous call rather than after that promise settles.
+
+## Cache and capture semantics
+
+The compile-cache signature concatenates each capture name with either its
+`toString()` value or `XXX` for a `RefField`. Arrays contribute the concatenated
+formatted members.
+
+- Lookup begins with the source received by `CompileScript` plus that signature.
+- Cache insertion uses the source variable after any transformer has run. A
+  source-changing transformer can therefore make lookup and insertion keys
+  differ.
+- Any signature containing `XXX` skips insertion, preventing a document/reference
+  identity from being reused through this cache.
+- Primitive signatures have no structural delimiter between entries beyond the
+  generated `name=value` fragments; extension code should not treat the cache
+  key as a collision-resistant serialization format.
+- The map can hold any `CompileResult` cast through its declared compiled type;
+  a cached value should still be checked through its `compiled` discriminator.
+
+When a `ScriptField` is persisted, captures become strings:
+
+```text
+name:true
+count:42
+label:reviewed
+source:ID->persistent-document-id
+```
+
+Hydration splits each record on `:` and reads only indexes `0` and `1`. Values
+containing a colon are therefore truncated. It reconstructs booleans first,
+loads `ID->` documents asynchronously, converts numeric text with `Number`, and
+leaves all other values as strings.
+
+After all capture promises resolve, Dash recompiles the main script and optional
+setter. Compilation failure throws. The serialization framework invokes this
+repair callback but does not await the promise it returns, so a deserialized
+`ScriptField` object can exist before its restored captures and compiled behavior
+are ready.
+
+## Computed fields
+
+`ComputedField` extends `ScriptField` and adds a value path driven by `computedFn`.
+Each invocation supplies:
+
+| Name | Value |
+| :--- | :--- |
+| `this` | The document whose field is being read |
+| `_last_` | The prior computed result |
+| `_setCacheResult_` | The field's observable cache setter |
+| `_readOnly_` | `true`, as a convention for implementations that suppress side effects |
+
+An explicit `_cachedResult` wins before re-evaluation. A JavaScript array result
+is converted to a Dash `List`. `ComputedField.DisableCompute(fn)` temporarily
+causes its `ToValue` conversion to return no computed projection and restores the
+flag in `finally`.
+
+The `_readOnly_` argument is advisory. Because the shared field adapter compiles
+with `editable:true`, the generic runner does not open `Doc.MakeReadOnly()` for a
+normal computed read. A global or author script must actually honor the flag if
+it is intended to remain side-effect-free.
+
+## Complete integrated global catalogue
+
+The integrated source has **151 case-sensitive static global names** across
+**12 capability families**: **129 functions**, **20 class values**, and **2
+namespace/object values**. Sixteen classes arrive through the
+`@scriptingGlobal` class decorator; the rest use direct registration calls.
+The behavior filter has 22 **Construct / allocate** rows because two of the 129
+functions are factories rather than class values.
+
+This catalogue is generated with the TypeScript compiler AST from every
+`ScriptingGlobals.add(...)` call and `@scriptingGlobal` class. Each row includes
+the exact signature when statically recoverable, registration path, owning
+module, immutable line link, an explicit source description when one exists,
+and bounded syntactic evidence for direct calls, assignments, and returns.
+
+The evidence column describes only the registered declaration. It does not
+claim to enumerate effects inside every transitive callee. Use the linked source
+and the generated call graph for that deeper path.
+
+<ScriptingGlobalReference />
+
+### What is not in the static 151
+
+`ScriptManager.addScriptToGlobals` has two runtime call sites that add the
+function object `f`, whose actual name comes from a saved script document. Those
+names cannot be listed ahead of time and are intentionally not invented as
+static API rows.
+
+Autocomplete remains useful for the live deployed build because module loading
+and saved documents determine availability at that moment. The catalogue is the
+auditable integrated-source baseline; autocomplete is the live registry view.
+
+Registration is case-sensitive. In particular, `schemaHeaderField` is a factory
+function while `SchemaHeaderField` is a constructor. They are two valid names,
+not a duplicate.
+
+## Save and lifecycle of a reusable function
+
+Choose **Save**, enter a name and description, then choose **Create Function**.
+Use a valid JavaScript identifier without whitespace or periods. The visible
+validator explicitly checks empty names and most spaces/periods, but the runtime
+`Function` constructor and exact-name registry are the final constraints.
+
+The lifecycle is:
+
+1. `ScriptingBox.onSave` compiles the edited source.
+2. `onCreate` writes `name`, `description`, and the raw source into the script
+   document and calls `ScriptManager.addScript`.
+3. The manager appends the document to `Docs.Prototypes.MainScriptDocument().data`.
+4. `addScriptToGlobals` removes any existing exact name, joins parameter names,
+   constructs `new Function(parameterNames, rawSource)`, defines the function's
+   `name`, and registers it with description/parameter suggestion metadata.
+5. Other scripts compiled after registration receive that function among their
+   global closure values.
+6. Deleting through `ScriptManager` removes the exact global and the script
+   document from the main collection.
+
+On startup, the `ScriptManager` singleton loads every document already present
+in the main script collection and repeats registration. Saved script storage is
+therefore active-code loading.
+
+:::caution[Shared executable name space]
+A saved name can be called by other script documents, computed fields, buttons,
+or event fields. Renaming or deleting it is an API change inside the workspace.
+Review the source, search its callers, and update dependents as one change.
 :::
 
-## Attach behavior to a document
+## Registry extension contract
 
-Script fields also back event properties such as `onClick` and `onChecked`.
-When a script document is opened for one of these layout fields, **Finish**
-returns the document to its normal layout after editing.
+Feature code exposes a value in one of three ways:
 
-Use event scripts for small, local actions:
+```ts
+ScriptingGlobals.add("Docs", Docs);
+ScriptingGlobals.add(myFunction, "What it does", "(doc: Doc, value: string)");
 
-- set a field when a button is clicked;
-- switch a collection view;
-- move to a trail item;
-- apply a filter;
-- toggle a display property.
+@scriptingGlobal
+class MyField extends ObjectField {}
+```
 
-Use a regular document type or shared component when behavior needs its own
-complex state, lifecycle, validation, and tests. A large script hidden in an
-`onClick` field is difficult to discover and maintain.
+The first overload uses an explicit name and value. The second derives the exact
+name from `function.name` and may add suggestion text. The decorator registers
+the class constructor when the module evaluates.
+
+An extension is complete when it:
+
+1. chooses a stable, case-sensitive name that does not already exist;
+2. imports the registering module on every application path that needs the name;
+3. documents parameter, return, mutation, permission, asynchronous, and undo
+   behavior;
+4. supplies accurate suggestion description and parameter metadata where useful;
+5. removes a dynamic registration when its durable owner is deleted;
+6. tests duplicate-name failure and the expected module-loading boundary;
+7. appears in the generated catalogue and passes its inventory checks.
+
+`ScriptingGlobals.add` throws on an exact duplicate. A missing or conditional
+module import means the global does not exist yet. Registration metadata powers
+suggestions; it does not enforce argument types at runtime.
+
+`setScriptingGlobals` changes only the exported live object used by compilation.
+The static registry and suggestion maps remain intact, and
+`resetScriptingGlobals` restores that ordinary object. Because the compiler's
+restore is not protected by `finally`, an exception between swap and reset can
+leave later compilations on the temporary object.
 
 ## Calculator REPL
 
-Open **Toggle a Calculator REPL** from the Tools menu. The REPL:
+Open **Toggle a Calculator REPL** from the Tools menu. Press <kbd>Enter</kbd> to
+compile and run one expression. The REPL:
 
-- compiles one expression when you press <kbd>Enter</kbd>;
-- shows primitive results directly and lets you expand object fields;
-- exposes visible documents as `d0`, `d1`, and so on;
-- keeps command history under the Up and Down arrow keys;
-- wraps successful execution in an undoable batch.
+- shows primitive values directly and lets object results expand into fields;
+- exposes mounted document views as `d0`, `d1`, and so on;
+- moves through command history with the Up and Down arrow keys;
+- runs successful commands within its caller's undo workflow.
 
-The numbered document labels are assigned from currently mounted views. They
-are convenient for exploration, not durable references. Use `idToDoc()` with a
-stored document ID in anything that must work after the layout changes.
+Numbered document labels are assigned from the currently mounted views. Use
+`idToDoc("persistent-id")` or an explicit `Doc` parameter for behavior that must
+survive layout, tab, or viewport changes.
 
-## Execution and security model
+## Event scripts and scope
 
-The compiler eventually constructs functions with JavaScript's
-`new Function(...)` and passes the registered globals into them. Editable
-scripts run with access to document state. They are not isolated from the
-application like code in a separate worker or restricted iframe.
+Fields such as `onClick` and `onChecked` can render through the Script document
+editor. **Finish** restores the normal layout after editing.
 
-Practical rules:
+Keep event scripts small and local:
 
-1. Treat a script copied from another workspace as executable code.
-2. Read generated scripts before compiling them.
-3. Test mutations against disposable documents.
-4. Keep each logical action inside one undo batch.
-5. Do not place API keys, tokens, or private data in source text.
-6. Prefer explicit `Doc` parameters over assumptions about the current
-   selection.
+- set or toggle a field;
+- switch a collection view;
+- follow a link or trail item;
+- apply one filter;
+- call one named reusable function with explicit inputs.
 
-Compilation is also permissive in several editor paths: missing-name and
-property diagnostics are filtered so Dash globals and dynamic document fields
-can work. A successful compile therefore proves syntactic viability, not that a
-field exists or a mutation is safe.
+Use a document type or tested component when behavior has durable internal
+state, multiple asynchronous phases, validation, cleanup, or its own permission
+model. The goal is discoverability: a maintainer should be able to find where
+behavior lives without opening every event field on a canvas.
 
-## Troubleshooting
+## Security and correctness model
 
-| Symptom | Check |
-| :--- | :--- |
-| Compile does nothing | The source cannot be empty. Look for the diagnostic text below the editor. |
-| “this type is not supported” | Use `Doc`, `string`, `number`, `boolean`, or a literal union. |
-| Document parameter is `undefined` | Drop a document onto the applied input, or enter an expression that resolves to a `Doc`. |
-| Saved name is rejected | Remove spaces and periods. |
-| Script works in the REPL but not a button | The REPL exposes visible `dN` variables; the event context may not. Pass a document explicitly or resolve its ID. |
-| Mutation cannot be undone cleanly | The script crosses batch boundaries or starts asynchronous work after its initiating batch has ended. |
-| A global is missing | Check autocomplete in the deployed build; scripting globals are registered by loaded features. |
+The registry contains document constructors, workspace mutations, selection and
+history operations, media controls, recording/replay, imports, navigation, AI
+calls, and application services. Scripts can therefore change persistent state
+or invoke external work through the same client authority as the person running
+Dash.
+
+Use these controls:
+
+1. Treat imported, copied, generated, and saved scripts as executable code.
+2. Review source and global calls before compilation or startup registration.
+3. Pass explicit documents instead of assuming selection or active-dashboard
+   state.
+4. Check access at the mutation or service boundary; the registry itself has no
+   per-global permission layer.
+5. Put one synchronous user action in one named undo batch.
+6. Model asynchronous work explicitly. A promise can outlive both the initiating
+   `run` call and its undo/read-only boundary.
+7. Never embed credentials or private tokens in script source, captures,
+   descriptions, screenshots, or error output.
+8. Preserve raw source, parameters, captures, caller context, and the exact
+   global name when recording a reproducibility failure.
+
+Temporary custom globals reduce dependencies but do not create a restricted
+realm. The generated function still executes in the application page and can
+reach anything supplied to it or otherwise available through JavaScript.
+
+## Failure and diagnosis matrix
+
+| Symptom | Runtime reason | What to inspect |
+| :--- | :--- | :--- |
+| Compile produces no script | Source is empty, an unfiltered diagnostic remains, or `Function` construction failed | Visible diagnostics and browser console; preserve generated/emitted context |
+| “this type is not supported” | Parameter type is not one of the four named types and contains no pipe | Enter one supported declaration at a time |
+| Several semicolon parameters are rejected | Validation reads the entire first colon tail before the later semicolon split | Confirm each parameter separately |
+| A decimal parameter changes value | The number control uses `parseInt` | Use an integer input or pass a number from another script path |
+| A document parameter is `undefined` | No dropped/evaluated `Doc`, or its view-relative `dN` label changed | Drop the document again or resolve a persistent ID |
+| Saved function is missing | Its module/script collection has not initialized, creation failed, or exact case differs | Live autocomplete, main script collection, function name, registration source |
+| Saved function changed but an old compiled script behaves differently | Compiled closures captured global values when constructed | Recompile dependent scripts after replacing the global |
+| Runtime error appears as an ordinary undefined computed value | `ComputedField.value` consumes the failure result field | Inspect the `success`/`error` result at a direct invocation boundary |
+| Returned promise rejects later | `run` returns before settlement | Await and catch within the author script or caller workflow |
+| Capture containing `:` changes after reload | Capture hydration reads only the first two colon-separated segments | Avoid colon-bearing string captures or introduce a versioned structured encoding |
+| Loaded script exists before it works | Async capture repair and recompilation are not awaited by generic deserialization | Wait on behavior-specific readiness and inspect the repair rejection |
+| Custom globals persist unexpectedly | Compilation threw before the straight-line reset | Restore the registry and diagnose the first exception |
+| Mutation is not one clean undo | Work crossed a batch boundary or continued asynchronously after the batch ended | Name one synchronous batch and isolate later phases |
+| Script works in REPL but not on a button | REPL-only `dN` variables or a different `this`/selection context | Use explicit parameters and log the invocation context |
+
+## Verification checklist
+
+A release touching scripting should verify:
+
+- the AST-generated static namespace has 151 exact unique names and the reviewed
+  case-only pair remains intentional;
+- all 16 decorated constructors and both runtime saved-function registration
+  sites are represented;
+- every row resolves to integrated, line-addressed source;
+- Compile, Apply, Save, Create Function, Edit, Run, and event-only Finish match
+  the state transition documented above;
+- each parameter control preserves its documented conversion behavior;
+- compilation tests cover filtered and unfiltered diagnostics, captures,
+  custom-global restoration, cache eligibility, and constructor failure;
+- invocation tests cover explicit `undefined`, receiver binding, thrown values,
+  promise results, editable/read-only paths, and error callbacks;
+- serialization tests cover primitive/document captures, colon-bearing strings,
+  async repair, setter recompilation, and cold reload;
+- saved-function tests cover startup load, replacement, deletion, case, invalid
+  identifiers, and stale compiled dependents;
+- browser tests exercise the full catalogue filters at desktop and mobile widths.
 
 ## Related
 
-- [Keyboard shortcuts](/reference/keyboard-shortcuts/) for opening Tools and
-  other programmable surfaces.
-- [Document model](/architecture/document-model/) for data fields, layout
-  fields, proxies, and access checks.
-- [Undo and provenance](/architecture/undo-provenance/) for mutation batches.
-- [Add an agent tool](/development/add-agent-tool/) for schema-bound automation
-  callable by the agent.
+- [Field runtime and serialization](/architecture/field-runtime/) for the proxy,
+  `ScriptField`, `ComputedField`, capture hydration, and wire boundary.
+- [Document model](/architecture/document-model/) for data/layout ownership,
+  prototypes, and access checks.
+- [Undo and provenance](/architecture/undo-provenance/) for mutation batches and
+  asynchronous boundaries.
+- [AI, agents, generation, and automation](/capabilities/ai-automation/) for the
+  separate model/tool automation surface.
+- [Runtime contracts](/reference/runtime-contracts/) for source-linked failure,
+  permission, and side-effect contracts.
+- [Generated source reference](/technical/api/) for call paths beyond each
+  global's directly registered declaration.

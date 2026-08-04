@@ -12,6 +12,7 @@ sidebar:
 | New kind of addressable content | Document type | [Add a document type](/development/add-document-type/) |
 | New persistable value inside documents | Serialized field type | [Field runtime extension contract](/architecture/field-runtime/#extension-contract-for-a-new-field-type) |
 | New way to arrange one collection | Collection view | [Add a collection view](/development/add-collection-view/) |
+| New function or constructor callable from Dash scripts | Scripting global | [Registry extension contract](/guides/features/scripting/#registry-extension-contract) |
 | New action the model can select | Agent tool | [Add an agent tool](/development/add-agent-tool/) |
 | Multi-document persistent edit | Undo-aware action | [Undo architecture](/architecture/undo-provenance/) |
 | Reusable visual control | Shared component | `packages/components` and Storybook |
@@ -50,6 +51,23 @@ Avoid a new field type when:
 
 The [complete generated registry](/architecture/field-runtime/#complete-serialized-field-catalogue)
 shows every current pattern and the source-backed implementation checklist.
+
+## Scripting global contract
+
+A scripting global is appropriate when Script documents, computed fields, event
+fields, or the REPL need one stable callable capability. It is a process-local
+code registry, not a persistence mechanism or permission model.
+
+Choose an exact case-sensitive name, register only after the owning module is
+loaded, describe parameters and side effects, and remove names whose durable
+owner is deleted. An exact duplicate throws. Compiled scripts capture the global
+values supplied when their closure is constructed, so replacing a registry entry
+does not rewrite an already compiled closure.
+
+The [complete scripting runtime and 151-name catalogue](/guides/features/scripting/#complete-integrated-global-catalogue)
+documents direct registration, decorated constructors, dynamically saved
+functions, compilation, cache, captures, invocation results, and the extension
+acceptance checklist.
 
 ## Collection view contract
 
