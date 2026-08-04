@@ -2,8 +2,9 @@
  * Validate the built site: internal links, heading anchors, images, alt text,
  * and heading order.
  *
- * Run after `npm run build`. There is no CI on this repository, so this is the
- * check that keeps a routing mistake from reaching the deployed site.
+ * Run after `npm run build`. This is the check that keeps a routing mistake
+ * from reaching the deployed site; CI runs it on every push and pull request
+ * (.github/workflows/verify.yml).
  *
  *   node scripts/check-links.mjs [dist-dir]
  */

@@ -1,0 +1,68 @@
+# Runs the same checks the contributing guide asks for locally, on every push
+# and pull request.
+#
+# The `audit:*` generators are deliberately not run here: they read a pinned
+# revision of the separate Dash-Web repository, which CI does not have. Their
+# output is committed, and the checks below prove that committed output is
+# internally consistent, source-addressed, and matches what the pages claim.
+name: Verify documentation
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Inventory invariants
+        run: npm test
+
+      - name: Text encoding
+        run: npm run encoding
+
+      - name: Capability coverage
+        run: npm run coverage
+
+      - name: Documentation quality
+        run: npm run quality
+
+      - name: Type check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Links, anchors, images, and heading order
+        run: npm run links
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

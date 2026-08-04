@@ -515,3 +515,18 @@ The general link checker treats `alt=""` as present. The quality checker closes
 that gap by permitting empty alt text only for the labelled interface icons in
 `/assets/icons/`; every other Markdown image must explain the information it
 conveys.
+
+### The same checks run in CI
+
+`.github/workflows/verify.yml` runs every step of `verify` on each push and pull
+request, and keeps the Playwright report when a browser test fails. Running the
+command locally first is still the fast path; CI exists so that a check nobody
+ran locally cannot reach the deployed site.
+
+CI deliberately does **not** run the `audit:*` generators. They read a pinned
+revision of the separate Dash-Web repository, which CI does not have. Their
+output is committed, and the checks that do run prove that committed output is
+internally consistent, line-addressed to an immutable revision, and consistent
+with what the pages assert about it. Regenerate locally whenever the Dash-Web
+baseline moves, and commit the result in the same change as the prose it
+supports.
