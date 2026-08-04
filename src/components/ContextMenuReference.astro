@@ -24,6 +24,7 @@ const labelKinds = [
     <div><strong>{summary.groups}</strong><span>submenu groups</span></div>
     <div><strong>{summary.guarded}</strong><span>entries behind a guard</span></div>
     <div><strong>{summary.handlerResolved}</strong><span>handlers traced to source</span></div>
+    <div><strong>{summary.tracedToFieldWrites}</strong><span>traced to a field write</span></div>
   </div>
 
   <div class="source-method">
@@ -115,7 +116,7 @@ const labelKinds = [
               </td>
               <td>{item.parent ? `${item.surfaceName} → ${item.parent}` : item.surfaceName}</td>
               <td>{item.plain} {item.availability}</td>
-              <td><code>{`${item.owner.container}.${item.owner.member}`}{item.handler.names.length ? ` · ${item.handler.names.join(' · ')}` : ''}</code></td>
+              <td><code>{`${item.owner.container}.${item.owner.member}`}{item.handler.names.length ? ` · ${item.handler.names.join(' · ')}` : ''}{item.handler.writes.length ? ` · writes ${item.handler.writes.join(' · ')}` : ''}</code></td>
             </tr>
           ))}
         </tbody>
@@ -156,7 +157,7 @@ const labelKinds = [
     eventExpression: string;
     owner: { container: string; member: string };
     source: { file: string; line: number; url: string };
-    handler: { names: string[]; resolved: ResolvedHandler[]; stateOwner: string };
+    handler: { names: string[]; resolved: ResolvedHandler[]; writes: string[]; stateOwner: string };
     plain: string;
     availability: string;
     interaction: string;
@@ -341,6 +342,7 @@ const labelKinds = [
         technical.append(generated);
       }
       addCodeList(technical, 'Guards, outermost first', row.guards);
+      addCodeList(technical, 'Fields written at the registration site', row.handler.writes);
       if (row.eventExpression) {
         const event = document.createElement('p');
         const heading = document.createElement('strong');
@@ -437,7 +439,7 @@ const labelKinds = [
           row.label, row.parent, row.surfaceName, row.plain, row.availability, row.eventExpression,
           row.labelExpression, row.generatedFrom, row.owner.container, row.owner.member,
           row.source.file, row.handler.stateOwner, ...row.labelVariants, ...row.guards,
-          ...row.handler.names,
+          ...row.handler.names, ...row.handler.writes,
           ...row.handler.resolved.flatMap((handler) => [handler.name, handler.signature, handler.purpose, ...handler.writes, ...handler.calls]),
         ].filter(Boolean).join(' ').toLowerCase(),
       }));

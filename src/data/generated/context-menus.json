@@ -25,7 +25,9 @@
     "guarded": 159,
     "undoable": 13,
     "undoablePropUsed": 0,
-    "handlerResolved": 106,
+    "handlerResolved": 131,
+    "tracedToFieldWrites": 61,
+    "untracedActions": 2,
     "contributingFiles": 31,
     "cooperativeGroups": 5
   },
@@ -263,7 +265,14 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1319-L1322"
           }
         ],
-        "stateOwner": "DocUtils.documentList"
+        "writes": [
+          "newDoc._author",
+          "newDoc.x",
+          "newDoc.y",
+          "newDoc.$backgroundColor",
+          "newDoc[pivotField]"
+        ],
+        "stateOwner": "newDoc._author, newDoc.x, newDoc.y, newDoc.$backgroundColor, newDoc[pivotField]"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in foo .filter(btnDoc => !btnDoc.hidden) .map(btnDoc => DocCast(btnDoc?.dragFactory)) .filter(doc => doc && doc !== Doc.UserDoc().emptyTrail && doc.title) .map(do…, so how many you see depends on your own documents.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
@@ -323,6 +332,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/extensions/ExtensionsTypings.ts#L6-L6"
           }
         ],
+        "writes": [],
         "stateOwner": "DocUtils.addDocumentCreatorMenuItems"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -361,6 +371,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocUtils.addDocumentCreatorMenuItems"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -401,6 +412,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocUtils.addDocumentCreatorMenuItems"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -453,7 +465,13 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L938-L941"
           }
         ],
-        "stateOwner": "DocUtils.addDocumentCreatorMenuItems"
+        "writes": [
+          "note.embeddingCount",
+          "textDoc.layout_fieldKey",
+          "textDoc[textDoc.layout_fieldKey]",
+          "textDoc[pivotField]"
+        ],
+        "stateOwner": "note.embeddingCount, textDoc.layout_fieldKey, textDoc[textDoc.layout_fieldKey], textDoc[pivotField]"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in DocListCast((Doc.UserDoc().template_notes as Doc).data), so how many you see depends on your own documents.",
       "availability": "Contributed only when its guard holds: !simpleMenu",
@@ -523,7 +541,13 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1319-L1322"
           }
         ],
-        "stateOwner": "DocUtils.userDocList"
+        "writes": [
+          "newDoc.author",
+          "newDoc.x",
+          "newDoc.y",
+          "newDoc[pivotField]"
+        ],
+        "stateOwner": "newDoc.author, newDoc.x, newDoc.y, newDoc[pivotField]"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in DocListCast(DocListCast(Doc.MyTools?.data)[1]?.data) .filter(btnDoc => !btnDoc.hidden) .map(btnDoc => Cast(btnDoc?.dragFactory, Doc, null)) .filter(doc => doc …, so how many you see depends on your own documents.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
@@ -561,6 +585,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocUtils.addDocumentCreatorMenuItems"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -611,6 +636,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/apis/google_docs/GoogleApiClientUtils.ts#L122-L122"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in StrListCast(this.Document.contextMenuLabels), so how many you see depends on your own documents.",
@@ -673,6 +699,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/apis/google_docs/GoogleApiClientUtils.ts#L122-L122"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in this._props .contextMenuItems?.(), so how many you see depends on your own documents.",
@@ -726,6 +753,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1308-L1308"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens the document full-screen over the workspace without moving it.",
@@ -778,6 +806,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/FieldView.tsx#L99-L99"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Adds the document to the active presentation trail as a step.",
@@ -831,6 +860,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1560-L1561"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -884,6 +914,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -925,6 +956,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -978,6 +1010,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1326-L1326"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Draws the document above its overlapping neighbours on a freeform canvas.",
@@ -1031,6 +1064,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1326-L1326"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Draws the document beneath its overlapping neighbours on a freeform canvas.",
@@ -1075,9 +1109,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "DocumentViewInternal.onContextMenu"
+        "writes": [
+          "this.layoutDoc._keepZWhenDragged"
+        ],
+        "stateOwner": "this.layoutDoc._keepZWhenDragged"
       },
-      "plain": "Runs the handler shown in the technical trace against any document.",
+      "plain": "Writes this.layoutDoc._keepZWhenDragged directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: this._props.bringToFront",
       "interaction": "Click once to run it.",
       "undoNote": "The handler wraps its work in a named undo batch, so one undo reverses the whole entry."
@@ -1117,6 +1154,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -1170,6 +1208,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L572-L589"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Turns the document into a doorway that opens its link target when clicked.",
@@ -1210,8 +1249,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L767"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.setToggleDetail"
+        ],
+        "resolved": [
+          {
+            "name": "this.setToggleDetail",
+            "origin": "module-internal symbol",
+            "signature": "setToggleDetail =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L399-L406"
+          }
+        ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Switches a setting on or off. The label reflects the state you will move to.",
@@ -1269,6 +1321,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L378-L383"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
@@ -1334,6 +1387,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L480-L485"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Changes stored state on the document or view named in the trace.",
@@ -1377,6 +1431,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -1432,6 +1487,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L393-L396"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -1487,6 +1543,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L385-L391"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -1531,6 +1588,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -1597,7 +1655,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1790"
           }
         ],
-        "stateOwner": "DocumentViewInternal.onContextMenu"
+        "writes": [
+          "this.layoutDoc.onDragStart"
+        ],
+        "stateOwner": "this.layoutDoc.onDragStart"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
       "availability": "Contributed when Developer mode is on.",
@@ -1638,9 +1699,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "DocumentViewInternal.onContextMenu"
+        "writes": [
+          "this.layoutDoc.onDragStart"
+        ],
+        "stateOwner": "this.layoutDoc.onDragStart"
       },
-      "plain": "Runs the handler shown in the technical trace against any document.",
+      "plain": "Writes this.layoutDoc.onDragStart directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -1679,6 +1743,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -1733,6 +1798,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1095-L1125"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Changes stored state on the document or view named in the trace.",
@@ -1778,9 +1844,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "DocumentViewInternal.onContextMenu"
+        "writes": [
+          "this.Document._chromeHidden"
+        ],
+        "stateOwner": "this.Document._chromeHidden"
       },
-      "plain": "Opens or reveals the named thing without changing the document’s content.",
+      "plain": "Writes this.Document._chromeHidden directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when the document is not a Dash system document and Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -1842,6 +1911,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1128-L1130"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Copies the document’s server path so you can reference it elsewhere.",
@@ -1883,6 +1953,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -1936,6 +2007,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L892-L972"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Downloads the document, and what it contains, as a zip archive.",
@@ -1988,6 +2060,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1310-L1310"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens sharing for this document so you can choose who may see or edit it.",
@@ -2027,8 +2100,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L804"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.importFolderIntoCollection"
+        ],
+        "resolved": [
+          {
+            "name": "this.importFolderIntoCollection",
+            "origin": "module-internal symbol",
+            "signature": "importFolderIntoCollection =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L534-L572"
+          }
+        ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Reads a folder from your computer into this collection as documents.",
@@ -2068,8 +2154,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L808"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.deleteClicked"
+        ],
+        "resolved": [
+          {
+            "name": "this.deleteClicked",
+            "origin": "module-internal symbol",
+            "signature": "deleteClicked =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L398-L398"
+          }
+        ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Removes the document from this view. Recently Closed keeps it, so this is not a delete.",
@@ -2108,8 +2207,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L810"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.openSetTimeModal"
+        ],
+        "resolved": [
+          {
+            "name": "this.openSetTimeModal",
+            "origin": "module-internal symbol",
+            "signature": "openSetTimeModal =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L593-L649"
+          }
+        ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens the scheduling dialog for this document.",
@@ -2160,6 +2272,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens the document’s raw fields in a key/value pane on the right.",
@@ -2198,6 +2311,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -2260,6 +2374,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/Documents.ts#L1026-L1033"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -2300,6 +2415,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -2340,6 +2456,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -2401,6 +2518,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CalendarManager.tsx#L71-L77"
           }
         ],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against any document.",
@@ -2441,6 +2559,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DocumentViewInternal.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -2479,8 +2598,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2036"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.resetView"
+        ],
+        "resolved": [
+          {
+            "name": "this.resetView",
+            "origin": "module-internal symbol",
+            "signature": "resetView(doc: Doc)",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/animationtimeline/Timeline.tsx#L311-L315"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2519,8 +2651,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2037"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.toggleResetView"
+        ],
+        "resolved": [
+          {
+            "name": "this.toggleResetView",
+            "origin": "module-internal symbol",
+            "signature": "toggleResetView =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2022-L2029"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Switches a setting on or off. The label reflects the state you will move to.",
@@ -2562,6 +2707,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -2614,7 +2760,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1240-L1242"
           }
         ],
-        "stateOwner": "CollectionFreeFormView.onContextMenu"
+        "writes": [
+          "Doc.UserDoc().defaultTextLayout"
+        ],
+        "stateOwner": "Doc.UserDoc().defaultTextLayout"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
       "availability": "Contributed when Developer mode is on.",
@@ -2694,6 +2843,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormBackgroundGrid.tsx#L11-L11"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2746,6 +2896,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1944-L1965"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2784,8 +2935,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2045"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.promoteCollection"
+        ],
+        "resolved": [
+          {
+            "name": "this.promoteCollection",
+            "origin": "module-internal symbol",
+            "signature": "promoteCollection =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1984-L1993"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2824,8 +2988,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2047"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.transcribeStrokes"
+        ],
+        "resolved": [
+          {
+            "name": "this.transcribeStrokes",
+            "origin": "module-internal symbol",
+            "signature": "transcribeStrokes =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2105-L2113"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2864,8 +3041,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2049"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.layoutDocsInGrid"
+        ],
+        "resolved": [
+          {
+            "name": "this.layoutDocsInGrid",
+            "origin": "module-internal symbol",
+            "signature": "layoutDocsInGrid =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1995-L2005"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -2921,6 +3111,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormClusters.ts#L95-L100"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Switches a setting on or off. The label reflects the state you will move to.",
@@ -2961,6 +3152,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3004,9 +3196,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionFreeFormView.onContextMenu"
+        "writes": [
+          "this._showAnimTimeline"
+        ],
+        "stateOwner": "this._showAnimTimeline"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this._showAnimTimeline directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3056,7 +3251,11 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PreviewCursor.tsx#L156-L178"
           }
         ],
-        "stateOwner": "CollectionFreeFormView.onContextMenu"
+        "writes": [
+          "SmartDrawHandler.Instance.AddDrawing",
+          "SmartDrawHandler.Instance.RemoveDrawing"
+        ],
+        "stateOwner": "SmartDrawHandler.Instance.AddDrawing, SmartDrawHandler.Instance.RemoveDrawing"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
       "availability": "Contributed only when its guard holds: this.layoutDoc.drawingData != undefined",
@@ -3110,6 +3309,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/smartdraw/StickerPalette.tsx#L55-L65"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -3162,7 +3362,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1240-L1242"
           }
         ],
-        "stateOwner": "CollectionFreeFormView.onContextMenu"
+        "writes": [
+          "DocCast(Doc.UserDoc().emptyCollection)!.backgroundColor"
+        ],
+        "stateOwner": "DocCast(Doc.UserDoc().emptyCollection)!.backgroundColor"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
       "availability": "Contributed only when its guard holds: this._props.renderDepth",
@@ -3200,8 +3403,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2087"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.fitContentOnce"
+        ],
+        "resolved": [
+          {
+            "name": "this.fitContentOnce",
+            "origin": "module-internal symbol",
+            "signature": "fitContentOnce =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L276-L281"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -3243,8 +3459,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2089"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.toggleNativeDimensions"
+        ],
+        "resolved": [
+          {
+            "name": "this.toggleNativeDimensions",
+            "origin": "exported symbol",
+            "signature": "export function toggleNativeDimensions(layoutDoc: Doc, contentScale: number, panelWidth: number, panelHeight: number)",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1467-L1480"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -3285,6 +3514,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3335,6 +3565,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/apis/gpt/PresCustomization.ts#L42-L42"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -3375,6 +3606,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionFreeFormView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3413,9 +3645,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionGridView.onContextMenu"
+        "writes": [
+          "this.Document.display"
+        ],
+        "stateOwner": "this.Document.display"
       },
-      "plain": "Switches a setting on or off. The label reflects the state you will move to.",
+      "plain": "Writes this.Document.display directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3451,9 +3686,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionGridView.onContextMenu"
+        "writes": [
+          "this.Document.centerY"
+        ],
+        "stateOwner": "this.Document.centerY"
       },
-      "plain": "Switches a setting on or off. The label reflects the state you will move to.",
+      "plain": "Writes this.Document.centerY directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3489,6 +3727,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionGridView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3532,9 +3771,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionNoteTakingView.onContextMenu"
+        "writes": [
+          "this.layoutDoc[this.fieldKey + '_columnHeaders_autoCreate']"
+        ],
+        "stateOwner": "this.layoutDoc[this.fieldKey + '_columnHeaders_autoCreate']"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.layoutDoc[this.fieldKey + '_columnHeaders_autoCreate'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3570,8 +3812,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L585"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.removeEmptyColumns"
+        ],
+        "resolved": [
+          {
+            "name": "this.removeEmptyColumns",
+            "origin": "module-internal symbol",
+            "signature": "removeEmptyColumns =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L569-L569"
+          }
+        ],
+        "writes": [],
         "stateOwner": "CollectionNoteTakingView.onContextMenu"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
@@ -3615,9 +3870,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionNoteTakingView.onContextMenu"
+        "writes": [
+          "this.layoutDoc._notetaking_columns_autoSize"
+        ],
+        "stateOwner": "this.layoutDoc._notetaking_columns_autoSize"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.layoutDoc._notetaking_columns_autoSize directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3658,9 +3916,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionNoteTakingView.onContextMenu"
+        "writes": [
+          "this.layoutDoc._layout_autoHeight"
+        ],
+        "stateOwner": "this.layoutDoc._layout_autoHeight"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.layoutDoc._layout_autoHeight directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3710,7 +3971,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L321"
           }
         ],
-        "stateOwner": "CollectionNoteTakingView.onContextMenu"
+        "writes": [
+          "this.dataDoc.data"
+        ],
+        "stateOwner": "this.dataDoc.data"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
@@ -3750,6 +4014,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionNoteTakingView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3793,9 +4058,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionStackingView.onContextMenu"
+        "writes": [
+          "this.layoutDoc._columnsFill"
+        ],
+        "stateOwner": "this.layoutDoc._columnsFill"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.layoutDoc._columnsFill directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3836,9 +4104,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionStackingView.onContextMenu"
+        "writes": [
+          "this.layoutDoc._layout_autoHeight"
+        ],
+        "stateOwner": "this.layoutDoc._layout_autoHeight"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.layoutDoc._layout_autoHeight directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -3888,7 +4159,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/List.ts#L321"
           }
         ],
-        "stateOwner": "CollectionStackingView.onContextMenu"
+        "writes": [
+          "this.dataDoc[this.fieldKey ?? 'data']"
+        ],
+        "stateOwner": "this.dataDoc[this.fieldKey ?? 'data']"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
       "availability": "Contributed only when its guard holds: !e.isPropagationStopped()",
@@ -3929,6 +4203,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionStackingView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -3983,6 +4258,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionTreeView.tsx#L368"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionTreeView.onContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -4026,9 +4302,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionTreeView.onContextMenu"
+        "writes": [
+          "this.Document.treeView_OpenIsTransient"
+        ],
+        "stateOwner": "this.Document.treeView_OpenIsTransient"
       },
-      "plain": "Changes stored state on the document or view named in the trace.",
+      "plain": "Writes this.Document.treeView_OpenIsTransient directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -4069,9 +4348,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionTreeView.onContextMenu"
+        "writes": [
+          "this.Document.treeView_HideHeaderFields"
+        ],
+        "stateOwner": "this.Document.treeView_HideHeaderFields"
       },
-      "plain": "Opens or reveals the named thing without changing the document’s content.",
+      "plain": "Writes this.Document.treeView_HideHeaderFields directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -4112,9 +4394,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionTreeView.onContextMenu"
+        "writes": [
+          "this.Document.treeView_HideTitle"
+        ],
+        "stateOwner": "this.Document.treeView_HideTitle"
       },
-      "plain": "Opens or reveals the named thing without changing the document’s content.",
+      "plain": "Writes this.Document.treeView_HideTitle directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -4152,6 +4437,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionTreeView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -4214,6 +4500,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L480-L485"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionTreeView.onContextMenu"
       },
       "plain": "Changes stored state on the document or view named in the trace.",
@@ -4255,6 +4542,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionTreeView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -4307,6 +4595,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4359,6 +4648,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4411,6 +4701,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4463,7 +4754,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
-        "stateOwner": "CollectionView.subItems"
+        "writes": [
+          "func(CollectionViewType.Stacking)._layout_autoHeight"
+        ],
+        "stateOwner": "func(CollectionViewType.Stacking)._layout_autoHeight"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
       "availability": "Contributed when the document is not a Dash system document.",
@@ -4515,6 +4809,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4567,7 +4862,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
-        "stateOwner": "CollectionView.subItems"
+        "writes": [
+          "func(CollectionViewType.NoteTaking)._layout_autoHeight"
+        ],
+        "stateOwner": "func(CollectionViewType.NoteTaking)._layout_autoHeight"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
       "availability": "Contributed when the document is not a Dash system document.",
@@ -4619,6 +4917,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4671,6 +4970,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4723,6 +5023,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4775,6 +5076,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4827,6 +5129,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4879,6 +5182,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4931,6 +5235,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -4983,6 +5288,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -5035,6 +5341,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -5087,6 +5394,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L271-L271"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.subItems"
       },
       "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
@@ -5127,6 +5435,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionView.setupViewTypes"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -5168,6 +5477,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionView.setupViewTypes"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -5212,9 +5522,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionView.onContextMenu"
+        "writes": [
+          "this.Document.forceActive"
+        ],
+        "stateOwner": "this.Document.forceActive"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.Document.forceActive directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -5265,6 +5578,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Opens the layout document that the collection applies to its children.",
@@ -5318,6 +5632,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -5362,9 +5677,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "CollectionView.onContextMenu"
+        "writes": [
+          "this.dataDoc.$isLightbox"
+        ],
+        "stateOwner": "this.dataDoc.$isLightbox"
       },
-      "plain": "Runs the handler shown in the technical trace against a collection and its renderers.",
+      "plain": "Writes this.dataDoc.$isLightbox directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -5403,6 +5721,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -5476,6 +5795,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in funcs, so how many you see depends on your own documents.",
@@ -5529,7 +5849,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/ObjectField.ts#L31-L33"
           }
         ],
-        "stateOwner": "CollectionView.onContextMenu"
+        "writes": [
+          "this.dataDoc[StrCast(childClick.targetScriptKey)]"
+        ],
+        "stateOwner": "this.dataDoc[StrCast(childClick.targetScriptKey)]"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in DocListCast(Cast(Doc.UserDoc()['clickFuncs-child'], Doc, null)?.data) .filter(childClick => ScriptCast(childClick.data)), so how many you see depends on your own documents.",
       "availability": "Contributed when Developer mode is on.",
@@ -5571,6 +5894,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -5624,6 +5948,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/Import%20%26%20Export/ImageUtils.ts#L30-L35"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Writes the collection’s nested images out to your file system.",
@@ -5666,6 +5991,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionView.onContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -5736,7 +6062,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L555-L584"
           }
         ],
-        "stateOwner": "CollectionSchemaView.openContextMenu"
+        "writes": [
+          "this._containedDocs"
+        ],
+        "stateOwner": "this._containedDocs"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
@@ -5806,7 +6135,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L555-L584"
           }
         ],
-        "stateOwner": "CollectionSchemaView.openContextMenu"
+        "writes": [
+          "this._containedDocs"
+        ],
+        "stateOwner": "this._containedDocs"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
@@ -5876,6 +6208,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L1243-L1267"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
@@ -5946,6 +6279,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L1243-L1267"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
@@ -5996,6 +6330,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L880-L890"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Changes stored state on the document or view named in the trace.",
@@ -6046,6 +6381,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L897-L901"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
@@ -6084,6 +6420,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -6134,6 +6471,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L548-L567"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -6184,6 +6522,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionNoteTakingView.tsx#L548-L567"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -6234,6 +6573,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L363-L380"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionSchemaView.openContextMenu"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
@@ -6275,9 +6615,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "SchemaRowBox.openContextMenu"
+        "writes": [
+          "this.Document._lockedSchemaEditing"
+        ],
+        "stateOwner": "this.Document._lockedSchemaEditing"
       },
-      "plain": "Runs the handler shown in the technical trace against a schema table.",
+      "plain": "Writes this.Document._lockedSchemaEditing directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -6325,6 +6668,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "SchemaRowBox.openContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -6375,6 +6719,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/CollectionSchemaView.tsx#L242-L245"
           }
         ],
+        "writes": [],
         "stateOwner": "SchemaRowBox.openContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a schema table.",
@@ -6445,6 +6790,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1095-L1125"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionStackingViewFieldColumn.menuCallback"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in Array.from(Object.keys(Doc.GetProto(dataDoc))) .filter(fieldKey => dataDoc[fieldKey] instanceof RichTextField || dataDoc[fieldKey] instanceof ImageField || typ…, so how many you see depends on your own documents.",
@@ -6515,6 +6861,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L1095-L1125"
           }
         ],
+        "writes": [],
         "stateOwner": "CollectionStackingViewFieldColumn.menuCallback"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in Array.from(Object.keys(Doc.GetProto(dataDoc))) .filter(fieldKey => DocListCast(dataDoc[fieldKey]).length), so how many you see depends on your own documents.",
@@ -6555,6 +6902,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionStackingViewFieldColumn.menuCallback"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -6595,6 +6943,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "CollectionStackingViewFieldColumn.menuCallback"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -6647,6 +6996,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L1310-L1310"
           }
         ],
+        "writes": [],
         "stateOwner": "DashboardView.onContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against the dashboard itself.",
@@ -6704,6 +7054,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/DashboardView.tsx#L533"
           }
         ],
+        "writes": [],
         "stateOwner": "DashboardView.onContextMenu"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
@@ -6745,9 +7096,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "AudioBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.hideAnchors"
+        ],
+        "stateOwner": "this.layoutDoc.hideAnchors"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.hideAnchors directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -6786,9 +7140,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "AudioBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.dontAutoFollowLinks"
+        ],
+        "stateOwner": "this.layoutDoc.dontAutoFollowLinks"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.dontAutoFollowLinks directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -6827,9 +7184,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "AudioBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.dontAutoPlayFollowedLinks"
+        ],
+        "stateOwner": "this.layoutDoc.dontAutoPlayFollowedLinks"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.dontAutoPlayFollowedLinks directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -6868,9 +7228,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "AudioBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.autoPlayAnchors"
+        ],
+        "stateOwner": "this.layoutDoc.autoPlayAnchors"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.autoPlayAnchors directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -6906,6 +7269,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "AudioBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -6958,6 +7322,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "CalendarBox.handleEventContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -7030,7 +7395,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/formattedText/FormattedTextBox.tsx#L93-L95"
           }
         ],
-        "stateOwner": "CalendarBox.handleEventContextMenu"
+        "writes": [
+          "doc.$task_description"
+        ],
+        "stateOwner": "doc.$task_description"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
       "availability": "Contributed only when its guard holds: doc",
@@ -7092,6 +7460,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DocumentView.tsx#L2052-L2052"
           }
         ],
+        "writes": [],
         "stateOwner": "CalendarBox.handleEventContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -7142,6 +7511,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/chatbot/chatboxcomponents/ChatBox.tsx#L246-L273"
           }
         ],
+        "writes": [],
         "stateOwner": "ComparisonBox.flashcardContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -7183,9 +7553,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "ComparisonBox.flashcardContextMenu"
+        "writes": [
+          "this.revealOp"
+        ],
+        "stateOwner": "this.revealOp"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.revealOp directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7224,9 +7597,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "ComparisonBox.flashcardContextMenu"
+        "writes": [
+          "this.revealOpHover"
+        ],
+        "stateOwner": "this.revealOpHover"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.revealOpHover directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7264,6 +7640,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "ComparisonBox.flashcardContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -7314,6 +7691,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/chatbot/chatboxcomponents/ChatBox.tsx#L246-L273"
           }
         ],
+        "writes": [],
         "stateOwner": "DataVizBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -7364,6 +7742,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/DataVizBox/DataVizBox.tsx#L599-L602"
           }
         ],
+        "writes": [],
         "stateOwner": "DataVizBox.specificContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -7404,6 +7783,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "DataVizBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -7454,6 +7834,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/EquationBox.tsx#L316-L355"
           }
         ],
+        "writes": [],
         "stateOwner": "EquationBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -7504,6 +7885,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/EquationBox.tsx#L380-L394"
           }
         ],
+        "writes": [],
         "stateOwner": "EquationBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -7545,9 +7927,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "EquationBox.specificContextMenu"
+        "writes": [
+          "EquationBox.degreeMode"
+        ],
+        "stateOwner": "EquationBox.degreeMode"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes EquationBox.degreeMode directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7586,9 +7971,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "EquationBox.specificContextMenu"
+        "writes": [
+          "EquationBox.fracMode"
+        ],
+        "stateOwner": "EquationBox.fracMode"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes EquationBox.fracMode directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7636,6 +8024,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/EquationBox.tsx#L98-L98"
           }
         ],
+        "writes": [],
         "stateOwner": "EquationBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -7674,6 +8063,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "EquationBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -7726,6 +8116,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/FontIconBox/FontIconBox.tsx#L70-L70"
           }
         ],
+        "writes": [],
         "stateOwner": "FontIconBox.specificContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -7806,6 +8197,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/MarqueeOptionsMenu.tsx#L17-L17"
           }
         ],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Not one fixed entry. Dash builds one of these for every item in (Doc.noviceMode ? noviceHighlighting : expertHighlighting), so how many you see depends on your own documents.",
@@ -7847,9 +8239,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc._layout_noSidebar"
+        ],
+        "stateOwner": "this.layoutDoc._layout_noSidebar"
       },
-      "plain": "Switches a setting on or off. The label reflects the state you will move to.",
+      "plain": "Writes this.layoutDoc._layout_noSidebar directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7888,9 +8283,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc._layout_enableAltContentUI"
+        ],
+        "stateOwner": "this.layoutDoc._layout_enableAltContentUI"
       },
-      "plain": "Switches a setting on or off. The label reflects the state you will move to.",
+      "plain": "Writes this.layoutDoc._layout_enableAltContentUI directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7931,9 +8329,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc[`_${this._props.fieldKey}_usePath`]"
+        ],
+        "stateOwner": "this.layoutDoc[`_${this._props.fieldKey}_usePath`]"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc[`_${this._props.fieldKey}_usePath`] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: this.Document._layout_enableAltContentUI",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -7971,6 +8372,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -8033,7 +8435,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Types.ts#L94-L94"
           }
         ],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "proto.BROADCAST_MESSAGE"
+        ],
+        "stateOwner": "proto.BROADCAST_MESSAGE"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
       "availability": "Contributed when Developer mode is on.",
@@ -8073,6 +8478,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -8111,9 +8517,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.dataDoc[this.fieldKey + '_autoUpdate']"
+        ],
+        "stateOwner": "this.dataDoc[this.fieldKey + '_autoUpdate']"
       },
-      "plain": "Switches a setting on or off. The label reflects the state you will move to.",
+      "plain": "Writes this.dataDoc[this.fieldKey + '_autoUpdate'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -8181,6 +8590,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/agent/services/stableDiffusionService.ts#L47-L86"
           }
         ],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -8217,8 +8627,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/formattedText/FormattedTextBox.tsx#L1251"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.askGPT"
+        ],
+        "resolved": [
+          {
+            "name": "this.askGPT",
+            "origin": "module-internal symbol",
+            "signature": "@action askGPT =",
+            "purpose": "Sends the user's input to OpenAI, displays the loading indicator, and updates the chat history.\n@param event The form submission event.",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/chatbot/chatboxcomponents/ChatBox.tsx#L246-L273"
+          }
+        ],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -8262,9 +8685,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc._createDocOnCR"
+        ],
+        "stateOwner": "this.layoutDoc._createDocOnCR"
       },
-      "plain": "Creates something new; nothing existing is replaced.",
+      "plain": "Writes this.layoutDoc._createDocOnCR directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: this._props.renderDepth",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -8315,6 +8741,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/smartdraw/StickerPalette.tsx#L55-L65"
           }
         ],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -8356,9 +8783,16 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.suggestedEditsEnabled",
+          "this.activeSuggestion",
+          "this.activeSuggestionsChatOpen",
+          "this.activeSuggestionsLog",
+          "this._suggestionEl"
+        ],
+        "stateOwner": "this.suggestedEditsEnabled, this.activeSuggestion, this.activeSuggestionsChatOpen, this.activeSuggestionsLog, this._suggestionEl"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.suggestedEditsEnabled, this.activeSuggestion, this.activeSuggestionsChatOpen directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "The handler wraps its work in a named undo batch, so one undo reverses the whole entry."
@@ -8397,9 +8831,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "FormattedTextBox.specificContextMenu"
+        "writes": [
+          "this.inlinePromptsEnabled"
+        ],
+        "stateOwner": "this.inlinePromptsEnabled"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.inlinePromptsEnabled directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "The handler wraps its work in a named undo batch, so one undo reverses the whole entry."
@@ -8437,6 +8874,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -8487,6 +8925,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/RTFMarkup.tsx#L12-L14"
           }
         ],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -8527,6 +8966,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "FormattedTextBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -8571,9 +9011,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "HTMLBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc[this.fieldKey + '_useCors']"
+        ],
+        "stateOwner": "this.layoutDoc[this.fieldKey + '_useCors']"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc[this.fieldKey + '_useCors'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -8614,9 +9057,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "HTMLBox.specificContextMenu"
+        "writes": [
+          "this.dataDoc[this.fieldKey + '_allowScripts']"
+        ],
+        "stateOwner": "this.dataDoc[this.fieldKey + '_allowScripts']"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.dataDoc[this.fieldKey + '_allowScripts'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !cm.findByDescription('Options...')",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -8689,7 +9135,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L574-L582"
           }
         ],
-        "stateOwner": "HTMLBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.layout_reflowHorizontal"
+        ],
+        "stateOwner": "this.layoutDoc.layout_reflowHorizontal"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
       "availability": "Contributed only when its guard holds: !cm.findByDescription('Options...')",
@@ -8742,6 +9191,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1944-L1965"
           }
         ],
+        "writes": [],
         "stateOwner": "HTMLBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -8782,6 +9232,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "HTMLBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -8820,8 +9271,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L649"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.rotate"
+        ],
+        "resolved": [
+          {
+            "name": "this.rotate",
+            "origin": "module-internal symbol",
+            "signature": "rotate: SketchRotateConstraintRef",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/sketch3d/scene/types.ts#L29-L29"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -8863,8 +9327,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L650"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.resolution"
+        ],
+        "resolved": [
+          {
+            "name": "this.resolution",
+            "origin": "module-internal symbol",
+            "signature": "resolution =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L316-L316"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -8903,8 +9380,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L651"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.setNativeSize"
+        ],
+        "resolved": [
+          {
+            "name": "this.setNativeSize",
+            "origin": "module-internal symbol",
+            "signature": "setNativeSize =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L318-L338"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Changes stored state on the document or view named in the trace.",
@@ -8968,6 +9458,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/server/DashUploadUtils.ts#L599-L599"
           }
         ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9030,6 +9521,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionSchema/SchemaTableCell.tsx#L320-L327"
           }
         ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Makes a copy; the original stays where it is.",
@@ -9068,8 +9560,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L663"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.docEditorView"
+        ],
+        "resolved": [
+          {
+            "name": "this.docEditorView",
+            "origin": "module-internal symbol",
+            "signature": "docEditorView =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L426-L434"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -9108,8 +9613,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L664"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.removeBackground"
+        ],
+        "resolved": [
+          {
+            "name": "this.removeBackground",
+            "origin": "module-internal symbol",
+            "signature": "removeBackground =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L412-L417"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Removes the named thing from this view. Check whether it is recoverable before relying on it.",
@@ -9148,8 +9666,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L665"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.maskForeground"
+        ],
+        "resolved": [
+          {
+            "name": "this.maskForeground",
+            "origin": "exported symbol",
+            "signature": "export function maskForeground(docId: string, imagePath: string)",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/Import%20%26%20Export/ImageUtils.ts#L102-L122"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9235,6 +9766,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/Transform.ts#L119-L119"
           }
         ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9291,6 +9823,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/smartdraw/StickerPalette.tsx#L55-L65"
           }
         ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9343,6 +9876,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ImageBox.tsx#L436-L441"
           }
         ],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9384,9 +9918,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "ImageBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc[this.fieldKey + '_usePath']"
+        ],
+        "stateOwner": "this.layoutDoc[this.fieldKey + '_usePath']"
       },
-      "plain": "Opens or reveals the named thing without changing the document’s content.",
+      "plain": "Writes this.layoutDoc[this.fieldKey + '_usePath'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: this.Document.ai_outpainted",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -9424,6 +9961,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "ImageBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9474,6 +10012,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "KeyValueBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9514,6 +10053,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "KeyValueBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9566,6 +10106,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/PropertiesDocBacklinksSelector.tsx#L19-L19"
           }
         ],
+        "writes": [],
         "stateOwner": "KeyValuePair.onContextMenu"
       },
       "plain": "Opens or reveals the named thing without changing the document’s content.",
@@ -9604,8 +10145,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/PDFBox.tsx#L529"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.toggleSidebarType"
+        ],
+        "resolved": [
+          {
+            "name": "this.toggleSidebarType",
+            "origin": "module-internal symbol",
+            "signature": "@undoBatch toggleSidebarType =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/PDFBox.tsx#L520-L523"
+          }
+        ],
+        "writes": [],
         "stateOwner": "PDFBox.specificContextMenu"
       },
       "plain": "Switches a setting on or off. The label reflects the state you will move to.",
@@ -9658,6 +10212,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1944-L1965"
           }
         ],
+        "writes": [],
         "stateOwner": "PDFBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9698,6 +10253,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "PDFBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9758,6 +10314,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/WebBoxRenderer.js#L19-L21"
           }
         ],
+        "writes": [],
         "stateOwner": "PDFBox.specificContextMenu"
       },
       "plain": "Makes a copy; the original stays where it is.",
@@ -9798,6 +10355,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "PDFBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9834,8 +10392,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ScreenshotBox.tsx#L81"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.toggleRecording"
+        ],
+        "resolved": [
+          {
+            "name": "this.toggleRecording",
+            "origin": "module-internal symbol",
+            "signature": "toggleRecording =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ScreenshotBox.tsx#L137-L195"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ScreenshotBox.subitems"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -9874,6 +10445,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "ScreenshotBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9910,8 +10482,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ScriptingBox.tsx#L303"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.onCopy"
+        ],
+        "resolved": [
+          {
+            "name": "this.onCopy",
+            "origin": "module-internal symbol",
+            "signature": "onCopy =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/ScriptingBox.tsx#L293-L297"
+          }
+        ],
+        "writes": [],
         "stateOwner": "ScriptingBox.specificContextMenu"
       },
       "plain": "Creates something new; nothing existing is replaced.",
@@ -9952,6 +10537,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "ScriptingBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -9990,8 +10576,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/VideoBox.tsx#L536"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.FullScreen"
+        ],
+        "resolved": [
+          {
+            "name": "this.FullScreen",
+            "origin": "module-internal symbol",
+            "signature": "@action public FullScreen =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/VideoBox.tsx#L281-L289"
+          }
+        ],
+        "writes": [],
         "stateOwner": "VideoBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -10044,6 +10643,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/VideoBox.tsx#L329-L362"
           }
         ],
+        "writes": [],
         "stateOwner": "VideoBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -10088,7 +10688,11 @@
           "navigator.mediaDevices.getDisplayMedia"
         ],
         "resolved": [],
-        "stateOwner": "VideoBox.specificContextMenu"
+        "writes": [
+          "this._screenCapture",
+          "this._videoRef!.srcObject"
+        ],
+        "stateOwner": "this._screenCapture, this._videoRef!.srcObject"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
       "availability": "Contributed only when its guard holds: this.Document.type === DocumentType.SCREENSHOT",
@@ -10131,9 +10735,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "VideoBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.dontAutoFollowLinks"
+        ],
+        "stateOwner": "this.layoutDoc.dontAutoFollowLinks"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.dontAutoFollowLinks directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: field",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10174,9 +10781,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "VideoBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.dontAutoPlayFollowedLinks"
+        ],
+        "stateOwner": "this.layoutDoc.dontAutoPlayFollowedLinks"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.dontAutoPlayFollowedLinks directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: field",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10217,9 +10827,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "VideoBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.autoPlayAnchors"
+        ],
+        "stateOwner": "this.layoutDoc.autoPlayAnchors"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc.autoPlayAnchors directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: field",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10269,6 +10882,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/ClientUtils.ts#L294-L296"
           }
         ],
+        "writes": [],
         "stateOwner": "VideoBox.specificContextMenu"
       },
       "plain": "Makes a copy; the original stays where it is.",
@@ -10310,9 +10924,15 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "VideoBox.specificContextMenu"
+        "writes": [
+          "this.dataDoc.layout",
+          "this.dataDoc[this._props.fieldKey]",
+          "this.dataDoc[this.fieldKey + '_duration']",
+          "this.dataDoc[this.fieldKey + '_presentation']"
+        ],
+        "stateOwner": "this.dataDoc.layout, this.dataDoc[this._props.fieldKey], this.dataDoc[this.fieldKey + '_duration'], this.dataDoc[this.fieldKey + '_presentation']"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.dataDoc.layout, this.dataDoc[this._props.fieldKey], this.dataDoc[this.fieldKey + '_duration'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: this.dataDoc[this.fieldKey + '_recorded']",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10350,6 +10970,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "VideoBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -10386,8 +11007,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/Viewer3DBox.tsx#L326"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.uploadModel"
+        ],
+        "resolved": [
+          {
+            "name": "this.uploadModel",
+            "origin": "module-internal symbol",
+            "signature": "@action // eslint-disable-next-line @typescript-eslint/no-unused-vars private uploadModel =",
+            "purpose": "",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/nodes/Viewer3DBox.tsx#L307-L320"
+          }
+        ],
+        "writes": [],
         "stateOwner": "Viewer3DBox.subitems"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -10426,6 +11060,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "Viewer3DBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -10470,9 +11105,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "WebBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc[this.fieldKey + '_useCors']"
+        ],
+        "stateOwner": "this.layoutDoc[this.fieldKey + '_useCors']"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.layoutDoc[this.fieldKey + '_useCors'] directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed when Developer mode is on.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10513,9 +11151,13 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "WebBox.specificContextMenu"
+        "writes": [
+          "this.dataDoc[this.fieldKey + '_allowScripts']",
+          "this._hackHide"
+        ],
+        "stateOwner": "this.dataDoc[this.fieldKey + '_allowScripts'], this._hackHide"
       },
-      "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
+      "plain": "Writes this.dataDoc[this.fieldKey + '_allowScripts'], this._hackHide directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed only when its guard holds: !cm.findByDescription('Options...')",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10588,7 +11230,10 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/fields/Doc.ts#L574-L582"
           }
         ],
-        "stateOwner": "WebBox.specificContextMenu"
+        "writes": [
+          "this.layoutDoc.layout_reflowHorizontal"
+        ],
+        "stateOwner": "this.layoutDoc.layout_reflowHorizontal"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
       "availability": "Contributed only when its guard holds: !cm.findByDescription('Options...')",
@@ -10641,6 +11286,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L1944-L1965"
           }
         ],
+        "writes": [],
         "stateOwner": "WebBox.specificContextMenu"
       },
       "plain": "Runs the handler shown in the technical trace against a type-specific renderer.",
@@ -10681,6 +11327,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "WebBox.specificContextMenu"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",
@@ -10719,8 +11366,21 @@
         "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/InkingStroke.tsx#L459"
       },
       "handler": {
-        "names": [],
-        "resolved": [],
+        "names": [
+          "this.analyzeStrokes"
+        ],
+        "resolved": [
+          {
+            "name": "this.analyzeStrokes",
+            "origin": "module-internal symbol",
+            "signature": "analyzeStrokes =",
+            "purpose": "analyzes the ink stroke and saves the analysis of the stroke to the 'inkAnalysis' field,\nand the recognized words to the 'handwriting'",
+            "writes": [],
+            "calls": [],
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/InkingStroke.tsx#L116-L129"
+          }
+        ],
+        "writes": [],
         "stateOwner": "InkingStroke.interactions"
       },
       "plain": "Runs the handler shown in the technical trace against an ink stroke.",
@@ -10771,6 +11431,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/InkingStroke.tsx#L137-L139"
           }
         ],
+        "writes": [],
         "stateOwner": "InkingStroke.interactions"
       },
       "plain": "Switches a setting on or off. The label reflects the state you will move to.",
@@ -10809,9 +11470,12 @@
       "handler": {
         "names": [],
         "resolved": [],
-        "stateOwner": "InkingStroke.interactions"
+        "writes": [
+          "InkStrokeProperties.Instance._controlButton"
+        ],
+        "stateOwner": "InkStrokeProperties.Instance._controlButton"
       },
-      "plain": "Changes stored state on the document or view named in the trace.",
+      "plain": "Writes InkStrokeProperties.Instance._controlButton directly. Nothing else runs, so the effect is exactly those fields changing.",
       "availability": "Contributed whenever this component is part of what you right-clicked.",
       "interaction": "Click once to run it.",
       "undoNote": "No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched."
@@ -10871,6 +11535,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/StyleProviderQuiz.tsx#L315-L320"
           }
         ],
+        "writes": [],
         "stateOwner": "StyleProviderQuiz.quizStyleProvider"
       },
       "plain": "Runs the handler shown in the technical trace against other menu contributors.",
@@ -10933,6 +11598,7 @@
             "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/StyleProviderQuiz.tsx#L315-L320"
           }
         ],
+        "writes": [],
         "stateOwner": "StyleProviderQuiz.quizStyleProvider"
       },
       "plain": "Runs the handler shown in the technical trace against other menu contributors.",
@@ -10973,6 +11639,7 @@
       "handler": {
         "names": [],
         "resolved": [],
+        "writes": [],
         "stateOwner": "StyleProviderQuiz.quizStyleProvider"
       },
       "plain": "Opens a submenu of related actions rather than doing something by itself.",

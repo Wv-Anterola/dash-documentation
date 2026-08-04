@@ -89,6 +89,30 @@ test('proves the menu is composed cooperatively rather than declared once', () =
   }
 });
 
+test('traces an entry to a field write when it never calls anything', () => {
+  // Many entries toggle a document field inline. Reporting "no handler" for
+  // those would hide the one fact that explains them.
+  assert.ok(menus.summary.tracedToFieldWrites >= 40);
+  assert.ok(menus.summary.untracedActions <= 5, 'almost every action should reach a handler or a field');
+
+  const chrome = menus.items.find((entry) => entry.labelVariants.includes('Show Chrome'));
+  assert.ok(chrome.handler.writes.includes('this.Document._chromeHidden'));
+  assert.match(chrome.plain, /_chromeHidden/);
+  assert.equal(chrome.handler.stateOwner, 'this.Document._chromeHidden');
+
+  for (const item of menus.items) {
+    if (!item.handler.writes.length) continue;
+    assert.ok(item.eventExpression.includes(item.handler.writes[0].split('.').pop()), `${item.id} claims a write that is not in its event body`);
+  }
+});
+
+test('resolves handlers passed by reference, not only handlers that are called', () => {
+  // `event: this.deleteClicked` never appears as a call at the registration site.
+  const close = menus.items.find((entry) => entry.label === 'Close' && entry.surface === 'document');
+  assert.ok(close.handler.names.includes('this.deleteClicked'), 'a by-reference handler must still be named');
+  assert.ok(menus.summary.handlerResolved >= 125);
+});
+
 test('states undo honestly instead of implying coverage', () => {
   // ContextMenuProps declares an `undoable` flag that no Dash entry sets; the
   // reversible entries are the ones whose own handler opens a batch.

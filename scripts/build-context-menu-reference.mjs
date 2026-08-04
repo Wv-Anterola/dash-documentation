@@ -550,11 +550,36 @@ const handlerIgnored = new Set([
 ]);
 
 function handlerNames(expression) {
-  return [...String(expression).matchAll(/\b([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(/g)]
-    .map((match) => match[1])
+  const called = [...String(expression).matchAll(/\b([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(/g)].map((match) => match[1]);
+  // A handler passed by reference (`event: this.deleteClicked`) is never called
+  // at the registration site, so the call-shaped pattern above cannot see it.
+  const trimmed = String(expression).trim();
+  const referenced = /^(?:this\.)?[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/.test(trimmed) ? [trimmed] : [];
+  return [...called, ...referenced]
     .filter((name) => !handlerIgnored.has(name.split('.').pop() ?? name))
     .filter((name, index, all) => all.indexOf(name) === index)
     .slice(0, 12);
+}
+
+/**
+ * The fields an event body assigns to. Many menu entries do their whole job
+ * with a direct write and never call anything, so the field is the trace.
+ */
+function writesIn(node, sourceFile) {
+  if (!node) return [];
+  const writes = [];
+  const visit = (child) => {
+    if (
+      ts.isBinaryExpression(child) &&
+      [ts.SyntaxKind.EqualsToken, ts.SyntaxKind.QuestionQuestionEqualsToken, ts.SyntaxKind.BarBarEqualsToken].includes(child.operatorToken.kind) &&
+      (ts.isPropertyAccessExpression(child.left) || ts.isElementAccessExpression(child.left))
+    ) {
+      writes.push(compact(child.left, sourceFile, 80));
+    }
+    ts.forEachChild(child, visit);
+  };
+  visit(node);
+  return [...new Set(writes)].slice(0, 6);
 }
 
 for (const file of files) {
@@ -599,6 +624,7 @@ for (const file of files) {
           guardSummary: readableGuard(guards),
           eventExpression,
           handlerNames: handlerNames(eventExpression),
+          writes: writesIn(eventNode, sourceFile),
           owner,
           source: { file, line, url: sourceUrl(file, line) },
         });
@@ -720,6 +746,12 @@ function plainLanguage(item) {
     [/^Add|^Create|^New/i, 'Creates something new; nothing existing is replaced.'],
     [/^Toggle|^Enable|^Disable|^Hide/i, 'Switches a setting on or off. The label reflects the state you will move to.'],
   ];
+  // An entry with no call at all does its whole job with a direct field write,
+  // and naming that field explains more than naming a handler that is not there.
+  const writeOnly = item.writes?.length && !item.handlerNames?.length;
+  if (writeOnly) {
+    return `Writes ${item.writes.slice(0, 3).join(', ')} directly. Nothing else runs, so the effect is exactly those fields changing.`;
+  }
   const matched = verbs.find(([pattern]) => pattern.test(item.label));
   if (matched) return matched[1];
   return `Runs the handler shown in the technical trace against ${item.surfaceName.toLowerCase()}.`;
@@ -732,7 +764,12 @@ for (const item of items) {
   item.handler = {
     names: item.handlerNames,
     resolved: resolved.slice(0, 4),
-    stateOwner: resolved[0]?.writes?.length ? resolved[0].writes.slice(0, 4).join(', ') : `${item.owner.container}.${item.owner.member}`,
+    writes: item.writes,
+    stateOwner: resolved[0]?.writes?.length
+      ? resolved[0].writes.slice(0, 4).join(', ')
+      : item.writes.length
+        ? item.writes.join(', ')
+        : `${item.owner.container}.${item.owner.member}`,
   };
   item.plain = plainLanguage(item);
   item.availability = item.guardSummary.length
@@ -745,6 +782,7 @@ for (const item of items) {
     ? 'The handler wraps its work in a named undo batch, so one undo reverses the whole entry.'
     : 'No undo batch is visible at the registration site. Undo may still work if the state it writes is itself batched.';
   delete item.handlerNames;
+  delete item.writes;
   delete item.guardSummary;
 }
 
@@ -807,6 +845,8 @@ const output = {
     undoable: items.filter((item) => item.undoable).length,
     undoablePropUsed: items.filter((item) => item.undoableProp).length,
     handlerResolved: items.filter((item) => item.handler.resolved.length).length,
+    tracedToFieldWrites: items.filter((item) => item.handler.writes.length).length,
+    untracedActions: items.filter((item) => item.kind === 'action' && !item.handler.resolved.length && !item.handler.writes.length).length,
     contributingFiles: new Set(items.map((item) => item.source.file)).size,
     cooperativeGroups: cooperativeGroups.length,
   },

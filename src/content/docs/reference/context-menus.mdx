@@ -133,7 +133,10 @@ the TypeScript compiler, and recovers:
 - the verbatim guard expressions around each contribution, summarised into
   plain language;
 - each `event` callback, joined to the scripting-global index first and the
-  exported-symbol index second.
+  exported-symbol index second;
+- the fields an entry writes directly, for the many entries that do their whole
+  job with an assignment and never call anything. For those, the field is the
+  explanation, and the atlas says so instead of reporting a missing handler.
 
 What it does not claim: the atlas describes what **can** be contributed, not
 what a given click **will** show. Runtime order and duplicate suppression
