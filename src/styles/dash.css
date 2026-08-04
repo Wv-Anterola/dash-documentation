@@ -2420,6 +2420,21 @@
   overflow-wrap: anywhere;
 }
 
+.sl-markdown-content .menu-variants {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.sl-markdown-content .menu-handler-origin {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin: 0.2rem 0 0;
+}
+
+.menu-surface-table code {
+  overflow-wrap: anywhere;
+}
+
 .control-contract-paging {
   justify-content: center;
   margin-top: var(--dash-space-4);

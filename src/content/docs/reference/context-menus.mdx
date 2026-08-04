@@ -1,0 +1,138 @@
+---
+title: Right-click menu atlas
+description: Every entry Dash can put in a right-click menu, traced from the component that contributes it through its guard, its event callback, and the state it writes.
+sidebar:
+  order: 2
+---
+
+import ContextMenuReference from '../../../components/ContextMenuReference.astro';
+
+<p class="lede">
+  Dash has no single right-click menu. The menu you see is assembled at the
+  moment you click, out of contributions from every component under the pointer.
+  That is why two documents of the same type can offer different entries, and
+  why an entry someone described to you may simply not be there.
+</p>
+
+## The one idea that explains the whole menu
+
+There is exactly one menu object: `ContextMenu.Instance`. When you right-click,
+the event travels up the React tree, and **each component it passes contributes
+its own entries into that shared object** before the menu is displayed. A
+component that wants to add to a group someone else already created looks the
+group up by its visible text with `findByDescription('Options...')` and pushes
+into the array it finds.
+
+Three consequences follow, and they account for most of the confusion people
+have with Dash menus:
+
+1. **The menu is additive.** Right-clicking an image inside a freeform
+   collection produces image entries, freeform entries, collection entries, and
+   the entries every document gets, in that stack.
+2. **Group names are the join key.** `Options...` is not owned by any one
+   component. It is a rendezvous point that {' '}
+   <strong>16 different components</strong> write into.
+3. **Absence is usually a guard, not a bug.** Most entries sit behind a
+   condition: Novice versus Developer mode, your access level, whether the
+   document is a folder, whether a renderer supports the feature.
+
+## Where the menu comes from
+
+| You right-click | The menu is opened by | What the entries act on |
+| :--- | :--- | :--- |
+| Any document | `DocumentView.onContextMenu` | The document itself: appearance, z-order, click behavior, sharing, export, close. |
+| A collection or its background | `CollectionView.onContextMenu` | The collection as a container: perspectives, child layout, child click scripts. |
+| A freeform marquee selection | `MarqueeView` | Every document the marquee enclosed, as a group. |
+| A schema table | `CollectionSchemaView` / `SchemaRowBox` | The table structure, or the one document behind a row. |
+| A stacking or note-board column | `CollectionStackingViewFieldColumn` | One group of children: its heading, sizing, and creation defaults. |
+| The dashboard background or title | `DashboardView` | The workspace as a whole. |
+| Inside a PDF, video, image, web page, audio, 3D, chart, or script | That renderer's own `Box` component | Content of that specific kind. |
+| Formatted text, or the `:` typing shortcut | `FormattedTextBox` / `RichTextRules` | Text content. The typed shortcut uses the same menu machinery. |
+| An ink stroke | `InkingStroke` | Stroke geometry rather than a document body. |
+| A key/value metadata row | `KeyValuePair` | One typed field on the document behind the row. |
+
+## Groups that more than one component builds
+
+These are the rendezvous points. If an entry you expect is missing from one of
+them, the component that contributes it is the thing that was not under your
+pointer.
+
+| Group | Components that push into it |
+| :--- | :--- |
+| **Options…** | 16, spanning collections, media renderers, web, script, and text boxes |
+| **Appearance…** | 5, including `DocumentView`, `CollectionView`, and `CollectionFreeFormView` |
+| **More…** | 3: `DocumentView`, `CollectionView`, `CollectionFreeFormView` |
+| **OnClick…** | 3: `DocumentView`, `CollectionView`, `CollectionTreeView` |
+| **Help…** | 3: `DocumentView`, `PDFBox`, `FormattedTextBox` |
+
+## Three kinds of label
+
+Reading a Dash menu entry correctly means knowing which kind of label you are
+looking at. The atlas below tags every entry with its kind.
+
+| Kind | What it means | Example |
+| :--- | :--- | :--- |
+| **Fixed label** | The same string every time. | `Send to Back` |
+| **Label follows state** | The text names the state you will move to, so the entry has two readings. | `Show Chrome` / `Hide Chrome` |
+| **One entry per document** | Dash generates one entry per matching document you own, so the count differs per person. | The creator list under **Create document** |
+
+A label that follows state is the most commonly misread. **Hide Clusters** does
+not mean clusters are hidden; it means clicking will hide them.
+
+## Undo is not uniform
+
+`ContextMenuProps` declares an `undoable` flag that wraps a click in a named
+undo batch. **No entry in the current source sets it.** Entries that are
+reversible with one undo are the ones whose own handler calls `undoable(...)`
+or `UndoManager.RunInBatch(...)`; the atlas marks those, and says so plainly
+for the rest rather than implying undo coverage that is not there.
+
+## Search every menu entry
+
+Search by what you see, such as `Send to Back` or `Enter Portal`; by why an
+entry is missing, such as `noviceMode` or `GetEffectiveAcl`; by the component
+that contributes it, such as `PDFBox`; or by the state it writes.
+
+<ContextMenuReference />
+
+## When an entry you expected is not there
+
+Work through these in order. Each one is a real cause, in rough order of how
+often it is the answer:
+
+1. **Mode.** A large share of entries are guarded by `!Doc.noviceMode`. Open
+   **Settings** and switch to Developer mode.
+2. **What you actually clicked.** Clicking the body of a PDF and clicking its
+   title bar reach different components, so they build different menus.
+3. **Access.** Entries guarded by `GetEffectiveAcl` disappear when your
+   effective permission on the document is below what they require.
+4. **Document shape.** Guards such as `!this.Document.isFolder` or
+   `instanceof Doc` remove entries that do not apply to this document.
+5. **Renderer support.** A type-specific entry only exists while the pointer is
+   inside that renderer.
+
+If none of those explain it, the entry may have been removed upstream. The
+atlas is generated from a pinned Dash-Web commit, and generation fails if any
+of the reviewed menu entry points disappears, so a stale entry here is a
+detectable condition rather than a silent one.
+
+## How this page is built
+
+The generator parses every Dash-Web source that references `ContextMenu` with
+the TypeScript compiler, and recovers:
+
+- every `ContextMenuProps` literal, including the ones created inside `.map()`
+  over the user's own documents;
+- submenu nesting through both inline `subitems` arrays and the deferred
+  `const items = group?.subitems ?? []; items.push({...})` idiom, following
+  `findByDescription` lookups to the group they target;
+- the verbatim guard expressions around each contribution, summarised into
+  plain language;
+- each `event` callback, joined to the scripting-global index first and the
+  exported-symbol index second.
+
+What it does not claim: the atlas describes what **can** be contributed, not
+what a given click **will** show. Runtime order and duplicate suppression
+belong to `ContextMenu` itself. For controls that are always visible rather
+than summoned, use the [interface control and node
+atlas](/reference/interface-controls/).

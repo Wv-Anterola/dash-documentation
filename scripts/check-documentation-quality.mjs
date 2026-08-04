@@ -114,6 +114,7 @@ const fieldReferenceSource = await readFile(path.join(root, 'src', 'data', 'gene
 const scriptingReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'scripting-globals.json'), 'utf8');
 const exportedReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'exported-symbols.json'), 'utf8');
 const interfaceControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'interface-controls.json'), 'utf8');
+const contextMenuReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'context-menus.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
@@ -121,6 +122,7 @@ const fieldReference = JSON.parse(fieldReferenceSource);
 const scriptingReference = JSON.parse(scriptingReferenceSource);
 const exportedReference = JSON.parse(exportedReferenceSource);
 const interfaceControlReference = JSON.parse(interfaceControlReferenceSource);
+const contextMenuReference = JSON.parse(contextMenuReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -249,6 +251,56 @@ for (const row of interfaceControlReference.controls) {
 const interfaceControlsPage = await readFile(path.join(docsRoot, 'reference', 'interface-controls.mdx'), 'utf8');
 if (!interfaceControlsPage.includes('<InterfaceControlReference />') || !interfaceControlsPage.includes('dash-control-action-trace.svg')) {
   errors.push('Interface control page lost its searchable contract index or unique action-trace visual');
+}
+
+if (contextMenuReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Context menu reference and generated source reference use different baseline revisions');
+}
+if (contextMenuReference.summary.entries !== contextMenuReference.items.length || contextMenuReference.items.length < 200) {
+  errors.push('Context menu inventory is stale or fell below the reviewed 200-entry floor');
+}
+if (new Set(contextMenuReference.items.map((row) => row.id)).size !== contextMenuReference.items.length) {
+  errors.push('Context menu inventory contains duplicate entry identities');
+}
+// Every documented surface must still have at least one traced contribution,
+// and the cooperative-group rendezvous points are the claim this page rests on.
+const contextMenuSurfaces = new Set(contextMenuReference.items.map((row) => row.surface));
+for (const surface of ['document', 'collection', 'schema', 'column', 'dashboard', 'renderer', 'ink']) {
+  if (!contextMenuSurfaces.has(surface)) errors.push(`Context menu surface lost every traced entry: ${surface}`);
+}
+for (const group of ['Options...', 'Appearance...', 'More...', 'OnClick...', 'Help...']) {
+  const record = contextMenuReference.cooperativeGroups.find((entry) => entry.group === group);
+  if (!record || record.contributors.length < 3) {
+    errors.push(`Cooperative menu group is no longer built by three or more components: ${group}`);
+  }
+}
+const contextMenuLabelKinds = new Set(['literal', 'stateful', 'generated']);
+for (const row of contextMenuReference.items) {
+  if (!row.label || !row.plain || !row.availability || !row.interaction || !row.handler?.stateOwner) {
+    errors.push(`${row.id}: context menu entry is missing its label, explanation, availability, interaction, or state owner`);
+  }
+  if (!contextMenuLabelKinds.has(row.labelKind)) {
+    errors.push(`${row.id}: context menu entry has an unclassified label kind`);
+  }
+  if (!sourceModules.has(row.source?.file) || !row.source?.url?.includes(sourceReference.repository.baselineTip) || !row.source?.url?.endsWith(`#L${row.source?.line}`)) {
+    errors.push(`${row.id}: context menu source is absent, mutable, or not line-addressed`);
+  }
+  for (const handler of row.handler?.resolved ?? []) {
+    if (!handler.signature || !handler.url) {
+      errors.push(`${row.id}: resolved menu handler ${handler.name} has no signature or source address`);
+    }
+  }
+}
+// The undo claim on the page is that no entry uses the ContextMenuProps flag.
+if (contextMenuReference.summary.undoablePropUsed !== 0) {
+  errors.push('Context menu page states that no entry sets ContextMenuProps.undoable, but the inventory now finds one');
+}
+const contextMenusPage = await readFile(path.join(docsRoot, 'reference', 'context-menus.mdx'), 'utf8');
+if (!contextMenusPage.includes('<ContextMenuReference />')) {
+  errors.push('Context menu page lost its searchable entry index');
+}
+if (!astroConfigSource.includes("slug: 'reference/context-menus'")) {
+  errors.push('Context menu atlas is no longer discoverable in the primary navigation');
 }
 
 if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
@@ -539,8 +591,9 @@ if (errors.length) {
       `${images} inline images have reproducible sources and intentional alt text; ` +
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
       `${exportedSymbols.length.toLocaleString()} exported declarations have collision-safe module targets; ` +
-      `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, and ` +
-      `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, and ` +
-      `${interfaceControlReference.controls.length} interface controls pass inventory invariants.`
+      `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, ` +
+      `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, ` +
+      `${interfaceControlReference.controls.length} interface controls, and ` +
+      `${contextMenuReference.items.length} context-menu entries pass inventory invariants.`
   );
 }

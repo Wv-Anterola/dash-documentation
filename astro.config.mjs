@@ -119,6 +119,7 @@ export default defineConfig({
             { slug: 'getting-started/basic-interactions', label: '4. Move, order, and resize things' },
             { slug: 'getting-started/using-dash', label: '5. Make your first board' },
             { slug: 'reference/interface-controls', label: 'Every button and node' },
+            { slug: 'reference/context-menus', label: 'Every right-click menu' },
             { slug: 'overview/current-state', label: 'What works right now' },
           ],
         },
@@ -278,6 +279,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { slug: 'reference/keyboard-shortcuts' },
+            { slug: 'reference/context-menus', label: 'Right-click menu atlas' },
             { slug: 'reference/document-types', label: 'Document types and schemas' },
             { slug: 'reference/collection-views' },
             { slug: 'reference/agent-tools' },

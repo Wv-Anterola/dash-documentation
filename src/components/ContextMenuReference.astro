@@ -1,0 +1,429 @@
+---
+import reference from '../data/generated/context-menus.json';
+import { siteHref } from '../data/sourceReference';
+
+const { summary, surfaces } = reference;
+const dataUrl = siteHref('/assets/data/context-menus.json');
+const kinds = [
+  ['action', 'Runs an action'],
+  ['group', 'Opens a submenu'],
+  ['label', 'Labels a section'],
+];
+const labelKinds = [
+  ['literal', 'Fixed label'],
+  ['stateful', 'Label follows state'],
+  ['generated', 'One entry per document'],
+];
+---
+
+<div class="control-contract-reference menu-reference" data-menu-reference data-source={dataUrl}>
+  <div class="audit-summary control-contract-summary" aria-label="Context menu totals">
+    <div><strong>{summary.entries.toLocaleString()}</strong><span>menu entries</span></div>
+    <div><strong>{summary.surfaces}</strong><span>menu surfaces</span></div>
+    <div><strong>{summary.contributingFiles}</strong><span>contributing components</span></div>
+    <div><strong>{summary.groups}</strong><span>submenu groups</span></div>
+    <div><strong>{summary.guarded}</strong><span>entries behind a guard</span></div>
+    <div><strong>{summary.handlerResolved}</strong><span>handlers traced to source</span></div>
+  </div>
+
+  <div class="source-method">
+    <strong>How to read an entry.</strong> “In plain words” says what happens
+    when you click it. “When you get it” names the guard that decides whether
+    the entry is contributed to the menu at all, which is the usual reason a
+    documented entry is missing. “Menu path” shows where it sits once the menu
+    is assembled. The technical trace carries the registration expression, the
+    verbatim guards, the event callback, and the handler it resolves to.
+  </div>
+
+  <div class="control-contract-filters" aria-label="Context menu filters">
+    <div class="control-contract-query">
+      <label for="menu-query">Find an entry, guard, handler, or component</label>
+      <input
+        id="menu-query"
+        type="search"
+        placeholder="Try Send to Back, noviceMode, Options..., PDFBox, or portal"
+        autocomplete="off"
+        disabled
+      />
+    </div>
+    <div>
+      <label for="menu-surface">What you right-clicked</label>
+      <select id="menu-surface" disabled>
+        <option value="">Every menu surface</option>
+        {surfaces.map((surface) => <option value={surface.id}>{surface.name}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="menu-kind">What the entry is</label>
+      <select id="menu-kind" disabled>
+        <option value="">Every entry kind</option>
+        {kinds.map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="menu-label-kind">How its label is decided</label>
+      <select id="menu-label-kind" disabled>
+        <option value="">Every label kind</option>
+        {labelKinds.map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="control-contract-results-header">
+    <p class="filter-count" data-menu-count role="status" aria-live="polite">
+      Loading {summary.entries.toLocaleString()} context-menu entries…
+    </p>
+    <button type="button" data-menu-clear disabled>Clear filters</button>
+  </div>
+
+  <div class="control-contract-list" id="menu-list" aria-busy="true">
+    <p class="control-contract-loading">Loading the source-traced menu entries…</p>
+  </div>
+
+  <noscript>
+    <p class="source-warning">
+      Interactive filtering requires JavaScript. The surface tables on this page
+      remain available without it.
+    </p>
+  </noscript>
+
+  <div class="control-contract-paging">
+    <button type="button" data-menu-more aria-controls="menu-list" hidden disabled>Show more</button>
+    <button type="button" data-menu-all aria-controls="menu-list" hidden disabled>Show all matching</button>
+  </div>
+</div>
+
+<script>
+  interface ResolvedHandler {
+    name: string;
+    origin: string;
+    signature: string;
+    purpose: string;
+    writes: string[];
+    calls: string[];
+    url: string;
+  }
+
+  interface MenuRow {
+    id: string;
+    surface: string;
+    surfaceName: string;
+    label: string;
+    labelVariants: string[];
+    labelKind: string;
+    labelExpression: string;
+    generatedFrom: string;
+    parent: string;
+    kind: string;
+    icon: string;
+    registration: string;
+    undoable: boolean;
+    undoableProp: boolean;
+    inlineSubmenu: boolean;
+    dividerAfter: boolean;
+    guards: string[];
+    eventExpression: string;
+    owner: { container: string; member: string };
+    source: { file: string; line: number; url: string };
+    handler: { names: string[]; resolved: ResolvedHandler[]; stateOwner: string };
+    plain: string;
+    availability: string;
+    interaction: string;
+    undoNote: string;
+    search?: string;
+  }
+
+  interface MenuPayload {
+    items: MenuRow[];
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-menu-reference]');
+  if (root) {
+    const query = root.querySelector<HTMLInputElement>('#menu-query');
+    const surface = root.querySelector<HTMLSelectElement>('#menu-surface');
+    const kind = root.querySelector<HTMLSelectElement>('#menu-kind');
+    const labelKind = root.querySelector<HTMLSelectElement>('#menu-label-kind');
+    const count = root.querySelector<HTMLElement>('[data-menu-count]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-menu-clear]');
+    const more = root.querySelector<HTMLButtonElement>('[data-menu-more]');
+    const all = root.querySelector<HTMLButtonElement>('[data-menu-all]');
+    const list = root.querySelector<HTMLElement>('#menu-list');
+    const inputs = [query, surface, kind, labelKind, clear, more, all].filter(Boolean) as Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>;
+    const pageSize = 40;
+    let limit = pageSize;
+    let rows: MenuRow[] = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (query) query.value = params.get('entry') ?? '';
+    if (surface) surface.value = params.get('surface') ?? '';
+    if (kind) kind.value = params.get('kind') ?? '';
+    if (labelKind) labelKind.value = params.get('label') ?? '';
+
+    const kindLabels: Record<string, string> = { action: 'Action', group: 'Submenu', label: 'Section label' };
+    const labelKindLabels: Record<string, string> = {
+      literal: 'Fixed label',
+      stateful: 'Label follows state',
+      generated: 'One entry per document',
+    };
+
+    const matches = (row: MenuRow) => {
+      const needle = query?.value.trim().toLowerCase() ?? '';
+      return (!needle || row.search?.includes(needle)) &&
+        (!surface?.value || row.surface === surface.value) &&
+        (!kind?.value || row.kind === kind.value) &&
+        (!labelKind?.value || row.labelKind === labelKind.value);
+    };
+
+    const syncUrl = () => {
+      const next = new URLSearchParams();
+      if (query?.value.trim()) next.set('entry', query.value.trim());
+      if (surface?.value) next.set('surface', surface.value);
+      if (kind?.value) next.set('kind', kind.value);
+      if (labelKind?.value) next.set('label', labelKind.value);
+      const suffix = next.toString();
+      window.history.replaceState({}, '', suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname);
+    };
+
+    const addFact = (target: HTMLDListElement, term: string, value: string) => {
+      const wrapper = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = term;
+      dd.textContent = value;
+      wrapper.append(dt, dd);
+      target.append(wrapper);
+    };
+
+    const addCodeList = (container: HTMLElement, label: string, values: string[]) => {
+      if (!values.length) return;
+      const paragraph = document.createElement('p');
+      paragraph.className = 'control-contract-code-list';
+      const heading = document.createElement('strong');
+      heading.textContent = `${label}:`;
+      paragraph.append(heading, document.createTextNode(' '));
+      values.slice(0, 8).forEach((value, index) => {
+        if (index) paragraph.append(document.createTextNode(', '));
+        const code = document.createElement('code');
+        code.textContent = value;
+        paragraph.append(code);
+      });
+      if (values.length > 8) paragraph.append(document.createTextNode(`, and ${values.length - 8} more`));
+      container.append(paragraph);
+    };
+
+    const createRow = (row: MenuRow) => {
+      const details = document.createElement('details');
+      details.className = 'control-contract-row';
+      details.id = `menu-${row.id}`;
+
+      const summaryEl = document.createElement('summary');
+      const identity = document.createElement('span');
+      identity.className = 'control-contract-identity';
+      const label = document.createElement('strong');
+      label.textContent = row.label;
+      const location = document.createElement('small');
+      location.textContent = row.parent ? `${row.surfaceName} → ${row.parent} → ${row.label}` : `${row.surfaceName} → top level`;
+      identity.append(label, location);
+
+      const badges = document.createElement('span');
+      badges.className = 'control-contract-badges';
+      const badgeValues = [kindLabels[row.kind] ?? row.kind, labelKindLabels[row.labelKind] ?? row.labelKind];
+      if (row.undoable) badgeValues.push('Undoable');
+      for (const value of badgeValues) {
+        const badge = document.createElement('span');
+        badge.textContent = value;
+        badges.append(badge);
+      }
+      summaryEl.append(identity, badges);
+
+      const body = document.createElement('div');
+      body.className = 'control-contract-body';
+      const plain = document.createElement('p');
+      plain.className = 'control-contract-plain';
+      const plainHeading = document.createElement('strong');
+      plainHeading.textContent = 'In plain words: ';
+      plain.append(plainHeading, document.createTextNode(row.plain));
+      body.append(plain);
+
+      if (row.labelVariants.length > 1) {
+        const variants = document.createElement('p');
+        variants.className = 'menu-variants';
+        const heading = document.createElement('strong');
+        heading.textContent = 'The same entry also reads: ';
+        variants.append(heading);
+        row.labelVariants.forEach((variant, index) => {
+          if (index) variants.append(document.createTextNode(' · '));
+          const code = document.createElement('code');
+          code.textContent = variant;
+          variants.append(code);
+        });
+        body.append(variants);
+      }
+
+      const facts = document.createElement('dl');
+      facts.className = 'control-contract-facts';
+      addFact(facts, 'Menu path', row.parent ? `${row.parent} → ${row.label}` : `Top level of the ${row.surfaceName.toLowerCase()} menu`);
+      addFact(facts, 'When you get it', row.availability);
+      addFact(facts, 'What you do', row.interaction);
+      addFact(facts, 'Contributed by', `${row.owner.container}.${row.owner.member}`);
+      addFact(facts, 'State owner', row.handler.stateOwner);
+      addFact(facts, 'Undo', row.undoNote);
+      body.append(facts);
+
+      const technical = document.createElement('details');
+      technical.className = 'control-contract-technical';
+      const technicalSummary = document.createElement('summary');
+      technicalSummary.textContent = 'Technical trace';
+      technical.append(technicalSummary);
+
+      const registration = document.createElement('p');
+      const registrationHeading = document.createElement('strong');
+      registrationHeading.textContent = 'Registered as: ';
+      registration.append(
+        registrationHeading,
+        document.createTextNode(
+          row.registration === 'addItem'
+            ? 'a top-level ContextMenu.Instance.addItem() call'
+            : row.registration === 'subitem'
+              ? 'a submenu entry pushed into an existing group'
+              : 'an inline ContextMenuProps literal'
+        )
+      );
+      technical.append(registration);
+
+      if (row.labelExpression) {
+        const expression = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Label expression: ';
+        const code = document.createElement('code');
+        code.textContent = row.labelExpression;
+        expression.append(heading, code);
+        technical.append(expression);
+      }
+      if (row.generatedFrom) {
+        const generated = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Generated over: ';
+        const code = document.createElement('code');
+        code.textContent = row.generatedFrom;
+        generated.append(heading, code);
+        technical.append(generated);
+      }
+      addCodeList(technical, 'Guards, outermost first', row.guards);
+      if (row.eventExpression) {
+        const event = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Event callback: ';
+        const code = document.createElement('code');
+        code.textContent = row.eventExpression;
+        event.append(heading, code);
+        technical.append(event);
+      }
+
+      for (const handler of row.handler.resolved) {
+        const block = document.createElement('section');
+        block.className = 'control-contract-handler';
+        const heading = document.createElement('h4');
+        const signature = document.createElement('code');
+        signature.textContent = handler.signature || handler.name;
+        heading.append(signature);
+        block.append(heading);
+        const origin = document.createElement('p');
+        origin.className = 'menu-handler-origin';
+        origin.textContent = `Resolved through the ${handler.origin} index.`;
+        block.append(origin);
+        if (handler.purpose) {
+          const purpose = document.createElement('p');
+          purpose.textContent = handler.purpose;
+          block.append(purpose);
+        }
+        addCodeList(block, 'Writes', handler.writes);
+        addCodeList(block, 'Direct calls', handler.calls);
+        if (handler.url) {
+          const link = document.createElement('a');
+          link.href = handler.url;
+          link.textContent = `Open ${handler.name} implementation`;
+          block.append(link);
+        }
+        technical.append(block);
+      }
+
+      const source = document.createElement('a');
+      source.href = row.source.url;
+      source.textContent = `Open the registration in ${row.source.file.split('/').pop()}:${row.source.line}`;
+      technical.append(source);
+      body.append(technical);
+      details.append(summaryEl, body);
+      return details;
+    };
+
+    const render = () => {
+      const matching = rows.filter(matches);
+      const visible = matching.slice(0, limit);
+      list?.replaceChildren(...visible.map(createRow));
+      const shown = visible.length;
+      if (count) count.textContent = `Showing ${shown.toLocaleString()} of ${matching.length.toLocaleString()} matching entries (${rows.length.toLocaleString()} total).`;
+      if (more) {
+        more.hidden = shown >= matching.length;
+        more.textContent = `Show ${Math.min(pageSize, matching.length - shown).toLocaleString()} more`;
+      }
+      if (all) all.hidden = shown >= matching.length;
+      syncUrl();
+    };
+
+    const resetAndRender = () => {
+      limit = pageSize;
+      render();
+    };
+    query?.addEventListener('input', resetAndRender);
+    surface?.addEventListener('change', resetAndRender);
+    kind?.addEventListener('change', resetAndRender);
+    labelKind?.addEventListener('change', resetAndRender);
+    more?.addEventListener('click', () => {
+      limit += pageSize;
+      render();
+    });
+    all?.addEventListener('click', () => {
+      limit = rows.length;
+      render();
+    });
+    clear?.addEventListener('click', () => {
+      if (query) query.value = '';
+      if (surface) surface.value = '';
+      if (kind) kind.value = '';
+      if (labelKind) labelKind.value = '';
+      resetAndRender();
+      query?.focus();
+    });
+
+    try {
+      const response = await fetch(root.dataset.source ?? '');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = (await response.json()) as MenuPayload;
+      rows = payload.items.map((row) => ({
+        ...row,
+        search: [
+          row.label, row.parent, row.surfaceName, row.plain, row.availability, row.eventExpression,
+          row.labelExpression, row.generatedFrom, row.owner.container, row.owner.member,
+          row.source.file, row.handler.stateOwner, ...row.labelVariants, ...row.guards,
+          ...row.handler.names,
+          ...row.handler.resolved.flatMap((handler) => [handler.name, handler.signature, handler.purpose, ...handler.writes, ...handler.calls]),
+        ].filter(Boolean).join(' ').toLowerCase(),
+      }));
+      inputs.forEach((input) => {
+        input.disabled = false;
+      });
+      if (list) list.ariaBusy = 'false';
+      render();
+    } catch (error) {
+      if (list) {
+        list.ariaBusy = 'false';
+        const warning = document.createElement('p');
+        warning.className = 'source-warning';
+        warning.textContent = `The context-menu data could not be loaded: ${error instanceof Error ? error.message : String(error)}`;
+        list.replaceChildren(warning);
+      }
+      if (count) count.textContent = 'Context-menu data is unavailable.';
+    }
+  }
+</script>
