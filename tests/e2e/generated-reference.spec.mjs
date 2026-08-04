@@ -14,6 +14,27 @@ const slug = (path) =>
   path.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /**
+ * Assert an illustration is present and has actually loaded.
+ *
+ * Content images are deferred, so an image below the fold is legitimately
+ * `hidden` until the reader reaches it. Scrolling first and then checking
+ * `naturalWidth` tests something stronger than the old bare visibility
+ * assertion did: that deferring the image did not break it.
+ */
+async function expectIllustrationLoads(page, name) {
+  const image = page.getByRole('img', { name }).first();
+  await image.waitFor({ state: 'attached' });
+  await image.scrollIntoViewIfNeeded();
+  await expect(image).toBeVisible();
+  // A deferred image starts fetching only once it is scrolled to, so the wait
+  // here is a real network fetch on a cold cache, not a render tick. The
+  // timeout is generous because CI runs several pages at once on one core.
+  await expect
+    .poll(() => image.evaluate((element) => (element.complete ? element.naturalWidth : 0)), { timeout: 30_000, intervals: [100, 250, 500] })
+    .toBeGreaterThan(0);
+}
+
+/**
  * Measures whether the page can scroll sideways, and if it can, names the
  * elements responsible.
  *
@@ -95,7 +116,7 @@ test('searches every exported symbol and opens its exact module contract', async
 
   await page.goto('/technical/exported-symbols/');
   await expect(page.getByRole('heading', { name: 'Exported symbol index' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Five-stage map from the pinned Dash source tree/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Five-stage map from the pinned Dash source tree/);
   await expect(page.locator('.exported-symbol-summary strong').first()).toHaveText('2,264');
   await expect(page.locator('[data-exported-symbol-row]:visible')).toHaveCount(80);
 
@@ -135,7 +156,7 @@ test('traces every interface control from plain behavior to implementation effec
 
   await page.goto('/reference/interface-controls/');
   await expect(page.getByRole('heading', { name: 'Interface control and node atlas' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /source-backed trace of the Image.*Rotate control/ })).toBeVisible();
+  await expectIllustrationLoads(page, /source-backed trace of the Image.*Rotate control/);
   await expect(page.locator('.control-contract-summary strong').first()).toHaveText(String(controlCount));
   await expect(page.locator('[data-control-row]:visible')).toHaveCount(40);
 
@@ -243,7 +264,7 @@ test('shows availability and source evidence without exposing revision hashes', 
 test('documents field encoding, the wire protocol, and observed security boundaries', async ({ page }) => {
   await page.goto('/architecture/field-runtime/');
   await expect(page.getByRole('heading', { name: 'Field runtime and serialization' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Seven-stage lifecycle/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Seven-stage lifecycle/);
   await expect(page.locator('li').filter({ hasText: 'become serialized' })).toContainText(
     'undefined and null become serialized null'
   );
@@ -256,7 +277,7 @@ test('documents field encoding, the wire protocol, and observed security boundar
 
   await page.goto('/architecture/server-storage-security/');
   await expect(page.getByRole('heading', { name: 'Observed enforcement matrix' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Trust-boundary map/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Trust-boundary map/);
   await expect(page.getByText('Current destructive protocol surface')).toBeVisible();
 
   await page.goto(`/technical/api/modules/${slug('src/client/util/SerializationHelper.ts')}/`);
@@ -271,7 +292,7 @@ test('documents field encoding, the wire protocol, and observed security boundar
 test('catalogues the HTTP surface and exposes request-supervision contracts', async ({ page }) => {
   await page.goto('/reference/http-service-interface/');
   await expect(page.getByRole('heading', { name: 'HTTP and service interface reference' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Two-lane lifecycle/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Two-lane lifecycle/);
   await expect(page.getByRole('link', { name: /full 1600 × 900 resolution/ })).toBeVisible();
   await expect(page.getByText('109', { exact: true }).first()).toBeVisible();
   const geometry = await horizontalOverflow(page, '[data-http-route-reference]', '.http-route-filters');
@@ -311,7 +332,7 @@ test('catalogues the HTTP surface and exposes request-supervision contracts', as
 test('maps every document type from stored value through factory and renderer', async ({ page }) => {
   await page.goto('/reference/document-types/');
   await expect(page.getByRole('heading', { name: 'Document type, prototype, and factory reference' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Seven-stage lifecycle/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Seven-stage lifecycle/);
   await expect(page.getByRole('link', { name: /full 1600 x 900 resolution/ })).toBeVisible();
   await expect(page.locator('.document-type-summary strong').first()).toHaveText('51');
 
@@ -342,7 +363,7 @@ test('maps every document type from stored value through factory and renderer', 
 test('maps every serialized field tag through storage, hydration, and conversion', async ({ page }) => {
   await page.goto('/architecture/field-runtime/');
   await expect(page.getByRole('heading', { name: 'Field runtime and serialization' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Seven-stage lifecycle from a document assignment/ })).toBeVisible();
+  await expectIllustrationLoads(page, /Seven-stage lifecycle from a document assignment/);
   await expect(page.locator('.field-type-summary strong').nth(1)).toHaveText('21');
   await expect(page.locator('.field-primitives article')).toHaveCount(3);
 
@@ -368,8 +389,8 @@ test('maps every serialized field tag through storage, hydration, and conversion
 test('exposes every scripting global with source, role, and responsive filters', async ({ page }) => {
   await page.goto('/guides/features/scripting/');
   await expect(page.getByRole('heading', { name: 'Scripting', exact: true })).toBeVisible();
-  await expect(page.getByRole('img', { name: /editable, applied, and saved-function states/ })).toBeVisible();
-  await expect(page.getByRole('img', { name: /Seven-stage Dash scripting pipeline/ })).toBeVisible();
+  await expectIllustrationLoads(page, /editable, applied, and saved-function states/);
+  await expectIllustrationLoads(page, /Seven-stage Dash scripting pipeline/);
   await expect(page.locator('.script-global-summary strong').first()).toHaveText('151');
 
   const query = page.getByLabel('Find a name, parameter, operation, call, field write, or source file');
@@ -402,7 +423,7 @@ test('assembles every right-click menu entry from its contributing component', a
 
   await page.goto('/reference/context-menus/');
   await expect(page.getByRole('heading', { name: 'Right-click menu atlas' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /How Dash assembles a right-click menu/ })).toBeVisible();
+  await expectIllustrationLoads(page, /How Dash assembles a right-click menu/);
   await expect(page.locator('.control-contract-summary strong').first()).toHaveText('223');
   await expect(page.locator('#menu-list .control-contract-row')).toHaveCount(40);
 
@@ -449,7 +470,7 @@ test('shows each keyboard chord for both platforms and says what the browser kee
 
   await page.goto('/reference/keyboard-shortcuts/');
   await expect(page.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /How Dash routes a keystroke/ })).toBeVisible();
+  await expectIllustrationLoads(page, /How Dash routes a keystroke/);
   await expect(page.locator('.control-contract-summary strong').first()).toHaveText('58');
   await expect(page.locator('#shortcut-list .control-contract-row')).toHaveCount(58);
 
@@ -579,7 +600,7 @@ test('publishes the open-destination map without needing JavaScript to read it',
 
   await page.goto('/reference/open-destinations/');
   await expect(page.getByRole('heading', { name: 'Where a document opens' })).toBeVisible();
-  await expect(page.getByRole('img', { name: /destination string splitting into a verb and a modifier/ })).toBeVisible();
+  await expectIllustrationLoads(page, /destination string splitting into a verb and a modifier/);
 
   // Unlike the filtered references, every record here is server-rendered, so
   // the whole table must be present before any script runs.

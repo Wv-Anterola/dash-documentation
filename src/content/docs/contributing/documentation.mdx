@@ -483,6 +483,31 @@ its lightweight poster name to `scripts/build-visual-posters.mjs`, and run
 `npm run visuals`. Pages display the poster and link it to the full recording,
 which keeps the index fast without hiding the interaction.
 
+### What a heavy recording costs, and where it costs it
+
+There is a hard rule and a soft one, and they are enforced by
+`npm run budget` after every build.
+
+**Hard:** no page may load more than about 1.7 MB before a reader can scroll.
+That number counts the document, its stylesheet and blocking scripts, and any
+image that is *not* deferred. When this budget was introduced, forty-one pages
+broke it and the worst loaded 64 MB, mostly one undeferred recording sitting
+below the fold. Every image written in a page body is now deferred
+automatically, so a recording in the body costs a reader nothing until they
+scroll to it.
+
+**Soft:** total deferred media per page is measured and reported, never
+enforced. Some of these recordings are the only surviving record of a feature
+that no longer runs, and re-encoding one is a media decision rather than
+something a build should force.
+
+The consequence for you: **the page visual above the article is the only image
+that loads eagerly**, so it is capped at 1 MB. A recording heavier than that is
+not eligible to be a page hero and is skipped by
+`scripts/build-page-visual-registry.mjs`. Naming one by hand in that file's
+`manual` map fails generation with the file size in the message. Use it inline
+in the body instead, where it is deferred, or capture a lighter still.
+
 When a final page-level capture is not available, use
 `MediaPlaceholder.astro`. A valid placeholder names the intended filename and
 ratio, specifies the exact scene to capture, and supplies final-quality alt

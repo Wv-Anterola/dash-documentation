@@ -13,6 +13,7 @@ const visual = pageVisualForPath(Astro.url.pathname);
       src={visual.src}
       alt={visual.alt}
       loading="eager"
+      fetchpriority="high"
       decoding="async"
       style={`object-position: ${visual.position ?? 'center'};`}
     />

@@ -1,9 +1,10 @@
 /**
- * Two accessibility fixups that markdown cannot express on its own.
+ * Three fixups that markdown has no syntax for.
  *
- * Both are things an author would have to remember on every page, which is
- * exactly the kind of obligation that gets dropped. Doing them here means a
- * contributor writes ordinary markdown and the output is still correct.
+ * All three are obligations an author would otherwise have to remember on
+ * every page, which is exactly the kind of obligation that gets dropped.
+ * Doing them here means a contributor writes ordinary markdown and the output
+ * is still correct.
  *
  * 1. **Table header scope.** GitHub-flavoured markdown renders `<th>` with no
  *    `scope`, leaving a screen reader to infer the association between a cell
@@ -15,8 +16,16 @@
  *    then, separately, some text, without saying which one it belongs to.
  *    Naming it from the item's own text restores the connection.
  *
- * Anything that already declares `scope` or an accessible name is left alone,
- * so a component can still be more specific than this.
+ * 3. **Deferred image loading.** This site illustrates itself with screen
+ *    recordings, and some of them are very large: one page carried a 42 MB GIF
+ *    that the browser began downloading immediately, below the fold, whether or
+ *    not the reader ever scrolled to it. Every image after the first is
+ *    deferred, and every image decodes off the main thread. The first is left
+ *    eager because it is usually the one visible on arrival, and deferring that
+ *    delays the page rather than speeding it up.
+ *
+ * Anything that already declares `scope`, an accessible name, or its own
+ * loading behaviour is left alone, so a component can still be more specific.
  */
 import { visit } from 'unist-util-visit';
 
@@ -30,6 +39,18 @@ function textOf(node) {
 export function rehypeContentA11y() {
   return (tree) => {
     visit(tree, 'element', (node) => {
+      if (node.tagName === 'img') {
+        node.properties ??= {};
+        node.properties.decoding ??= 'async';
+        // Every page that has no inline media of its own is given a page
+        // visual, which renders above the article and is the image a reader
+        // sees on arrival. Images written in the body are therefore always
+        // below it, so all of them are deferred rather than only the ones
+        // after the first.
+        node.properties.loading ??= 'lazy';
+        return;
+      }
+
       if (node.tagName === 'table') {
         for (const section of node.children ?? []) {
           if (section.type !== 'element') continue;

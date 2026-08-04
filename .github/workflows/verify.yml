@@ -65,6 +65,9 @@ jobs:
       - name: Accessibility
         run: npm run accessibility
 
+      - name: Page weight budget
+        run: npm run budget
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

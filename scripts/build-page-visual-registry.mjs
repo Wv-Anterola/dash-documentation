@@ -32,36 +32,22 @@ const candidateRoots = [
 const manual = {
   '/': '/assets/images/current/dash-trip-planner-detail.webp',
   '/architecture': '/assets/images/dash1.png',
-  '/architecture/agents-ai': '/assets/gifs/ai/ai-websearch-2.gif',
-  '/architecture/collections-views': '/assets/images/environment/views/freeform_view.gif',
   '/architecture/desktop-local-models': '/assets/images/environment/homemenu.png',
   '/architecture/document-model': '/assets/gifs/gettingstarted/dash-create-text.gif',
   '/architecture/extension-points': '/assets/gifs/environment/colon-menu.gif',
   '/architecture/import-export': '/assets/gifs/gettingstarted/dash-drag-drop.gif',
   '/architecture/links-trails': '/assets/gifs/gettingstarted/dash-trail-transition.gif',
-  '/architecture/rendering-lifecycle': '/assets/gifs/environment/dash-flyout.gif',
   '/architecture/server-storage-security': '/assets/gifs/gettingstarted/dash-pin-doc.gif',
   '/architecture/system-map': '/assets/gifs/environment/menu-panel.gif',
   '/architecture/undo-provenance': '/assets/gifs/gettingstarted/recently-closed.gif',
   '/capabilities': '/assets/images/gen_ai.png',
-  '/capabilities/ai-automation': '/assets/gifs/ai/ai-firefly-template-image-1.gif',
-  '/capabilities/connections-and-trails': '/assets/gifs/trails/arrows-present-together.gif',
   '/capabilities/documents': '/assets/images/environment/image_doc3.png',
-  '/capabilities/organization': '/assets/gifs/views/schema_columns.gif',
   '/capabilities/platform': '/assets/gifs/environment/dash-create-delete-tab.gif',
-  '/capabilities/search-import': '/assets/gifs/gettingstarted/dash-link-search.gif',
   '/concepts': '/assets/gifs/gettingstarted/dash-show-links.gif',
-  '/concepts/agents': '/assets/gifs/dataViz/aiChat.gif',
-  '/concepts/collections': '/assets/gifs/gettingstarted/dash-create-collection-marquee.gif',
-  '/concepts/documents': '/assets/gifs/gettingstarted/dash-image-text-embed.gif',
-  '/concepts/generative': '/assets/gifs/ai/ai-firefly-image-1.gif',
-  '/concepts/links': '/assets/gifs/links/linkboard.gif',
-  '/concepts/trails': '/assets/gifs/trails/miniplayer.gif',
   '/contributing/documentation': '/assets/gifs/gettingstarted/dash-editing-link.gif',
   '/contributing/joining': '/assets/gifs/environment/dash-drag-tab-create-tile.gif',
   '/development': '/assets/gifs/environment/rename-dashboard.gif',
   '/development/add-agent-tool': '/assets/gifs/ai/ai-pdf.gif',
-  '/development/add-collection-view': '/assets/gifs/dataViz/fromSchema_dataViz.gif',
   '/development/add-document-type': '/assets/gifs/gettingstarted/createnode.gif',
   '/development/extension-points': '/assets/gifs/trails/pinmenuview.gif',
   '/development/testing-release': '/assets/gifs/environment/dash-report.gif',
@@ -72,22 +58,15 @@ const manual = {
   '/getting-started/using-dash': '/assets/gifs/gettingstarted/createnode.gif',
   '/getting-started/modes': '/assets/gifs/gettingstarted/dash-shift-click.gif',
   '/getting-started/running-dash': '/assets/gifs/environment/new-dashboard.gif',
-  '/guides/documents/temporal-media': '/assets/gifs/audio/audiotrimming.gif',
   '/guides/features/collaboration': '/assets/gifs/gettingstarted/dash-create-link-board.gif',
   '/guides/features/scripting': '/assets/gifs/ai/ai-edit-3.gif',
-  '/guides/properties/fieldsandtags': '/assets/gifs/dataViz/titleCol.gif',
-  '/guides/properties/filters': '/assets/gifs/environment/map_filter.gif',
-  '/guides/properties/layout': '/assets/gifs/trails/pinlayoutcontent.gif',
   '/guides/properties/linkedto': '/assets/gifs/gettingstarted/dash-toggle-show-link.gif',
   '/guides/properties/options': '/assets/gifs/gettingstarted/dash-colon-menu.gif',
   '/guides/properties/othercontexts': '/assets/gifs/gettingstarted/dash-pres-layout-content-grouping.gif',
   '/guides/properties/sharingpermissions': '/assets/gifs/gettingstarted/dash-drag-drop-link.gif',
-  '/guides/videos': '/assets/gifs/gettingstarted/dash-pres-miniplayer.gif',
-  '/guides/views/notetaking': '/assets/gifs/gettingstarted/textannos.gif',
   '/guides/views/stacking': '/assets/gifs/environment/colon-stack.gif',
   '/reference/interface-controls': '/assets/gifs/gettingstarted/dash-context-menu.gif',
   '/reference/branch-audit': '/assets/gifs/environment/dash-report.gif',
-  '/reference/agent-tools': '/assets/gifs/ai/ai-template-csv-1.gif',
   '/reference/collection-views': '/assets/images/environment/views/schema_view.png',
   '/reference/configuration': '/assets/gifs/gettingstarted/dash-properties-pane.gif',
   '/reference/document-types': '/assets/images/diagrams/dash-document-construction-lifecycle.svg',
@@ -99,22 +78,14 @@ const manual = {
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
   '/reference/status-taxonomy': '/assets/gifs/gettingstarted/dash-annotation-icon.gif',
   '/research/cohorts': '/assets/gifs/environment/dash-drag-tab-back.gif',
-  '/research/cohorts/2019-2020': '/assets/gifs/gettingstarted/textannos.gif',
   '/research/cohorts/2021-2022': '/assets/gifs/gettingstarted/dash-pin-with-view.gif',
-  '/research/cohorts/2023': '/assets/gifs/environment/map_placepin.gif',
-  '/research/cohorts/2024': '/assets/gifs/ai/ai-template-csv-2.gif',
   '/research/cohorts/2025': '/assets/gifs/ai/ai-pdf.gif',
   '/research/cohorts/2026': '/assets/images/current/dash-trip-planner-preset.webp',
   '/research/lineage': '/assets/gifs/gettingstarted/dash-following-link.gif',
-  '/research/projects': '/assets/gifs/gettingstarted/dash-marquee.gif',
-  '/research/people': '/assets/gifs/gettingstarted/groupselection.gif',
   '/research/publications': '/assets/gifs/gettingstarted/dash-pdf-select-annotate.gif',
   '/research/release-history': '/assets/gifs/gettingstarted/dash-reorganize-slides.gif',
-  '/workflows/research-synthesis': '/assets/gifs/gettingstarted/dash-pdf-anno-marquee.gif',
-  '/workflows/data-to-story': '/assets/gifs/dataViz/filteringB.gif',
   '/workflows/agent-assisted': '/assets/gifs/ai/ai-edit-3.gif',
   '/workflows/team-workspace': '/assets/gifs/gettingstarted/dash-drag-drop-link.gif',
-  '/workflows': '/assets/gifs/gettingstarted/dash-present-trail.gif',
 };
 
 const manualAlt = {
@@ -238,16 +209,37 @@ rawCandidates.push(
   '/assets/images/gen_ai.png'
 );
 
+/**
+ * A page visual renders above the article, so it is the one image on the page
+ * that must load eagerly. Some of the archived recordings are enormous: one is
+ * 40 MB, and several are over 10 MB. As a hero, any of those is the difference
+ * between a page that appears and a page that hangs, which is why anything past
+ * this weight is left out of the automatic pool. The limit is set so that a
+ * hero plus a typical document stays inside the eager budget enforced by
+ * scripts/check-performance-budget.mjs, rather than at a round number.
+ *
+ * They are not banned from the site. They stay available as inline media in a
+ * page body, where they are deferred until a reader scrolls to them, and a
+ * `manual` entry can still name one deliberately.
+ */
+const heroWeightLimit = 1_000_000;
+
 const candidates = [];
 const seenHashes = new Set();
+const tooHeavy = [];
 for (const source of rawCandidates.sort()) {
   if (posterSources.has(source)) continue;
   const bytes = await readFile(path.join(publicRoot, source.slice(1)));
   const digest = createHash('sha256').update(bytes).digest('hex');
   if (seenHashes.has(digest)) continue;
   seenHashes.add(digest);
+  if (bytes.byteLength > heroWeightLimit) {
+    tooHeavy.push({ source, bytes: bytes.byteLength });
+    continue;
+  }
   candidates.push(source);
 }
+tooHeavy.sort((a, b) => b.bytes - a.bytes);
 
 const used = new Set();
 const assignments = {};
@@ -256,6 +248,17 @@ for (const route of routes) {
   const source = manual[route];
   if (!source) continue;
   if (used.has(source)) throw new Error(`Manual page visual is repeated: ${source}`);
+  // A hand-picked hero is still a hero, and the weight limit is about what the
+  // browser has to fetch before the page appears, not about how the image was
+  // chosen. Twenty-one manual entries were removed when this was introduced.
+  const manualBytes = (await readFile(path.join(publicRoot, source.slice(1)))).byteLength;
+  if (manualBytes > heroWeightLimit) {
+    throw new Error(
+      `Manual page visual for ${route} is ${(manualBytes / 1024 / 1024).toFixed(1)} MB, over the ` +
+      `${(heroWeightLimit / 1024 / 1024).toFixed(1)} MB hero limit. Use it inline in the page body, where it is deferred, ` +
+      'or pick a lighter image.'
+    );
+  }
   used.add(source);
   assignments[route] = {
     src: source,
@@ -289,5 +292,7 @@ const ordered = Object.fromEntries(
 await writeFile(output, `${JSON.stringify(ordered, null, 2)}\n`);
 console.log(
   `Assigned ${routes.length} pages without inline media ${used.size} distinct source images ` +
-  `from ${candidates.length} unique candidates; pages with their own visuals keep those instead.`
+  `from ${candidates.length} unique candidates; pages with their own visuals keep those instead. ` +
+  `${tooHeavy.length} candidates were held back as too heavy to load eagerly` +
+  (tooHeavy.length ? ` (largest ${tooHeavy[0].source} at ${(tooHeavy[0].bytes / 1024 / 1024).toFixed(1)} MB).` : '.')
 );

@@ -8,12 +8,12 @@
     "alt": "Dash demonstration of Dash1."
   },
   "/architecture/agents-ai": {
-    "src": "/assets/gifs/ai/ai-websearch-2.gif",
-    "alt": "Dash demonstration of Ai Websearch 2."
+    "src": "/assets/gifs/ai/ai-edit-3.gif",
+    "alt": "Dash demonstration of Ai Edit 3."
   },
   "/architecture/collections-views": {
-    "src": "/assets/images/environment/views/freeform_view.gif",
-    "alt": "Dash demonstration of Freeform View."
+    "src": "/assets/gifs/environment/dash-close-tile.gif",
+    "alt": "Dash demonstration of Close Tile."
   },
   "/architecture/desktop-local-models": {
     "src": "/assets/images/environment/homemenu.png",
@@ -36,8 +36,8 @@
     "alt": "Dash demonstration of Trail Transition."
   },
   "/architecture/rendering-lifecycle": {
-    "src": "/assets/gifs/environment/dash-flyout.gif",
-    "alt": "Dash demonstration of Flyout."
+    "src": "/assets/gifs/features/inkedit0.gif",
+    "alt": "Dash demonstration of Inkedit0."
   },
   "/architecture/system-map": {
     "src": "/assets/gifs/environment/menu-panel.gif",
@@ -48,48 +48,48 @@
     "alt": "Dash demonstration of Recently Closed."
   },
   "/capabilities/ai-automation": {
-    "src": "/assets/gifs/ai/ai-firefly-template-image-1.gif",
-    "alt": "Dash demonstration of Ai Firefly Template Image 1."
+    "src": "/assets/images/gen_ai.png",
+    "alt": "Dash demonstration of Gen Ai."
   },
   "/capabilities/connections-and-trails": {
-    "src": "/assets/gifs/trails/arrows-present-together.gif",
-    "alt": "Dash demonstration of Arrows Present Together."
+    "src": "/assets/gifs/trails/pinlayout.gif",
+    "alt": "Dash demonstration of Pinlayout."
   },
   "/capabilities/documents": {
     "src": "/assets/images/environment/image_doc3.png",
     "alt": "Dash demonstration of Image Doc3."
   },
   "/capabilities/organization": {
-    "src": "/assets/gifs/views/schema_columns.gif",
-    "alt": "Dash demonstration of Schema Columns."
+    "src": "/assets/gifs/features/inkedit2.gif",
+    "alt": "Dash demonstration of Inkedit2."
   },
   "/concepts": {
     "src": "/assets/gifs/gettingstarted/dash-show-links.gif",
     "alt": "Dash demonstration of Show Links."
   },
   "/concepts/agents": {
-    "src": "/assets/gifs/dataViz/aiChat.gif",
-    "alt": "Dash demonstration of AiChat."
+    "src": "/assets/gifs/environment/dash-create-delete-tab.gif",
+    "alt": "Dash demonstration of Create Delete Tab."
   },
   "/concepts/collections": {
-    "src": "/assets/gifs/gettingstarted/dash-create-collection-marquee.gif",
-    "alt": "Dash demonstration of Create Collection Marquee."
+    "src": "/assets/gifs/environment/dash-drag-tab-tile.gif",
+    "alt": "Dash demonstration of Drag Tab Tile."
   },
   "/concepts/documents": {
-    "src": "/assets/gifs/gettingstarted/dash-image-text-embed.gif",
-    "alt": "Dash demonstration of Image Text Embed."
+    "src": "/assets/gifs/gettingstarted/dash-pin-doc.gif",
+    "alt": "Dash demonstration of Pin Doc."
   },
   "/concepts/generative": {
-    "src": "/assets/gifs/ai/ai-firefly-image-1.gif",
-    "alt": "Dash demonstration of Ai Firefly Image 1."
+    "src": "/assets/gifs/gettingstarted/dash-annotation-embed.gif",
+    "alt": "Dash demonstration of Annotation Embed."
   },
   "/concepts/links": {
-    "src": "/assets/gifs/links/linkboard.gif",
-    "alt": "Dash demonstration of Linkboard."
+    "src": "/assets/gifs/gettingstarted/dash-editing-link.gif",
+    "alt": "Dash demonstration of Editing Link."
   },
   "/concepts/trails": {
-    "src": "/assets/gifs/trails/miniplayer.gif",
-    "alt": "Dash demonstration of Miniplayer."
+    "src": "/assets/images/trails/dash-bezier-editor.gif",
+    "alt": "Dash demonstration of Bezier Editor."
   },
   "/contributing/inapp-links": {
     "src": "/assets/images/diagrams/dash-inapp-doc-link-path.svg",
@@ -108,8 +108,8 @@
     "alt": "Dash demonstration of Ai Pdf."
   },
   "/development/add-collection-view": {
-    "src": "/assets/gifs/dataViz/fromSchema_dataViz.gif",
-    "alt": "Dash demonstration of FromSchema DataViz."
+    "src": "/assets/gifs/gettingstarted/dash-pin-with-view.gif",
+    "alt": "Dash demonstration of Pin With View."
   },
   "/development/add-document-type": {
     "src": "/assets/gifs/gettingstarted/createnode.gif",
@@ -124,8 +124,8 @@
     "alt": "Dash demonstration of Report."
   },
   "/getting-started/basic-interactions": {
-    "src": "/assets/gifs/ai/ai-edit-3.gif",
-    "alt": "Dash demonstration of Ai Edit 3."
+    "src": "/assets/gifs/gettingstarted/dash-annotation-marquee.gif",
+    "alt": "Dash demonstration of Annotation Marquee."
   },
   "/getting-started/modes": {
     "src": "/assets/gifs/gettingstarted/dash-shift-click.gif",
@@ -136,24 +136,24 @@
     "alt": "Dash demonstration of New Dashboard."
   },
   "/guides/documents/temporal-media": {
-    "src": "/assets/gifs/audio/audiotrimming.gif",
-    "alt": "Dash demonstration of Audiotrimming."
+    "src": "/assets/images/environment/video_doc.png",
+    "alt": "Dash demonstration of Video Doc."
   },
   "/guides/features/collaboration": {
     "src": "/assets/gifs/gettingstarted/dash-create-link-board.gif",
     "alt": "Dash demonstration of Create Link Board."
   },
   "/guides/properties/fieldsandtags": {
-    "src": "/assets/gifs/dataViz/titleCol.gif",
-    "alt": "Dash demonstration of TitleCol."
+    "src": "/assets/images/trails/properties.png",
+    "alt": "Dash demonstration of Properties."
   },
   "/guides/properties/filters": {
-    "src": "/assets/gifs/environment/map_filter.gif",
-    "alt": "Dash demonstration of Map Filter."
+    "src": "/assets/gifs/gettingstarted/dash-context-menu.gif",
+    "alt": "Dash demonstration of Context Menu."
   },
   "/guides/properties/layout": {
-    "src": "/assets/gifs/trails/pinlayoutcontent.gif",
-    "alt": "Dash demonstration of Pinlayoutcontent."
+    "src": "/assets/gifs/dataViz/3colLinechart.gif",
+    "alt": "Dash demonstration of 3colLinechart."
   },
   "/guides/properties/linkedto": {
     "src": "/assets/gifs/gettingstarted/dash-toggle-show-link.gif",
@@ -172,12 +172,12 @@
     "alt": "Dash demonstration of Drag Drop Link."
   },
   "/guides/videos": {
-    "src": "/assets/gifs/gettingstarted/dash-pres-miniplayer.gif",
-    "alt": "Dash demonstration of Pres Miniplayer."
+    "src": "/assets/gifs/gettingstarted/dash-audio-anno.gif",
+    "alt": "Dash demonstration of Audio Anno."
   },
   "/guides/views/notetaking": {
-    "src": "/assets/gifs/gettingstarted/textannos.gif",
-    "alt": "Dash demonstration of Textannos."
+    "src": "/assets/gifs/environment/dash-drag-tab.gif",
+    "alt": "Dash demonstration of Drag Tab."
   },
   "/guides/views/stacking": {
     "src": "/assets/gifs/environment/colon-stack.gif",
@@ -188,8 +188,8 @@
     "alt": "Dash demonstration of Files Panel."
   },
   "/reference/agent-tools": {
-    "src": "/assets/gifs/ai/ai-template-csv-1.gif",
-    "alt": "Dash demonstration of Ai Template Csv 1."
+    "src": "/assets/gifs/features/inkdraw.gif",
+    "alt": "Dash demonstration of Inkdraw."
   },
   "/reference/collection-views": {
     "src": "/assets/images/environment/views/schema_view.png",
@@ -204,8 +204,8 @@
     "alt": "Parsed claims and written claims side by side: one generated and checked on every build, the other written by a person and checked by nobody, counted separately because a record can be fully traced and still unexplained."
   },
   "/reference/generated-data": {
-    "src": "/assets/gifs/ai/ai-template-csv-2.gif",
-    "alt": "Dash demonstration of Ai Template Csv 2."
+    "src": "/assets/images/environment/dataViz_doc.png",
+    "alt": "Dash demonstration of DataViz Doc."
   },
   "/reference/glossary": {
     "src": "/assets/gifs/gettingstarted/dash-edit-link.gif",
@@ -224,8 +224,8 @@
     "alt": "Dash demonstration of Annotation Icon."
   },
   "/reference/task-routes": {
-    "src": "/assets/gifs/animation/animateaddremove.gif",
-    "alt": "Dash demonstration of Animateaddremove."
+    "src": "/assets/gifs/gettingstarted/dash-create-trail-side.gif",
+    "alt": "Dash demonstration of Create Trail Side."
   },
   "/research/cohorts": {
     "src": "/assets/gifs/environment/dash-drag-tab-back.gif",
@@ -236,8 +236,8 @@
     "alt": "Dash demonstration of Following Link."
   },
   "/research/people": {
-    "src": "/assets/gifs/gettingstarted/groupselection.gif",
-    "alt": "Dash demonstration of Groupselection."
+    "src": "/assets/gifs/gettingstarted/dash-pdf-marquee-anno.gif",
+    "alt": "Dash demonstration of Pdf Marquee Anno."
   },
   "/research/publications": {
     "src": "/assets/gifs/gettingstarted/dash-pdf-select-annotate.gif",
@@ -248,15 +248,15 @@
     "alt": "Dash demonstration of Reorganize Slides."
   },
   "/research/reproducibility": {
-    "src": "/assets/gifs/environment/pdf.gif",
-    "alt": "Dash demonstration of Pdf."
+    "src": "/assets/images/environment/pdf_doc.png",
+    "alt": "Dash demonstration of Pdf Doc."
   },
   "/technical/api": {
-    "src": "/assets/gifs/animation/editmode.gif",
-    "alt": "Dash demonstration of Editmode."
+    "src": "/assets/gifs/gettingstarted/dash-follow-link-onclick.gif",
+    "alt": "Dash demonstration of Follow Link Onclick."
   },
   "/workflows": {
-    "src": "/assets/gifs/gettingstarted/dash-present-trail.gif",
-    "alt": "Dash demonstration of Present Trail."
+    "src": "/assets/gifs/gettingstarted/dash-follow-link.gif",
+    "alt": "Dash demonstration of Follow Link."
   }
 }
