@@ -29,8 +29,14 @@ jobs:
           node-version: 22
           cache: npm
 
+      # `npm ci` is the usual choice, but the committed lock is generated on
+      # Windows and does not contain sharp's Linux-only optional subtree, so a
+      # clean install on this runner would fail on a platform difference rather
+      # than on anything about the documentation. `npm install` resolves those
+      # optional packages for the current platform and still honours the lock
+      # for everything else.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Inventory invariants
         run: npm test

@@ -1,0 +1,100 @@
+---
+title: Generated data endpoints
+description: Every reference on this site is rendered from a machine-readable dataset, and each of those datasets is published as JSON so a claim can be verified or reused without scraping the pages.
+sidebar:
+  order: 4
+---
+
+import DatasetIndex from '../../../components/DatasetIndex.astro';
+
+<p class="lede">
+  The reference pages here are views over generated data, not hand-maintained
+  tables. That data is published as-is, so you can check a claim, diff two
+  revisions, or build something else on top of it without parsing HTML.
+</p>
+
+## What is published
+
+Every dataset is derived from one pinned Dash-Web revision by a generator in
+`scripts/`, committed alongside the pages that use it, and served as static
+JSON.
+
+<DatasetIndex />
+
+A manifest of all of them, with schema versions and record counts, is at
+[`/assets/data/index.json`](/assets/data/index.json).
+
+## The shape of a dataset
+
+Every dataset shares the same envelope:
+
+```json
+{
+  "schemaVersion": 1,
+  "generatedAt": "…",
+  "repository": { "remote": "https://github.com/brown-dash/Dash-Web", "baseline": "<commit sha>" },
+  "methodology": { "…": "how this dataset was derived, and what makes generation fail" },
+  "summary": { "…": "counts the pages quote" },
+  "<records>": [ … ]
+}
+```
+
+The array name differs per dataset and is listed in the table above. Two fields
+are worth reading before anything else:
+
+- **`repository.baseline`** is an immutable commit. Every `source.url` in the
+  dataset is a permalink into that commit, so a record can be checked against
+  the exact code it describes.
+- **`methodology.driftRule`** states what makes generation fail. That is the
+  mechanism keeping the dataset honest: when the code it parses moves, the
+  build breaks rather than the documentation quietly going stale.
+
+## Stability
+
+Fields are added, not renamed or removed, without incrementing that dataset's
+`schemaVersion`. Treat a `schemaVersion` change as breaking.
+
+The baseline moves whenever the pinned Dash-Web revision moves, and record
+counts move with it. If you need reproducible results, pin the baseline you
+read and compare against it rather than against "latest".
+
+Two datasets need extra care:
+
+- **`project-controls`** is the one dataset generated from something other than
+  the pinned baseline. Each project record carries its own `branchTip` and a
+  `mergedIntoMaster` flag, because these features live on unmerged branches.
+  Read `disclosure` before using it for anything.
+- **`task-routes`** contains hand-reviewed judgements about which controls
+  serve one intent. The routes are machine-verified to exist; the grouping is
+  editorial.
+
+## What is not published
+
+The full source ledger, the semantic branch deltas, and the TypeDoc export run
+to tens of megabytes each and are not served as endpoints. They are used at
+build time to render the [module API pages](/technical/exported-symbols/), and
+can be regenerated locally with the commands in [Reproducibility and artifact
+packages](/research/reproducibility/).
+
+## Using it
+
+Nothing here requires a key, and everything is a plain static file.
+
+```sh
+# Which controls are hidden outside Developer mode?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/interface-controls.json \
+  | jq -r '.controls[] | select(.visibility | test("Developer mode")) | .label'
+
+# Which right-click entries write to the selected document without an undo batch?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/context-menus.json \
+  | jq -r '.items[] | select(.undoable == false and .kind == "action") | "\(.surfaceName): \(.label)"'
+
+# Which chords does Dash take away from the browser?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/keyboard-shortcuts.json \
+  | jq -r '.shortcuts[] | select(.eventControl.preventDefault) | .chordOther'
+```
+
+If you build something on these, the useful thing to report back is a record
+that turned out to be wrong. The generators are designed to fail loudly on
+structural drift, but a wrong plain-language explanation is exactly the kind of
+error automation cannot catch.

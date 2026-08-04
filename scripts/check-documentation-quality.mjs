@@ -391,6 +391,30 @@ for (const task of taskRouteReference.tasks) {
     if (!route.plain || !route.where) errors.push(`${task.id}: route ${route.label} lost its explanation or location`);
   }
 }
+// The published dataset manifest must name every dataset that has an endpoint,
+// and every baseline it advertises must be an immutable commit.
+const dataEndpointDir = path.join(root, 'src', 'pages', 'assets', 'data');
+const dataEndpoints = (await readdir(dataEndpointDir))
+  .filter((name) => name.endsWith('.json.ts') && name !== 'index.json.ts')
+  .map((name) => name.replace(/\.json\.ts$/, ''));
+const manifestSource = await readFile(path.join(dataEndpointDir, 'index.json.ts'), 'utf8');
+for (const endpoint of dataEndpoints) {
+  if (!manifestSource.includes(`id: '${endpoint}'`)) {
+    errors.push(`Published data endpoint is missing from the dataset manifest: ${endpoint}`);
+  }
+}
+if (/baseline: \w+\.repository\.baseline,/.test(manifestSource)) {
+  const mutable = [...manifestSource.matchAll(/id: '([^']+)'[\s\S]*?baseline: (\w+)\.repository\.baseline,/g)];
+  for (const [, id, dataset] of mutable) {
+    // Only source-reference-derived datasets carry a mutable `baseline` ref.
+    if (['exportedSymbols'].includes(dataset)) errors.push(`Dataset manifest publishes a mutable ref for ${id}; use the resolved commit`);
+  }
+}
+const generatedDataPage = await readFile(path.join(docsRoot, 'reference', 'generated-data.mdx'), 'utf8');
+if (!generatedDataPage.includes('<DatasetIndex />') || !generatedDataPage.includes('/assets/data/index.json')) {
+  errors.push('Generated data page lost its dataset index or its manifest link');
+}
+
 const taskRoutePage = await readFile(path.join(docsRoot, 'reference', 'task-routes.mdx'), 'utf8');
 if (!taskRoutePage.includes('<TaskRouteReference />')) {
   errors.push('Cross-route task page lost its generated index');

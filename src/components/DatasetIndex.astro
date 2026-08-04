@@ -1,0 +1,61 @@
+---
+import contextMenus from '../data/generated/context-menus.json';
+import documentTypes from '../data/generated/document-types.json';
+import exportedSymbols from '../data/generated/exported-symbols.json';
+import fieldTypes from '../data/generated/field-types.json';
+import httpRoutes from '../data/generated/http-routes.json';
+import interfaceControls from '../data/generated/interface-controls.json';
+import keyboardShortcuts from '../data/generated/keyboard-shortcuts.json';
+import projectControls from '../data/generated/project-controls.json';
+import scriptingGlobals from '../data/generated/scripting-globals.json';
+import taskRoutes from '../data/generated/task-routes.json';
+import { siteHref } from '../data/sourceReference';
+
+const datasets = [
+  ['interface-controls', 'Interface controls', interfaceControls.controls.length, 'controls', '/reference/interface-controls/', 'audit:controls'],
+  ['context-menus', 'Right-click menu entries', contextMenus.items.length, 'items', '/reference/context-menus/', 'audit:menus'],
+  ['keyboard-shortcuts', 'Keyboard shortcuts', keyboardShortcuts.shortcuts.length, 'shortcuts', '/reference/keyboard-shortcuts/', 'audit:keys'],
+  ['task-routes', 'Cross-route tasks', taskRoutes.tasks.length, 'tasks', '/reference/task-routes/', 'audit:tasks'],
+  ['project-controls', 'Project controls', projectControls.controls.length, 'controls', '/guides/features/trip-planner/', 'audit:projects'],
+  ['document-types', 'Document types', documentTypes.types.length, 'types', '/reference/document-types/', 'audit:documents'],
+  ['field-types', 'Serialized field types', fieldTypes.registrations.length, 'registrations', '/reference/runtime-contracts/', 'audit:fields'],
+  ['http-routes', 'HTTP routes', httpRoutes.routes.length, 'routes', '/reference/http-service-interface/', 'audit:http'],
+  ['scripting-globals', 'Scripting globals', scriptingGlobals.globals.length, 'globals', '/guides/features/scripting/', 'audit:scripting'],
+  ['exported-symbols', 'Exported symbols', exportedSymbols.rows.length, 'rows', '/technical/exported-symbols/', 'audit:symbols'],
+] as const;
+
+const total = datasets.reduce((sum, [, , count]) => sum + count, 0);
+---
+
+<div class="dataset-index">
+  <div class="audit-summary control-contract-summary" aria-label="Published dataset totals">
+    <div><strong>{datasets.length}</strong><span>published datasets</span></div>
+    <div><strong>{total.toLocaleString()}</strong><span>generated records</span></div>
+    <div><strong>{interfaceControls.repository.baseline.slice(0, 7)}</strong><span>pinned Dash-Web revision</span></div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Dataset</th>
+          <th scope="col">Records</th>
+          <th scope="col">Array</th>
+          <th scope="col">Endpoint</th>
+          <th scope="col">Rebuild with</th>
+        </tr>
+      </thead>
+      <tbody>
+        {datasets.map(([id, title, count, key, page, generator]) => (
+          <tr>
+            <td><a href={siteHref(page)}>{title}</a></td>
+            <td>{count.toLocaleString()}</td>
+            <td><code>{key}</code></td>
+            <td><a href={siteHref(`/assets/data/${id}.json`)}><code>/assets/data/{id}.json</code></a></td>
+            <td><code>npm run {generator}</code></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
