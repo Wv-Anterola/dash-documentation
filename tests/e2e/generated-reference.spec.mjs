@@ -69,6 +69,48 @@ test('searches every exported symbol and opens its exact module contract', async
   expect(geometry.rootRight).toBeLessThanOrEqual(geometry.viewportWidth + 1);
 });
 
+test('traces every interface control from plain behavior to implementation effects', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/interface-controls.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  expect(dataResponse.headers()['content-type']).toContain('application/json');
+  const data = await dataResponse.json();
+  expect(data.controls).toHaveLength(203);
+
+  await page.goto('/reference/interface-controls/');
+  await expect(page.getByRole('heading', { name: 'Interface control and node atlas' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /source-backed trace of the Image.*Rotate control/ })).toBeVisible();
+  await expect(page.locator('.control-contract-summary strong').first()).toHaveText('203');
+  await expect(page.locator('[data-control-row]:visible')).toHaveCount(40);
+
+  const query = page.getByLabel('Find a button, icon, tooltip, handler, state field, or effect');
+  await query.fill('imageRotate90');
+  await expect(page.locator('[data-control-row]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-control-count]')).toContainText('1 of 1 matching controls');
+  const rotate = page.locator('[data-control-row]:visible');
+  await rotate.locator('summary').first().click();
+  await expect(rotate.getByText(/Sets Native Pixel Size|Rotate 90/).first()).toBeVisible();
+  await expect(rotate.getByText('the selected image document and its ImageBox renderer')).toBeVisible();
+  await rotate.getByText('Technical trace', { exact: true }).click();
+  await expect(rotate.getByText('imageRotate90()', { exact: true })).toBeVisible();
+  await expect(rotate.getByRole('link', { name: 'Open imageRotate90 implementation' })).toHaveAttribute('href', /\/blob\/.*#L\d+$/);
+  await expect(page).toHaveURL(/control=imageRotate90/);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await page.evaluate(() => {
+    const root = document.querySelector('[data-control-reference]');
+    const filters = document.querySelector('.control-contract-filters');
+    if (!root || !filters) throw new Error('Interface control reference layout is missing');
+    return {
+      pageWidth: document.documentElement.scrollWidth,
+      viewportWidth: document.documentElement.clientWidth,
+      rootRight: root.getBoundingClientRect().right,
+      filtersRight: filters.getBoundingClientRect().right,
+    };
+  });
+  expect(geometry.pageWidth).toBe(geometry.viewportWidth);
+  expect(geometry.filtersRight).toBeLessThanOrEqual(geometry.rootRight + 1);
+});
+
 test('filters semantic branch deltas', async ({ page }) => {
   await page.goto('/reference/branch-audit/');
   await expect(page.getByText('TypeScript compiler + Python AST')).toBeVisible();

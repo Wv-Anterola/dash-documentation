@@ -378,6 +378,23 @@ gap. Remove that caution in the same change that supplies the missing evidence.
 Two sentences presented as a complete guide are worse than two sentences that
 state their evidence boundary.
 
+### Interface control reference standard
+
+Every persistent global control belongs in the searchable
+[interface control atlas](/reference/interface-controls/). A complete entry
+names the visible label or icon, location, interaction, tooltip, visibility or
+selection predicate, beginner explanation, handler expression, state owner, and
+source wiring. When the handler is a scripting global, the generator must also
+join its signature, direct calls, and observed field writes from the scripting
+reference.
+
+Do not document a source identifier as if it were user-facing behavior. “Runs
+`showFreeform`” is implementation evidence, not an explanation. Do not document
+an icon from a screenshot alone either: the corresponding registry or JSX
+contract must remain source-addressable. Run `npm run audit:controls` after a
+top bar, sidebar, toolbar, decoration, properties, footer, or creator change;
+generation intentionally fails when reviewed JSX evidence disappears.
+
 ### Exported API reference standard
 
 Every exported declaration is discoverable through the

@@ -1,0 +1,379 @@
+---
+import reference from '../data/generated/interface-controls.json';
+import { siteHref } from '../data/sourceReference';
+
+const { summary, regions, controlTypes } = reference;
+const dataUrl = siteHref('/assets/data/interface-controls.json');
+const evidenceLevels = [
+  ['document-backed registry', 'Document-backed registry'],
+  ['dynamic registry factory', 'Dynamic registry factory'],
+  ['creator registry', 'Creator registry'],
+  ['reviewed JSX contract', 'Reviewed JSX contract'],
+];
+---
+
+<div class="control-contract-reference" data-control-reference data-source={dataUrl}>
+  <div class="audit-summary control-contract-summary" aria-label="Interface control totals">
+    <div><strong>{summary.controls.toLocaleString()}</strong><span>named controls</span></div>
+    <div><strong>{summary.regions}</strong><span>interface regions</span></div>
+    <div><strong>{summary.groups}</strong><span>control groups</span></div>
+    <div><strong>{summary.nestedControls}</strong><span>submenu controls</span></div>
+    <div><strong>{summary.handlerResolvedControls}</strong><span>script handlers traced</span></div>
+    <div><strong>{summary.directComponentContracts}</strong><span>reviewed JSX contracts</span></div>
+  </div>
+
+  <div class="source-method">
+    <strong>How to read an entry.</strong> “In plain words” says what a person
+    experiences. “When it appears” names the required mode or selection.
+    “Technical trace” shows the registry expression, state owner, calls, writes,
+    and implementation evidence. A source link proves where the control is
+    wired; it does not replace the explanation.
+  </div>
+
+  <div class="control-contract-filters" aria-label="Interface control filters">
+    <div class="control-contract-query">
+      <label for="control-contract-query">Find a button, icon, tooltip, handler, state field, or effect</label>
+      <input
+        id="control-contract-query"
+        type="search"
+        placeholder="Try Pin, imageRotate90, selected collection, ACL, or undo"
+        autocomplete="off"
+        disabled
+      />
+    </div>
+    <div>
+      <label for="control-contract-region">Where it appears</label>
+      <select id="control-contract-region" disabled>
+        <option value="">Every interface region</option>
+        {regions.map((region) => <option value={region}>{region}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="control-contract-type">How it behaves</label>
+      <select id="control-contract-type" disabled>
+        <option value="">Every control type</option>
+        {controlTypes.map((type) => <option value={type}>{type}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="control-contract-evidence">Where the claim comes from</label>
+      <select id="control-contract-evidence" disabled>
+        <option value="">Every evidence level</option>
+        {evidenceLevels.map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="control-contract-results-header">
+    <p class="filter-count" data-control-count role="status" aria-live="polite">
+      Loading {summary.controls.toLocaleString()} interface controls…
+    </p>
+    <button type="button" data-control-clear disabled>Clear filters</button>
+  </div>
+
+  <div class="control-contract-list" id="control-contract-list" aria-busy="true">
+    <p class="control-contract-loading">Loading the source-backed control contracts…</p>
+  </div>
+
+  <noscript>
+    <p class="source-warning">
+      Interactive filtering requires JavaScript. The explanatory tables on this
+      page remain available without it.
+    </p>
+  </noscript>
+
+  <div class="control-contract-paging">
+    <button type="button" data-control-more aria-controls="control-contract-list" hidden disabled>Show more</button>
+    <button type="button" data-control-all aria-controls="control-contract-list" hidden disabled>Show all matching</button>
+  </div>
+</div>
+
+<script>
+  interface SourceLink {
+    file: string;
+    line: number;
+    url: string;
+  }
+
+  interface ResolvedHandler {
+    name: string;
+    signature: string;
+    purpose: string;
+    writes: string[];
+    calls: string[];
+    source: SourceLink;
+  }
+
+  interface ControlRow {
+    id: string;
+    region: string;
+    group: string;
+    parent: string;
+    label: string;
+    icon: string;
+    tooltip: string;
+    controlType: string;
+    interaction: string;
+    visibility: string;
+    predicate: string;
+    handlerExpression: string;
+    beginner: string;
+    technicalDetail?: string;
+    evidence: string;
+    source: SourceLink;
+    handler: {
+      names: string[];
+      resolved: ResolvedHandler[];
+      stateOwner: string;
+    };
+    search?: string;
+  }
+
+  interface ControlPayload {
+    controls: ControlRow[];
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-control-reference]');
+  if (root) {
+    const query = root.querySelector<HTMLInputElement>('#control-contract-query');
+    const region = root.querySelector<HTMLSelectElement>('#control-contract-region');
+    const type = root.querySelector<HTMLSelectElement>('#control-contract-type');
+    const evidence = root.querySelector<HTMLSelectElement>('#control-contract-evidence');
+    const count = root.querySelector<HTMLElement>('[data-control-count]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-control-clear]');
+    const more = root.querySelector<HTMLButtonElement>('[data-control-more]');
+    const all = root.querySelector<HTMLButtonElement>('[data-control-all]');
+    const list = root.querySelector<HTMLElement>('#control-contract-list');
+    const filterControls = [query, region, type, evidence, clear, more, all].filter(Boolean) as Array<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>;
+    const pageSize = 40;
+    let limit = pageSize;
+    let rows: ControlRow[] = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (query) query.value = params.get('control') ?? '';
+    if (region) region.value = params.get('region') ?? '';
+    if (type) type.value = params.get('type') ?? '';
+    if (evidence) evidence.value = params.get('evidence') ?? '';
+
+    const evidenceLabels = {
+      'document-backed registry': 'Document-backed registry',
+      'dynamic registry factory': 'Dynamic registry factory',
+      'creator registry': 'Creator registry',
+      'reviewed JSX contract': 'Reviewed JSX contract',
+    } as Record<string, string>;
+
+    const matches = (row: ControlRow) => {
+      const needle = query?.value.trim().toLowerCase() ?? '';
+      return (!needle || row.search?.includes(needle)) &&
+        (!region?.value || row.region === region.value) &&
+        (!type?.value || row.controlType === type.value) &&
+        (!evidence?.value || row.evidence === evidence.value);
+    };
+
+    const syncUrl = () => {
+      const next = new URLSearchParams();
+      if (query?.value.trim()) next.set('control', query.value.trim());
+      if (region?.value) next.set('region', region.value);
+      if (type?.value) next.set('type', type.value);
+      if (evidence?.value) next.set('evidence', evidence.value);
+      const suffix = next.toString();
+      window.history.replaceState({}, '', suffix ? `${window.location.pathname}?${suffix}` : window.location.pathname);
+    };
+
+    const addFact = (list: HTMLDListElement, term: string, value: string) => {
+      const wrapper = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = term;
+      dd.textContent = value;
+      wrapper.append(dt, dd);
+      list.append(wrapper);
+    };
+
+    const addCodeList = (container: HTMLElement, label: string, values: string[]) => {
+      if (!values.length) return;
+      const paragraph = document.createElement('p');
+      paragraph.className = 'control-contract-code-list';
+      const heading = document.createElement('strong');
+      heading.textContent = `${label}:`;
+      paragraph.append(heading, document.createTextNode(' '));
+      values.slice(0, 8).forEach((value, index) => {
+        if (index) paragraph.append(document.createTextNode(', '));
+        const code = document.createElement('code');
+        code.textContent = value;
+        paragraph.append(code);
+      });
+      if (values.length > 8) paragraph.append(document.createTextNode(`, and ${values.length - 8} more`));
+      container.append(paragraph);
+    };
+
+    const createRow = (row: ControlRow) => {
+      const details = document.createElement('details');
+      details.className = 'control-contract-row';
+      details.dataset.controlRow = '';
+      details.id = `control-${row.id}`;
+
+      const summary = document.createElement('summary');
+      const identity = document.createElement('span');
+      identity.className = 'control-contract-identity';
+      const label = document.createElement('strong');
+      label.textContent = row.label;
+      const location = document.createElement('small');
+      location.textContent = row.parent ? `${row.parent} → ${row.label}` : row.group;
+      identity.append(label, location);
+
+      const badges = document.createElement('span');
+      badges.className = 'control-contract-badges';
+      for (const value of [row.region, row.controlType, evidenceLabels[row.evidence] ?? row.evidence]) {
+        const badge = document.createElement('span');
+        badge.textContent = value;
+        badges.append(badge);
+      }
+      summary.append(identity, badges);
+
+      const body = document.createElement('div');
+      body.className = 'control-contract-body';
+      const plain = document.createElement('p');
+      plain.className = 'control-contract-plain';
+      const plainHeading = document.createElement('strong');
+      plainHeading.textContent = 'In plain words: ';
+      plain.append(plainHeading, document.createTextNode(row.beginner));
+      body.append(plain);
+
+      const facts = document.createElement('dl');
+      facts.className = 'control-contract-facts';
+      addFact(facts, 'Where', `${row.region} → ${row.group}`);
+      addFact(facts, 'When it appears', row.visibility);
+      addFact(facts, 'What you do', row.interaction);
+      addFact(facts, 'Tooltip in Dash', row.tooltip || 'No literal tooltip is registered.');
+      addFact(facts, 'State owner', row.handler.stateOwner);
+      body.append(facts);
+
+      const technical = document.createElement('details');
+      technical.className = 'control-contract-technical';
+      const technicalSummary = document.createElement('summary');
+      technicalSummary.textContent = 'Technical trace';
+      technical.append(technicalSummary);
+
+      if (row.technicalDetail) {
+        const detail = document.createElement('p');
+        detail.textContent = row.technicalDetail;
+        technical.append(detail);
+      }
+      if (row.predicate) {
+        const predicate = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Visibility predicate: ';
+        const code = document.createElement('code');
+        code.textContent = row.predicate;
+        predicate.append(heading, code);
+        technical.append(predicate);
+      }
+      if (row.handlerExpression) {
+        const expression = document.createElement('p');
+        const heading = document.createElement('strong');
+        heading.textContent = 'Registry or JSX handler: ';
+        const code = document.createElement('code');
+        code.textContent = row.handlerExpression;
+        expression.append(heading, code);
+        technical.append(expression);
+      }
+
+      for (const handler of row.handler.resolved) {
+        const handlerBlock = document.createElement('section');
+        handlerBlock.className = 'control-contract-handler';
+        const heading = document.createElement('h4');
+        const signature = document.createElement('code');
+        signature.textContent = handler.signature || handler.name;
+        heading.append(signature);
+        handlerBlock.append(heading);
+        if (handler.purpose) {
+          const purpose = document.createElement('p');
+          purpose.textContent = handler.purpose;
+          handlerBlock.append(purpose);
+        }
+        addCodeList(handlerBlock, 'Writes', handler.writes);
+        addCodeList(handlerBlock, 'Direct calls', handler.calls);
+        const link = document.createElement('a');
+        link.href = handler.source.url;
+        link.textContent = `Open ${handler.name} implementation`;
+        handlerBlock.append(link);
+        technical.append(handlerBlock);
+      }
+
+      const source = document.createElement('a');
+      source.href = row.source.url;
+      source.textContent = 'Open control wiring in source';
+      technical.append(source);
+      body.append(technical);
+      details.append(summary, body);
+      return details;
+    };
+
+    const render = () => {
+      const matching = rows.filter(matches);
+      const visible = matching.slice(0, limit);
+      list?.replaceChildren(...visible.map(createRow));
+      const shown = visible.length;
+      if (count) count.textContent = `Showing ${shown.toLocaleString()} of ${matching.length.toLocaleString()} matching controls (${rows.length.toLocaleString()} total).`;
+      if (more) {
+        more.hidden = shown >= matching.length;
+        more.textContent = `Show ${Math.min(pageSize, matching.length - shown).toLocaleString()} more`;
+      }
+      if (all) all.hidden = shown >= matching.length;
+      syncUrl();
+    };
+
+    const resetAndRender = () => {
+      limit = pageSize;
+      render();
+    };
+    query?.addEventListener('input', resetAndRender);
+    region?.addEventListener('change', resetAndRender);
+    type?.addEventListener('change', resetAndRender);
+    evidence?.addEventListener('change', resetAndRender);
+    more?.addEventListener('click', () => {
+      limit += pageSize;
+      render();
+    });
+    all?.addEventListener('click', () => {
+      limit = rows.length;
+      render();
+    });
+    clear?.addEventListener('click', () => {
+      if (query) query.value = '';
+      if (region) region.value = '';
+      if (type) type.value = '';
+      if (evidence) evidence.value = '';
+      resetAndRender();
+      query?.focus();
+    });
+
+    try {
+      const response = await fetch(root.dataset.source ?? '');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const payload = await response.json() as ControlPayload;
+      rows = payload.controls.map((row) => ({
+        ...row,
+        search: [
+          row.label, row.tooltip, row.region, row.group, row.parent, row.controlType,
+          row.beginner, row.visibility, row.predicate, row.handlerExpression,
+          row.handler.stateOwner, row.technicalDetail,
+          ...row.handler.resolved.flatMap((handler) => [handler.name, handler.signature, handler.purpose, ...handler.writes, ...handler.calls]),
+        ].filter(Boolean).join(' ').toLowerCase(),
+      }));
+      filterControls.forEach((control) => { control.disabled = false; });
+      if (list) list.ariaBusy = 'false';
+      render();
+    } catch (error) {
+      if (list) {
+        list.ariaBusy = 'false';
+        const warning = document.createElement('p');
+        warning.className = 'source-warning';
+        warning.textContent = `The interface-control data could not be loaded: ${error instanceof Error ? error.message : String(error)}`;
+        list.replaceChildren(warning);
+      }
+      if (count) count.textContent = 'Interface-control data is unavailable.';
+    }
+  }
+</script>

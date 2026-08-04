@@ -113,12 +113,14 @@ const documentReferenceSource = await readFile(path.join(root, 'src', 'data', 'g
 const fieldReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'field-types.json'), 'utf8');
 const scriptingReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'scripting-globals.json'), 'utf8');
 const exportedReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'exported-symbols.json'), 'utf8');
+const interfaceControlReferenceSource = await readFile(path.join(root, 'src', 'data', 'generated', 'interface-controls.json'), 'utf8');
 const sourceReference = JSON.parse(referenceSource);
 const httpReference = JSON.parse(httpReferenceSource);
 const documentReference = JSON.parse(documentReferenceSource);
 const fieldReference = JSON.parse(fieldReferenceSource);
 const scriptingReference = JSON.parse(scriptingReferenceSource);
 const exportedReference = JSON.parse(exportedReferenceSource);
+const interfaceControlReference = JSON.parse(interfaceControlReferenceSource);
 const overlayIds = [...overlaySource.matchAll(/^\s{2}'([^']+)':\s*\{/gm)].map((match) => match[1]);
 for (const id of overlayIds) {
   if (!referenceSource.includes(`"id": "${id}"`)) {
@@ -139,6 +141,7 @@ const allowedAccess = new Set([
 const routeKeys = new Map();
 const completeRegistrations = new Set();
 const sourceModules = new Set(sourceReference.modules.map((module) => module.path));
+const scriptingGlobalNames = new Set(scriptingReference.globals.map((entry) => entry.name));
 const exportedSymbols = sourceReference.modules.flatMap((module) =>
   module.symbols.filter((symbol) => symbol.exported).map((symbol) => ({ module, symbol }))
 );
@@ -216,6 +219,36 @@ if (!exportedSymbolsPage.includes('<ExportedSymbolReference />') || !exportedSym
 }
 if (!astroConfigSource.includes("slug: 'technical/exported-symbols'")) {
   errors.push('Exported symbol reference is no longer discoverable in the primary navigation');
+}
+
+if (interfaceControlReference.repository.baseline !== sourceReference.repository.baselineTip) {
+  errors.push('Interface control reference and generated source reference use different baseline revisions');
+}
+if (interfaceControlReference.summary.controls !== interfaceControlReference.controls.length || interfaceControlReference.controls.length < 200) {
+  errors.push('Interface control inventory is stale or fell below the reviewed 200-control floor');
+}
+if (interfaceControlReference.summary.regions !== 7 || new Set(interfaceControlReference.controls.map((row) => row.region)).size !== 7) {
+  errors.push('Interface control inventory no longer covers all seven reviewed interface regions');
+}
+if (new Set(interfaceControlReference.controls.map((row) => row.id)).size !== interfaceControlReference.controls.length) {
+  errors.push('Interface control inventory contains duplicate row identities');
+}
+for (const row of interfaceControlReference.controls) {
+  if (!row.label || !row.beginner || !row.visibility || !row.interaction || !row.handler?.stateOwner) {
+    errors.push(`${row.id}: interface control contract is missing visible, beginner, conditional, interaction, or state-owner evidence`);
+  }
+  if (!sourceModules.has(row.source?.file) || !row.source?.url?.includes(sourceReference.repository.baselineTip) || !row.source?.url?.endsWith(`#L${row.source?.line}`)) {
+    errors.push(`${row.id}: interface control source is absent, mutable, or not line-addressed`);
+  }
+  for (const handler of row.handler?.resolved ?? []) {
+    if (!scriptingGlobalNames.has(handler.name) || !handler.signature || !handler.source?.url) {
+      errors.push(`${row.id}: resolved interface handler ${handler.name} is absent from the scripting-global contract`);
+    }
+  }
+}
+const interfaceControlsPage = await readFile(path.join(docsRoot, 'reference', 'interface-controls.mdx'), 'utf8');
+if (!interfaceControlsPage.includes('<InterfaceControlReference />') || !interfaceControlsPage.includes('dash-control-action-trace.svg')) {
+  errors.push('Interface control page lost its searchable contract index or unique action-trace visual');
 }
 
 if (documentReference.repository.baseline !== sourceReference.repository.baselineTip) {
@@ -507,6 +540,7 @@ if (errors.length) {
       `${overlayIds.length} runtime contract overlays resolve to source symbols; ` +
       `${exportedSymbols.length.toLocaleString()} exported declarations have collision-safe module targets; ` +
       `${httpReference.routes.length} HTTP route registrations, ${documentReference.types.length} document type lifecycles, and ` +
-      `${fieldReference.registrations.length} serialized field types plus ${scriptingReference.globals.length} scripting globals pass inventory invariants.`
+      `${fieldReference.registrations.length} serialized field types, ${scriptingReference.globals.length} scripting globals, and ` +
+      `${interfaceControlReference.controls.length} interface controls pass inventory invariants.`
   );
 }

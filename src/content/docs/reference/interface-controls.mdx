@@ -5,16 +5,14 @@ sidebar:
   order: 1
 ---
 
-import SourceSnapshot from '../../../components/SourceSnapshot.astro';
 import CreatorAtlas from '../../../components/CreatorAtlas.astro';
+import InterfaceControlReference from '../../../components/InterfaceControlReference.astro';
 
 <p class="lede">
   This page names controls that the interface often communicates with an icon,
   abbreviation, or hover tooltip alone. Use it when “click the button” is not
   enough to identify which button or what it will create.
 </p>
-
-<SourceSnapshot />
 
 ## Three words the interface assumes you know
 
@@ -29,15 +27,16 @@ says **open its properties**, keep that document selected and open the right
 panel. If it says **create a node**, use a creator in **Tools** or type `:` on a
 canvas.
 
-The inventory combines three sources:
+The inventory combines three kinds of evidence:
 
-- a live pass through the current Dash client on 29 July 2026;
-- the control registries in `TopBar.tsx`, `CurrentUserUtils.ts`, and
-  `DocumentButtonBar.tsx`;
-- the document and collection enums in `DocumentTypes.ts`.
+- runtime captures, used to show where a person sees each control;
+- the control registries and JSX in `TopBar.tsx`, `CurrentUserUtils.ts`,
+  `DocumentButtonBar.tsx`, and `PropertiesView.tsx`;
+- the document, creator, and scripting-global indexes generated from the Dash
+  source tree.
 
 The captured runtime and checked-out TypeScript are not perfectly identical.
-The running compiled client exposes **Trip Planner Tool** and **Trip Doc**
+The captured compiled client exposes **Trip Planner Tool** and **Trip Doc**
 creators that are not recoverable as dedicated entries in the checked-out
 `creatorBtnDescriptors` registry. The source registry, meanwhile, contains
 newer developer and agent creators that the captured runtime does not expose.
@@ -61,6 +60,45 @@ The interface is layered:
 When a control is missing, first clear the current selection, leave Explore
 mode, and check whether Dash is in Novice or Developer mode. Many controls are
 conditional rather than broken.
+
+## Search every global interface control
+
+![A source-backed trace of the Image → Rotate control from its visible toolbar button through the document-backed descriptor, visibility predicate, FontIcon renderer, scripting-global dispatch, selected ImageBox rotate method, and visible result.](/assets/images/diagrams/dash-control-action-trace.svg)
+
+[Open the interface-control action trace at its full 1600 × 900 resolution.](/assets/images/diagrams/dash-control-action-trace.svg)
+
+The reference below inventories the persistent top bar, sidebar, context
+toolbar and all nested tool groups, selected-document decorations, properties
+sections, docked footer controls, and source-registry creators. Search by what
+you see—such as **Rotate** or **heart**—or by implementation evidence such as
+`imageRotate90`, `Doc.ActiveInk`, `SharingManager`, or `SelectedDocType`.
+
+<InterfaceControlReference />
+
+### How a toolbar click becomes a Dash state change
+
+Most context-toolbar controls are documents themselves. Their source descriptor
+declares a visible `title`, tooltip, button type, optional `toolType`, scripts,
+and functions such as `hidden` or `linearView_isOpen`. Startup code turns that
+descriptor into a `FontIconDocument`. The icon renderer evaluates the visibility
+function and invokes the registered script when the person clicks, chooses a
+value, or drags a slider. The script name resolves through `ScriptingGlobals` to
+an implementation function, which then reads or writes the selected document,
+its layout delegate, or a manager singleton.
+
+The short script parameters mean:
+
+| Parameter | Plain meaning | Technical role |
+| :--- | :--- | :--- |
+| `value` | The color, number, text, or list choice the person just supplied. | Passed by the document-backed button renderer into a value script. |
+| `this.toolType` | Which sub-tool this button represents. | A descriptor field used by shared handlers such as `showFreeform`, `setFontAttr`, and `setActiveTool`. |
+| `_readOnly_` | “Check the current value” instead of “change it,” when true. | Lets one script support both button-state evaluation and mutation. |
+| `_added_` | Whether a dynamic toggle was added or activated. | Used by tag-filter controls to update a collection’s filter set. |
+| `shiftKey` / `altKey` | Whether Shift or Alt was held during the action. | Selects alternate behavior, such as creating a perspective or pinning extra view state. |
+
+The generated contracts intentionally keep the visible behavior and technical
+trace together. A handler name alone is not an explanation, and a friendly
+tooltip alone is not implementation evidence.
 
 ## Top bar
 
