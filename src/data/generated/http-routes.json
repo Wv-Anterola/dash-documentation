@@ -10,7 +10,12 @@
     "directOwnerNames": [
       "app",
       "server"
-    ]
+    ],
+    "docComments": "Recovered from the comment above each registration in Dash-Web, not written here. A route with no comment is reported as having none",
+    "calls": "Notable calls inside the handler, with the handler expanded through same-file helper definitions",
+    "effects": "Database, filesystem, outbound network, subprocess, and external-model contact, classified from the expanded handler text",
+    "groupPurpose": "Reviewed per family rather than per route: a family is one file with one job, which a reader can check",
+    "driftRule": "Generation fails when a route family appears without a reviewed purpose, or a reviewed purpose outlives its family"
   },
   "summary": {
     "routes": 109,
@@ -18,12 +23,216 @@
     "direct": 21,
     "public": 25,
     "admin": 2,
-    "duplicateMethodPaths": 3
+    "duplicateMethodPaths": 3,
+    "groups": 15,
+    "documented": 38,
+    "withCalls": 102,
+    "touchDatabase": 7,
+    "touchFilesystem": 21,
+    "reachOutward": 27,
+    "runProcesses": 4
   },
   "duplicateMethodPaths": [
     "GET /",
     "GET /home",
     "GET /login"
+  ],
+  "groups": [
+    {
+      "name": "Adobe and video generation",
+      "purpose": "Drives Adobe Firefly and the video-generation pipeline, including cancelling work already in flight and polling what is still running.",
+      "routes": 14,
+      "documented": 3,
+      "files": [
+        "src/server/ApiManagers/FireflyManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": true,
+      "reachesOutward": true,
+      "runsProcesses": false
+    },
+    {
+      "name": "Assistant and ingestion",
+      "purpose": "Everything the assistant needs to turn outside material into Dash documents: capturing pages, chunking and formatting text, and creating the documents.",
+      "routes": 17,
+      "documented": 17,
+      "files": [
+        "src/server/ApiManagers/AssistantManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": true,
+      "reachesOutward": true,
+      "runsProcesses": true
+    },
+    {
+      "name": "Authentication and assets",
+      "purpose": "Signup, login, logout, and password reset, plus the script bundle and stylesheet the browser needs before any of that can run.",
+      "routes": 18,
+      "documented": 5,
+      "files": [
+        "src/server/server_Initialization.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": true,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Data and visualization",
+      "purpose": "Supplies tabular data to the visualization documents.",
+      "routes": 1,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/DataVizManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Deletion utilities",
+      "purpose": "Destructive operator routes that drop database contents, uploaded files, or both. Admin-gated in a release build.",
+      "routes": 2,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/DeleteManager.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesFilesystem": true,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Dynamic agent tools",
+      "purpose": "Stores and serves the agent tools that are defined at runtime rather than compiled into the client.",
+      "routes": 3,
+      "documented": 1,
+      "files": [
+        "src/server/api/dynamicTools.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": true,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Flashcard labeling",
+      "purpose": "Labels flashcard content for the study features.",
+      "routes": 1,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/FlashcardManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": true,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Google services",
+      "purpose": "Proxies Google Docs and Google Tasks so the credentials stay on the server rather than in the browser.",
+      "routes": 9,
+      "documented": 5,
+      "files": [
+        "src/server/ApiManagers/GeneralGoogleManager.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Model services",
+      "purpose": "The general model endpoints: completion, embedding, image description, and the smaller model-backed helpers.",
+      "routes": 7,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/GPTManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": false,
+      "reachesOutward": true,
+      "runsProcesses": false
+    },
+    {
+      "name": "Monitored-session operations",
+      "purpose": "Operator controls for a running server session, keyed by a session key rather than by a user: backup, debug output, and session teardown.",
+      "routes": 5,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/SessionManager.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Repository utilities",
+      "purpose": "Reports the running version and pulls the repository, which is how a deployment is updated in place.",
+      "routes": 2,
+      "documented": 1,
+      "files": [
+        "src/server/ApiManagers/UtilManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": true
+    },
+    {
+      "name": "Shell and diagnostics",
+      "purpose": "Serves the application shell itself and the operator-facing pages around it: the root document, the admin surface, and per-document entry points.",
+      "routes": 9,
+      "documented": 2,
+      "files": [
+        "src/server/index.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Uploads and media",
+      "purpose": "Accepts files into the server, inspects and transcodes media, and answers whether the server is reachable.",
+      "routes": 10,
+      "documented": 1,
+      "files": [
+        "src/server/ApiManagers/UploadManager.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesFilesystem": true,
+      "reachesOutward": true,
+      "runsProcesses": false
+    },
+    {
+      "name": "User and activity",
+      "purpose": "Reads about the current user and the workspace state attached to them, including the identifiers a client needs before it can resolve sharing and links.",
+      "routes": 8,
+      "documented": 0,
+      "files": [
+        "src/server/ApiManagers/UserManager.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    },
+    {
+      "name": "Video stitching",
+      "purpose": "Submits, tracks, and health-checks the video stitching jobs that run outside the request that started them.",
+      "routes": 3,
+      "documented": 3,
+      "files": [
+        "src/server/ApiManagers/VideoStitcherManager.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesFilesystem": false,
+      "reachesOutward": false,
+      "runsProcesses": false
+    }
   ],
   "routes": [
     {
@@ -36,6 +245,15 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "Accessing root index redirects to home",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 119,
@@ -52,6 +270,17 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "Root redirects",
+      "calls": [
+        "User"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 567,
@@ -68,6 +297,24 @@
       "responses": [
         "render"
       ],
+      "docComment": "",
+      "calls": [
+        "Array.from",
+        "Date.now",
+        "Object.prototype.hasOwnProperty.call",
+        "find",
+        "inactiveTimes",
+        "msToTime",
+        "process",
+        "target.sort"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 145,
@@ -85,6 +332,15 @@
         "redirect",
         "render"
       ],
+      "docComment": "Serves a simple password input box for any",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 161,
@@ -108,6 +364,18 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "AdminPrivileges.set",
+        "replace"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 172,
@@ -125,6 +393,20 @@
         "permissionDenied",
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "_permissionDenied",
+        "handler",
+        "sessionAgent.serverWorker.emit",
+        "this.authorizedAction"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/SessionManager.ts",
         "line": 46,
@@ -142,6 +424,22 @@
         "status",
         "type"
       ],
+      "docComment": "",
+      "calls": [
+        "fs.existsSync",
+        "send",
+        "sendFile",
+        "slog",
+        "slogError",
+        "toISOString"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 612,
@@ -164,6 +462,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_invalid",
+        "_success",
+        "altResponse.json",
+        "altResponse.text",
+        "bearerResponse.json",
+        "cancelResponse.json",
+        "cancelResponse.text",
+        "cancelled",
+        "encodeURIComponent",
+        "fetch",
+        "found",
+        "this.activeRequests.get",
+        "this.cancelUrls.get",
+        "this.cancelVideoGeneration"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2173,
@@ -186,6 +508,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_invalid",
+        "_success",
+        "altResponse.json",
+        "altResponse.text",
+        "bearerResponse.json",
+        "cancelResponse.json",
+        "cancelResponse.text",
+        "cancelled",
+        "encodeURIComponent",
+        "fetch",
+        "this.activeRequests.get",
+        "this.cancelUrls.get",
+        "this.cancelVideoGeneration",
+        "this.cancelledJobs.add"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2448,
@@ -210,6 +556,30 @@
         "json",
         "status"
       ],
+      "docComment": "Register an API route to capture a screenshot of a webpage using Puppeteer and return the image URL for display in the WebBox component",
+      "calls": [
+        "Date.now",
+        "Promise",
+        "browser.close",
+        "browser.newPage",
+        "page.evaluate",
+        "page.goto",
+        "page.on",
+        "page.screenshot",
+        "page.setRequestInterception",
+        "page.setViewport",
+        "puppeteer.launch",
+        "request.abort",
+        "request.continue",
+        "request.resourceType"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 864,
@@ -231,6 +601,19 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_invalid",
+        "_success",
+        "completed"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2424,
@@ -247,6 +630,18 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.concatVideos",
+        "_success"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 31,
@@ -269,6 +664,25 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to create and save a CSV file on the server Writes the CSV content to a unique file and provides a URL for download",
+      "calls": [
+        "clientPathToFile",
+        "data",
+        "fetchWithRetry",
+        "path.normalize",
+        "promisify",
+        "send",
+        "serverPathToFile",
+        "v4",
+        "writeFileAsync"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 825,
@@ -291,6 +705,30 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to create a document and start a background job for processing Uses Python scripts to process files and generate document chunks for further use",
+      "calls": [
+        "createVenvProcess.on",
+        "fs.existsSync",
+        "fs.readFileSync",
+        "installRequirementsProcess.on",
+        "installRequirementsProcess.stderr.on",
+        "installRequirementsProcess.stdout.on",
+        "line.substring",
+        "lines.pop",
+        "path.basename",
+        "pathToDirectory",
+        "pythonProcess.on",
+        "pythonProcess.stderr.on",
+        "pythonProcess.stdout.on",
+        "runPythonScript"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": true,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 695,
@@ -307,6 +745,17 @@
       "responses": [
         "type"
       ],
+      "docComment": "4. Fallback Routes & Redirects",
+      "calls": [
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 649,
@@ -327,6 +776,22 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "csvParser",
+        "csvToString",
+        "path.basename",
+        "resolve",
+        "serverPathToFile"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/DataVizManager.ts",
         "line": 9,
@@ -343,6 +808,17 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 23,
@@ -360,6 +836,21 @@
         "permissionDenied",
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "_permissionDenied",
+        "compressed",
+        "handler",
+        "sessionAgent.serverWorker.emit",
+        "this.authorizedAction"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/SessionManager.ts",
         "line": 27,
@@ -377,6 +868,21 @@
         "permissionDenied",
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "_permissionDenied",
+        "compressed",
+        "handler",
+        "sessionAgent.serverWorker.emit",
+        "this.authorizedAction"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/SessionManager.ts",
         "line": 36,
@@ -393,6 +899,17 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "WebSocket.doDelete"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/DeleteManager.ts",
         "line": 13,
@@ -413,6 +930,21 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.buildFileDirectories",
+        "Database.Instance.dropSchema",
+        "WebSocket.doDelete",
+        "mkdirSync",
+        "rimraf.sync"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/DeleteManager.ts",
         "line": 22,
@@ -430,6 +962,20 @@
         "permissionDenied",
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "_permissionDenied",
+        "handler",
+        "sessionAgent.serverWorker.emit",
+        "this.authorizedAction"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/SessionManager.ts",
         "line": 64,
@@ -451,6 +997,20 @@
         "redirect",
         "sendFile"
       ],
+      "docComment": "",
+      "calls": [
+        "MobileDetect",
+        "detector.mobile",
+        "import",
+        "serveHome"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 194,
@@ -475,6 +1035,30 @@
         "json",
         "status"
       ],
+      "docComment": "Video download and save endpoint for video persistence",
+      "calls": [
+        "Promise",
+        "URL",
+        "axios",
+        "clientPathToFile",
+        "directory",
+        "filename.replace",
+        "fs.createWriteStream",
+        "fs.existsSync",
+        "fs.mkdirSync",
+        "json",
+        "json.getData",
+        "path.extname",
+        "pathToDirectory",
+        "resolve"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": true,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 328,
@@ -498,6 +1082,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Object.defineProperty",
+        "Promise",
+        "_invalid",
+        "_success",
+        "attemptExtraction",
+        "browser.close",
+        "browser.defaultBrowserContext",
+        "browser.newPage",
+        "canvas.getContext",
+        "canvas.toDataURL",
+        "clearTimeout",
+        "content",
+        "contentRatio.toFixed",
+        "context.overridePermissions"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2226,
@@ -514,6 +1122,15 @@
       "responses": [
         "render"
       ],
+      "docComment": "",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 503,
@@ -537,6 +1154,26 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "Date.now",
+        "User.findOne",
+        "async.waterfall",
+        "c.randomBytes",
+        "done",
+        "next",
+        "nodemailer.createTransport",
+        "smtpTransport.sendMail",
+        "user.save",
+        "you"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 504,
@@ -557,6 +1194,20 @@
       "responses": [
         "send"
       ],
+      "docComment": "Register an API route to format chunks of text or images for structured display Converts raw chunk data into a structured format for frontend consumption",
+      "calls": [
+        "path.normalize",
+        "pathToDirectory",
+        "promisify",
+        "readFileAsync"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 769,
@@ -578,6 +1229,21 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to generate an image using OpenAI's DALL-E model Uploads the generated image to the server and provides a URL for access",
+      "calls": [
+        "DashUploadUtils.UploadImage",
+        "OpenAI",
+        "fetchWithRetry",
+        "openai.images.generate",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 559,
@@ -608,6 +1274,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "Adobe Firefly Video Generation API endpoints",
+      "calls": [
+        "Buffer.from",
+        "CRF",
+        "KEYFRAME",
+        "URL",
+        "_invalid",
+        "_success",
+        "auto",
+        "clientId.substring",
+        "fetch",
+        "frame",
+        "image",
+        "issues",
+        "json",
+        "monitorUrl.match"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2398,
@@ -624,6 +1314,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "Utils.GuestID"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 72,
@@ -645,6 +1346,20 @@
         "json",
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "fs.existsSync",
+        "fs.readFileSync",
+        "getDynamicTool",
+        "json"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/api/dynamicTools.ts",
         "line": 129,
@@ -662,6 +1377,20 @@
         "json",
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "getDynamicTools",
+        "json",
+        "path.basename",
+        "readdirSync"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/api/dynamicTools.ts",
         "line": 128,
@@ -683,6 +1412,20 @@
         "send",
         "status"
       ],
+      "docComment": "Register an endpoint to retrieve file content from the content json file",
+      "calls": [
+        "fs.createReadStream",
+        "fs.existsSync",
+        "readStream.on",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 139,
@@ -699,6 +1442,18 @@
       "responses": [
         "send"
       ],
+      "docComment": "Register an endpoint to retrieve file names from the file_summaries.json file",
+      "calls": [
+        "fetchWithRetry",
+        "fs.readFileSync"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 126,
@@ -716,6 +1471,20 @@
         "send",
         "status"
       ],
+      "docComment": "Register an endpoint to retrieve file summaries from the json file",
+      "calls": [
+        "fetchWithRetry",
+        "fs.existsSync",
+        "fs.readFileSync",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 101,
@@ -732,6 +1501,15 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 65,
@@ -752,6 +1530,17 @@
       "responses": [
         "json"
       ],
+      "docComment": "Register an API route to check the progress of a document creation job Returns the current step and progress percentage",
+      "calls": [
+        "v4"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 726,
@@ -773,6 +1562,20 @@
         "send",
         "status"
       ],
+      "docComment": "Register an endpoint to retrieve raw file content as plain text (no JSON parsing)",
+      "calls": [
+        "fs.createReadStream",
+        "fs.existsSync",
+        "readStream.on",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 985,
@@ -794,6 +1597,18 @@
         "json",
         "status"
       ],
+      "docComment": "Register an API route to retrieve the final result of a document creation job Returns the processed data or an error status if the job is incomplete",
+      "calls": [
+        "send",
+        "v4"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 746,
@@ -810,6 +1625,15 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 58,
@@ -826,6 +1650,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "Utils.GuestID"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 51,
@@ -842,6 +1677,18 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "Database.Instance.query",
+        "cursor.toArray"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 19,
@@ -864,6 +1711,26 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to retrieve web search results using Google Custom Search This route filters results by checking their x-frame-options headers for security purposes",
+      "calls": [
+        "axios.head",
+        "axiosInstance.get",
+        "customsearch.cse.list",
+        "fetchSearchResults",
+        "fetchWithRetry",
+        "filterResultsByXFrameOptions",
+        "google.customsearch",
+        "send",
+        "validResults.slice",
+        "xFrameOptions.toUpperCase"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 255,
@@ -885,6 +1752,20 @@
         "send",
         "status"
       ],
+      "docComment": "Register Wikipedia summary API route",
+      "calls": [
+        "axios.get",
+        "axiosInstance.get",
+        "fetchWithRetry",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 227,
@@ -906,6 +1787,22 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "EndpointHandlerMap.get",
+        "GoogleApiServerUtils.GetEndpoint",
+        "api.batchUpdate",
+        "api.create",
+        "api.get",
+        "handler"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 45,
@@ -931,6 +1828,21 @@
       "responses": [
         "status"
       ],
+      "docComment": "Task Creation",
+      "calls": [
+        "GoogleApiServerUtils.retrieveOAuthClient",
+        "google.tasks",
+        "send",
+        "tasks.tasks.get",
+        "tasks.tasks.insert"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 67,
@@ -951,6 +1863,19 @@
       "responses": [
         "status"
       ],
+      "docComment": "Task Deletion",
+      "calls": [
+        "GoogleApiServerUtils.retrieveOAuthClient",
+        "google.tasks",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 127,
@@ -971,6 +1896,20 @@
       "responses": [
         "status"
       ],
+      "docComment": "Task Retrieval",
+      "calls": [
+        "GoogleApiServerUtils.retrieveOAuthClient",
+        "google.tasks",
+        "send",
+        "tasks.tasks.get"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 172,
@@ -999,6 +1938,21 @@
       "responses": [
         "status"
       ],
+      "docComment": "Task Update",
+      "calls": [
+        "GoogleApiServerUtils.retrieveOAuthClient",
+        "google.tasks",
+        "send",
+        "tasks.tasks.get",
+        "tasks.tasks.patch"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 95,
@@ -1021,6 +1975,19 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "create",
+        "this.gptAPICall"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 463,
@@ -1044,6 +2011,20 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "this.gptDescribeImage",
+        "this.imageUrlToBase64",
+        "this.openai.chat.completions.create"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 488,
@@ -1065,6 +2046,20 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "this.gptDrawingColor",
+        "this.imageUrlToBase64",
+        "this.openai.chat.completions.create"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 493,
@@ -1085,6 +2080,19 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "this.gptGetEmbedding",
+        "this.openai.embeddings.create"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 473,
@@ -1105,6 +2113,19 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "this.gptHandwriting",
+        "this.openai.chat.completions.create"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 483,
@@ -1126,6 +2147,19 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "generate",
+        "this.gptImageCall"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 468,
@@ -1147,6 +2181,19 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "_success",
+        "this.gptImageLabel",
+        "this.openai.chat.completions.create"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/GPTManager.ts",
         "line": 478,
@@ -1168,6 +2215,20 @@
         "redirect",
         "sendFile"
       ],
+      "docComment": "",
+      "calls": [
+        "MobileDetect",
+        "detector.mobile",
+        "import",
+        "serveHome"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 194,
@@ -1184,6 +2245,17 @@
       "responses": [
         "sendFile"
       ],
+      "docComment": "This ensures that if the user is at /home, they still get the React app shell",
+      "calls": [
+        "dirname"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 687,
@@ -1204,6 +2276,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.InspectImage"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 249,
@@ -1225,6 +2308,24 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "array",
+        "bcrypt.compare",
+        "check",
+        "equals",
+        "len",
+        "resolve",
+        "run",
+        "validationResult"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 90,
@@ -1242,6 +2343,20 @@
         "permissionDenied",
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "_permissionDenied",
+        "handler",
+        "sessionAgent.killSession",
+        "this.authorizedAction"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/SessionManager.ts",
         "line": 55,
@@ -1264,6 +2379,22 @@
       "responses": [
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "createVirtualEnvironment",
+        "fs.existsSync",
+        "installDependencies",
+        "manageVenvAndRunScript",
+        "runPythonScript",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/FlashcardManager.ts",
         "line": 147,
@@ -1281,6 +2412,17 @@
         "redirect",
         "render"
       ],
+      "docComment": "",
+      "calls": [
+        "getLogin"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 498,
@@ -1297,6 +2439,17 @@
       "responses": [
         "sendFile"
       ],
+      "docComment": "This ensures that if the user is at /home, they still get the React app shell",
+      "calls": [
+        "dirname"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 687,
@@ -1318,6 +2471,29 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "User.findOne",
+        "array",
+        "check",
+        "initializeGuest",
+        "isEmail",
+        "next",
+        "normalizeEmail",
+        "notEmpty",
+        "passport.authenticate",
+        "postLogin",
+        "run",
+        "setTimeout",
+        "validationResult"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 499,
@@ -1334,6 +2510,17 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "getLogout"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 501,
@@ -1361,6 +2548,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.UploadImage",
+        "Dropbox",
+        "_error",
+        "_invalid",
+        "_success",
+        "b",
+        "characters",
+        "content",
+        "fetch",
+        "fs.readFile",
+        "json",
+        "normalizedPrompt.substring",
+        "path.basename",
+        "pattern.test"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2041,
@@ -1382,6 +2593,30 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to process a media file (audio or video) Extracts audio from video files, transcribes the audio using OpenAI Whisper, and provides a summary",
+      "calls": [
+        "OpenAI",
+        "Promise",
+        "combinedSegments.pop",
+        "convertVideoToAudio",
+        "ffmpegProcess.on",
+        "fs.createReadStream",
+        "fs.existsSync",
+        "openai.audio.transcriptions.create",
+        "openai.chat.completions.create",
+        "path.basename",
+        "path.extname",
+        "path.normalize",
+        "pathToDirectory",
+        "reject"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": true,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 383,
@@ -1403,6 +2638,20 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to fetch data from a URL using a proxy with retry logic Useful for bypassing rate limits or scraping inaccessible data",
+      "calls": [
+        "axiosInstance.get",
+        "delay",
+        "fetchWithRetry",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 588,
@@ -1420,6 +2669,18 @@
         "redirect",
         "send"
       ],
+      "docComment": "register({ method: Method.POST, subscription: \"/IBMAnalysis\", secureHandler: async ({ req, res }) => res.send(await IBM_Recommender.analyze(req.body)) }); register({ method: Method.POST, subscription: \"/recommender\", secureHandler: async ({ req, res }) => { const keyphrases = req.body.keyphrases; const wordvecs = await recommender.vectorize(keyphrases); let embedding: Float32Array = new Float32Array(); if (wordvecs && wordvecs.dataSync()) { embedding = wordvecs.dataSync() as Float32Array; } res.send(embedding); } });",
+      "calls": [
+        "exec",
+        "resolve"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": true,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UtilManager.ts",
         "line": 33,
@@ -1444,6 +2705,26 @@
         "invalid",
         "success"
       ],
+      "docComment": "register({ method: Method.POST subscription: '/queryFireflyOutpaint', secureHandler: ({req, res}) => this.outpaintImage() })",
+      "calls": [
+        "DashUploadUtils.UploadImage",
+        "Promise.resolve",
+        "_invalid",
+        "_success",
+        "fetch",
+        "json",
+        "response2.json",
+        "this.generateImage",
+        "this.getBearerToken",
+        "this.validatePromptSafety"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2130,
@@ -1461,6 +2742,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Dropbox",
+        "IncomingForm",
+        "Promise.resolve",
+        "_invalid",
+        "_success",
+        "fetch",
+        "filesGetTemporaryLink",
+        "filesUpload",
+        "form.parse",
+        "fs.readFileSync",
+        "json",
+        "path.basename",
+        "pathToDirectory",
+        "resolve"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2019,
@@ -1488,6 +2793,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.UploadImage",
+        "Dropbox",
+        "Promise.resolve",
+        "_invalid",
+        "_success",
+        "dashImages.every",
+        "fetch",
+        "fs.readFile",
+        "json",
+        "path.basename",
+        "reject",
+        "resolve",
+        "resolver",
+        "response2.json"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 1984,
@@ -1508,6 +2837,30 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Boundary",
+        "Buffer.from",
+        "FormData",
+        "_success",
+        "arrayBuffer",
+        "fetch",
+        "form.set",
+        "json",
+        "json.blob",
+        "match",
+        "parse",
+        "reduce",
+        "response2.headers.get",
+        "response2.json"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2259,
@@ -1535,6 +2888,30 @@
         "invalid",
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Buffer.from",
+        "CRF",
+        "KEYFRAME",
+        "URL",
+        "_invalid",
+        "_success",
+        "auto",
+        "clientId.substring",
+        "fetch",
+        "frame",
+        "image",
+        "issues",
+        "json",
+        "monitorUrl.match"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2144,
@@ -1555,6 +2932,25 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Date.now",
+        "_success",
+        "fetch",
+        "statusResponse.json",
+        "this.checkVideoStatus",
+        "this.getBearerToken",
+        "this.videoCache.get",
+        "tokenResponse.json",
+        "valid"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": true
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2167,
@@ -1575,6 +2971,20 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.QueryYoutubeProgress",
+        "String.fromCharCode",
+        "_success",
+        "apply"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 115,
@@ -1591,6 +3001,18 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "GoogleApiServerUtils.generateAuthenticationUrl",
+        "GoogleApiServerUtils.retrieveCredentials"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 16,
@@ -1611,6 +3033,23 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "URLSearchParams",
+        "_success",
+        "axios",
+        "post",
+        "setTimeout",
+        "this.refreshDropboxToken",
+        "token"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": true,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2363,
@@ -1631,6 +3070,18 @@
       "responses": [
         "status"
       ],
+      "docComment": "Google Account Linking",
+      "calls": [
+        "GoogleApiServerUtils.processNewUser",
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 156,
@@ -1652,6 +3103,18 @@
         "redirect",
         "render"
       ],
+      "docComment": "",
+      "calls": [
+        "Date.now",
+        "User.findOne"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 507,
@@ -1675,6 +3138,30 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "Date.now",
+        "User.findOne",
+        "any",
+        "array",
+        "async.waterfall",
+        "check",
+        "done",
+        "equals",
+        "isLength",
+        "nodemailer.createTransport",
+        "run",
+        "smtpTransport.sendMail",
+        "user.save",
+        "validationResult"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 508,
@@ -1691,6 +3178,15 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 143,
@@ -1707,6 +3203,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "Database.Auxiliary.GoogleAccessToken.Revoke"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 36,
@@ -1729,6 +3236,23 @@
         "json",
         "status"
       ],
+      "docComment": "Register routes",
+      "calls": [
+        "fs.existsSync",
+        "fs.readFileSync",
+        "fs.writeFileSync",
+        "json",
+        "name",
+        "saveDynamicTool",
+        "test"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/api/dynamicTools.ts",
         "line": 127,
@@ -1750,6 +3274,30 @@
         "send",
         "status"
       ],
+      "docComment": "Register an API route to scrape website content using Puppeteer and JSDOM Extracts and returns readable content from a given URL",
+      "calls": [
+        "Array.from",
+        "JSDOM",
+        "Promise",
+        "Readability",
+        "browser.close",
+        "browser.newPage",
+        "cleanupText",
+        "document.querySelectorAll",
+        "el.remove",
+        "extractEnhancedContent",
+        "page.content",
+        "page.goto",
+        "page.setDefaultNavigationTimeout",
+        "page.setUserAgent"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 613,
@@ -1771,6 +3319,17 @@
         "send",
         "status"
       ],
+      "docComment": "Register an endpoint to search file summaries",
+      "calls": [
+        "send"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/AssistantManager.ts",
         "line": 208,
@@ -1787,6 +3346,15 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 125,
@@ -1807,6 +3375,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "Database.Instance.update"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UserManager.ts",
         "line": 30,
@@ -1824,6 +3403,17 @@
         "redirect",
         "render"
       ],
+      "docComment": "",
+      "calls": [
+        "getSignup"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 495,
@@ -1845,6 +3435,30 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "User",
+        "User.findOne",
+        "Utils.GenerateGuid",
+        "Utils.GuestID",
+        "array",
+        "check",
+        "equals",
+        "isEmail",
+        "isLength",
+        "next",
+        "normalizeEmail",
+        "postSignup",
+        "run",
+        "user.save"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 496,
@@ -1859,6 +3473,17 @@
       "access": "session",
       "inputs": {},
       "responses": [],
+      "docComment": "",
+      "calls": [
+        "DashStats.handleStats"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 131,
@@ -1873,6 +3498,17 @@
       "access": "session",
       "inputs": {},
       "responses": [],
+      "docComment": "",
+      "calls": [
+        "DashStats.handleStatsView"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/index.ts",
         "line": 137,
@@ -1894,6 +3530,18 @@
         "error",
         "success"
       ],
+      "docComment": "GET /api/stitchstatus/:jobId - Check stitching job status (for future use)",
+      "calls": [
+        "_error",
+        "_success"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/VideoStitcherManager.ts",
         "line": 73,
@@ -1918,6 +3566,20 @@
         "error",
         "success"
       ],
+      "docComment": "POST /api/stitchvideos - Stitch two videos together",
+      "calls": [
+        "VideoStitcher.checkFFmpegAvailable",
+        "VideoStitcher.stitchVideos",
+        "_error",
+        "_success"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/VideoStitcherManager.ts",
         "line": 26,
@@ -1934,6 +3596,18 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "If the frontend is stubborn and asks for the root, send it the right file anyway",
+      "calls": [
+        "slog",
+        "toISOString"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 599,
@@ -1954,6 +3628,30 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "AdmZip",
+        "Database.Instance.replace",
+        "IncomingForm",
+        "Object.prototype.hasOwnProperty.call",
+        "basefilename.replace",
+        "dbRes",
+        "entry.entryName.replace",
+        "field.Data.replace",
+        "field.replace",
+        "form.parse",
+        "getId",
+        "json.getData",
+        "mapFn",
+        "path.extname"
+      ],
+      "effects": {
+        "database": true,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 141,
@@ -1975,6 +3673,28 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "Array.from",
+        "DashUploadUtils.upload",
+        "DashUploadUtils.uploadProgress.set",
+        "DashUploadUtils.uploadYoutube",
+        "IncomingForm",
+        "_success",
+        "fixNewFilename",
+        "form.on",
+        "form.parse",
+        "path.extname",
+        "pathToDirectory",
+        "resolve"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 40,
@@ -1997,6 +3717,29 @@
         "invalid",
         "success"
       ],
+      "docComment": "construct this url and send user to it.  It will allow them to authorize their dropbox account and will send the resulting token to our endpoint /refreshDropbox https://www.dropbox.com/oauth2/authorize?client_id=DROPBOX_CLIENT_ID&response_type=code&token_access_type=offline&redirect_uri=http://localhost:1050/refreshDropbox see: https://dropbox.tech/developers/using-oauth-2-0-with-offline-access",
+      "calls": [
+        "Buffer.from",
+        "DashUploadUtils",
+        "DashUploadUtils.UploadImage",
+        "Dropbox",
+        "_invalid",
+        "_success",
+        "data",
+        "fs.readFile",
+        "path.basename",
+        "reject",
+        "resolve",
+        "this.uploadImageToDropbox",
+        "this.uploadToDropbox"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/FireflyManager.ts",
         "line": 2276,
@@ -2017,6 +3760,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.UploadImage"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 127,
@@ -2041,6 +3795,30 @@
         "send",
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "Buffer.concat",
+        "Buffer.from",
+        "InjectSize",
+        "RegExp",
+        "URL",
+        "axios",
+        "clientPathToFile",
+        "finalize",
+        "json",
+        "on",
+        "path.basename",
+        "path.extname",
+        "readdirSync",
+        "regex.test"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": true,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 260,
@@ -2062,6 +3840,20 @@
       "responses": [
         "success"
       ],
+      "docComment": "",
+      "calls": [
+        "DashUploadUtils.uploadYoutube",
+        "String.fromCharCode",
+        "_success",
+        "apply"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UploadManager.ts",
         "line": 99,
@@ -2078,6 +3870,18 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "exec",
+        "resolve"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": true,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/UtilManager.ts",
         "line": 49,
@@ -2095,6 +3899,19 @@
         "error",
         "success"
       ],
+      "docComment": "GET /api/videohealth - Health check endpoint",
+      "calls": [
+        "VideoStitcher.checkFFmpegAvailable",
+        "_error",
+        "_success"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/VideoStitcherManager.ts",
         "line": 97,
@@ -2115,6 +3932,17 @@
       "responses": [
         "send"
       ],
+      "docComment": "",
+      "calls": [
+        "GoogleApiServerUtils.processNewUser"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/ApiManagers/GeneralGoogleManager.ts",
         "line": 28,
@@ -2132,6 +3960,20 @@
         "sendFile",
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "fs.existsSync",
+        "send",
+        "slog",
+        "toISOString"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": true,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 702,
@@ -2148,6 +3990,19 @@
       "responses": [
         "status"
       ],
+      "docComment": "",
+      "calls": [
+        "send",
+        "slog",
+        "toISOString"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 692,
@@ -2164,6 +4019,17 @@
       "responses": [
         "redirect"
       ],
+      "docComment": "",
+      "calls": [
+        "User"
+      ],
+      "effects": {
+        "database": false,
+        "filesystem": false,
+        "network": false,
+        "process": false,
+        "externalModel": false
+      },
       "source": {
         "file": "src/server/server_Initialization.ts",
         "line": 568,

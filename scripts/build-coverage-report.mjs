@@ -150,12 +150,12 @@ const surfaces = [
     dataset: 'http-routes.json',
     records: 'routes',
     label: 'path',
-    explanation: null,
-    explanationSource: 'nobody yet',
-    behaviour: (row) => Boolean(row.inputs?.length || row.responses?.length),
-    behaviourName: 'inputs or responses recovered',
+    explanation: 'docComment',
+    explanationSource: 'Dash-Web, as a comment above the registration',
+    behaviour: (row) => Boolean(row.calls?.length),
+    behaviourName: 'handler calls recovered',
     page: '/reference/http-service-interface/',
-    note: 'This dataset carries no explanation field at all. Every route is classified by method, registration layer, and access path, and none of them says what it is for.',
+    note: 'Every route belongs to a family whose purpose is explained on the reference page, and every route now carries its recovered calls and the effects they imply. What is counted here is narrower: whether whoever wrote the route left a comment saying what it is for.',
   },
 ];
 

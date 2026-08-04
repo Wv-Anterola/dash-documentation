@@ -26,6 +26,34 @@ const inputText = (inputs: Record<string, string[] | undefined>) => {
     <div><strong>{reference.summary.supervised}</strong><span>RouteManager-supervised</span></div>
     <div><strong>{reference.summary.direct}</strong><span>direct Express</span></div>
     <div><strong>{groups.length}</strong><span>service groups</span></div>
+    <div><strong>{reference.summary.documented}</strong><span>carry a source comment</span></div>
+    <div><strong>{reference.summary.reachOutward}</strong><span>reach outside the server</span></div>
+  </div>
+
+  <div class="http-route-families">
+    <h3 id="what-each-family-is-for">What each family is for</h3>
+    <p>
+      Written per file rather than per route. A route's own comment, where its
+      author left one, appears with the route in the table below.
+    </p>
+    <dl class="http-route-family-list">
+      {reference.groups.map((family) => (
+        <div id={`family-${family.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+          <dt>{family.name} <span class="http-route-family-count">{family.routes} routes</span></dt>
+          <dd>
+            <p>{family.purpose}</p>
+            <p class="http-route-family-effects">
+              {[
+                family.touchesDatabase ? 'touches the database' : '',
+                family.touchesFilesystem ? 'writes or reads files' : '',
+                family.reachesOutward ? 'reaches outside the server' : '',
+                family.runsProcesses ? 'runs a subprocess' : '',
+              ].filter(Boolean).join(' · ') || 'no database, file, network, or subprocess contact observed'}
+            </p>
+          </dd>
+        </div>
+      ))}
+    </dl>
   </div>
 
   <div class="http-route-filters" aria-label="Filter HTTP routes">
@@ -66,6 +94,7 @@ const inputText = (inputs: Record<string, string[] | undefined>) => {
           <th scope="col">Method and path</th>
           <th scope="col">Service</th>
           <th scope="col">Access path</th>
+          <th scope="col">What its author said it does</th>
           <th scope="col">Observed inputs</th>
           <th scope="col">Response operations</th>
           <th scope="col">Source</th>
@@ -78,7 +107,7 @@ const inputText = (inputs: Record<string, string[] | undefined>) => {
             data-method={route.method}
             data-group={route.group}
             data-access={route.access}
-            data-search={`${route.method} ${route.path} ${route.group} ${route.access} ${inputText(route.inputs)} ${route.responses.join(' ')}`.toLowerCase()}
+            data-search={`${route.method} ${route.path} ${route.group} ${route.access} ${route.docComment} ${route.calls.join(' ')} ${inputText(route.inputs)} ${route.responses.join(' ')}`.toLowerCase()}
           >
             <th scope="row">
               <span class={`http-method http-method--${route.method.toLowerCase()}`}>{route.method}</span>
@@ -88,6 +117,23 @@ const inputText = (inputs: Record<string, string[] | undefined>) => {
             <td>
               <span class={`http-access http-access--${route.access}`}>{accessLabels[route.access]}</span>
               <small>{route.layer === 'supervised' ? 'RouteManager' : 'Express'}</small>
+            </td>
+            <td>
+              {route.docComment
+                ? <span class="http-route-comment">{route.docComment}</span>
+                : <span class="http-route-comment http-route-comment--absent">Undocumented at the registration</span>}
+              {route.calls.length > 0 && (
+                <p class="http-route-calls">Calls: {route.calls.slice(0, 5).map((call, index) => <>{index ? ', ' : ''}<code>{call}</code></>)}</p>
+              )}
+              <p class="http-route-effects">
+                {[
+                  route.effects.database ? 'database' : '',
+                  route.effects.filesystem ? 'files' : '',
+                  route.effects.network ? 'network' : '',
+                  route.effects.externalModel ? 'external model' : '',
+                  route.effects.process ? 'subprocess' : '',
+                ].filter(Boolean).join(' · ') || 'no observed side effects'}
+              </p>
             </td>
             <td>{inputText(route.inputs)}</td>
             <td>{route.responses.length ? route.responses.map((response) => <code>{response}</code>) : 'No response call statically observed'}</td>

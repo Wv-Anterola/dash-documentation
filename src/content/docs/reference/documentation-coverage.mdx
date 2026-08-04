@@ -45,13 +45,23 @@ the person writing a script. A missing one is a gap in the product before it is
 a gap here: the parsed calls and field writes below each entry are this site
 reconstructing what the registration should have said.
 
-**HTTP routes** have no explanation field at all. Every route is classified by
-method, registration layer, and access path, which answers "is this supervised"
-and "can an unauthenticated caller reach it" but never answers "what is it
-for". That is the honest state of it, and inventing prose to close the column
-would be worse than leaving it open.
+**HTTP routes** used to score zero here, because the dataset had no
+explanation field at all. It has one now, and the number moved without anyone
+writing a word of new prose: roughly a third of the registrations in Dash-Web
+already carried a comment saying what the route was for, and the generator now
+recovers it instead of leaving it in the file. The rest genuinely have none.
 
-Neither is presented as finished. Both are more useful stated than hidden.
+That is deliberately a narrow measure. Every route also belongs to a family
+whose purpose is explained on the [HTTP service
+interface](/reference/http-service-interface/) page, and every route now
+carries its recovered calls and the effects they imply. The family purpose is
+written per file rather than per route, because a file with one job is a claim
+a reader can check, while a hundred invented per-route sentences would be a
+hundred chances to be confidently wrong about code nobody documented. Counting
+the family purpose once per route would have moved this column to 100 percent
+and meant nothing.
+
+Neither gap is presented as finished. Both are more useful stated than hidden.
 
 ## Why publish this
 

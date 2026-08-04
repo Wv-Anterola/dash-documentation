@@ -2794,6 +2794,60 @@
 }
 
 /* ------------------------------------------------------------------ *
+ * HTTP route families and per-route evidence
+ * ------------------------------------------------------------------ */
+
+.http-route-families {
+  margin-block: var(--dash-space-4);
+}
+
+.http-route-family-list {
+  display: grid;
+  gap: var(--dash-space-2);
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  margin-block: var(--dash-space-3);
+}
+
+.http-route-family-list > div {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-md);
+  padding: var(--dash-space-3);
+}
+
+.sl-markdown-content .http-route-family-list dt {
+  color: var(--dash-ink);
+  font-weight: 700;
+}
+
+.sl-markdown-content .http-route-family-list dd {
+  margin: var(--dash-space-1) 0 0;
+}
+
+.sl-markdown-content .http-route-family-list p {
+  margin-block: 0 var(--dash-space-1);
+}
+
+.http-route-family-count {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  font-weight: 400;
+}
+
+.sl-markdown-content .http-route-family-effects,
+.sl-markdown-content .http-route-calls,
+.sl-markdown-content .http-route-effects {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: var(--dash-space-1) 0;
+}
+
+.http-route-comment--absent {
+  color: var(--dash-ink-soft);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------------ *
  * Documentation coverage
  * ------------------------------------------------------------------ */
 

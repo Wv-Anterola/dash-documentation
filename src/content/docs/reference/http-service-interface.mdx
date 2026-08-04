@@ -212,6 +212,30 @@ do not have to become browser authority.
 
 ## Reading the generated catalogue
 
+Three of the columns below are new, and they exist because this reference could
+previously state a route's method, inputs, and responses while never saying
+what the route was for.
+
+- **What its author said it does** is recovered from the comment above the
+  registration in Dash-Web. It is not written here. Roughly a third of the
+  registrations carry one; the rest say so plainly rather than being filled in
+  with a plausible guess.
+- **Calls** are the notable functions inside the handler, with the handler
+  expanded through helper definitions in the same file. This is what stands in
+  for a description where the author left none.
+- **Side effects** say whether the handler touches the database, reads or
+  writes files, reaches outside the server, contacts an external model, or runs
+  a subprocess. All five are classified from the handler text, so a route is
+  marked as destructive because of what it calls, not because of what its path
+  is named.
+
+The family purposes above the table are the one part of this page written by
+hand. They are written per file rather than per route deliberately: a file with
+one job is a claim you can check by opening it, and a hundred invented
+per-route sentences would be a hundred chances to be confidently wrong about
+code nobody documented. How that choice is counted is set out in [what this
+documentation does not know](/reference/documentation-coverage/).
+
 <HttpRouteReference />
 
 ### What each column proves
@@ -220,6 +244,9 @@ do not have to become browser authority.
 | :--- | :--- | :--- |
 | Method and path | Exact Express or RouteManager registration | That the route is reachable through a visible UI control |
 | Service | Owning source manager/module | A stable public product boundary |
+| What its author said it does | A comment that exists above the registration in Dash-Web | That the comment is still accurate, or that a blank means the route is simple |
+| Calls | Functions invoked in the handler, expanded through same-file helpers | The full call graph; a call reached through an interface or a dynamic dispatch may be missing |
+| Side effects | Database, file, network, external-model, and subprocess contact in the handler text | That an absent effect is impossible, only that nothing in the handler shows it |
 | Access path | Registration form and supervisor flags | Per-resource authorization or deployed global middleware behavior |
 | Observed inputs | Named reads found in the registered handler and local helper bodies | Required/optional status, type, maximum size, or semantic validation |
 | Response operations | Statically reachable `res.*` and shared helper calls | Complete status/body variants or streaming semantics |

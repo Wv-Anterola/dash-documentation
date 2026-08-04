@@ -114,6 +114,105 @@ function extractResponses(text) {
   return [...responses].sort();
 }
 
+/**
+ * The comment a developer left above a route registration.
+ *
+ * Roughly half the registrations in Dash-Web carry one, and none of it has ever
+ * reached this site: the reference could state a route's method, inputs, and
+ * responses while the one sentence explaining its purpose sat three lines above
+ * in the same file. This recovers that sentence rather than inventing one.
+ */
+function leadingComment(node, sourceFile) {
+  const full = sourceFile.getFullText();
+  // Walk out to the enclosing statement: the comment sits above `register({`,
+  // not above the object literal the caller hands this function.
+  let target = node;
+  while (target.parent && !ts.isStatement(target) && !ts.isPropertyAssignment(target)) target = target.parent;
+  const ranges = ts.getLeadingCommentRanges(full, target.pos) ?? [];
+  const text = ranges
+    .map((range) => full.slice(range.pos, range.end))
+    .join('\n')
+    .replace(/^\s*\/\*\*?/gm, '')
+    .replace(/\*\/\s*$/gm, '')
+    .replace(/^\s*\*\s?/gm, '')
+    .replace(/^\s*\/\/\s?/gm, '')
+    .replace(/^\s*eslint-disable.*$/gm, '')
+    // Tag lines describe parameters that the inputs field already lists.
+    .replace(/^\s*@\w+.*$/gm, '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  return text.length > 600 ? `${text.slice(0, 599)}...` : text;
+}
+
+const callIgnored = new Set([
+  'if', 'for', 'return', 'map', 'filter', 'forEach', 'push', 'includes', 'indexOf', 'split', 'join', 'trim',
+  'toString', 'toLowerCase', 'startsWith', 'endsWith', 'then', 'catch', 'require', 'String', 'Number', 'Boolean',
+  'JSON.stringify', 'JSON.parse', 'Object.keys', 'Object.values', 'Object.entries', 'Array.isArray', 'console.log',
+  'console.error', 'console.warn', 'Promise.all', 'Math.max', 'Math.min', 'Math.round', 'Error', 'Date',
+  // The regex matches any identifier followed by `(`, which control-flow
+  // keywords also are. They are not calls and must not read as evidence.
+  'while', 'switch', 'async', 'await', 'function', 'typeof', 'delete', 'new', 'throw', 'yield', 'super', 'void',
+  'do', 'else', 'try', 'finally', 'in', 'of', 'case', 'not',
+]);
+
+/** Notable calls inside a handler, as evidence of what the route actually does. */
+function extractCalls(text) {
+  const names = new Set();
+  for (const match of text.matchAll(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(/g)) {
+    const name = match[1];
+    const tail = name.split('.').pop() ?? name;
+    if (callIgnored.has(name) || callIgnored.has(tail)) continue;
+    if (/^(res|req)\./.test(name)) continue;
+    names.add(name);
+  }
+  return [...names].sort().slice(0, 14);
+}
+
+/**
+ * What a route touches, in the terms someone worrying about a route cares
+ * about. Derived from the handler text, so it is evidence rather than a label
+ * applied by hand.
+ */
+function classifyEffects(text) {
+  return {
+    database: /\bDatabase\.|\bmongo|dropSchema|\bWebSocket\.do/i.test(text),
+    filesystem: /\bfs\.|writeFile|readFile|mkdirSync|rimraf|createWriteStream|createReadStream|unlink/i.test(text),
+    network: /\baxios\b|\bfetch\(|node-fetch|https?\.get\(|https?\.request\(/i.test(text),
+    process: /\bexec\(|execSync|spawn\(|spawnSync|child_process/i.test(text),
+    externalModel: /openai|anthropic|\bgpt|firefly|gemini|replicate|stability/i.test(text),
+  };
+}
+
+/**
+ * Reviewed purpose for each route family.
+ *
+ * Written per group rather than per route on purpose. A group is one file with
+ * one job, which is a claim a reader can check by opening it; 109 invented
+ * per-route sentences would be 109 chances to be confidently wrong about code
+ * nobody documented. Generation fails when a group appears with no purpose, or
+ * a purpose outlives its group.
+ */
+const groupPurposes = {
+  'Shell and diagnostics': 'Serves the application shell itself and the operator-facing pages around it: the root document, the admin surface, and per-document entry points.',
+  'Authentication and assets': 'Signup, login, logout, and password reset, plus the script bundle and stylesheet the browser needs before any of that can run.',
+  'User and activity': 'Reads about the current user and the workspace state attached to them, including the identifiers a client needs before it can resolve sharing and links.',
+  'Monitored-session operations': 'Operator controls for a running server session, keyed by a session key rather than by a user: backup, debug output, and session teardown.',
+  'Adobe and video generation': 'Drives Adobe Firefly and the video-generation pipeline, including cancelling work already in flight and polling what is still running.',
+  'Assistant and ingestion': 'Everything the assistant needs to turn outside material into Dash documents: capturing pages, chunking and formatting text, and creating the documents.',
+  'Uploads and media': 'Accepts files into the server, inspects and transcodes media, and answers whether the server is reachable.',
+  'Data and visualization': 'Supplies tabular data to the visualization documents.',
+  'Deletion utilities': 'Destructive operator routes that drop database contents, uploaded files, or both. Admin-gated in a release build.',
+  'Dynamic agent tools': 'Stores and serves the agent tools that are defined at runtime rather than compiled into the client.',
+  'Google services': 'Proxies Google Docs and Google Tasks so the credentials stay on the server rather than in the browser.',
+  'Model services': 'The general model endpoints: completion, embedding, image description, and the smaller model-backed helpers.',
+  'Flashcard labeling': 'Labels flashcard content for the study features.',
+  'Repository utilities': 'Reports the running version and pulls the repository, which is how a deployment is updated in place.',
+  'Video stitching': 'Submits, tracks, and health-checks the video stitching jobs that run outside the request that started them.',
+};
+
 function groupFor(file) {
   const name = path.posix.basename(file).replace(/Manager\.ts$|\.ts$/g, '');
   return ({
@@ -210,6 +309,9 @@ function supervisedRoutes(file, sourceFile) {
               access: admin ? 'admin-in-release' : publicHandler ? 'session-or-public-handler' : 'session',
               inputs: extractInputs(text),
               responses: extractResponses(text),
+              docComment: leadingComment(config, sourceFile),
+              calls: extractCalls(text),
+              effects: classifyEffects(text),
               source: { file, line: lineOf(sourceFile, config), url: sourceUrl(file, lineOf(sourceFile, config)) },
             });
           }
@@ -266,6 +368,9 @@ function directRoutes(file, sourceFile, sharedDefinitions = new Map()) {
             access: directAccess(file, route),
             inputs: extractInputs(handlers),
             responses: extractResponses(handlers),
+            docComment: leadingComment(node, sourceFile),
+            calls: extractCalls(handlers),
+            effects: classifyEffects(handlers),
             source: { file, line: lineOf(sourceFile, node), url: sourceUrl(file, lineOf(sourceFile, node)) },
           });
         }
@@ -312,6 +417,30 @@ routes.sort((a, b) => a.path.localeCompare(b.path) || a.method.localeCompare(b.m
 
 const duplicateKeys = [...new Set(routes.map((route) => `${route.method} ${route.path}`))]
   .filter((key) => routes.filter((route) => `${route.method} ${route.path}` === key).length > 1);
+
+const presentGroups = [...new Set(routes.map((route) => route.group))].sort();
+const groupDrift = [
+  ...presentGroups.filter((group) => !groupPurposes[group]).map((group) => `route group "${group}" has no reviewed purpose`),
+  ...Object.keys(groupPurposes).filter((group) => !presentGroups.includes(group)).map((group) => `reviewed purpose for "${group}" outlived its routes`),
+];
+if (groupDrift.length) throw new Error(`The HTTP route families drifted:\n  ${groupDrift.join('\n  ')}`);
+
+const groups = presentGroups.map((group) => {
+  const members = routes.filter((route) => route.group === group);
+  return {
+    name: group,
+    purpose: groupPurposes[group],
+    routes: members.length,
+    documented: members.filter((route) => route.docComment).length,
+    files: [...new Set(members.map((route) => route.source.file))],
+    // Worth surfacing per family: these are the questions a reader asks before
+    // reading any single route in it.
+    touchesDatabase: members.some((route) => route.effects.database),
+    touchesFilesystem: members.some((route) => route.effects.filesystem),
+    reachesOutward: members.some((route) => route.effects.network || route.effects.externalModel),
+    runsProcesses: members.some((route) => route.effects.process),
+  };
+});
 const output = {
   schemaVersion: 1,
   repository: {
@@ -322,6 +451,11 @@ const output = {
     supervisedCandidateFiles: supervisedFiles.length,
     directCandidateFiles: directFiles.length,
     directOwnerNames: ['app', 'server'],
+    docComments: 'Recovered from the comment above each registration in Dash-Web, not written here. A route with no comment is reported as having none',
+    calls: 'Notable calls inside the handler, with the handler expanded through same-file helper definitions',
+    effects: 'Database, filesystem, outbound network, subprocess, and external-model contact, classified from the expanded handler text',
+    groupPurpose: 'Reviewed per family rather than per route: a family is one file with one job, which a reader can check',
+    driftRule: 'Generation fails when a route family appears without a reviewed purpose, or a reviewed purpose outlives its family',
   },
   summary: {
     routes: routes.length,
@@ -330,8 +464,16 @@ const output = {
     public: routes.filter((route) => route.access.includes('public')).length,
     admin: routes.filter((route) => route.access === 'admin-in-release').length,
     duplicateMethodPaths: duplicateKeys.length,
+    groups: groups.length,
+    documented: routes.filter((route) => route.docComment).length,
+    withCalls: routes.filter((route) => route.calls.length).length,
+    touchDatabase: routes.filter((route) => route.effects.database).length,
+    touchFilesystem: routes.filter((route) => route.effects.filesystem).length,
+    reachOutward: routes.filter((route) => route.effects.network || route.effects.externalModel).length,
+    runProcesses: routes.filter((route) => route.effects.process).length,
   },
   duplicateMethodPaths: duplicateKeys,
+  groups,
   routes,
 };
 
@@ -339,7 +481,10 @@ const outputPath = path.join(root, 'src', 'data', 'generated', 'http-routes.json
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 console.log(
-  `Built HTTP route reference: ${output.summary.routes} routes ` +
+  `Built HTTP route reference: ${output.summary.routes} routes in ${output.summary.groups} explained families ` +
   `(${output.summary.supervised} supervised, ${output.summary.direct} direct, ` +
-  `${output.summary.duplicateMethodPaths} duplicate method/path registrations).`
+  `${output.summary.duplicateMethodPaths} duplicate method/path registrations); ` +
+  `${output.summary.documented} carry a comment recovered from source, ${output.summary.withCalls} have traced calls; ` +
+  `${output.summary.touchDatabase} touch the database, ${output.summary.touchFilesystem} the filesystem, ` +
+  `${output.summary.reachOutward} reach outside the server, ${output.summary.runProcesses} run a subprocess.`
 );

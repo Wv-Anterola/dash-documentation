@@ -38,7 +38,60 @@ test('recomputes route summary and duplicate registrations exactly', () => {
     public: routes.routes.filter((route) => route.access.includes('public')).length,
     admin: routes.routes.filter((route) => route.access === 'admin-in-release').length,
     duplicateMethodPaths: duplicates.length,
+    groups: routes.groups.length,
+    documented: routes.routes.filter((route) => route.docComment).length,
+    withCalls: routes.routes.filter((route) => route.calls.length).length,
+    touchDatabase: routes.routes.filter((route) => route.effects.database).length,
+    touchFilesystem: routes.routes.filter((route) => route.effects.filesystem).length,
+    reachOutward: routes.routes.filter((route) => route.effects.network || route.effects.externalModel).length,
+    runProcesses: routes.routes.filter((route) => route.effects.process).length,
   });
+});
+
+test('explains every route family and leaves no purpose without routes', () => {
+  const present = new Set(routes.routes.map((route) => route.group));
+  assert.equal(routes.groups.length, present.size);
+  for (const family of routes.groups) {
+    assert.ok(present.has(family.name), `${family.name} has a purpose but no routes`);
+    assert.ok(family.purpose.length >= 40, `${family.name} has no usable purpose`);
+    assert.equal(family.routes, routes.routes.filter((route) => route.group === family.name).length);
+    assert.ok(family.files.length >= 1);
+  }
+});
+
+test('recovers what a route author wrote rather than inventing it', () => {
+  // A third of the registrations carry a comment. The rest genuinely do not,
+  // and an empty string is the honest record of that.
+  const documented = routes.routes.filter((route) => route.docComment);
+  assert.ok(documented.length >= 30, `only ${documented.length} routes carry a recovered comment`);
+  assert.ok(documented.length < routes.routes.length, 'if every route is documented now, raise this expectation');
+  for (const route of documented) {
+    assert.ok(route.docComment.length <= 600);
+    assert.ok(!route.docComment.includes('*/'), `${route.path} kept its comment delimiters`);
+    assert.ok(!/^\s*@/.test(route.docComment), `${route.path} leads with a tag line rather than prose`);
+  }
+});
+
+test('classifies side effects from the handler, not from the path', () => {
+  const destructive = find('GET', '/delete/:target');
+  assert.equal(destructive.effects.database, true, 'the delete route drops schemas');
+  assert.equal(destructive.effects.filesystem, true, 'the delete route removes the files directory');
+  assert.ok(destructive.calls.includes('Database.Instance.dropSchema'));
+  assert.ok(destructive.calls.includes('WebSocket.doDelete'));
+
+  // Control lines: a route that only reads should not be marked as writing.
+  const version = find('GET', '/version');
+  assert.equal(version.effects.database, false);
+  assert.equal(version.effects.network, false);
+
+  for (const route of routes.routes) {
+    assert.equal(Object.keys(route.effects).length, 5);
+    for (const value of Object.values(route.effects)) assert.equal(typeof value, 'boolean');
+    // Control-flow keywords are not calls and must never appear as evidence.
+    for (const call of route.calls) {
+      assert.ok(!['switch', 'while', 'async', 'await', 'function', 'catch', 'if', 'for'].includes(call), `${route.path} lists \`${call}\` as a call`);
+    }
+  }
 });
 
 test('preserves high-impact access paths and request inputs', () => {

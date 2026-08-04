@@ -17,7 +17,7 @@ const surface = (id) => report.surfaces.find((entry) => entry.id === id);
 const floors = {
   records: 850,
   tracedPct: 100,
-  explainedPct: 70,
+  explainedPct: 75,
   fullyExplainedSurfaces: 8,
 };
 
@@ -74,8 +74,9 @@ test('names the two known gaps rather than averaging them away', () => {
   const routes = surface('http-routes');
   assert.ok(scripting.explainedPct < 100, 'if scripting globals are now fully described, retire this expectation');
   assert.ok(scripting.missingExamples.length > 0, 'a gap with no named examples is not a work queue');
-  assert.equal(routes.hasExplanationField, false, 'HTTP routes gained an explanation field; update the report and this test');
-  assert.ok(routes.note.length > 30, 'a surface with no explanation field must say so in prose');
+  assert.ok(routes.explainedPct < 100, 'if every route now carries a comment, retire this expectation');
+  assert.ok(routes.missingExamples.length > 0, 'a gap with no named examples is not a work queue');
+  assert.ok(routes.note.length > 30, 'a partly explained surface must say what is and is not counted');
   assert.equal(report.summary.largestGap, 'scripting-globals');
   // The gaps must be at the top: the page is ordered as a work queue.
   assert.equal(report.surfaces[0].id, 'scripting-globals');
