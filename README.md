@@ -60,7 +60,13 @@ regenerated after an edit. `npm test` on its own does not catch that. Run
 `npm run hooks:install` once to have `preflight` run on every push.
 
 Every check names the command that fixes it when it fails. Read the `fix:` line
-before investigating anything.
+before investigating anything. [How this site is
+built](https://brown-dash-documentation.vercel.app/contributing/pipeline/) maps
+every generator, dataset, and check, and is itself generated from the repository.
+
+Node 22 or newer. Dependency updates arrive monthly as grouped pull requests,
+each gated by the same checks, so an upgrade that breaks something fails on its
+own branch.
 
 The same steps run in CI on every push and pull request
 (`.github/workflows/verify.yml`). CI does not run `audit:all`, because those

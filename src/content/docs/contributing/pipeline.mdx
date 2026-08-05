@@ -80,6 +80,14 @@ they disagree, so a partial regeneration cannot pass.
 
 <PipelineMap />
 
+## Keeping the toolchain current
+
+Dependency updates arrive as grouped pull requests once a month, split into
+minor/patch and major. Every one of them runs the whole gate above before it can
+be merged, so an upgrade that breaks a generator, a page, or the accessibility
+budget fails on its own branch rather than on someone else's push. Node 22 or
+newer is required.
+
 ## What is not on this page
 
 `npm run audit:all` is not run in CI. Those generators read a sibling Dash-Web

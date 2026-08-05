@@ -4,6 +4,9 @@
   "private": true,
   "description": "Documentation and project history for Dash, a hypermedia system built at Brown University.",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
