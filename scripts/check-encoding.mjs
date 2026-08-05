@@ -25,13 +25,15 @@ const roots = [
   'scripts',
   'tests',
   'README.md',
+  'CONTRIBUTING.md',
+  '.github',
   'astro.config.mjs',
   'playwright.config.mjs',
   'package.json',
   'CITATION.cff',
 ];
 const textExtensions = new Set([
-  '.astro', '.cff', '.css', '.js', '.jsx', '.json', '.md', '.mdx', '.mjs', '.py', '.ts', '.tsx',
+  '.astro', '.cff', '.css', '.js', '.jsx', '.json', '.md', '.mdx', '.mjs', '.py', '.ts', '.tsx', '.yml',
 ]);
 const mojibake = /[\uFFFD\u00C2]|\u00E2[^\s]/u;
 const ignored = new Set([

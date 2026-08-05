@@ -1,0 +1,53 @@
+name: A record here is wrong
+description: A control, route, menu entry, shortcut, or type is described incorrectly.
+title: 'wrong: '
+labels: ['correction']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the most useful report you can file.
+
+        The generators fail loudly when the code they parse moves, so structural
+        drift is caught automatically. A plain-language explanation that is
+        simply wrong is not caught by anything, and needs a person who knows
+        what the code does.
+
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      description: The URL, and the record's heading or label if the page is long.
+      placeholder: /reference/interface-controls/ , "Pin to presentation"
+    validations:
+      required: true
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: What it currently says
+      description: Paste the sentence or field that is wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happens
+      description: |
+        What the code does, or what you observed. A file and line is ideal; a
+        reproducible sequence of steps is just as good.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: basis
+    attributes:
+      label: How do you know
+      options:
+        - I read the source
+        - I used Dash and saw it behave differently
+        - I wrote or reviewed this part of Dash
+        - Something else, explained above
+    validations:
+      required: true

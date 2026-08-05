@@ -1,0 +1,41 @@
+name: Something here is unexplained
+description: A record is traced to source but does not say what it is for, or a topic is missing entirely.
+title: 'unexplained: '
+labels: ['coverage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The [coverage report](https://brown-dash-documentation.vercel.app/reference/documentation-coverage/)
+        already counts what is traced separately from what a person has
+        explained, and names the surfaces that are behind. If the gap you found
+        is already listed there, this issue is still worth filing: knowing which
+        specific records people actually reach for is what turns a list of 118
+        into a queue worth working through.
+
+  - type: input
+    id: where
+    attributes:
+      label: Where you were looking
+      description: The URL, and the record's name if there is one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What you needed to know and could not find
+      description: |
+        The question you arrived with. This is more useful than a suggested
+        fix: it says what the page has to answer, without assuming the current
+        structure is the right place to answer it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How you found the answer instead
+      description: Reading the source, asking someone, trial and error, or not at all.
+    validations:
+      required: false
