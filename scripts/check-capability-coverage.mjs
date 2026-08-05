@@ -340,6 +340,15 @@ if (
   repeatedAcrossPageAndPoster.length ||
   missingAssignedPageMedia.length
 ) {
+  /**
+   * Most failures here are not authoring mistakes; they are a generated file
+   * that has not caught up with an edit. Saying so on the spot is the
+   * difference between a two-second fix and a bisect: this check ran red four
+   * pushes in a row once because the message named the symptom and nothing
+   * named the command.
+   */
+  const remedy = (command, why) => console.error(`    fix: run \`${command}\` and commit the result, because ${why}.`);
+
   if (unknown.length) {
     console.error('Capability registry references unknown projects:');
     for (const title of unknown) console.error(`  - ${title}`);
@@ -395,6 +404,7 @@ if (
   }
   if (baselineMismatch) {
     console.error('Generated branch, inventory, and semantic references do not share one baseline commit.');
+    remedy('npm run audit:all', 'the datasets are only comparable when every one of them was derived from the same Dash-Web revision, and one of them was regenerated on its own');
   }
   if (sourceLinksWithoutCommit.length) {
     console.error('Generated symbols without immutable commit links:');
@@ -402,6 +412,7 @@ if (
   }
   if (typedocBaselineMissing) {
     console.error('TypeDoc reflection JSON is absent or was not generated for the semantic baseline.');
+    remedy('npm run audit:typedoc', 'the module API pages are rendered from that reflection, and it is pinned to the same baseline as everything else');
   }
   if (!branchAudit.branches.some((branch) => branch.name === 'origin/master')) {
     console.error('Branch audit does not contain the origin/master baseline.');
@@ -409,6 +420,7 @@ if (
   if (missingNamedBranches.length) {
     console.error('Project records name branches absent from the branch audit:');
     for (const name of new Set(missingNamedBranches)) console.error(`  - ${name}`);
+    remedy('npm run audit:branches', 'the audit enumerates the refs that exist in the clone, and a branch named in a project record has to be one of them');
   }
   if (missingCapabilityVisuals.length) {
     console.error('Capabilities without visual evidence:');
@@ -421,7 +433,7 @@ if (
   if (missingVisualPosters.length) {
     console.error('Visual posters have not been built:');
     for (const poster of missingVisualPosters) console.error(`  - ${poster}.webp`);
-    console.error('Run `npm run visuals` to rebuild the poster set.');
+    remedy('npm run visuals', 'posters are transcoded from archived media and are not committed until that runs');
   }
   if (creatorLabels.length !== 38) {
     console.error(`Expected 38 documented creator entries, found ${creatorLabels.length}.`);
@@ -437,6 +449,7 @@ if (
   if (missingPageVisuals.length) {
     console.error('Automatic page visuals reference missing images:');
     for (const image of missingPageVisuals) console.error(`  - ${image}`);
+    remedy('npm run visuals', 'the assignment is rebuilt from the media that is actually on disk');
   }
   if (duplicatePosterContent.length) {
     console.error('Project/capability posters repeat identical image content:');
@@ -451,28 +464,34 @@ if (
   if (missingPageAssignments.length) {
     console.error('Pages without inline media also lack a unique page visual:');
     for (const route of missingPageAssignments) console.error(`  - ${route}`);
+    remedy('npm run visuals', 'the registry assigns a visual to every page it finds, and it has not been re-run since these pages were added');
   }
   if (unexpectedPageAssignments.length) {
     console.error('Page visual registry contains pages that already own inline visuals:');
     for (const route of unexpectedPageAssignments) console.error(`  - ${route}`);
+    remedy('npm run visuals', 'a page that grew its own image no longer needs an assigned one, and the registry drops it on the next run');
   }
   if (duplicateAssignedSources.length) {
     console.error('Page visual registry repeats source paths:');
     for (const source of new Set(duplicateAssignedSources)) console.error(`  - ${source}`);
+    remedy('npm run visuals', 'assignment is one image per page, and a repeat means the registry was hand-edited or is stale');
   }
   if (duplicatePageVisualContent.length) {
     console.error('Page visual registry repeats identical image content:');
     for (const sources of duplicatePageVisualContent) console.error(`  - ${sources.join(', ')}`);
+    remedy('npm run visuals', 'two paths holding the same bytes are deduplicated by hash when the registry is rebuilt');
   }
   if (repeatedAcrossPageAndPoster.length) {
     console.error('Page visuals reuse image content already assigned to a poster:');
     for (const sources of repeatedAcrossPageAndPoster) {
       console.error(`  - ${sources.join(', ')}`);
     }
+    remedy('npm run visuals', 'posters are built first and the page registry excludes whatever they claimed');
   }
   if (missingAssignedPageMedia.length) {
     console.error('Page visual registry references missing media:');
     for (const source of missingAssignedPageMedia) console.error(`  - ${source}`);
+    remedy('npm run visuals', 'the registry points at a file that has since been moved or deleted');
   }
   process.exitCode = 1;
 } else {

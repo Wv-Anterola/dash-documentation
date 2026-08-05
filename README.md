@@ -52,11 +52,21 @@ npm run links     # internal link, anchor, image, and heading checks over dist/
 npm run test:e2e  # generated reference, archive, and mobile-navigation checks
 ```
 
-Run `npm run verify` before committing. The same steps run in CI on every push
-and pull request (`.github/workflows/verify.yml`). CI does not run `audit:all`,
-because those generators read a sibling Dash-Web checkout it does not have;
-their output is committed and the other checks prove it is internally
-consistent and source-addressed.
+Run `npm run verify` before committing: it is the whole gate, in the order CI
+runs it. For the edit loop use `npm run preflight`, the fast half (unit tests,
+encoding, coverage, quality), which needs no build, finishes in under a minute,
+and catches the failure that actually happens: a generated file that was not
+regenerated after an edit. `npm test` on its own does not catch that. Run
+`npm run hooks:install` once to have `preflight` run on every push.
+
+Every check names the command that fixes it when it fails. Read the `fix:` line
+before investigating anything.
+
+The same steps run in CI on every push and pull request
+(`.github/workflows/verify.yml`). CI does not run `audit:all`, because those
+generators read a sibling Dash-Web checkout it does not have; their output is
+committed and the other checks prove it is internally consistent and
+source-addressed.
 
 ## Where things live
 

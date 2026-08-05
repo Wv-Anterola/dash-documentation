@@ -1,0 +1,5 @@
+# Shell hooks must keep Unix line endings even when checked out on Windows.
+# `sh` reads a trailing carriage return as part of the command and fails with
+# "\r: command not found", which is a confusing way to learn that a hook works
+# everywhere except on the machine most of this repository is edited from.
+.githooks/* text eol=lf

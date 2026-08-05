@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Run the checks that catch a stale generated file before a push does.
+#
+# Opt in with `npm run hooks:install`. It is not on by default: a hook that
+# nobody chose is a hook people learn to pass --no-verify to.
+#
+# This runs `preflight`, not `verify`. Preflight is the fast half: unit tests,
+# encoding, coverage, and quality, none of which need a build, and between them
+# they catch the failure that actually happens, which is a dataset or registry
+# that was not regenerated after an edit. The slow half (astro check, build,
+# links, endpoints, accessibility, budget, Playwright) is left to CI, which has
+# the minutes to spend and is where a broken build should be caught anyway.
+#
+# Skip once with `git push --no-verify`.
+set -e
+
+echo "pre-push: npm run preflight (skip with --no-verify)"
+npm run --silent preflight

@@ -520,6 +520,42 @@ canvas into an image.
 npm run verify
 ```
 
+That is the whole gate, and it takes a few minutes because it builds the site
+and drives a browser. There is a fast half for the edit loop:
+
+```bash
+npm run preflight
+```
+
+`preflight` is the first four steps of `verify`: unit tests, encoding, coverage,
+and quality. None of them need a build, they finish in well under a minute, and
+between them they catch the failure that actually happens in practice, which is
+a generated file that was not regenerated after an edit. `npm test` alone does
+not: the unit tests read the committed datasets and cannot tell that a page was
+added without one.
+
+If you would rather not remember, install the hook once:
+
+```bash
+npm run hooks:install
+```
+
+That points `core.hooksPath` at `.githooks/`, whose `pre-push` runs `preflight`.
+It is opt-in on purpose, and `git push --no-verify` skips it. The slow half is
+left to CI, which has the minutes to spend.
+
+When a check does fail, read the last line of its output before anything else.
+Most of these failures are a stale generated file rather than a mistake in what
+you wrote, and the checks name the command that fixes them:
+
+```text
+Pages without inline media also lack a unique page visual:
+  - /reference/open-destinations
+    fix: run `npm run visuals` and commit the result, because the registry
+    assigns a visual to every page it finds, and it has not been re-run since
+    these pages were added.
+```
+
 `verify` runs the unit, encoding, coverage, authored-document quality, Astro,
 production-build, built-link, and browser-level suites in their required order.
 `coverage` validates project/capability mappings and canonical targets. `check`
