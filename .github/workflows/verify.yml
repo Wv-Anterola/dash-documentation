@@ -54,6 +54,9 @@ jobs:
       - name: Documentation quality
         run: npm run quality
 
+      - name: Documented examples
+        run: npm run examples
+
       - name: Type check
         run: npm run check
 

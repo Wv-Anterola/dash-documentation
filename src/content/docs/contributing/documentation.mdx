@@ -527,12 +527,25 @@ and drives a browser. There is a fast half for the edit loop:
 npm run preflight
 ```
 
-`preflight` is the first four steps of `verify`: unit tests, encoding, coverage,
-and quality. None of them need a build, they finish in well under a minute, and
-between them they catch the failure that actually happens in practice, which is
-a generated file that was not regenerated after an edit. `npm test` alone does
-not: the unit tests read the committed datasets and cannot tell that a page was
-added without one.
+`preflight` is the first five steps of `verify`: unit tests, encoding, coverage,
+quality, and documented examples. None of them need a build, they finish in well
+under a minute, and between them they catch the failure that actually happens in
+practice, which is a generated file that was not regenerated after an edit.
+`npm test` alone does not: the unit tests read the committed datasets and cannot
+tell that a page was added without one.
+
+### Examples are checked, not trusted
+
+If you write a shell example that queries a published dataset, `npm run
+examples` will parse every field path in it and resolve it against the real
+data. An unknown field fails the build.
+
+This exists because a stale documented query does not look broken. `jq` on a
+field that no longer exists prints nothing, and nothing is exactly what a
+correct answer of "none" looks like, so a reader concludes there are no such
+records and moves on. Every published dataset is also required to have at least
+one worked example, because a dataset nobody has shown a use for is a dataset
+nobody will use.
 
 If you would rather not remember, install the hook once:
 

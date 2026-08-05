@@ -104,20 +104,87 @@ packages](/research/reproducibility/).
 
 ## Using it
 
-Nothing here requires a key, and everything is a plain static file.
+Nothing here requires a key, and everything is a plain static file. There is one
+worked query per dataset below, each answering a question somebody actually
+arrives with.
+
+These are checked. `npm run examples` parses every field path in every example
+on this page and resolves it against the real dataset, so a renamed field breaks
+the build instead of leaving a copy-paste command that silently returns nothing.
+That is the failure mode of documented examples everywhere, and it is invisible
+without a check, because an empty result looks exactly like a correct answer of
+"none".
+
+### The interface
 
 ```sh
 # Which controls are hidden outside Developer mode?
 curl -s https://brown-dash-documentation.vercel.app/assets/data/interface-controls.json \
   | jq -r '.controls[] | select(.visibility | test("Developer mode")) | .label'
 
-# Which right-click entries write to the selected document without an undo batch?
+# Which right-click entries change the document without an undo batch?
 curl -s https://brown-dash-documentation.vercel.app/assets/data/context-menus.json \
   | jq -r '.items[] | select(.undoable == false and .kind == "action") | "\(.surfaceName): \(.label)"'
 
 # Which chords does Dash take away from the browser?
 curl -s https://brown-dash-documentation.vercel.app/assets/data/keyboard-shortcuts.json \
   | jq -r '.shortcuts[] | select(.eventControl.preventDefault) | .chordOther'
+
+# Which everyday tasks can be done by keyboard as well as by clicking?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/task-routes.json \
+  | jq -r '.tasks[] | select(.routeKinds | index("shortcut")) | .intent'
+
+# Which "open here" requests does nothing actually route, so they fall through?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/open-destinations.json \
+  | jq -r '.destinations[] | select(.routed == false) | "\(.member) used \(.useCount) times"'
+```
+
+### The runtime and the server
+
+```sh
+# Which routes touch the database without going through the route manager?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/http-routes.json \
+  | jq -r '.routes[] | select(.effects.database and .access == "direct-no-route-manager") | "\(.method) \(.path)"'
+
+# Which document types is a person expected to create, rather than the system?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/document-types.json \
+  | jq -r '.types[] | select(.audience == "surface") | "\(.name): \(.plainMeaning)"'
+
+# Which stored field types can a script reach?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/field-types.json \
+  | jq -r '.registrations[] | select(.scriptingGlobal) | "\(.tag) -> \(.className)"'
+
+# Which scripting globals ship with no description at all?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/scripting-globals.json \
+  | jq -r '.globals[] | select(.description == "") | .name'
+
+# ... and which of those can still be understood from the button that calls them?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/scripting-usage.json \
+  | jq -r '.usage[] | select(.described == false) | "\(.name) <- \(.controls[0].label)"'
+
+# Which controls come from an unmerged project branch rather than from master?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/project-controls.json \
+  | jq -r '.controls[] | select(.leavesDash) | "\(.projectName): \(.label)"'
+
+# Where is a given exported symbol declared?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/exported-symbols.json \
+  | jq -r '.rows[] | select(.name == "CompileScript") | "\(.module):\(.lineStart) \(.signature)"'
+```
+
+### The documentation itself
+
+```sh
+# Which surfaces have records nobody has explained anywhere?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/coverage-report.json \
+  | jq -r '.surfaces[] | select(.unreachable > 0) | "\(.name): \(.unreachable) of \(.records)"'
+
+# What is the tightest contrast ratio on this site, in light mode?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/accessibility.json \
+  | jq -r '[.measurements[] | "\(.themes.light.ratio) \(.name)"] | sort | first'
+
+# Which help links inside Dash point at a fragment that no longer exists?
+curl -s https://brown-dash-documentation.vercel.app/assets/data/inapp-doc-links.json \
+  | jq -r '.links[] | select(.fragmentStatus == "missing") | "\(.surface): \(.requested)"'
 ```
 
 If you build something on these, the useful thing to report back is a record

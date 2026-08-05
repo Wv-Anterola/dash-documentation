@@ -12,9 +12,9 @@ npm run preflight   # run this before you push
 ```
 
 `preflight` is the fast half of the full gate: unit tests, encoding, coverage,
-and quality. It needs no build, takes under a minute, and catches the failure
-that actually happens here, which is a generated file that was not regenerated
-after an edit. `npm test` on its own does not catch that.
+quality, and documented examples. It needs no build, takes under a minute, and
+catches the failure that actually happens here, which is a generated file that
+was not regenerated after an edit. `npm test` on its own does not catch that.
 
 `npm run verify` is the whole gate, in the order CI runs it. Run it before a
 pull request. `npm run hooks:install` wires `preflight` to a pre-push hook if

@@ -48,6 +48,7 @@ npm test          # semantic parser and immutable-link unit tests
 npm run audit:all # regenerate every source-derived inventory (needs a Dash-Web checkout)
 npm run coverage  # verify integrated projects map to canonical capability docs
 npm run encoding  # reject mojibake and replacement characters
+npm run examples  # resolve every field in a documented query against the real dataset
 npm run links     # internal link, anchor, image, and heading checks over dist/
 npm run test:e2e  # generated reference, archive, and mobile-navigation checks
 ```
