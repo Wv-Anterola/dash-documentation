@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">How a fact reaches a page on this site, and where it can go stale</title>
+  <desc id="desc">A pinned Dash-Web revision is read by a generator, which writes a dataset that is committed to this repository. A component renders that dataset as a page and a route republishes it as a JSON endpoint. Unit tests assert its invariants and checks prove the committed output still agrees with the pages. Because continuous integration has no Dash-Web checkout, it cannot rebuild the dataset: an edit that lands without regenerating leaves a committed file behind, which is the failure this pipeline is arranged to make loud.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#25345f" flood-opacity="0.12"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#5269d8"/></marker>
+    <marker id="warnarrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0L12 6L0 12Z" fill="#c2410c"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1470" cy="112" r="180" fill="#dfe5ff" opacity="0.6"/><circle cx="110" cy="838" r="200" fill="#e8ddff" opacity="0.55"/>
+
+  <text x="100" y="100" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="750" fill="#17213f">Nothing here is typed into a page</text>
+  <text x="102" y="150" font-family="Inter,Arial,sans-serif" font-size="25" fill="#526078">A fact about Dash is parsed out of a pinned revision, committed as data, rendered, and then held in place by a check.</text>
+
+  <!-- Stage 1: source -->
+  <g filter="url(#shadow)"><rect x="100" y="238" width="290" height="230" rx="24" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="130" y="292" font-size="19" font-weight="700" fill="#7c88ad">STEP 1</text>
+    <text x="130" y="336" font-size="30" font-weight="730" fill="#17213f">Pinned revision</text>
+    <text x="130" y="382" font-size="22" fill="#526078">One immutable commit</text>
+    <text x="130" y="414" font-size="22" fill="#526078">of Dash-Web, read with</text>
+    <text x="130" y="446" font-size="22" fill="#526078">the TypeScript parser.</text>
+  </g>
+
+  <!-- Stage 2: generator -->
+  <g filter="url(#shadow)"><rect x="470" y="238" width="290" height="230" rx="24" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="500" y="292" font-size="19" font-weight="700" fill="#7c88ad">STEP 2</text>
+    <text x="500" y="336" font-size="30" font-weight="730" fill="#17213f">Generator</text>
+    <text x="500" y="382" font-size="22" font-family="ui-monospace,Menlo,Consolas,monospace" fill="#526078">scripts/build-*.mjs</text>
+    <text x="500" y="420" font-size="22" fill="#526078">Fails loudly when the</text>
+    <text x="500" y="452" font-size="22" fill="#526078">code it pins to moves.</text>
+  </g>
+
+  <!-- Stage 3: dataset -->
+  <g filter="url(#shadow)"><rect x="840" y="238" width="290" height="230" rx="24" fill="#fff" stroke="#8ea2f5" stroke-width="4"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="870" y="292" font-size="19" font-weight="700" fill="#7c88ad">STEP 3</text>
+    <text x="870" y="336" font-size="30" font-weight="730" fill="#17213f">Committed data</text>
+    <text x="870" y="382" font-size="22" font-family="ui-monospace,Menlo,Consolas,monospace" fill="#526078">src/data/generated/</text>
+    <text x="870" y="420" font-size="22" fill="#526078">Checked in, because CI</text>
+    <text x="870" y="452" font-size="22" fill="#526078">cannot rebuild it.</text>
+  </g>
+
+  <!-- Stage 4: rendered -->
+  <g filter="url(#shadow)"><rect x="1210" y="238" width="290" height="230" rx="24" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="1240" y="292" font-size="19" font-weight="700" fill="#7c88ad">STEP 4</text>
+    <text x="1240" y="336" font-size="30" font-weight="730" fill="#17213f">Page and endpoint</text>
+    <text x="1240" y="382" font-size="22" fill="#526078">A component renders it;</text>
+    <text x="1240" y="414" font-size="22" fill="#526078">a route republishes the</text>
+    <text x="1240" y="446" font-size="22" fill="#526078">same JSON verbatim.</text>
+  </g>
+
+  <path d="M390 353h68" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+  <path d="M760 353h68" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+  <path d="M1130 353h68" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+
+  <!-- Step 5: the checks -->
+  <g filter="url(#shadow)"><rect x="470" y="576" width="1030" height="200" rx="24" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="500" y="630" font-size="19" font-weight="700" fill="#7c88ad">STEP 5</text>
+    <text x="500" y="674" font-size="30" font-weight="730" fill="#17213f">Checks, and the tests underneath them</text>
+    <text x="500" y="720" font-size="22" fill="#526078">Prove the committed data still agrees with the pages, with the other datasets, and with itself.</text>
+    <text x="500" y="752" font-size="22" fill="#526078">Three of them need no build at all, which is what `npm run preflight` runs before a push.</text>
+  </g>
+  <path d="M985 468v96" stroke="#5269d8" stroke-width="6" marker-end="url(#arrow)"/>
+
+  <!-- The failure this arrangement exists to catch -->
+  <g filter="url(#shadow)"><rect x="100" y="576" width="290" height="200" rx="24" fill="#fff7ed" stroke="#fdba74" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="130" y="630" font-size="19" font-weight="700" fill="#c2410c">THE FAILURE MODE</text>
+    <text x="130" y="672" font-size="25" font-weight="730" fill="#7c2d12">Quiet staleness</text>
+    <text x="130" y="712" font-size="21" fill="#9a3412">An edit lands, the data is</text>
+    <text x="130" y="742" font-size="21" fill="#9a3412">not rebuilt, nothing breaks.</text>
+  </g>
+  <path d="M985 490C700 510 470 540 396 640" fill="none" stroke="#c2410c" stroke-width="5" stroke-dasharray="12 10" marker-end="url(#warnarrow)"/>
+  <text x="700" y="546" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="21" fill="#c2410c">skipping step 2 leads here</text>
+</svg>

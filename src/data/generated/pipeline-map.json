@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-05T03:02:04.822Z",
+  "methodology": {
+    "derivedFrom": "The scripts, tests, dataset manifest, and package.json in this repository. Each script contributes its own header comment, its imports and writes, and the npm command that runs it.",
+    "driftRule": "Generation fails when a script cannot be run by any npm command, when a script has no header comment, or when a check is reachable from neither `verify` nor the scheduled list.",
+    "scheduledChecks": [
+      "links:external"
+    ]
+  },
+  "summary": {
+    "generators": 19,
+    "checks": 8,
+    "datasets": 22,
+    "publishedDatasets": 13,
+    "testFiles": 15,
+    "checksInPreflight": 3,
+    "checksNeedingBuild": 4,
+    "generatorsWithoutTest": 5
+  },
+  "generators": [
+    {
+      "script": "scripts/build-branch-audit.mjs",
+      "command": "audit:branches",
+      "allCommands": [
+        "audit:branches"
+      ],
+      "summary": "Build a reproducible, branch-aware evidence index for the Dash codebase.",
+      "reads": [],
+      "writes": [
+        "branch-audit"
+      ],
+      "publishedAs": [],
+      "tests": [],
+      "stage": 1
+    },
+    {
+      "script": "scripts/build-context-menu-reference.mjs",
+      "command": "audit:menus",
+      "allCommands": [
+        "audit:menus"
+      ],
+      "summary": "Builds the source-traced right-click (context) menu reference.",
+      "reads": [
+        "exported-symbols",
+        "scripting-globals",
+        "source-reference"
+      ],
+      "writes": [
+        "context-menus"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/context-menus/",
+          "endpoint": "/assets/data/context-menus.json",
+          "title": "Right-click menu atlas"
+        }
+      ],
+      "tests": [
+        "context-menus.test.mjs",
+        "task-routes.test.mjs"
+      ],
+      "stage": 3
+    },
+    {
+      "script": "scripts/build-coverage-report.mjs",
+      "command": "audit:coverage-report",
+      "allCommands": [
+        "audit:coverage-report"
+      ],
+      "summary": "Builds the report of what this documentation does not know.",
+      "reads": [
+        "interface-controls"
+      ],
+      "writes": [
+        "coverage-report"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/documentation-coverage/",
+          "endpoint": "/assets/data/coverage-report.json",
+          "title": "Documentation coverage report"
+        }
+      ],
+      "tests": [
+        "coverage-report.test.mjs"
+      ],
+      "stage": 4
+    },
+    {
+      "script": "scripts/build-document-type-reference.mjs",
+      "command": "audit:documents",
+      "allCommands": [
+        "audit:documents"
+      ],
+      "summary": "Trace every document type Dash can create, from its enum member to the thing a reader sees on the canvas.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "document-types"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/document-types/",
+          "endpoint": "/assets/data/document-types.json",
+          "title": "Document types and creators"
+        }
+      ],
+      "tests": [
+        "document-types.test.mjs",
+        "interface-controls.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-exported-symbol-reference.mjs",
+      "command": "audit:symbols",
+      "allCommands": [
+        "audit:symbols"
+      ],
+      "summary": "Index every exported declaration in Dash-Web, with a stable target for each.",
+      "reads": [
+        "source-modules"
+      ],
+      "writes": [
+        "exported-symbols"
+      ],
+      "publishedAs": [
+        {
+          "page": "/technical/exported-symbols/",
+          "endpoint": "/assets/data/exported-symbols.json",
+          "title": "Exported symbol index"
+        }
+      ],
+      "tests": [
+        "exported-symbols.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-field-type-reference.mjs",
+      "command": "audit:fields",
+      "allCommands": [
+        "audit:fields"
+      ],
+      "summary": "Catalogue the field types Dash can serialize, and what happens on the way back in.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "field-types"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/runtime-contracts/",
+          "endpoint": "/assets/data/field-types.json",
+          "title": "Serialized field types"
+        }
+      ],
+      "tests": [
+        "field-types.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-http-route-reference.mjs",
+      "command": "audit:http",
+      "allCommands": [
+        "audit:http"
+      ],
+      "summary": "Enumerate every HTTP route the Dash server registers, and what each one can reach.",
+      "reads": [
+        "source-modules"
+      ],
+      "writes": [
+        "http-routes"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/http-service-interface/",
+          "endpoint": "/assets/data/http-routes.json",
+          "title": "HTTP service interface"
+        }
+      ],
+      "tests": [
+        "http-routes.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-inapp-link-reference.mjs",
+      "command": "audit:inapp",
+      "allCommands": [
+        "audit:inapp"
+      ],
+      "summary": "Builds the inventory of links from Dash back into this documentation.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "inapp-doc-links"
+      ],
+      "publishedAs": [
+        {
+          "page": "/contributing/inapp-links/",
+          "endpoint": "/assets/data/inapp-doc-links.json",
+          "title": "Links from Dash into this site"
+        }
+      ],
+      "tests": [
+        "inapp-links.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-interface-control-reference.mjs",
+      "command": "audit:controls",
+      "allCommands": [
+        "audit:controls"
+      ],
+      "summary": "Trace every persistent control in the Dash interface back to the code behind it.",
+      "reads": [
+        "document-types",
+        "scripting-globals",
+        "source-reference"
+      ],
+      "writes": [
+        "interface-controls"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/interface-controls/",
+          "endpoint": "/assets/data/interface-controls.json",
+          "title": "Interface control and node atlas"
+        }
+      ],
+      "tests": [
+        "interface-controls.test.mjs",
+        "task-routes.test.mjs"
+      ],
+      "stage": 3
+    },
+    {
+      "script": "scripts/build-keyboard-shortcut-reference.mjs",
+      "command": "audit:keys",
+      "allCommands": [
+        "audit:keys"
+      ],
+      "summary": "Builds the source-traced keyboard shortcut reference.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "keyboard-shortcuts"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/keyboard-shortcuts/",
+          "endpoint": "/assets/data/keyboard-shortcuts.json",
+          "title": "Keyboard shortcuts"
+        }
+      ],
+      "tests": [
+        "keyboard-shortcuts.test.mjs",
+        "task-routes.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-open-destination-reference.mjs",
+      "command": "audit:destinations",
+      "allCommands": [
+        "audit:destinations"
+      ],
+      "summary": "Builds the source-traced reference for where a document opens.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "open-destinations"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/open-destinations/",
+          "endpoint": "/assets/data/open-destinations.json",
+          "title": "Open destination map"
+        }
+      ],
+      "tests": [
+        "open-destinations.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-page-visual-registry.mjs",
+      "command": "visuals",
+      "allCommands": [
+        "visuals"
+      ],
+      "summary": "Assign one distinct, relevant Dash image to every documentation page.",
+      "reads": [],
+      "writes": [
+        "page-visuals"
+      ],
+      "publishedAs": [],
+      "tests": [],
+      "stage": 1
+    },
+    {
+      "script": "scripts/build-pipeline-map.mjs",
+      "command": "audit:pipeline",
+      "allCommands": [
+        "audit:pipeline"
+      ],
+      "summary": "Describe this repository's own build pipeline, from its own files.",
+      "reads": [],
+      "writes": [
+        "pipeline-map"
+      ],
+      "publishedAs": [],
+      "tests": [],
+      "stage": 1
+    },
+    {
+      "script": "scripts/build-project-control-reference.mjs",
+      "command": "audit:projects",
+      "allCommands": [
+        "audit:projects"
+      ],
+      "summary": "Builds the source-traced reference for project-specific controls.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "project-controls"
+      ],
+      "publishedAs": [
+        {
+          "page": "/guides/features/trip-planner/",
+          "endpoint": "/assets/data/project-controls.json",
+          "title": "Project-specific controls"
+        }
+      ],
+      "tests": [
+        "project-controls.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-scripting-reference.mjs",
+      "command": "audit:scripting",
+      "allCommands": [
+        "audit:scripting"
+      ],
+      "summary": "List everything a script running inside Dash can call.",
+      "reads": [
+        "source-reference"
+      ],
+      "writes": [
+        "scripting-globals"
+      ],
+      "publishedAs": [
+        {
+          "page": "/guides/features/scripting/",
+          "endpoint": "/assets/data/scripting-globals.json",
+          "title": "Scripting globals"
+        }
+      ],
+      "tests": [
+        "interface-controls.test.mjs",
+        "scripting-globals.test.mjs"
+      ],
+      "stage": 2
+    },
+    {
+      "script": "scripts/build-source-reference.mjs",
+      "command": "audit:source",
+      "allCommands": [
+        "audit:source"
+      ],
+      "summary": "Build the semantic, immutable source ledger used by the technical reference.",
+      "reads": [],
+      "writes": [
+        "historical-symbols",
+        "semantic-branches",
+        "source-inventory",
+        "source-modules",
+        "source-reference"
+      ],
+      "publishedAs": [],
+      "tests": [
+        "context-menus.test.mjs",
+        "document-types.test.mjs",
+        "exported-symbols.test.mjs",
+        "field-types.test.mjs",
+        "http-routes.test.mjs",
+        "interface-controls.test.mjs",
+        "keyboard-shortcuts.test.mjs",
+        "project-controls.test.mjs",
+        "scripting-globals.test.mjs"
+      ],
+      "stage": 1
+    },
+    {
+      "script": "scripts/build-task-route-reference.mjs",
+      "command": "audit:tasks",
+      "allCommands": [
+        "audit:tasks"
+      ],
+      "summary": "Builds the cross-route task index.",
+      "reads": [
+        "context-menus",
+        "interface-controls",
+        "keyboard-shortcuts",
+        "source-reference"
+      ],
+      "writes": [
+        "task-routes"
+      ],
+      "publishedAs": [
+        {
+          "page": "/reference/task-routes/",
+          "endpoint": "/assets/data/task-routes.json",
+          "title": "Cross-route task index"
+        }
+      ],
+      "tests": [
+        "task-routes.test.mjs"
+      ],
+      "stage": 4
+    },
+    {
+      "script": "scripts/build-typedoc-reference.mjs",
+      "command": "audit:typedoc",
+      "allCommands": [
+        "audit:typedoc"
+      ],
+      "summary": "Generate raw TypeDoc reflection JSON from an immutable origin/master archive.",
+      "reads": [],
+      "writes": [
+        "typedoc-api"
+      ],
+      "publishedAs": [],
+      "tests": [],
+      "stage": 1
+    },
+    {
+      "script": "scripts/build-visual-posters.mjs",
+      "command": "visuals",
+      "allCommands": [
+        "visuals"
+      ],
+      "summary": "Build a lightweight still for each project and capability that has a recording.",
+      "reads": [],
+      "writes": [],
+      "publishedAs": [],
+      "tests": [],
+      "stage": 1
+    }
+  ],
+  "checks": [
+    {
+      "script": "scripts/check-accessibility.mjs",
+      "command": "accessibility",
+      "summary": "Accessibility gate: design tokens first, then the built pages.",
+      "runsIn": "verify",
+      "note": null,
+      "needsBuild": true
+    },
+    {
+      "script": "scripts/check-capability-coverage.mjs",
+      "command": "coverage",
+      "summary": "Prove the committed datasets, the registries, and the pages still agree.",
+      "runsIn": "preflight",
+      "note": null,
+      "needsBuild": false
+    },
+    {
+      "script": "scripts/check-documentation-quality.mjs",
+      "command": "quality",
+      "summary": "Hold the authored pages to the standards the site claims for itself.",
+      "runsIn": "preflight",
+      "note": null,
+      "needsBuild": false
+    },
+    {
+      "script": "scripts/check-encoding.mjs",
+      "command": "encoding",
+      "summary": "Reject mojibake anywhere in the repository's text.",
+      "runsIn": "preflight",
+      "note": null,
+      "needsBuild": false
+    },
+    {
+      "script": "scripts/check-external-links.mjs",
+      "command": "links:external",
+      "summary": "Reachability check for every outbound link, run on a schedule rather than on a push.",
+      "runsIn": "scheduled",
+      "note": "Weekly, via .github/workflows/link-rot.yml. It probes other people's servers, and a push that fails because a university page was briefly down teaches everyone to ignore a red build.",
+      "needsBuild": false
+    },
+    {
+      "script": "scripts/check-links.mjs",
+      "command": "links",
+      "summary": "Validate the built site: internal links, heading anchors, images, alt text, and heading order.",
+      "runsIn": "verify",
+      "note": null,
+      "needsBuild": true
+    },
+    {
+      "script": "scripts/check-machine-endpoints.mjs",
+      "command": "endpoints",
+      "summary": "Validate the plain-text and JSON entry points a machine reads.",
+      "runsIn": "verify",
+      "note": null,
+      "needsBuild": true
+    },
+    {
+      "script": "scripts/check-performance-budget.mjs",
+      "command": "budget",
+      "summary": "Page weight budget, measured on what a browser actually fetches first.",
+      "runsIn": "verify",
+      "note": null,
+      "needsBuild": true
+    }
+  ]
+}

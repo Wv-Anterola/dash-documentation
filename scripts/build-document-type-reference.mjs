@@ -1,3 +1,21 @@
+/**
+ * Trace every document type Dash can create, from its enum member to the thing
+ * a reader sees on the canvas.
+ *
+ * A document type in Dash is not one declaration. It is an enum member, a
+ * prototype registration that gives it default fields, a factory that builds an
+ * instance, sometimes a creator-palette template, and a renderer component that
+ * draws it. Those five live in different files, and no single one of them tells
+ * you whether a type is actually reachable by a user.
+ *
+ * This reads the pinned Dash-Web revision, parses each of the five with the
+ * TypeScript compiler, and joins them into one record per type.
+ *
+ * Output: src/data/generated/document-types.json, rendered at
+ * /reference/document-types/ and published at /assets/data/document-types.json.
+ *
+ *   npm run audit:documents
+ */
 import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';

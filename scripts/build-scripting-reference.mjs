@@ -1,3 +1,23 @@
+/**
+ * List everything a script running inside Dash can call.
+ *
+ * Globals reach scripting three ways: a direct ScriptingGlobals.add call, a
+ * class decorator that registers its members, and saved scripts attached at
+ * runtime. All three are parsed, because a reader writing a script cannot tell
+ * from inside Dash which mechanism put a name in scope.
+ *
+ * This deliberately does not use the comments above the registrations as
+ * descriptions. An audit is emitted instead, because those comments are largely
+ * copy-pasted: one of them sits above eight unrelated globals and describes one
+ * of them. Importing them would raise the site's explained-coverage number
+ * while making it less true. The audit is published so the gap is visible and
+ * fixable at the source. See /guides/features/scripting/.
+ *
+ * Output: src/data/generated/scripting-globals.json, published at
+ * /assets/data/scripting-globals.json.
+ *
+ *   npm run audit:scripting
+ */
 import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';

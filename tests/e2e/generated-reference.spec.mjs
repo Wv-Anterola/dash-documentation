@@ -3,6 +3,7 @@ import reference from '../../src/data/generated/source-modules.json' with { type
 import interfaceControls from '../../src/data/generated/interface-controls.json' with { type: 'json' };
 import openDestinations from '../../src/data/generated/open-destinations.json' with { type: 'json' };
 import inappLinks from '../../src/data/generated/inapp-doc-links.json' with { type: 'json' };
+import pipeline from '../../src/data/generated/pipeline-map.json' with { type: 'json' };
 
 // Counts that grow whenever a control is traced are read from the dataset the
 // page renders, not pinned here. A hardcoded total turns "we documented six
@@ -22,7 +23,15 @@ const slug = (path) =>
  * assertion did: that deferring the image did not break it.
  */
 async function expectIllustrationLoads(page, name) {
-  const image = page.getByRole('img', { name }).first();
+  return expectImageLoads(page.getByRole('img', { name }).first());
+}
+
+/** The same assertion where the image is identified by its file rather than its alt text. */
+async function expectIllustrationBySource(page, fragment) {
+  return expectImageLoads(page.locator(`img[src*="${fragment}"]`).first());
+}
+
+async function expectImageLoads(image) {
   await image.waitFor({ state: 'attached' });
   await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
@@ -213,14 +222,14 @@ test('explains the causal engineering model instead of only listing components',
   await expect(page.getByRole('heading', { name: 'The design pressures behind the architecture' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Write path: from gesture to every client' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'System invariants' })).toBeVisible();
-  await expect(page.locator('img[src*="dash-action-lifecycle"]')).toBeVisible();
+  await expectIllustrationBySource(page, 'dash-action-lifecycle');
 });
 
 test('connects decisions, runtime contracts, diagnostics, and symbol-level failure semantics', async ({ page }) => {
   await page.goto('/architecture/decisions-tradeoffs/');
   await expect(page.getByRole('heading', { name: 'Architecture decisions and tradeoffs' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'ADR-006: Synchronize field operations instead of whole workspaces' })).toBeVisible();
-  await expect(page.locator('img[src*="dash-decision-record"]')).toBeVisible();
+  await expectIllustrationBySource(page, 'dash-decision-record');
 
   await page.goto('/reference/runtime-contracts/');
   await expect(page.getByRole('heading', { name: 'Runtime contract reference' })).toBeVisible();
@@ -645,5 +654,29 @@ test('reports where every help link in Dash lands', async ({ page }) => {
 
   await page.setViewportSize({ width: 390, height: 844 });
   const geometry = await horizontalOverflow(page, '.inapp-link-reference');
+  expectNoHorizontalScroll(geometry);
+});
+
+test('explains its own build pipeline, and links each generator to what it feeds', async ({ page }) => {
+  await page.goto('/contributing/pipeline/');
+  await expect(page.getByRole('heading', { name: 'How this site is built' })).toBeVisible();
+
+  // Every generator and check in the repository is on the page, and the stage
+  // grouping is derived, so both counts move on their own when one is added.
+  await expect(page.locator('.pipeline-generator')).toHaveCount(pipeline.generators.length);
+  await expect(page.locator('.pipeline-table tbody tr')).toHaveCount(pipeline.checks.length);
+  const stages = new Set(pipeline.generators.map((entry) => entry.stage));
+  await expect(page.locator('.pipeline-stage')).toHaveCount(stages.size);
+
+  // The point of the page is that a reader can get from a script to the page it
+  // produces, so at least one of those links has to actually resolve.
+  const published = pipeline.generators.find((entry) => entry.publishedAs.length);
+  const target = page.locator('.pipeline-io').getByRole('link', { name: published.publishedAs[0].page }).first();
+  await expect(target).toBeVisible();
+  const response = await page.request.get(await target.getAttribute('href'));
+  expect(response.ok()).toBeTruthy();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await horizontalOverflow(page, '.pipeline-map');
   expectNoHorizontalScroll(geometry);
 });

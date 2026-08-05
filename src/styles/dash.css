@@ -2962,10 +2962,116 @@
   margin: 0 0 0.2rem;
 }
 
+/* ------------------------------------------------------------------ *
+ * Build pipeline map
+ * ------------------------------------------------------------------ */
+
+.pipeline-table-scroll {
+  overflow-x: auto;
+}
+
+.pipeline-table {
+  min-width: 34rem;
+  width: 100%;
+}
+
+.pipeline-when {
+  border: 1px solid var(--dash-control-border);
+  border-radius: var(--dash-radius-sm);
+  display: inline-block;
+  font-size: var(--dash-type-xs);
+  padding: 0.1rem 0.45rem;
+  white-space: nowrap;
+}
+
+/* The distinction that matters is "runs without a build" against everything
+   else, so only that one is emphasised. */
+.pipeline-when[data-when='preflight'] {
+  background: var(--dash-accent-soft);
+  border-color: var(--dash-accent);
+}
+
+.sl-markdown-content .pipeline-note {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: var(--dash-space-1) 0;
+}
+
+.pipeline-stage {
+  margin-block: var(--dash-space-5);
+}
+
+.sl-markdown-content .pipeline-stage-note {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: 0 var(--dash-space-3);
+}
+
+.pipeline-generator {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-md);
+  margin-block: var(--dash-space-3);
+  padding: var(--dash-space-4);
+}
+
+.pipeline-generator-head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dash-space-2);
+  justify-content: space-between;
+}
+
+.sl-markdown-content .pipeline-generator-head h5 {
+  margin-block: 0;
+}
+
+.sl-markdown-content .pipeline-script {
+  color: var(--dash-ink-soft);
+  font-family: var(--sl-font-mono);
+  font-size: var(--dash-type-xs);
+  margin-block: 0;
+}
+
+.pipeline-io {
+  display: grid;
+  gap: var(--dash-space-2);
+  margin-block: var(--dash-space-3) 0;
+}
+
+.pipeline-io > div {
+  display: grid;
+  gap: var(--dash-space-1);
+  grid-template-columns: minmax(7rem, 9rem) 1fr;
+}
+
+.sl-markdown-content .pipeline-io dt {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+}
+
+.sl-markdown-content .pipeline-io dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dash-space-2);
+  margin: 0;
+}
+
+.pipeline-none {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  font-style: italic;
+}
+
 @media (max-width: 50rem) {
   .coverage-bars > div {
     grid-template-columns: 1fr;
     gap: 0.2rem;
+  }
+
+  .pipeline-io > div {
+    grid-template-columns: 1fr;
   }
 }
 

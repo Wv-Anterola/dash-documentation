@@ -1,3 +1,23 @@
+/**
+ * Catalogue the field types Dash can serialize, and what happens on the way
+ * back in.
+ *
+ * Everything stored in a Dash document is a tagged field, and the tag is what
+ * the server writes and the client reads back. That makes the set of tags the
+ * real schema of the system: a type missing from it cannot be persisted, and a
+ * type whose tag changes breaks every stored document that used it.
+ *
+ * This parses the serialization registrations from the pinned Dash-Web
+ * revision, records the tag each type registers under and the category it falls
+ * in, and notes two things that matter when reading old data: which types carry
+ * a repair hook for documents written before a change, and which are visible to
+ * scripting.
+ *
+ * Output: src/data/generated/field-types.json, rendered at
+ * /reference/field-types/ and published at /assets/data/field-types.json.
+ *
+ *   npm run audit:fields
+ */
 import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';

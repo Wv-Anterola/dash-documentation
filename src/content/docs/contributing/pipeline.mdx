@@ -1,0 +1,93 @@
+---
+title: How this site is built
+description: "A map of every generator, dataset, and check in this repository, derived from the repository itself, so that a failing build points at the script responsible."
+sidebar:
+  order: 3
+---
+
+import PipelineMap from '../../../components/PipelineMap.astro';
+
+<p class="lede">
+  Almost nothing on this site is typed by hand into a page. Reference content is
+  generated from a pinned revision of Dash-Web, committed as JSON, rendered by a
+  component, and held in place by a check. This page is a map of that machine,
+  and it is generated from the machine.
+</p>
+
+## The shape of it
+
+Every reference on this site travels the same five steps:
+
+1. **A generator** in `scripts/build-*.mjs` reads a pinned Dash-Web revision and
+   writes a dataset.
+2. **The dataset** lands in `src/data/generated/` and is committed, because CI
+   has no Dash-Web checkout to regenerate it from.
+3. **A component** renders it, and for most datasets a route under
+   `src/pages/assets/data/` republishes it as a public JSON endpoint.
+4. **A unit test** asserts the invariants the pages rely on.
+5. **A check** in `scripts/check-*.mjs` proves the committed output still agrees
+   with the pages and with itself.
+
+The one thing to understand before anything else: **the generated files are
+committed, and CI cannot rebuild them.** That makes staleness this
+repository's characteristic failure. An edit lands, a generated file is not
+rebuilt, nothing visibly breaks, and the site starts describing a version of
+Dash that no longer exists. Every check below exists to make that loud.
+
+## If a check just failed
+
+Read the `fix:` line in its output first. Most failures here are a stale
+generated file rather than a mistake in what you wrote, and each check names the
+command that resolves it:
+
+```text
+Pages without inline media also lack a unique page visual:
+  - /contributing/pipeline
+    fix: run `npm run visuals` and commit the result, because the registry
+    assigns a visual to every page it finds, and it has not been re-run since
+    these pages were added.
+```
+
+Three commands resolve nearly everything:
+
+| Command | Use it when |
+| :--- | :--- |
+| `npm run visuals` | A page was added, moved, or grew its own image. |
+| `npm run audit:all` | The pinned Dash-Web revision moved. Needs a sibling Dash-Web checkout. |
+| `npm run preflight` | Before pushing. It is the fast half of `verify` and needs no build. |
+
+## Adding a page
+
+Write the MDX, add it to the sidebar in `astro.config.mjs`, then run
+`npm run visuals` and commit what it changes. That last step is the one people
+forget, and `npm test` will not catch it: the unit tests read the committed
+datasets and cannot tell that a page exists without one. `npm run preflight`
+does catch it, in about forty seconds.
+
+## Moving the Dash-Web baseline
+
+Run `npm run audit:all` against the new revision and commit the regenerated
+datasets **in the same change as the prose they support**. The generators are
+written to fail rather than to guess: each one pins itself to needles in the
+source, and when a handler is renamed or a control deleted, generation stops
+instead of the site quietly going stale. A failing generator is the system
+working.
+
+Every dataset records the revision it came from, and `npm run coverage` fails if
+they disagree, so a partial regeneration cannot pass.
+
+## The map
+
+<PipelineMap />
+
+## What is not on this page
+
+`npm run audit:all` is not run in CI. Those generators read a sibling Dash-Web
+checkout that CI does not have. Their output is committed, and the checks that
+do run prove that committed output is internally consistent, addressed to an
+immutable revision, and consistent with what the pages assert about it.
+
+The datasets themselves, with their schemas and record counts, are listed under
+[generated data endpoints](/reference/generated-data/). What the documentation
+still does not explain is counted under [documentation
+coverage](/reference/documentation-coverage/).

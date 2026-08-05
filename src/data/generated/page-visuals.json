@@ -99,6 +99,10 @@
     "src": "/assets/gifs/environment/dash-drag-tab-create-tile.gif",
     "alt": "Dash demonstration of Drag Tab Create Tile."
   },
+  "/contributing/pipeline": {
+    "src": "/assets/images/diagrams/dash-documentation-pipeline.svg",
+    "alt": "A fact travelling from one pinned Dash-Web commit through a generator, into a committed dataset, out to a page and a JSON endpoint, with the checks underneath, and a branch showing where skipping the regeneration step leaves the site quietly describing code that has moved."
+  },
   "/development": {
     "src": "/assets/gifs/environment/rename-dashboard.gif",
     "alt": "Dash demonstration of Rename Dashboard."

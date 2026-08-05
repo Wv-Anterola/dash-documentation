@@ -1,0 +1,126 @@
+---
+/**
+ * The build pipeline, rendered from the map generated out of the repository.
+ *
+ * Server-rendered rather than fetched, because this is the page someone reads
+ * when something is broken and they are trying to find the script responsible.
+ * It has to work with JavaScript off and be searchable in the page.
+ *
+ * Generators are grouped by dependency stage. The stage is derived, not
+ * written down, so a new generator lands in the right place without anyone
+ * updating this component.
+ */
+import map from '../data/generated/pipeline-map.json';
+
+const { summary, generators, checks } = map;
+
+const stages = [...new Set(generators.map((entry) => entry.stage))].sort((a, b) => a - b);
+const stageNote: Record<number, string> = {
+  1: 'Reads the pinned Dash-Web revision and nothing this repository generated. Run these first.',
+  2: 'Reads a stage 1 dataset.',
+  3: 'Joins several earlier datasets into one view of the interface.',
+  4: 'Reports on the datasets above, so it runs last.',
+};
+
+const runOrder: Record<string, string> = {
+  preflight: 'preflight',
+  verify: 'verify, after the build',
+  scheduled: 'on a schedule',
+};
+---
+
+<div class="pipeline-map">
+  <div class="audit-summary" aria-label="Pipeline totals">
+    <div><strong>{summary.generators}</strong><span>generators</span></div>
+    <div><strong>{summary.datasets}</strong><span>committed datasets</span></div>
+    <div><strong>{summary.publishedDatasets}</strong><span>published as endpoints</span></div>
+    <div><strong>{summary.checks}</strong><span>checks</span></div>
+    <div><strong>{summary.checksInPreflight}</strong><span>need no build</span></div>
+    <div><strong>{summary.testFiles}</strong><span>unit test files</span></div>
+  </div>
+
+  <h3 id="pipeline-checks">The checks, and when each one runs</h3>
+  <p>
+    Everything in <code>preflight</code> runs without building the site, which is
+    why it is the fast loop and the hook. Everything else needs
+    <code>dist/</code> to exist.
+  </p>
+
+  <div class="pipeline-table-scroll">
+    <table class="pipeline-table">
+      <thead>
+        <tr>
+          <th scope="col">Command</th>
+          <th scope="col">Runs in</th>
+          <th scope="col">What it holds</th>
+        </tr>
+      </thead>
+      <tbody>
+        {checks.map((check) => (
+          <tr>
+            <td><code>npm run {check.command}</code></td>
+            <td>
+              <span class="pipeline-when" data-when={check.runsIn}>{runOrder[check.runsIn] ?? check.runsIn}</span>
+            </td>
+            <td>
+              <p>{check.summary}</p>
+              {check.note && <p class="pipeline-note">{check.note}</p>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="pipeline-generators">The generators, in the order they have to run</h3>
+  <p>
+    <code>npm run audit:all</code> runs all of them in a valid order. The stages
+    below are derived from what each one reads, and generation fails if
+    <code>audit:all</code> ever contradicts them.
+  </p>
+
+  {stages.map((stage) => (
+    <section class="pipeline-stage" id={`stage-${stage}`}>
+      <h4>Stage {stage}</h4>
+      <p class="pipeline-stage-note">{stageNote[stage] ?? 'Reads datasets produced by an earlier stage.'}</p>
+
+      {generators
+        .filter((entry) => entry.stage === stage)
+        .map((entry) => (
+          <article class="pipeline-generator">
+            <div class="pipeline-generator-head">
+              <h5><code>npm run {entry.command}</code></h5>
+              <p class="pipeline-script">{entry.script}</p>
+            </div>
+            <p>{entry.summary}</p>
+            <dl class="pipeline-io">
+              <div>
+                <dt>Reads</dt>
+                <dd>{entry.reads.length ? entry.reads.map((name) => <code>{name}.json</code>) : <span class="pipeline-none">the Dash-Web checkout only</span>}</dd>
+              </div>
+              <div>
+                <dt>Writes</dt>
+                <dd>{entry.writes.length ? entry.writes.map((name) => <code>{name}.json</code>) : <span class="pipeline-none">image files, not a dataset</span>}</dd>
+              </div>
+              <div>
+                <dt>Rendered at</dt>
+                <dd>
+                  {entry.publishedAs.length
+                    ? entry.publishedAs.map((published) => <a href={published.page}>{published.page}</a>)
+                    : <span class="pipeline-none">used at build time, no page of its own</span>}
+                </dd>
+              </div>
+              <div>
+                <dt>Asserted by</dt>
+                <dd>
+                  {entry.tests.length
+                    ? entry.tests.map((name) => <code>tests/{name}</code>)
+                    : <span class="pipeline-none">no unit test reads its output</span>}
+                </dd>
+              </div>
+            </dl>
+          </article>
+        ))}
+    </section>
+  ))}
+</div>

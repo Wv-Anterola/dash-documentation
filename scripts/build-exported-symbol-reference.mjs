@@ -1,3 +1,24 @@
+/**
+ * Index every exported declaration in Dash-Web, with a stable target for each.
+ *
+ * This is the backing inventory for the module API pages. Its job beyond
+ * listing is disambiguation: thousands of exports across hundreds of modules
+ * collide by name, so each one is given a collision-safe target that a page can
+ * link to and a check can verify still resolves.
+ *
+ * Each export is also classified by how much is actually known about it:
+ * reviewed by a person, described by a comment in the source, or
+ * declaration-only, which is most of them. That distinction is what stops the
+ * module pages from implying a description exists where none does.
+ *
+ * Reads src/data/generated/source-modules.json, so run `npm run audit:source`
+ * first.
+ *
+ * Output: src/data/generated/exported-symbols.json, rendered under
+ * /technical/exported-symbols/ and /technical/api/modules/.
+ *
+ *   npm run audit:symbols
+ */
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

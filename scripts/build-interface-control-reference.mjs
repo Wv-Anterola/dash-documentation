@@ -1,3 +1,29 @@
+/**
+ * Trace every persistent control in the Dash interface back to the code behind
+ * it.
+ *
+ * A control here is anything a user can see and act on that stays put: the top
+ * bar, the sidebar, the context toolbar, document decorations, the properties
+ * panel, tab and tile chrome, the footer, and the creator palette. For each
+ * one, the record carries what it does in plain language, when it is visible,
+ * how it is operated, its tooltip, what owns the state it changes, the handler
+ * it calls, and a permalink to the line that proves it.
+ *
+ * Controls are declared here as contracts: a label, a file, and a needle that
+ * must appear in that file. That is the drift rule. When someone renames a
+ * handler or deletes a button in Dash-Web, the needle stops matching and this
+ * generator fails, rather than the site quietly describing a control that no
+ * longer exists.
+ *
+ * Where a control's handler is also a scripting global, the two are joined, so
+ * a reader can go from the button to the function a script would call instead.
+ *
+ * Output: src/data/generated/interface-controls.json, rendered at
+ * /reference/interface-controls/ and published at
+ * /assets/data/interface-controls.json.
+ *
+ *   npm run audit:controls
+ */
 import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';

@@ -1,3 +1,21 @@
+/**
+ * Build a lightweight still for each project and capability that has a
+ * recording.
+ *
+ * The archived media is the evidence, and some of it is very large. A page that
+ * shows a card grid should not download tens of megabytes of animation to
+ * render thumbnails nobody has clicked yet, so each entry below names its
+ * source and gets a single WebP frame transcoded from it. The card shows the
+ * poster and links to the full recording.
+ *
+ * The map is hand-maintained on purpose: which frame represents a feature is a
+ * judgement, and picking one automatically produced posters of empty canvases.
+ * Adding an entry here also removes that source from the automatic page-visual
+ * pool, so the same image never appears twice on the site.
+ *
+ * Output: public/assets/images/visuals/*.webp. Run alongside the page visual
+ * registry, which is what `npm run visuals` does.
+ */
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

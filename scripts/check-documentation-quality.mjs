@@ -1,3 +1,22 @@
+/**
+ * Hold the authored pages to the standards the site claims for itself.
+ *
+ * The generators guarantee that a record is traceable. Nothing guarantees that
+ * the prose around it is usable, and that is the half a person writes. This
+ * check covers it: every page needs a unique title and a description that says
+ * something, every image needs a reproducible local source and alt text that
+ * carries the information the image does, every heading anchor has to be
+ * unique, and the reader-facing wording has to stay plain.
+ *
+ * It also re-derives the counts the pages quote from the datasets themselves,
+ * so a number written into a sentence cannot drift away from the inventory it
+ * came from. That is why a change to a generator's summary shape breaks this
+ * check: the recomputation is the point.
+ *
+ * Needs no build, which is why it is part of `preflight`.
+ *
+ *   npm run quality
+ */
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

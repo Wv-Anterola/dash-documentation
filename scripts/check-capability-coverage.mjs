@@ -1,3 +1,24 @@
+/**
+ * Prove the committed datasets, the registries, and the pages still agree.
+ *
+ * The generators read a Dash-Web checkout that CI does not have, so their
+ * output is committed. That makes staleness the failure mode of this
+ * repository: an edit lands, a generated file is not rebuilt, and nothing
+ * visible breaks. This check is what makes that loud.
+ *
+ * It holds several things at once. Every integrated project has to map to a
+ * real documentation page. Every dataset has to name the same Dash-Web baseline
+ * as the others, because records from different revisions are not comparable.
+ * Every source link has to carry an immutable commit. Every page has to own a
+ * distinct visual, and no image may be used twice.
+ *
+ * Almost every failure here is a generated file that is behind, not a mistake
+ * in what someone wrote, so each one names the command that fixes it.
+ *
+ * Needs no build, which is why it is part of `preflight`.
+ *
+ *   npm run coverage
+ */
 import { createHash } from 'node:crypto';
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';

@@ -1,3 +1,25 @@
+/**
+ * Enumerate every HTTP route the Dash server registers, and what each one can
+ * reach.
+ *
+ * Routes are registered in two ways: through the project's own RouteManager,
+ * which applies authentication, and directly on Express, which does not. Which
+ * of the two a route used is the single most important fact about it, and it is
+ * not visible from the URL, so it is recorded as `supervised` or `direct`.
+ *
+ * Beyond registration, each handler is read for the calls it makes, and those
+ * are classified into the effects worth knowing before calling a route: does it
+ * touch the database, the filesystem, the network, or a subprocess. Where the
+ * source carries a leading comment on the registration, it is recovered as the
+ * route's description; where it does not, the route is left undescribed rather
+ * than given a guess.
+ *
+ * Output: src/data/generated/http-routes.json, rendered at
+ * /reference/http-service-interface/ and published at
+ * /assets/data/http-routes.json.
+ *
+ *   npm run audit:http
+ */
 import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';

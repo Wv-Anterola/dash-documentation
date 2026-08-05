@@ -252,6 +252,7 @@ export default defineConfig({
                 { slug: 'development/troubleshooting' },
                 { slug: 'contributing/joining' },
                 { slug: 'contributing/documentation' },
+                { slug: 'contributing/pipeline', label: 'How this site is built' },
                 { slug: 'contributing/inapp-links', label: 'Links from Dash into this site' },
               ],
             },

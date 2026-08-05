@@ -1,3 +1,20 @@
+/**
+ * Reject mojibake anywhere in the repository's text.
+ *
+ * A file that was written as UTF-8 and read back as Latin-1 does not fail to
+ * build; it renders, with an apostrophe turned into three characters. That
+ * survives review because it looks like a typo rather than an encoding fault,
+ * and it spreads whenever the file is edited again on the machine that caused
+ * it.
+ *
+ * This walks the authored text of the repository and fails on the replacement
+ * character and on the byte sequences a UTF-8 to Latin-1 round trip produces.
+ * The large generated source archives are exempt: they contain the literal
+ * contents of Dash-Web files, including whatever encoding those files carry,
+ * and correcting them here would misquote the source.
+ *
+ *   npm run encoding
+ */
 import { readFile, readdir } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
