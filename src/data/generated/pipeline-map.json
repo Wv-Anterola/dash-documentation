@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-05T03:02:04.822Z",
+  "generatedAt": "2026-08-05T03:28:26.275Z",
   "methodology": {
     "derivedFrom": "The scripts, tests, dataset manifest, and package.json in this repository. Each script contributes its own header comment, its imports and writes, and the npm command that runs it.",
     "driftRule": "Generation fails when a script cannot be run by any npm command, when a script has no header comment, or when a check is reachable from neither `verify` nor the scheduled list.",
@@ -13,10 +13,10 @@
     "checks": 8,
     "datasets": 22,
     "publishedDatasets": 13,
-    "testFiles": 15,
+    "testFiles": 16,
     "checksInPreflight": 3,
     "checksNeedingBuild": 4,
-    "generatorsWithoutTest": 5
+    "generatorsWithoutTest": 4
   },
   "generators": [
     {
@@ -319,7 +319,9 @@
         "pipeline-map"
       ],
       "publishedAs": [],
-      "tests": [],
+      "tests": [
+        "pipeline-map.test.mjs"
+      ],
       "stage": 1
     },
     {
@@ -465,6 +467,7 @@
       "command": "accessibility",
       "summary": "Accessibility gate: design tokens first, then the built pages.",
       "runsIn": "verify",
+      "onPush": true,
       "note": null,
       "needsBuild": true
     },
@@ -473,6 +476,7 @@
       "command": "coverage",
       "summary": "Prove the committed datasets, the registries, and the pages still agree.",
       "runsIn": "preflight",
+      "onPush": true,
       "note": null,
       "needsBuild": false
     },
@@ -481,6 +485,7 @@
       "command": "quality",
       "summary": "Hold the authored pages to the standards the site claims for itself.",
       "runsIn": "preflight",
+      "onPush": true,
       "note": null,
       "needsBuild": false
     },
@@ -489,6 +494,7 @@
       "command": "encoding",
       "summary": "Reject mojibake anywhere in the repository's text.",
       "runsIn": "preflight",
+      "onPush": true,
       "note": null,
       "needsBuild": false
     },
@@ -497,6 +503,7 @@
       "command": "links:external",
       "summary": "Reachability check for every outbound link, run on a schedule rather than on a push.",
       "runsIn": "scheduled",
+      "onPush": false,
       "note": "Weekly, via .github/workflows/link-rot.yml. It probes other people's servers, and a push that fails because a university page was briefly down teaches everyone to ignore a red build.",
       "needsBuild": false
     },
@@ -505,6 +512,7 @@
       "command": "links",
       "summary": "Validate the built site: internal links, heading anchors, images, alt text, and heading order.",
       "runsIn": "verify",
+      "onPush": true,
       "note": null,
       "needsBuild": true
     },
@@ -513,6 +521,7 @@
       "command": "endpoints",
       "summary": "Validate the plain-text and JSON entry points a machine reads.",
       "runsIn": "verify",
+      "onPush": true,
       "note": null,
       "needsBuild": true
     },
@@ -521,6 +530,7 @@
       "command": "budget",
       "summary": "Page weight budget, measured on what a browser actually fetches first.",
       "runsIn": "verify",
+      "onPush": true,
       "note": null,
       "needsBuild": true
     }

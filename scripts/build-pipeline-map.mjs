@@ -124,6 +124,16 @@ const reachableFrom = (name, seen = new Set()) => {
 const verifyChain = reachableFrom('verify');
 const preflightChain = reachableFrom('preflight');
 
+/**
+ * The push workflow lists its steps individually rather than calling `verify`,
+ * because a named step tells you which check failed without opening a log. The
+ * cost of that is drift: a check added to `verify` and not to the workflow
+ * never runs on a push, and nothing says so. Reading the workflow here closes
+ * it.
+ */
+const workflow = await readFile(path.join(root, '.github', 'workflows', 'verify.yml'), 'utf8');
+const runsInCi = (command) => new RegExp(`run: npm (?:run )?${command.replace(/:/g, ':')}\\s*$`, 'm').test(workflow);
+
 const testFiles = (await readdir(testsRoot)).filter((name) => name.endsWith('.test.mjs'));
 const testSources = new Map();
 for (const name of testFiles) testSources.set(name, await readFile(path.join(testsRoot, name), 'utf8'));
@@ -195,11 +205,18 @@ for (const file of files) {
     if (runsIn === 'nothing') {
       problems.push(`scripts/${file} runs as \`npm run ${command}\` but nothing runs that command, so it checks nothing`);
     }
+    const onPush = runsInCi(command);
+    if (runsIn !== 'scheduled' && !onPush) {
+      problems.push(
+        `\`npm run ${command}\` is part of \`verify\` but .github/workflows/verify.yml does not run it, so it never runs on a push`
+      );
+    }
     checks.push({
       script: `scripts/${file}`,
       command,
       summary,
       runsIn,
+      onPush,
       note: scheduled[command] ?? null,
       needsBuild: verifyChain.has(command) && !preflightChain.has(command),
     });

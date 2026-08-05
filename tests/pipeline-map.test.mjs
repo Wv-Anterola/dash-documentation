@@ -41,6 +41,17 @@ test('no check is defined that nothing runs', () => {
   assert.ok(map.summary.checksInPreflight >= 3, 'preflight has stopped covering the build-free checks');
 });
 
+test('every check that is not scheduled actually runs on a push', () => {
+  for (const check of map.checks) {
+    if (check.runsIn === 'scheduled') {
+      assert.equal(check.onPush, false, `${check.command} is described as scheduled but also runs on every push`);
+      assert.ok(check.note, 'a check kept off the push path has to say why');
+      continue;
+    }
+    assert.equal(check.onPush, true, `${check.command} is part of verify but the push workflow never runs it`);
+  }
+});
+
 test('stages respect what each generator reads', () => {
   const producerOf = new Map();
   for (const generator of map.generators) {
