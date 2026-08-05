@@ -22,6 +22,14 @@ updates:
         update-types: ['minor', 'patch']
       majors:
         update-types: ['major']
+    ignore:
+      # `@astrojs/check` declares a peer range of ^5 || ^6, so npm cannot even
+      # install TypeScript 7 alongside it. Proposing that upgrade every month
+      # produces a pull request that fails at `npm install`, which teaches
+      # people to skim past red checks. Drop this entry once the Astro type
+      # checker widens its range; minor and patch updates still arrive.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
     commit-message:
       # Matches the repository's own commit style: a lowercase phrase.
       prefix: 'update'
