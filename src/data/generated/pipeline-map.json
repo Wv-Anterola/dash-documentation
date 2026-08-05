@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-05T03:42:36.723Z",
+  "generatedAt": "2026-08-05T03:52:30.104Z",
   "methodology": {
     "derivedFrom": "The scripts, tests, dataset manifest, and package.json in this repository. Each script contributes its own header comment, its imports and writes, and the npm command that runs it.",
     "driftRule": "Generation fails when a script cannot be run by any npm command, when a script has no header comment, or when a check is reachable from neither `verify` nor the scheduled list.",
@@ -9,11 +9,11 @@
     ]
   },
   "summary": {
-    "generators": 19,
+    "generators": 20,
     "checks": 8,
-    "datasets": 22,
-    "publishedDatasets": 13,
-    "testFiles": 16,
+    "datasets": 23,
+    "publishedDatasets": 14,
+    "testFiles": 17,
     "checksInPreflight": 3,
     "checksNeedingBuild": 4,
     "generatorsWithoutTest": 4
@@ -237,6 +237,7 @@
       ],
       "tests": [
         "interface-controls.test.mjs",
+        "scripting-usage.test.mjs",
         "task-routes.test.mjs"
       ],
       "stage": 3
@@ -371,9 +372,36 @@
       ],
       "tests": [
         "interface-controls.test.mjs",
-        "scripting-globals.test.mjs"
+        "scripting-globals.test.mjs",
+        "scripting-usage.test.mjs"
       ],
       "stage": 2
+    },
+    {
+      "script": "scripts/build-scripting-usage.mjs",
+      "command": "audit:scripting-usage",
+      "allCommands": [
+        "audit:scripting-usage"
+      ],
+      "summary": "Join scripting globals to the interface controls that call them.",
+      "reads": [
+        "interface-controls",
+        "scripting-globals"
+      ],
+      "writes": [
+        "scripting-usage"
+      ],
+      "publishedAs": [
+        {
+          "page": "/guides/features/scripting/",
+          "endpoint": "/assets/data/scripting-usage.json",
+          "title": "Which controls call which scripting global"
+        }
+      ],
+      "tests": [
+        "scripting-usage.test.mjs"
+      ],
+      "stage": 4
     },
     {
       "script": "scripts/build-source-reference.mjs",

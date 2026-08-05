@@ -143,6 +143,17 @@ const surfaces = [
     behaviourName: 'calls or field writes recovered',
     page: '/guides/features/scripting/',
     note: 'The description is the second argument to ScriptingGlobals.add. It is part of the running application: Dash shows it to the person writing a script, so a missing one is a gap in the product, not only here.',
+    // Not counted as explained. A control record says what one particular call
+    // does with its arguments already chosen, which is evidence about the
+    // global rather than a description of it. Counting it separately keeps the
+    // headline number meaning one thing while still telling a reader that an
+    // answer exists one link away.
+    crossReference: {
+      dataset: 'scripting-usage.json',
+      records: 'usage',
+      key: 'name',
+      via: 'the interface control that calls it',
+    },
   },
   {
     id: 'http-routes',
@@ -195,6 +206,29 @@ for (const surface of surfaces) {
 
   if (!traced.length) failures.push(`${surface.id}: no record carries a source location`);
 
+  /**
+   * Records with no explanation of their own, but with a reviewed explanation
+   * one link away. These stay outside `explained` on purpose; what they change
+   * is the work queue, because a reader who lands on one is not stuck.
+   */
+  let reachable = new Set();
+  if (surface.crossReference) {
+    const { dataset, records: key, key: field } = surface.crossReference;
+    try {
+      const linked = JSON.parse(await readFile(path.join(generated, dataset), 'utf8'));
+      const entries = linked[key];
+      if (!Array.isArray(entries) || !entries.length) {
+        failures.push(`${surface.id}: ${dataset} no longer holds a non-empty \`${key}\` array`);
+      } else {
+        reachable = new Set(entries.map((entry) => entry[field]).filter(Boolean));
+      }
+    } catch (error) {
+      failures.push(`${surface.id}: cannot read ${dataset} (${error.message})`);
+    }
+  }
+  const crossReferenced = missing.filter((row) => reachable.has(row[surface.label]));
+  const unreachable = missing.filter((row) => !reachable.has(row[surface.label]));
+
   const pct = (part) => Math.round((part / records.length) * 1000) / 10;
   rows.push({
     id: surface.id,
@@ -213,9 +247,18 @@ for (const surface of surfaces) {
     behaved: behaved.length,
     behavedPct: pct(behaved.length),
     missing: missing.length,
+    crossReferenced: crossReferenced.length,
+    crossReferencedPct: surface.crossReference ? pct(crossReferenced.length) : 0,
+    crossReferenceVia: surface.crossReference?.via ?? '',
+    unreachable: unreachable.length,
     // A work queue, not an indictment. Capped so the page stays readable and
-    // the full list stays one fetch away in the dataset itself.
-    missingExamples: missing.slice(0, 24).map((row) => String(row[surface.label] ?? '').trim()).filter(Boolean),
+    // the full list stays one fetch away in the dataset itself. Records that
+    // have no explanation anywhere come first: those are the ones where a
+    // reader is genuinely stuck.
+    missingExamples: [...unreachable, ...crossReferenced]
+      .slice(0, 24)
+      .map((row) => String(row[surface.label] ?? '').trim())
+      .filter(Boolean),
   });
 }
 
@@ -237,6 +280,7 @@ const output = {
   repository: JSON.parse(await readFile(path.join(generated, 'interface-controls.json'), 'utf8')).repository,
   methodology: {
     explained: 'A record counts as explained when its plain-language field holds text. Length and quality are not judged: this measures presence, which is the part a machine can be trusted with',
+    crossReferenced: 'A record with no explanation of its own, but with a reviewed explanation one link away. Counted apart from explained and never added to it: knowing which button calls a function is evidence about that function, not a description of it',
     traced: 'A record counts as traced when it carries a source location, which every generator is expected to produce for every record',
     behaviour: 'Each surface names one parsed signal that its records either have or lack, such as a resolved handler or a recovered hydration path',
     scope: 'Only the generated inventories are measured. Hand-written narrative pages are not, because there is nothing to count there that would mean anything',
@@ -249,6 +293,8 @@ const output = {
     explainedPct: Math.round((totals.explained / totals.records) * 1000) / 10,
     traced: totals.traced,
     tracedPct: Math.round((totals.traced / totals.records) * 1000) / 10,
+    crossReferenced: rows.reduce((sum, row) => sum + row.crossReferenced, 0),
+    unexplainedAnywhere: rows.reduce((sum, row) => sum + row.unreachable, 0),
     fullyExplainedSurfaces: rows.filter((row) => row.explained === row.records).length,
     surfacesWithoutExplanationField: rows.filter((row) => !row.hasExplanationField).length,
     largestGap: rows.slice().sort((a, b) => b.missing - a.missing)[0]?.id ?? '',

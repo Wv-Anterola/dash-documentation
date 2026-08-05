@@ -20,6 +20,7 @@ import inappDocLinks from '../../../data/generated/inapp-doc-links.json';
 import openDestinations from '../../../data/generated/open-destinations.json';
 import projectControls from '../../../data/generated/project-controls.json';
 import scriptingGlobals from '../../../data/generated/scripting-globals.json';
+import scriptingUsage from '../../../data/generated/scripting-usage.json';
 import taskRoutes from '../../../data/generated/task-routes.json';
 import exportedSymbols from '../../../data/generated/exported-symbols.json';
 
@@ -110,6 +111,18 @@ const datasets: DatasetEntry[] = [
     recordKey: 'surfaces',
     baseline: coverageReport.repository.baseline,
     generator: 'npm run audit:coverage-report',
+  },
+  {
+    id: 'scripting-usage',
+    title: 'Which controls call which scripting global',
+    description: 'For each scripting global that an interface control calls, the controls that call it and the reviewed explanation each of them carries. Most globals have no description of their own; this is where an answer exists anyway.',
+    path: '/assets/data/scripting-usage.json',
+    page: '/guides/features/scripting/',
+    schemaVersion: scriptingUsage.schemaVersion,
+    records: scriptingUsage.usage.length,
+    recordKey: 'usage',
+    baseline: scriptingUsage.repository.baseline,
+    generator: 'npm run audit:scripting-usage',
   },
   {
     id: 'inapp-doc-links',

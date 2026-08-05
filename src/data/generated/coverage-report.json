@@ -7,6 +7,7 @@
   },
   "methodology": {
     "explained": "A record counts as explained when its plain-language field holds text. Length and quality are not judged: this measures presence, which is the part a machine can be trusted with",
+    "crossReferenced": "A record with no explanation of its own, but with a reviewed explanation one link away. Counted apart from explained and never added to it: knowing which button calls a function is evidence about that function, not a description of it",
     "traced": "A record counts as traced when it carries a source location, which every generator is expected to produce for every record",
     "behaviour": "Each surface names one parsed signal that its records either have or lack, such as a resolved handler or a recovered hydration path",
     "scope": "Only the generated inventories are measured. Hand-written narrative pages are not, because there is nothing to count there that would mean anything",
@@ -19,6 +20,8 @@
     "explainedPct": 78.9,
     "traced": 897,
     "tracedPct": 100,
+    "crossReferenced": 41,
+    "unexplainedAnywhere": 148,
     "fullyExplainedSurfaces": 8,
     "surfacesWithoutExplanationField": 0,
     "largestGap": "scripting-globals"
@@ -41,31 +44,35 @@
       "behaved": 123,
       "behavedPct": 81.5,
       "missing": 118,
+      "crossReferenced": 41,
+      "crossReferencedPct": 27.2,
+      "crossReferenceVia": "the interface control that calls it",
+      "unreachable": 77,
       "missingExamples": [
-        "setBackgroundColor",
-        "setBorderColor",
-        "setFontAttr",
-        "setHeaderColor",
-        "setInkProperty",
-        "setTagFilter",
-        "toggleCharStyle",
-        "toggleOverlay",
-        "toggleRaiseOnDrag",
-        "webBack",
-        "webForward",
-        "webSetURL",
-        "copyDragFactory",
         "Docs",
         "makeDelegate",
         "addTreeFolder",
-        "bringToFront",
-        "curKeyFrame",
         "formatToTime",
         "gotoFrame",
         "max",
         "min",
-        "nextKeyFrame",
-        "pinWithView"
+        "pivotColumnClick",
+        "setGroupBy",
+        "switchView",
+        "updateLinkCollection",
+        "updateTagsCollection",
+        "GoogleAuthenticationManager",
+        "GestureOverlay",
+        "setPen",
+        "imageStretch",
+        "urlHash",
+        "getCurrentRecording",
+        "getWorkspaceRecordings",
+        "isWorkspaceRecording",
+        "isWorkspaceReplaying",
+        "pauseWorkspaceReplaying",
+        "removeWorkspaceReplaying",
+        "renderDropdown"
       ]
     },
     {
@@ -85,6 +92,10 @@
       "behaved": 102,
       "behavedPct": 93.6,
       "missing": 71,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 71,
       "missingExamples": [
         "/activity",
         "/admin/:previous_target",
@@ -129,6 +140,10 @@
       "behaved": 49,
       "behavedPct": 96.1,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -148,6 +163,10 @@
       "behaved": 18,
       "behavedPct": 100,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -167,6 +186,10 @@
       "behaved": 142,
       "behavedPct": 64.8,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -186,6 +209,10 @@
       "behaved": 58,
       "behavedPct": 100,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -205,6 +232,10 @@
       "behaved": 17,
       "behavedPct": 94.4,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -224,6 +255,10 @@
       "behaved": 18,
       "behavedPct": 62.1,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -243,6 +278,10 @@
       "behaved": 131,
       "behavedPct": 58.7,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     },
     {
@@ -262,6 +301,10 @@
       "behaved": 21,
       "behavedPct": 100,
       "missing": 0,
+      "crossReferenced": 0,
+      "crossReferencedPct": 0,
+      "crossReferenceVia": "",
+      "unreachable": 0,
       "missingExamples": []
     }
   ]

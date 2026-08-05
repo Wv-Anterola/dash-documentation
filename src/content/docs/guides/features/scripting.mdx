@@ -32,7 +32,7 @@ appear through several interfaces:
 | Script document | Code editor, parameter list, Compile, Apply, and Save | `DocumentType.SCRIPTING` containing a `ScriptField` | Visible, inspectable actions with inputs |
 | Applied Script document | Type-specific input controls, Edit, and Run | The same document plus parameter values stored as fields | Let a non-programmer run a prepared action |
 | Event field | Script editor with Finish, reached from a field such as `onClick` | `ScriptField` in a layout/event property | Small behavior attached to a button or node event |
-| Key–Value field editor | A value beginning with scripting prefixes | Immediate value, `ScriptField`, or `ComputedField` | Define a field without creating a separate Script document |
+| Key-Value field editor | A value beginning with scripting prefixes | Immediate value, `ScriptField`, or `ComputedField` | Define a field without creating a separate Script document |
 | Computed field | No separate visible editor after assignment | `ComputedField`, optionally with a setter script | Derive a value from observable document state |
 | Calculator REPL | One-line command entry and expandable result | Ephemeral compiled expression | Inspect and experiment with mounted documents |
 | Saved function | Name and description form after Save | Script document in the main script collection plus a process-local global | Reuse one action from other scripts and events |
@@ -124,9 +124,9 @@ If a parameter name is also captured by a compiled script, the capture occupies
 that parameter slot and the ordinary declared parameter is omitted from the
 generated signature.
 
-## Inline field syntax in the Key–Value view
+## Inline field syntax in the Key-Value view
 
-The Key–Value editor calls `KeyValueBox.CompileKVPScript`, which interprets a
+The Key-Value editor calls `KeyValueBox.CompileKVPScript`, which interprets a
 small prefix language before invoking the same compiler.
 
 | Value text | Meaning |
@@ -237,7 +237,7 @@ service will succeed, or a mutation is authorized.
 ## Invocation, `this`, arguments, and results
 
 For every generated custom parameter except `this`, `run(args)` uses the supplied
-argument when the key exists—even when its value is explicitly `undefined`—and
+argument when the key exists (even when its value is explicitly `undefined`) and
 otherwise uses the captured value. The receiver is `args.this ||
 capturedVariables.this`.
 
@@ -364,6 +364,31 @@ So the comments are recovered, audited, and deliberately not used. The audit is
 published in the dataset as `commentAudit`, which also names the lines worth
 fixing in Dash-Web. What stands in for a description here is the evidence
 column: the calls each global makes and the fields it writes.
+
+### Where an answer exists anyway
+
+There was one reviewed source of prose about these functions that was going
+unused. Every control in the [interface control
+atlas](/reference/interface-controls/) carries a plain-language explanation
+somebody wrote and checked, and 142 of those controls record which functions
+their handler calls. Where a control calls a scripting global, that explanation
+is direct evidence of what calling the global does: pressing the button is
+calling the function.
+
+Joining the two connects **44 globals to the controls that call them, 41 of
+which have no description of their own**. Those rows now carry a "What pressing
+it does" panel quoting the control's explanation and linking to its record.
+
+It is attributed rather than copied, and it does not move the coverage number.
+A control calls a global with its arguments already chosen, so it tells you what
+one particular call does, not what the function is for in general. The
+[coverage report](/reference/documentation-coverage/) counts these separately
+for that reason: 33 explained at the registration site, 41 answerable through a
+control, and 77 with no explanation anywhere. The last figure is the real work
+queue, and it is the one worth fixing in Dash-Web.
+
+The join is published at
+[`/assets/data/scripting-usage.json`](/assets/data/scripting-usage.json).
 
 <ScriptingGlobalReference />
 

@@ -1,0 +1,2909 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-05T03:58:25.435Z",
+  "repository": {
+    "remote": "https://github.com/brown-dash/Dash-Web",
+    "baseline": "e7473b5d1076d5b77f6e580c4367afd8c4958033"
+  },
+  "methodology": {
+    "derivedFrom": "The generated interface-control atlas and the generated scripting-global inventory, both from the same pinned Dash-Web revision. A control contributes when the functions its handler calls include a registered scripting global.",
+    "driftRule": "Generation fails when the two datasets carry different baselines, or when no control resolves to any global, which is what a record-shape change looks like from here.",
+    "limits": "A control tells you what one particular call does, with its arguments already chosen. It is evidence about the global, not a specification of it: a global may accept parameters no button ever varies, and a global called by no control is not thereby unimportant."
+  },
+  "summary": {
+    "globals": 151,
+    "describedAtRegistration": 33,
+    "calledByAControl": 44,
+    "undescribedButCalled": 41,
+    "controlsCallingAGlobal": 142,
+    "callSites": 178
+  },
+  "usage": [
+    {
+      "name": "bringToFront",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2589,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2589"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-doc-top",
+          "label": "Top",
+          "region": "Context toolbar",
+          "group": "Doc",
+          "explanation": "Moves the selected freeform document in front of the other documents.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-doc-top",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 743,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L743"
+          }
+        }
+      ]
+    },
+    {
+      "name": "copyDragFactory",
+      "kind": "function",
+      "category": "application-services",
+      "described": false,
+      "source": {
+        "file": "src/client/documents/DocUtils.ts",
+        "line": 985,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/documents/DocUtils.ts#L985"
+      },
+      "controls": [
+        {
+          "id": "tools-palette-document-creators-3d-model",
+          "label": "3D Model",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new 3D Model from Dash’s Viewer3DDocument template (VIEWER3D).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-3d-model",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 425,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L425"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-agent",
+          "label": "Agent",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Agent from Dash’s AgentDocument template (AGENT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-agent",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 431,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L431"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-audio",
+          "label": "Audio",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Audio from Dash’s AudioDocument template (AUDIO).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-audio",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 415,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L415"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-button",
+          "label": "Button",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Button from Dash’s ButtonDocument template (BUTTON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-button",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 419,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L419"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-chat-assist",
+          "label": "Chat Assist",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Chat Assist from Dash’s ChatDocument template (CHAT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-chat-assist",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 430,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L430"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-checker",
+          "label": "Checker",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Checker from Dash’s PolicyCheckerDocument template (POLICY_CHECKER).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-checker",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 427,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L427"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-col",
+          "label": "Col",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Col from Dash’s FreeformDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-col",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 408,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L408"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-compare",
+          "label": "Compare",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Compare from Dash’s ComparisonDocument template (COMPARISON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-compare",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 411,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L411"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-dataviz",
+          "label": "DataViz",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new DataViz from Dash’s DataVizDocument template (DATAVIZ).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-dataviz",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 421,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L421"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-diagram",
+          "label": "Diagram",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Diagram from Dash’s DiagramDocument template (DIAGRAM).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-diagram",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 412,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L412"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-flashcard",
+          "label": "Flashcard",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Flashcard from Dash’s FlashcardDocument template (COMPARISON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-flashcard",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 404,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L404"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-function",
+          "label": "Function",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Function from Dash’s FunctionPlotDocument template (FUNCPLOT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-function",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 413,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L413"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-grab",
+          "label": "Grab",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Grab from Dash’s ScreenshotDocument template (SCREENSHOT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-grab",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 417,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L417"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-html",
+          "label": "Html",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Html from Dash’s HtmlDocument template (HTML).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-html",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 409,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L409"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-image",
+          "label": "Image",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Image from Dash’s ImageDocument template (IMG).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-image",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 405,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L405"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-journal",
+          "label": "Journal",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Journal from Dash’s DailyJournalDocument template (JOURNAL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-journal",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 422,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L422"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-life-coach",
+          "label": "Life Coach",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Life Coach from Dash’s LifeCoachDocument template (LIFECOACH).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-life-coach",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 423,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L423"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-map",
+          "label": "Map",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Map from Dash’s MapDocument template (MAP).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-map",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 416,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L416"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-math",
+          "label": "Math",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Math from Dash’s EquationDocument template (EQUATION).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-math",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 406,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L406"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-mermaids",
+          "label": "Mermaids",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Mermaids from Dash’s mermaidsView template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-mermaids",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 436,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L436"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-metanote",
+          "label": "MetaNote",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new MetaNote from Dash’s metaNoteTemplate template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-metanote",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 432,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L432"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-note",
+          "label": "Note",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Note from Dash’s TextDocument template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-note",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 403,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L403"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-notes",
+          "label": "Notes",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Notes from Dash’s NoteTakingDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-notes",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 407,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L407"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-plotly",
+          "label": "Plotly",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Plotly from Dash’s plotlyView template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-plotly",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 437,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L437"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-recording",
+          "label": "Recording",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Recording from Dash’s AudioDocument template (AUDIO).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-recording",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 414,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L414"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-scrapbook",
+          "label": "Scrapbook",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Scrapbook from Dash’s ScrapbookDocument template (SCRAPBOOK).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-scrapbook",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 429,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L429"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-script",
+          "label": "Script",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Script from Dash’s ScriptingDocument template (SCRIPTING).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-script",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 420,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L420"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-sketch3d",
+          "label": "Sketch3D",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Sketch3D from Dash’s Sketch3DDocument template (SKETCH3D).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-sketch3d",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 428,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L428"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-tab",
+          "label": "Tab",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Tab from Dash’s FreeformDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-tab",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 435,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L435"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-task",
+          "label": "Task",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Task from Dash’s TaskDocument template (TASK).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-task",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 424,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L424"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-testimony",
+          "label": "Testimony",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Testimony from Dash’s PolicyTestimonyDocument template (POLICY_TESTIMONY).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-testimony",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 426,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L426"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-trail",
+          "label": "Trail",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Trail from Dash’s PresDocument template (PRES).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-trail",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 434,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L434"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-video-gen",
+          "label": "Video Gen",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Video Gen from Dash’s VideoGeneratorDocument template (VIDGEN).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-video-gen",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 438,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L438"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-view-slide",
+          "label": "View Slide",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new View Slide from Dash’s slideView template (COL, RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-view-slide",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 433,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L433"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-web",
+          "label": "Web",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Web from Dash’s WebDocument template (WEB).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-web",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 410,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L410"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-webcam",
+          "label": "WebCam",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new WebCam from Dash’s WebCamDocument template (WEBCAM).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-webcam",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 418,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L418"
+          }
+        }
+      ]
+    },
+    {
+      "name": "curKeyFrame",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2569,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2569"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-num",
+          "label": "Num",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Frame # (click to toggle edit mode).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-num",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 900,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L900"
+          }
+        }
+      ]
+    },
+    {
+      "name": "datavizFromSchema",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2597,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2597"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-schema-dataviz",
+          "label": "DataViz",
+          "region": "Context toolbar",
+          "group": "Schema",
+          "explanation": "Turn Schema Table into Data Visualization Doc.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-schema-dataviz",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 864,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L864"
+          }
+        }
+      ]
+    },
+    {
+      "name": "equation_colorizer",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 539,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L539"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-eqn-colorize",
+          "label": "Colorize",
+          "region": "Context toolbar",
+          "group": "Eqn",
+          "explanation": "colorize variables. It changes the selected equation.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eqn-colorize",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 734,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L734"
+          }
+        }
+      ]
+    },
+    {
+      "name": "equation_slider",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 524,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L524"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-eqn-slider",
+          "label": "Slider",
+          "region": "Context toolbar",
+          "group": "Eqn",
+          "explanation": "slider for setting variable.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eqn-slider",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 736,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L736"
+          }
+        }
+      ]
+    },
+    {
+      "name": "equation_titles",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 549,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L549"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-eqn-titles",
+          "label": "Titles",
+          "region": "Context toolbar",
+          "group": "Eqn",
+          "explanation": "show titles when selected.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eqn-titles",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 735,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L735"
+          }
+        }
+      ]
+    },
+    {
+      "name": "equation_variables",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 532,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L532"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-eqn-vars",
+          "label": "Vars",
+          "region": "Context toolbar",
+          "group": "Eqn",
+          "explanation": "find unbound variables.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eqn-vars",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 737,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L737"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hideUI",
+      "kind": "function",
+      "category": "workspace-and-navigation",
+      "described": false,
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1125,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1125"
+      },
+      "controls": [
+        {
+          "id": "canvas-footer-docked-controls-toggle-ui",
+          "label": "Toggle UI",
+          "region": "Canvas footer",
+          "group": "Docked controls",
+          "explanation": "Hides or restores interface buttons to make more room for the workspace.",
+          "page": "/reference/interface-controls/#control-index-canvas-footer-docked-controls-toggle-ui",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 717,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L717"
+          }
+        }
+      ]
+    },
+    {
+      "name": "imageDontBlend",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 604,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L604"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-image-noblend",
+          "label": "NoBlend",
+          "region": "Context toolbar",
+          "group": "Image",
+          "explanation": "Don't blend with background.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-image-noblend",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 885,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L885"
+          }
+        }
+      ]
+    },
+    {
+      "name": "imageMaskForeground",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 609,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L609"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-image-maskfgd",
+          "label": "MaskFgd",
+          "region": "Context toolbar",
+          "group": "Image",
+          "explanation": "Uses the selected image’s foreground as a mask.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-image-maskfgd",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 884,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L884"
+          }
+        }
+      ]
+    },
+    {
+      "name": "imageRemoveBackground",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 614,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L614"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-image-nobkgd",
+          "label": "NoBkgd",
+          "region": "Context toolbar",
+          "group": "Image",
+          "explanation": "Runs background removal on the selected image.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-image-nobkgd",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 883,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L883"
+          }
+        }
+      ]
+    },
+    {
+      "name": "imageRotate90",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 624,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L624"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-image-rotate",
+          "label": "Rotate",
+          "region": "Context toolbar",
+          "group": "Image",
+          "explanation": "Turns the selected image 90 degrees.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-image-rotate",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 882,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L882"
+          }
+        }
+      ]
+    },
+    {
+      "name": "imageSetPixelSize",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 619,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L619"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-image-pixels",
+          "label": "Pixels",
+          "region": "Context toolbar",
+          "group": "Image",
+          "explanation": "Set Native Pixel Size.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-image-pixels",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 881,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L881"
+          }
+        }
+      ]
+    },
+    {
+      "name": "nextKeyFrame",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2561,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2561"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-fwd",
+          "label": "Fwd",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Next Animation Frame.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-fwd",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 901,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L901"
+          }
+        }
+      ]
+    },
+    {
+      "name": "openDoc",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": true,
+      "source": {
+        "file": "src/client/views/collections/CollectionDockingView.tsx",
+        "line": 680,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/CollectionDockingView.tsx#L680"
+      },
+      "controls": [
+        {
+          "id": "tools-palette-document-creators-3d-model",
+          "label": "3D Model",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new 3D Model from Dash’s Viewer3DDocument template (VIEWER3D).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-3d-model",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 425,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L425"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-agent",
+          "label": "Agent",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Agent from Dash’s AgentDocument template (AGENT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-agent",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 431,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L431"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-audio",
+          "label": "Audio",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Audio from Dash’s AudioDocument template (AUDIO).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-audio",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 415,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L415"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-button",
+          "label": "Button",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Button from Dash’s ButtonDocument template (BUTTON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-button",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 419,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L419"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-chat-assist",
+          "label": "Chat Assist",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Chat Assist from Dash’s ChatDocument template (CHAT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-chat-assist",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 430,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L430"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-checker",
+          "label": "Checker",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Checker from Dash’s PolicyCheckerDocument template (POLICY_CHECKER).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-checker",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 427,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L427"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-col",
+          "label": "Col",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Col from Dash’s FreeformDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-col",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 408,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L408"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-compare",
+          "label": "Compare",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Compare from Dash’s ComparisonDocument template (COMPARISON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-compare",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 411,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L411"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-dataviz",
+          "label": "DataViz",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new DataViz from Dash’s DataVizDocument template (DATAVIZ).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-dataviz",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 421,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L421"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-diagram",
+          "label": "Diagram",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Diagram from Dash’s DiagramDocument template (DIAGRAM).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-diagram",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 412,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L412"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-flashcard",
+          "label": "Flashcard",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Flashcard from Dash’s FlashcardDocument template (COMPARISON).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-flashcard",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 404,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L404"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-function",
+          "label": "Function",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Function from Dash’s FunctionPlotDocument template (FUNCPLOT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-function",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 413,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L413"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-grab",
+          "label": "Grab",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Grab from Dash’s ScreenshotDocument template (SCREENSHOT).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-grab",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 417,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L417"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-html",
+          "label": "Html",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Html from Dash’s HtmlDocument template (HTML).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-html",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 409,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L409"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-image",
+          "label": "Image",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Image from Dash’s ImageDocument template (IMG).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-image",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 405,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L405"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-journal",
+          "label": "Journal",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Journal from Dash’s DailyJournalDocument template (JOURNAL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-journal",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 422,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L422"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-life-coach",
+          "label": "Life Coach",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Life Coach from Dash’s LifeCoachDocument template (LIFECOACH).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-life-coach",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 423,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L423"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-map",
+          "label": "Map",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Map from Dash’s MapDocument template (MAP).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-map",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 416,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L416"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-math",
+          "label": "Math",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Math from Dash’s EquationDocument template (EQUATION).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-math",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 406,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L406"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-mermaids",
+          "label": "Mermaids",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Mermaids from Dash’s mermaidsView template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-mermaids",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 436,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L436"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-metanote",
+          "label": "MetaNote",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new MetaNote from Dash’s metaNoteTemplate template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-metanote",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 432,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L432"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-note",
+          "label": "Note",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Note from Dash’s TextDocument template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-note",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 403,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L403"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-notes",
+          "label": "Notes",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Notes from Dash’s NoteTakingDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-notes",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 407,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L407"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-plotly",
+          "label": "Plotly",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Plotly from Dash’s plotlyView template (RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-plotly",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 437,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L437"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-recording",
+          "label": "Recording",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Recording from Dash’s AudioDocument template (AUDIO).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-recording",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 414,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L414"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-scrapbook",
+          "label": "Scrapbook",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Scrapbook from Dash’s ScrapbookDocument template (SCRAPBOOK).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-scrapbook",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 429,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L429"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-script",
+          "label": "Script",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Script from Dash’s ScriptingDocument template (SCRIPTING).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-script",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 420,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L420"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-sketch3d",
+          "label": "Sketch3D",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Sketch3D from Dash’s Sketch3DDocument template (SKETCH3D).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-sketch3d",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 428,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L428"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-tab",
+          "label": "Tab",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Tab from Dash’s FreeformDocument template (COL).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-tab",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 435,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L435"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-task",
+          "label": "Task",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Task from Dash’s TaskDocument template (TASK).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-task",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 424,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L424"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-testimony",
+          "label": "Testimony",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Testimony from Dash’s PolicyTestimonyDocument template (POLICY_TESTIMONY).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-testimony",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 426,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L426"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-trail",
+          "label": "Trail",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Trail from Dash’s PresDocument template (PRES).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-trail",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 434,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L434"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-video-gen",
+          "label": "Video Gen",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Video Gen from Dash’s VideoGeneratorDocument template (VIDGEN).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-video-gen",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 438,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L438"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-view-slide",
+          "label": "View Slide",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new View Slide from Dash’s slideView template (COL, RTF).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-view-slide",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 433,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L433"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-web",
+          "label": "Web",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new Web from Dash’s WebDocument template (WEB).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-web",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 410,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L410"
+          }
+        },
+        {
+          "id": "tools-palette-document-creators-webcam",
+          "label": "WebCam",
+          "region": "Tools palette",
+          "group": "Document creators",
+          "explanation": "Makes a new WebCam from Dash’s WebCamDocument template (WEBCAM).",
+          "page": "/reference/interface-controls/#control-index-tools-palette-document-creators-webcam",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 418,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L418"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pinWithView",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2576,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2576"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-pin",
+          "label": "Pin",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Adds the selected view to the active presentation trail.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-pin",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 891,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L891"
+          }
+        }
+      ]
+    },
+    {
+      "name": "prevKeyFrame",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2565,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2565"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-back",
+          "label": "Back",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Prev Animation Frame.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-back",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 899,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L899"
+          }
+        }
+      ]
+    },
+    {
+      "name": "redo",
+      "kind": "function",
+      "category": "selection-and-history",
+      "described": false,
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 111,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L111"
+      },
+      "controls": [
+        {
+          "id": "canvas-footer-docked-controls-redo",
+          "label": "Redo",
+          "region": "Canvas footer",
+          "group": "Docked controls",
+          "explanation": "Redo ⌘⇧Z. It changes the current workspace action history.",
+          "page": "/reference/interface-controls/#control-index-canvas-footer-docked-controls-redo",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 713,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L713"
+          }
+        }
+      ]
+    },
+    {
+      "name": "selectMainMenu",
+      "kind": "function",
+      "category": "workspace-and-navigation",
+      "described": false,
+      "source": {
+        "file": "src/client/views/MainView.tsx",
+        "line": 1121,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/MainView.tsx#L1121"
+      },
+      "controls": [
+        {
+          "id": "sidebar-panel-buttons-closed",
+          "label": "Closed",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Recently Closed opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-closed",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 522,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L522"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-dashboards",
+          "label": "Dashboards",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Dashboards opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-dashboards",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 517,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L517"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-faces",
+          "label": "Faces",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Unique Faces opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-faces",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 526,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L526"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-files",
+          "label": "Files",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Files opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-files",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 519,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L519"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-image-grouper",
+          "label": "Image Grouper",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Image Grouper opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-image-grouper",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 525,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L525"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-imports",
+          "label": "Imports",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Imports opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-imports",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 521,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L521"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-search",
+          "label": "Search",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Search opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-search",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 518,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L518"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-shared",
+          "label": "Shared",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Shared Docs opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-shared",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 523,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L523"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-tools",
+          "label": "Tools",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Tools opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-tools",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 520,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L520"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-trails",
+          "label": "Trails",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "Trails opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-trails",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 524,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L524"
+          }
+        },
+        {
+          "id": "sidebar-panel-buttons-user-doc",
+          "label": "User Doc",
+          "region": "Sidebar",
+          "group": "Panel buttons",
+          "explanation": "User Doc opens beside the workspace; opening it does not replace or delete canvas documents.",
+          "page": "/reference/interface-controls/#control-index-sidebar-panel-buttons-user-doc",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 527,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L527"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sendToBack",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx",
+        "line": 2593,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/collections/collectionFreeForm/CollectionFreeFormView.tsx#L2593"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-doc-bottom",
+          "label": "Bottom",
+          "region": "Context toolbar",
+          "group": "Doc",
+          "explanation": "Moves the selected freeform document behind the other documents.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-doc-bottom",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 742,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L742"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setActiveTool",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": true,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 457,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L457"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-eraser-area",
+          "label": "Area",
+          "region": "Context toolbar",
+          "group": "Eraser",
+          "explanation": "Erase like a pencil.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eraser-area",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 851,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L851"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-circle",
+          "label": "Circle",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Circle (double tap to lock mode).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-circle",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 835,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L835"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-eraser",
+          "label": "Eraser",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Eraser (Ctrl+E). It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-eraser",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 847,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L847"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-highlight",
+          "label": "Highlight",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Highlight (Ctrl+H). It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-highlight",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 841,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L841"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-ink",
+          "label": "Ink",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Ink. It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-ink",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 838,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L838"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-line",
+          "label": "Line",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Line (double tap to lock mode).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-line",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 837,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L837"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-math",
+          "label": "Math",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Math. It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-math",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 843,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L843"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-pen",
+          "label": "Pen",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Pen (Ctrl+P). It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-pen",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 840,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L840"
+          }
+        },
+        {
+          "id": "context-toolbar-eraser-segment",
+          "label": "Segment",
+          "region": "Context toolbar",
+          "group": "Eraser",
+          "explanation": "Erase stroke segments.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eraser-segment",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 850,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L850"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-smart-draw",
+          "label": "Smart Draw",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Uses the drawing gesture as an AI-assisted drawing request.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-smart-draw",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 856,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L856"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-square",
+          "label": "Square",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Square (double tap to lock mode).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-square",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 836,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L836"
+          }
+        },
+        {
+          "id": "context-toolbar-eraser-stroke",
+          "label": "Stroke",
+          "region": "Context toolbar",
+          "group": "Eraser",
+          "explanation": "Eraser complete strokes.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-eraser-stroke",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 849,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L849"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-write",
+          "label": "Write",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Write (Ctrl+Shift+P).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-write",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 842,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L842"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setBackgroundColor",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 111,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L111"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-fill",
+          "label": "Fill",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Fill/Background Color.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-fill",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 895,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L895"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setBorderColor",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 69,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L69"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-border",
+          "label": "Border",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Changes the outline color around the selected document.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-border",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 896,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L896"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setBorderWidth",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": true,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 465,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L465"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-b-width",
+          "label": "B.Width",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Changes how thick the selected document’s border is; zero hides it.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-b-width",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 897,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L897"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setDefaultImageTemplate",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 161,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L161"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-img-temp",
+          "label": "Img Temp",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Default Image Template.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-img-temp",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 894,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L894"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setDefaultTemplate",
+      "kind": "function",
+      "category": "workspace-and-navigation",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 156,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L156"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-template",
+          "label": "Template",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Default Note Template.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-template",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 893,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L893"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setFontAttr",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 332,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L332"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-text-size",
+          "label": " Size",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Font size (%size). It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-size",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 803,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L803"
+          }
+        },
+        {
+          "id": "context-toolbar-text-color",
+          "label": "Color",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Font color (%color).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-color",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 804,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L804"
+          }
+        },
+        {
+          "id": "context-toolbar-text-font",
+          "label": "Font",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Font. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-font",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 801,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L801"
+          }
+        },
+        {
+          "id": "context-toolbar-text-highlight",
+          "label": "Highlight",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Font highlight. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-highlight",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 805,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L805"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setHeaderColor",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 166,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L166"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-header",
+          "label": "Header",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Changes the selected document’s title-bar color, not its content background.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-header",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 892,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L892"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setInkProperty",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 482,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L482"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-ink-size",
+          "label": " Size",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Size of area pencil eraser.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-size",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 853,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L853"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-color",
+          "label": "Color",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Stroke color. It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-color",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 846,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L846"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-labels",
+          "label": "Labels",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Show Labels Inside Shapes.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-labels",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 855,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L855"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-mask",
+          "label": "Mask",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Make Stroke a Stencil Mask.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-mask",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 854,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L854"
+          }
+        },
+        {
+          "id": "context-toolbar-ink-width",
+          "label": "Width",
+          "region": "Context toolbar",
+          "group": "Ink",
+          "explanation": "Stroke width. It changes the active drawing tool.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-ink-width",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 845,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L845"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setInkToolDefaults",
+      "kind": "function",
+      "category": "user-state-and-modes",
+      "described": false,
+      "source": {
+        "file": "src/client/util/CurrentUserUtils.ts",
+        "line": 1269,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L1269"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-ink",
+          "label": "Ink",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Ink functions. It changes the current selection.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-ink",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 906,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L906"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setTagFilter",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 307,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L307"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-filter-chat",
+          "label": "Chat",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Shows or hides documents tagged Chat; it does not delete them.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-chat",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 769,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L769"
+          }
+        },
+        {
+          "id": "context-toolbar-filter-idea",
+          "label": "Idea",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Shows or hides documents tagged Idea; it does not delete them.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-idea",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 769,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L769"
+          }
+        },
+        {
+          "id": "context-toolbar-filter-like",
+          "label": "Like",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Shows or hides documents tagged Like; it does not delete them.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-like",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 769,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L769"
+          }
+        },
+        {
+          "id": "context-toolbar-filter-options",
+          "label": "Options",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Click to customize list of filter buttons.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-options",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 783,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L783"
+          }
+        },
+        {
+          "id": "context-toolbar-filter-star",
+          "label": "Star",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Shows or hides documents tagged Star; it does not delete them.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-star",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 769,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L769"
+          }
+        },
+        {
+          "id": "context-toolbar-filter-todo",
+          "label": "Todo",
+          "region": "Context toolbar",
+          "group": "Filter",
+          "explanation": "Shows or hides documents tagged Todo; it does not delete them.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-filter-todo",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 769,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L769"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setView",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 50,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L50"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-perspective",
+          "label": "Perspective",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Chooses how the selected collection is laid out without replacing or copying its children.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-perspective",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 890,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L890"
+          }
+        }
+      ]
+    },
+    {
+      "name": "showFreeform",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 199,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L199"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-board-auto-cols",
+          "label": "Auto Cols",
+          "region": "Context toolbar",
+          "group": "Board",
+          "explanation": "Automatically manage columns.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-board-auto-cols",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 756,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L756"
+          }
+        },
+        {
+          "id": "context-toolbar-stack-center",
+          "label": "Center",
+          "region": "Context toolbar",
+          "group": "Stack",
+          "explanation": "Horizontally Center Stack.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-stack-center",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 750,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L750"
+          }
+        },
+        {
+          "id": "context-toolbar-primary-toolbar-chat",
+          "label": "Chat",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Toggle Chat Assistant.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-chat",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 902,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L902"
+          }
+        },
+        {
+          "id": "context-toolbar-view-clusters",
+          "label": "Clusters",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Show Doc Clusters. It changes the selected collection view.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-clusters",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 796,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L796"
+          }
+        },
+        {
+          "id": "context-toolbar-sort-color",
+          "label": "Color",
+          "region": "Context toolbar",
+          "group": "Sort",
+          "explanation": "Sort by document color.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-sort-color",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 763,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L763"
+          }
+        },
+        {
+          "id": "context-toolbar-view-fit-all",
+          "label": "Fit All",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Fit Docs to View (double tap to persist).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-fit-all",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 794,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L794"
+          }
+        },
+        {
+          "id": "context-toolbar-view-grid",
+          "label": "Grid",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Show Grid. It changes the selected collection view.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-grid",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 791,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L791"
+          }
+        },
+        {
+          "id": "context-toolbar-sort-reverse",
+          "label": "Reverse",
+          "region": "Context toolbar",
+          "group": "Sort",
+          "explanation": "Sort the cards in reverse order.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-sort-reverse",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 765,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L765"
+          }
+        },
+        {
+          "id": "context-toolbar-view-snap",
+          "label": "Snap",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Show Snap Lines. It changes the selected collection view.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-snap",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 790,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L790"
+          }
+        },
+        {
+          "id": "context-toolbar-stack-stagger",
+          "label": "Stagger",
+          "region": "Context toolbar",
+          "group": "Stack",
+          "explanation": "Stagger left/right. It changes the selected stack layout.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-stack-stagger",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 751,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L751"
+          }
+        },
+        {
+          "id": "context-toolbar-sort-tags",
+          "label": "Tags",
+          "region": "Context toolbar",
+          "group": "Sort",
+          "explanation": "Sort by document's tags.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-sort-tags",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 764,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L764"
+          }
+        },
+        {
+          "id": "context-toolbar-view-tags",
+          "label": "Tags",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Toggle Tags display.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-tags",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 789,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L789"
+          }
+        },
+        {
+          "id": "context-toolbar-sort-time",
+          "label": "Time",
+          "region": "Context toolbar",
+          "group": "Sort",
+          "explanation": "Sort by most recent document creation.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-sort-time",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 761,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L761"
+          }
+        },
+        {
+          "id": "context-toolbar-sort-type",
+          "label": "Type",
+          "region": "Context toolbar",
+          "group": "Sort",
+          "explanation": "Sort by document type.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-sort-type",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 762,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L762"
+          }
+        },
+        {
+          "id": "context-toolbar-stack-v-align",
+          "label": "V. Align",
+          "region": "Context toolbar",
+          "group": "Stack",
+          "explanation": "Vertically Center Stack.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-stack-v-align",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 749,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L749"
+          }
+        },
+        {
+          "id": "context-toolbar-view-wrap",
+          "label": "Wrap",
+          "region": "Context toolbar",
+          "group": "View",
+          "explanation": "Panning wraps vertically and horizontally.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-view-wrap",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 792,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L792"
+          }
+        }
+      ]
+    },
+    {
+      "name": "toggleCharStyle",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 371,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L371"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-lists",
+          "label": "#",
+          "region": "Context toolbar",
+          "group": "Lists",
+          "explanation": "Number List. It changes the selected text list.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-lists",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 814,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L814"
+          }
+        },
+        {
+          "id": "context-toolbar-lists-1-a-a",
+          "label": "1.A.a",
+          "region": "Context toolbar",
+          "group": "Lists",
+          "explanation": "Multi List. It changes the selected text list.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-lists-1-a-a",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 815,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L815"
+          }
+        },
+        {
+          "id": "context-toolbar-styles-bold",
+          "label": "Bold",
+          "region": "Context toolbar",
+          "group": "Styles",
+          "explanation": "Bold (Ctrl+B). It changes the selected text style.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-styles-bold",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 807,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L807"
+          }
+        },
+        {
+          "id": "context-toolbar-lists-bullets",
+          "label": "Bullets",
+          "region": "Context toolbar",
+          "group": "Lists",
+          "explanation": "Bullet List. It changes the selected text list.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-lists-bullets",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 813,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L813"
+          }
+        },
+        {
+          "id": "context-toolbar-align-center",
+          "label": "Center",
+          "region": "Context toolbar",
+          "group": "Align",
+          "explanation": "Center align (Cmd-\\).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-align-center",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 820,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L820"
+          }
+        },
+        {
+          "id": "context-toolbar-text-dictate",
+          "label": "Dictate",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Dictate. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-dictate",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 826,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L826"
+          }
+        },
+        {
+          "id": "context-toolbar-text-elide",
+          "label": "Elide",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Elide selection. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-elide",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 825,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L825"
+          }
+        },
+        {
+          "id": "context-toolbar-text-fit-box",
+          "label": "Fit Box",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Fit text to box. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-fit-box",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 824,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L824"
+          }
+        },
+        {
+          "id": "context-toolbar-styles-italic",
+          "label": "Italic",
+          "region": "Context toolbar",
+          "group": "Styles",
+          "explanation": "Italic (Ctrl+I). It changes the selected text style.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-styles-italic",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 808,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L808"
+          }
+        },
+        {
+          "id": "context-toolbar-align-justify",
+          "label": "Justify",
+          "region": "Context toolbar",
+          "group": "Align",
+          "explanation": "Justify. It changes the selected paragraph alignment.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-align-justify",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 822,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L822"
+          }
+        },
+        {
+          "id": "context-toolbar-align-left",
+          "label": "Left",
+          "region": "Context toolbar",
+          "group": "Align",
+          "explanation": "Left align (Cmd-[). It changes the selected paragraph alignment.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-align-left",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 819,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L819"
+          }
+        },
+        {
+          "id": "context-toolbar-text-nolink",
+          "label": "NoLink",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Auto Link. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-nolink",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 827,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L827"
+          }
+        },
+        {
+          "id": "context-toolbar-align-right",
+          "label": "Right",
+          "region": "Context toolbar",
+          "group": "Align",
+          "explanation": "Right align (Cmd-]).",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-align-right",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 821,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L821"
+          }
+        },
+        {
+          "id": "context-toolbar-styles-strike",
+          "label": "Strike",
+          "region": "Context toolbar",
+          "group": "Styles",
+          "explanation": "Strike Through. It changes the selected text style.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-styles-strike",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 810,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L810"
+          }
+        },
+        {
+          "id": "context-toolbar-styles-under",
+          "label": "Under",
+          "region": "Context toolbar",
+          "group": "Styles",
+          "explanation": "Underline (Ctrl+U). It changes the selected text style.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-styles-under",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 809,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L809"
+          }
+        },
+        {
+          "id": "context-toolbar-text-vcenter",
+          "label": "Vcenter",
+          "region": "Context toolbar",
+          "group": "Text",
+          "explanation": "Vertical center. It changes the selected formatted text.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-text-vcenter",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 817,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L817"
+          }
+        }
+      ]
+    },
+    {
+      "name": "toggleOverlay",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 188,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L188"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-primary-toolbar-overlay",
+          "label": "Overlay",
+          "region": "Context toolbar",
+          "group": "Primary toolbar",
+          "explanation": "Switches overlay behavior for a floating document inside a freeform collection.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-primary-toolbar-overlay",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 898,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L898"
+          }
+        }
+      ]
+    },
+    {
+      "name": "toggleRaiseOnDrag",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 558,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L558"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-doc-z-order",
+          "label": "Z order",
+          "region": "Context toolbar",
+          "group": "Doc",
+          "explanation": "Keep Z order on Drag.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-doc-z-order",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 744,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L744"
+          }
+        }
+      ]
+    },
+    {
+      "name": "toggleSchemaPreview",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 641,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L641"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-schema-preview",
+          "label": "Preview",
+          "region": "Context toolbar",
+          "group": "Schema",
+          "explanation": "Show selection preview.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-schema-preview",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 862,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L862"
+          }
+        }
+      ]
+    },
+    {
+      "name": "toggleSingleLineSchema",
+      "kind": "function",
+      "category": "collections-and-layout",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 656,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L656"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-schema-1-line",
+          "label": "1 Line",
+          "region": "Context toolbar",
+          "group": "Schema",
+          "explanation": "Single Line Rows. It changes the selected schema view.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-schema-1-line",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 863,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L863"
+          }
+        }
+      ]
+    },
+    {
+      "name": "undo",
+      "kind": "function",
+      "category": "selection-and-history",
+      "described": false,
+      "source": {
+        "file": "src/client/util/SelectionManager.ts",
+        "line": 96,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/SelectionManager.ts#L96"
+      },
+      "controls": [
+        {
+          "id": "canvas-footer-docked-controls-undo",
+          "label": "Undo",
+          "region": "Canvas footer",
+          "group": "Docked controls",
+          "explanation": "Undo ⌘Z. It changes the current workspace action history.",
+          "page": "/reference/interface-controls/#control-index-canvas-footer-docked-controls-undo",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 712,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L712"
+          }
+        }
+      ]
+    },
+    {
+      "name": "videoSnapshot",
+      "kind": "function",
+      "category": "media-and-specialized-content",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 598,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L598"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-video-snapshot",
+          "label": "Snapshot",
+          "region": "Context toolbar",
+          "group": "Video",
+          "explanation": "Take snapshot of current frame.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-video-snapshot",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 876,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L876"
+          }
+        }
+      ]
+    },
+    {
+      "name": "webBack",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 592,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L592"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-web-back",
+          "label": "Back",
+          "region": "Context toolbar",
+          "group": "Web",
+          "explanation": "Go back. It changes the selected web document.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-web-back",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 869,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L869"
+          }
+        }
+      ]
+    },
+    {
+      "name": "webForward",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 583,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L583"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-web-forward",
+          "label": "Forward",
+          "region": "Context toolbar",
+          "group": "Web",
+          "explanation": "Go forward. It changes the selected web document.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-web-forward",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 870,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L870"
+          }
+        }
+      ]
+    },
+    {
+      "name": "webSetURL",
+      "kind": "function",
+      "category": "appearance-and-tools",
+      "described": false,
+      "source": {
+        "file": "src/client/views/global/globalScripts.ts",
+        "line": 572,
+        "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/views/global/globalScripts.ts#L572"
+      },
+      "controls": [
+        {
+          "id": "context-toolbar-web-url",
+          "label": "URL",
+          "region": "Context toolbar",
+          "group": "Web",
+          "explanation": "URL. It changes the selected web document.",
+          "page": "/reference/interface-controls/#control-index-context-toolbar-web-url",
+          "source": {
+            "file": "src/client/util/CurrentUserUtils.ts",
+            "line": 871,
+            "url": "https://github.com/brown-dash/Dash-Web/blob/e7473b5d1076d5b77f6e580c4367afd8c4958033/src/client/util/CurrentUserUtils.ts#L871"
+          }
+        }
+      ]
+    }
+  ]
+}

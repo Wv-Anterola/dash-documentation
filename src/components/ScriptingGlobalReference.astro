@@ -1,7 +1,20 @@
 ---
 import reference from '../data/generated/scripting-globals.json';
+import usageReference from '../data/generated/scripting-usage.json';
 
 const globals = reference.globals as any[];
+
+/**
+ * Which documented interface controls call each global.
+ *
+ * Most globals carry no description, and the comments above their registrations
+ * cannot supply one. The controls can: 142 of them record the functions their
+ * handler calls, and each carries a plain-language explanation somebody wrote
+ * and reviewed. Where a control calls a global, that explanation is the best
+ * available account of what calling the global does, so it is shown here and
+ * attributed rather than copied into the global's own description.
+ */
+const callersOf = new Map<string, any[]>(usageReference.usage.map((entry: any) => [entry.name, entry.controls]));
 const categoryLabels: Record<string, string> = {
   'appearance-and-tools': 'Appearance and tools',
   'application-services': 'Application services',
@@ -99,6 +112,9 @@ const anchorFor = (name: string) => `script-global-${name.replace(/[^A-Za-z0-9_-
         entry.path,
         ...entry.effects.calls,
         ...entry.effects.writes,
+        // A reader looking for "the function behind the Explore button" should
+        // find it by typing the button's name.
+        ...(callersOf.get(entry.name) ?? []).flatMap((control: any) => [control.label, control.region, control.explanation]),
       ].filter(Boolean).join(' ').toLowerCase();
       return (
         <details
@@ -158,6 +174,30 @@ const anchorFor = (name: string) => `script-global-${name.replace(/[^A-Za-z0-9_-
               <p><strong>Return statements:</strong> {entry.effects.returns}</p>
               <p class="script-global-note">This evidence is syntactic and intentionally bounded to the registered declaration. Follow the source link and generated call graph for transitive side effects.</p>
             </div>
+
+            {callersOf.has(entry.name) && (
+              <div class="script-global-callers">
+                <h3>What pressing it does</h3>
+                <p class="script-global-note">
+                  {entry.description
+                    ? 'This global also backs interface controls. Their explanations were written and reviewed for the button, not for the function.'
+                    : 'This global has no description of its own. It does back interface controls, and those explanations were written and reviewed by a person, for the button rather than for the function.'}
+                </p>
+                <ul>
+                  {callersOf.get(entry.name)!.map((control: any) => (
+                    <li>
+                      <a href={control.page}>{control.label}</a>{' '}
+                      <span class="script-global-caller-region">{control.region}</span>
+                      <p>{control.explanation}</p>
+                    </li>
+                  ))}
+                </ul>
+                <p class="script-global-note">
+                  A control calls this with its arguments already chosen, so it is
+                  evidence about the function rather than a specification of it.
+                </p>
+              </div>
+            )}
           </div>
         </details>
       );
@@ -231,6 +271,15 @@ const anchorFor = (name: string) => `script-global-${name.replace(/[^A-Za-z0-9_-
   .script-global-facts dt { color: var(--sl-color-gray-2); font-weight: 700; }
   .script-global-facts dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
   .script-global-note { border-left: 3px solid var(--sl-color-gray-4); padding-left: .55rem; color: var(--sl-color-gray-2); }
+  /* The callers block is a different kind of claim from the three columns above
+     it: reviewed prose about a button rather than parsed facts about a
+     declaration. It gets the full width and its own rule so it does not read as
+     a fourth column of the same thing. */
+  .script-global-callers { grid-column: 1 / -1; border-top: 1px solid var(--sl-color-gray-5); padding-top: .8rem; }
+  .script-global-callers ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .5rem .9rem; margin: .5rem 0; padding: 0; list-style: none; }
+  .script-global-callers li { min-width: 0; }
+  .script-global-callers li p { margin: .15rem 0 0; }
+  .script-global-caller-region { color: var(--sl-color-gray-3); font-size: .68rem; }
   @container (max-width: 850px) {
     .script-global-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .script-global-detail { grid-template-columns: 1fr; }

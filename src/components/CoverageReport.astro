@@ -18,6 +18,7 @@ const { summary, surfaces } = reference;
     <div><strong>{summary.surfaces}</strong><span>generated surfaces</span></div>
     <div><strong>{summary.tracedPct}%</strong><span>carry a source line</span></div>
     <div><strong>{summary.explainedPct}%</strong><span>carry a human explanation</span></div>
+    <div><strong>{summary.unexplainedAnywhere}</strong><span>unexplained anywhere</span></div>
     <div><strong>{summary.fullyExplainedSurfaces}</strong><span>surfaces fully explained</span></div>
     <div><strong>{summary.surfacesWithoutExplanationField}</strong><span>with no explanation field at all</span></div>
   </div>
@@ -83,12 +84,22 @@ const { summary, surfaces } = reference;
       </p>
       {surface.note && <p class="coverage-note">{surface.note}</p>}
 
+      {surface.crossReferenced > 0 && (
+        <p class="coverage-note">
+          <strong>{surface.crossReferenced} of the {surface.missing} unexplained records
+          can still be answered</strong> through {surface.crossReferenceVia}. That is not
+          counted as explained above, because it describes one particular call
+          rather than the thing itself. It does mean a reader who lands on one of
+          those is not stuck. {surface.unreachable} have no explanation anywhere.
+        </p>
+      )}
+
       {surface.missing > 0 && (
         <details class="coverage-missing">
           <summary>{surface.missing} still unexplained</summary>
           <p class="coverage-missing-note">
             {surface.missingExamples.length < surface.missing
-              ? `The first ${surface.missingExamples.length}, in dataset order. The rest are in the published JSON.`
+              ? `The first ${surface.missingExamples.length}, in dataset order, with the ones that have no explanation anywhere first. The rest are in the published JSON.`
               : 'All of them, in dataset order.'}
           </p>
           <ul>

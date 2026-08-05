@@ -34,9 +34,11 @@ test('covers every dataset that has a published endpoint', async () => {
     .map((name) => name.replace(/\.json\.ts$/, ''))
     .filter((name) => name !== 'index');
   const measured = new Set(report.surfaces.map((entry) => entry.id));
-  // These three are indexes over other datasets rather than inventories of
-  // their own, so counting explanations in them would double-count.
-  const exempt = new Set(['task-routes', 'exported-symbols', 'coverage-report']);
+  // These are indexes and joins over other datasets rather than inventories of
+  // their own, so counting explanations in them would double-count. Every
+  // record in scripting-usage is a scripting global already counted under
+  // scripting-globals, seen from the control that calls it.
+  const exempt = new Set(['task-routes', 'exported-symbols', 'coverage-report', 'scripting-usage']);
   for (const id of endpoints) {
     if (exempt.has(id)) continue;
     assert.ok(measured.has(id), `${id} is published but not measured by the coverage report`);
