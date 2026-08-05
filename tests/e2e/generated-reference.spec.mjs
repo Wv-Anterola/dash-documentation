@@ -4,6 +4,7 @@ import interfaceControls from '../../src/data/generated/interface-controls.json'
 import openDestinations from '../../src/data/generated/open-destinations.json' with { type: 'json' };
 import inappLinks from '../../src/data/generated/inapp-doc-links.json' with { type: 'json' };
 import pipeline from '../../src/data/generated/pipeline-map.json' with { type: 'json' };
+import accessibility from '../../src/data/generated/accessibility.json' with { type: 'json' };
 
 // Counts that grow whenever a control is traced are read from the dataset the
 // page renders, not pinned here. A hardcoded total turns "we documented six
@@ -678,5 +679,30 @@ test('explains its own build pipeline, and links each generator to what it feeds
 
   await page.setViewportSize({ width: 390, height: 844 });
   const geometry = await horizontalOverflow(page, '.pipeline-map');
+  expectNoHorizontalScroll(geometry);
+});
+
+test('publishes its own accessibility measurements and its untested list', async ({ page }) => {
+  const dataResponse = await page.request.get('/assets/data/accessibility.json');
+  expect(dataResponse.ok()).toBeTruthy();
+  const data = await dataResponse.json();
+  expect(data.measurements).toHaveLength(accessibility.measurements.length);
+
+  await page.goto('/reference/accessibility/');
+  await expect(page.getByRole('heading', { name: 'Accessibility of this site' })).toBeVisible();
+
+  // Every measured pair is on the page, in both themes, as text. A contrast
+  // table that needed colour vision to read would refute itself.
+  const rows = page.locator('.a11y-table tbody tr');
+  await expect(rows).toHaveCount(accessibility.measurements.length);
+  await expect(page.getByText(/\d+\.\d\d:1/).first()).toBeVisible();
+
+  // The untested list is the part that keeps the numbers honest, so its absence
+  // should fail rather than quietly leave an overclaim on the page.
+  await expect(page.getByRole('heading', { name: 'What is not tested' })).toBeVisible();
+  await expect(page.locator('.a11y-gap')).toHaveCount(accessibility.notTested.length);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const geometry = await horizontalOverflow(page, '.a11y-report');
   expectNoHorizontalScroll(geometry);
 });
