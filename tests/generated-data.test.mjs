@@ -39,7 +39,14 @@ test('every published dataset carries an immutable, line-addressable provenance'
   for (const name of endpoints.filter((entry) => entry !== 'index')) {
     const data = JSON.parse(await readFile(path.join(generatedDir, `${name}.json`), 'utf8'));
     assert.equal(typeof data.schemaVersion, 'number', `${name} has no schema version`);
-    assert.ok(data.repository, `${name} has no repository provenance`);
+    // A dataset may measure this site instead of Dash, in which case there is
+    // no Dash-Web commit to pin it to and it has to say so in the data rather
+    // than simply omit the field.
+    if (!data.repository) {
+      assert.equal(data.describes, 'this documentation site', `${name} has no repository provenance and does not say what it describes`);
+      assert.ok(data.methodology?.derivedFrom, `${name} describes this site but does not say what it was derived from`);
+      continue;
+    }
     const commit = data.repository.baselineTip ?? data.repository.masterTip ?? data.repository.baseline;
     assert.match(String(commit), /^[0-9a-f]{40}$/, `${name} is not pinned to an immutable commit`);
   }

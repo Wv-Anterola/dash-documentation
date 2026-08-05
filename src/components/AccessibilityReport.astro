@@ -1,0 +1,97 @@
+---
+/**
+ * The accessibility measurements, and the list of what was not measured.
+ *
+ * Server-rendered, with the ratios as text rather than as swatches, because a
+ * page about contrast that requires you to see colour to read it would be a
+ * poor joke. The swatch is decoration beside the number, not the number.
+ */
+import report from '../data/generated/accessibility.json';
+
+// The theme names come from the data rather than being written here, so adding
+// a third theme would show up without editing this file. That costs the JSON
+// import's inferred key union, hence the widening.
+const measurements = report.measurements as Array<
+  (typeof report.measurements)[number] & { themes: Record<string, { ratio: number; passes: boolean }> }
+>;
+const { summary, notTested } = report;
+const roleOrder = ['text', 'component boundary', 'decoration'];
+const roles = roleOrder.filter((role) => measurements.some((entry) => entry.role === role));
+const roleNote: Record<string, string> = {
+  text: 'Body and link text. WCAG 2.1 AA requires 4.5:1.',
+  'component boundary': 'The visible edge of a control, which a reader has to find before using it. WCAG 2.1 AA requires 3:1.',
+  decoration: 'Lines that group content. No WCAG threshold applies; the floor here is a house rule so the line stays visible.',
+};
+---
+
+<div class="a11y-report">
+  <div class="audit-summary" aria-label="Accessibility measurement totals">
+    <div><strong>{summary.passing}/{summary.measurements}</strong><span>measurements at or above threshold</span></div>
+    <div><strong>{summary.pairs}</strong><span>reviewed colour pairs</span></div>
+    <div><strong>{summary.themes.length}</strong><span>themes measured</span></div>
+    <div><strong>{summary.tokensUsed}</strong><span>design tokens in use</span></div>
+    <div><strong>{summary.areasNotTested}</strong><span>areas documented as untested</span></div>
+  </div>
+
+  {roles.map((role) => (
+    <section class="a11y-role">
+      <h3 id={`contrast-${role.replace(/\s+/g, '-')}`}>{role.charAt(0).toUpperCase() + role.slice(1)}</h3>
+      <p class="a11y-role-note">{roleNote[role]}</p>
+
+      <div class="a11y-table-scroll">
+        <table class="a11y-table">
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Needs</th>
+              {summary.themes.map((theme) => <th scope="col">{theme.charAt(0).toUpperCase() + theme.slice(1)}</th>)}
+              <th scope="col">Tokens</th>
+            </tr>
+          </thead>
+          <tbody>
+            {measurements.filter((entry) => entry.role === role).map((entry) => (
+              <tr>
+                <th scope="row">{entry.name}</th>
+                <td>{entry.required}:1</td>
+                {summary.themes.map((theme) => (
+                  <td>
+                    <span class="a11y-ratio" data-passes={String(entry.themes[theme].passes)}>
+                      {entry.themes[theme].ratio.toFixed(2)}:1
+                    </span>
+                    <span class="sr-only">{entry.themes[theme].passes ? ' meets the threshold' : ' is below the threshold'}</span>
+                  </td>
+                ))}
+                <td><code>{entry.foreground}</code> on <code>{entry.background}</code></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  ))}
+
+  <section class="a11y-gaps">
+    <h3 id="what-is-not-tested">What is not tested</h3>
+    <p>
+      Everything above is computed on every push. None of it establishes that a
+      page is usable, only that specific measurable things are true. This is the
+      rest.
+    </p>
+
+    {notTested.map((gap) => (
+      <article class="a11y-gap">
+        <h4>{gap.area}</h4>
+        <dl>
+          <div>
+            <dt>Checked</dt>
+            <dd>{gap.checked}</dd>
+          </div>
+          <div>
+            <dt>Not checked</dt>
+            <dd>{gap.notChecked}</dd>
+          </div>
+        </dl>
+      </article>
+    ))}
+  </section>
+</div>

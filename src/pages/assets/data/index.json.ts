@@ -9,6 +9,7 @@
  * was generated from, and its record count, so a consumer can tell a
  * regeneration from a schema change.
  */
+import accessibility from '../../../data/generated/accessibility.json';
 import contextMenus from '../../../data/generated/context-menus.json';
 import coverageReport from '../../../data/generated/coverage-report.json';
 import documentTypes from '../../../data/generated/document-types.json';
@@ -35,7 +36,13 @@ interface DatasetEntry {
   schemaVersion: number;
   records: number;
   recordKey: string;
-  baseline: string;
+  /**
+   * The Dash-Web commit the records describe. Null for the one dataset that
+   * measures this site rather than Dash: the accessibility report is derived
+   * from this repository's own stylesheet, and pinning it to a Dash revision
+   * would be a false provenance claim.
+   */
+  baseline: string | null;
   generator: string;
 }
 
@@ -111,6 +118,18 @@ const datasets: DatasetEntry[] = [
     recordKey: 'surfaces',
     baseline: coverageReport.repository.baseline,
     generator: 'npm run audit:coverage-report',
+  },
+  {
+    id: 'accessibility',
+    title: 'Accessibility measurements for this site',
+    description: 'Every reviewed colour pair with its computed contrast in both themes and the threshold it has to meet, plus the areas this site does not test at all.',
+    path: '/assets/data/accessibility.json',
+    page: '/reference/accessibility/',
+    schemaVersion: accessibility.schemaVersion,
+    records: accessibility.measurements.length,
+    recordKey: 'measurements',
+    baseline: null,
+    generator: 'npm run audit:accessibility',
   },
   {
     id: 'scripting-usage',

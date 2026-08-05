@@ -191,6 +191,10 @@
     "src": "/assets/images/current/dash-files-panel.webp",
     "alt": "Dash demonstration of Files Panel."
   },
+  "/reference/accessibility": {
+    "src": "/assets/images/diagrams/dash-accessibility-measurement.svg",
+    "alt": "The measured half beside the unmeasured half: contrast computed from the stylesheet for every reviewed pair in both themes and structural facts checked on every built page, against the things no automated check establishes, such as whether a page reads well aloud, whether focus order makes sense, and whether the archived recordings have any equivalent for a reader who cannot see them."
+  },
   "/reference/agent-tools": {
     "src": "/assets/gifs/features/inkdraw.gif",
     "alt": "Dash demonstration of Inkdraw."

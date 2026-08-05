@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-05T04:15:18.436Z",
+  "describes": "this documentation site",
+  "methodology": {
+    "derivedFrom": "src/styles/dash.css. Every reviewed pair is resolved through its var() chain per theme and its contrast ratio computed with the WCAG 2.1 sRGB relative-luminance formula.",
+    "enforcement": "`npm run accessibility` recomputes these on every push and fails the build below the stated threshold, then audits every built page for structural facts. This report is the same measurement, published.",
+    "driftRule": "Generation fails when a reviewed pair names a token the stylesheet no longer defines, when a theme block disappears, or when the stylesheet uses a token it never defines.",
+    "standard": "WCAG 2.1 level AA"
+  },
+  "summary": {
+    "pairs": 12,
+    "measurements": 24,
+    "passing": 24,
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "tokensUsed": 37,
+    "tokensDefined": 37,
+    "areasNotTested": 6
+  },
+  "measurements": [
+    {
+      "name": "body text on the page",
+      "role": "text",
+      "foreground": "--dash-ink",
+      "background": "--dash-surface",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 13.85,
+          "passes": true
+        },
+        "light": {
+          "ratio": 17.76,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "body text on a raised surface",
+      "role": "text",
+      "foreground": "--dash-ink",
+      "background": "--dash-surface-raised",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 12.58,
+          "passes": true
+        },
+        "light": {
+          "ratio": 16.13,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "body text on a panel",
+      "role": "text",
+      "foreground": "--dash-ink",
+      "background": "--dash-panel",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 13.85,
+          "passes": true
+        },
+        "light": {
+          "ratio": 16.87,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "secondary text on the page",
+      "role": "text",
+      "foreground": "--dash-ink-soft",
+      "background": "--dash-surface",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 7.48,
+          "passes": true
+        },
+        "light": {
+          "ratio": 6.39,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "secondary text on a raised surface",
+      "role": "text",
+      "foreground": "--dash-ink-soft",
+      "background": "--dash-surface-raised",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 6.79,
+          "passes": true
+        },
+        "light": {
+          "ratio": 5.8,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "link colour on the page",
+      "role": "text",
+      "foreground": "--dash-blue",
+      "background": "--dash-surface",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 8.04,
+          "passes": true
+        },
+        "light": {
+          "ratio": 6.57,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "accent text on the page",
+      "role": "text",
+      "foreground": "--dash-accent",
+      "background": "--dash-surface",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 6.19,
+          "passes": true
+        },
+        "light": {
+          "ratio": 6.57,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "body text on an accent tint",
+      "role": "text",
+      "foreground": "--dash-ink",
+      "background": "--dash-accent-soft",
+      "required": 4.5,
+      "criterion": "WCAG 2.1 AA 1.4.3 (contrast, minimum)",
+      "themes": {
+        "dark": {
+          "ratio": 13.19,
+          "passes": true
+        },
+        "light": {
+          "ratio": 13.69,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "form control border on the page",
+      "role": "component boundary",
+      "foreground": "--dash-control-border",
+      "background": "--dash-surface",
+      "required": 3,
+      "criterion": "WCAG 2.1 AA 1.4.11 (non-text contrast)",
+      "themes": {
+        "dark": {
+          "ratio": 3.88,
+          "passes": true
+        },
+        "light": {
+          "ratio": 3.34,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "form control border on a raised surface",
+      "role": "component boundary",
+      "foreground": "--dash-control-border",
+      "background": "--dash-surface-raised",
+      "required": 3,
+      "criterion": "WCAG 2.1 AA 1.4.11 (non-text contrast)",
+      "themes": {
+        "dark": {
+          "ratio": 3.52,
+          "passes": true
+        },
+        "light": {
+          "ratio": 3.03,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "accent boundary against the page",
+      "role": "component boundary",
+      "foreground": "--dash-accent",
+      "background": "--dash-surface",
+      "required": 3,
+      "criterion": "WCAG 2.1 AA 1.4.11 (non-text contrast)",
+      "themes": {
+        "dark": {
+          "ratio": 6.19,
+          "passes": true
+        },
+        "light": {
+          "ratio": 6.57,
+          "passes": true
+        }
+      }
+    },
+    {
+      "name": "decorative grouping rule",
+      "role": "decoration",
+      "foreground": "--dash-rule-strong",
+      "background": "--dash-surface",
+      "required": 1.6,
+      "criterion": "No WCAG threshold applies; this floor is a house rule so the line stays visible",
+      "themes": {
+        "dark": {
+          "ratio": 2.11,
+          "passes": true
+        },
+        "light": {
+          "ratio": 1.95,
+          "passes": true
+        }
+      }
+    }
+  ],
+  "notTested": [
+    {
+      "area": "Screen reader experience",
+      "checked": "Every page has a language, one h1, a main landmark, labelled form controls, named buttons, discernible link text, and scoped table headers.",
+      "notChecked": "Whether a page actually reads well. Correct structure is necessary and not sufficient: a heading can be present and unhelpful, and an alt text can exist and describe the wrong thing."
+    },
+    {
+      "area": "Keyboard navigation",
+      "checked": "Interactive controls are real buttons, links, inputs, and details elements, which are focusable and operable by keyboard by default.",
+      "notChecked": "Focus order and focus visibility have not been walked page by page. Nothing here traps focus deliberately, but that is a claim about intent, not a measurement."
+    },
+    {
+      "area": "Archived recordings",
+      "checked": "Every image and recording carries alt text, and heavy recordings are deferred so they never block a page from appearing.",
+      "notChecked": "The recordings have no captions or transcripts. They are silent screen captures of Dash, and the surrounding prose is written to stand on its own, but a reader who cannot see them is relying on that prose rather than on an equivalent."
+    },
+    {
+      "area": "Zoom and reflow",
+      "checked": "Browser tests assert that no reference page scrolls sideways at a 390 pixel viewport, which is the failure that wide generated tables cause.",
+      "notChecked": "WCAG 1.4.10 reflow at 400 percent zoom, and 1.4.12 text spacing overrides, have not been measured."
+    },
+    {
+      "area": "Colour vision",
+      "checked": "Contrast ratios for every reviewed pair, in both themes, computed from the stylesheet rather than asserted.",
+      "notChecked": "Whether any status is carried by hue alone has been reviewed by eye rather than by tooling. Where colour appears in generated tables it is paired with text."
+    },
+    {
+      "area": "Third-party interface",
+      "checked": "The site is Starlight, whose own components are audited upstream, and the search index is Pagefind.",
+      "notChecked": "Neither is re-audited here. A defect in the theme or in the search widget would not be caught by these checks."
+    }
+  ]
+}

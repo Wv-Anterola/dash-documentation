@@ -292,6 +292,7 @@ export default defineConfig({
             { slug: 'reference/task-routes', label: 'Cross-route task index' },
             { slug: 'reference/open-destinations', label: 'Open destination map' },
             { slug: 'reference/documentation-coverage', label: 'What this site does not know' },
+            { slug: 'reference/accessibility', label: 'Accessibility of this site' },
             { slug: 'reference/generated-data', label: 'Generated data endpoints' },
             { slug: 'reference/document-types', label: 'Document types and schemas' },
             { slug: 'reference/collection-views' },

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">What this site measures about its own accessibility, and what it does not</title>
+  <desc id="desc">On one side, the things computed on every push: contrast for every reviewed colour pair in both themes, resolved from the stylesheet rather than asserted, and structural facts about every built page such as a language, one h1, a main landmark, labelled controls, named buttons, discernible link text, and scoped table headers. On the other side, the things no check here establishes: whether a page reads well to a screen reader, focus order and visibility, captions or transcripts for the archived recordings, reflow at four hundred percent zoom, and whether any status is carried by hue alone. Both are published, because a pass rate without its exclusions is not a usable claim.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#25345f" flood-opacity="0.12"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1465" cy="115" r="180" fill="#dfe5ff" opacity="0.6"/><circle cx="105" cy="835" r="200" fill="#e8ddff" opacity="0.55"/>
+
+  <text x="100" y="100" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="750" fill="#17213f">Measured, and not measured</text>
+  <text x="102" y="150" font-family="Inter,Arial,sans-serif" font-size="25" fill="#526078">A pass rate without its exclusions is not a claim anybody can use. Both halves are published.</text>
+
+  <!-- Enforced -->
+  <g filter="url(#shadow)"><rect x="100" y="222" width="660" height="500" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <circle cx="158" cy="284" r="28" fill="#198a83"/><path d="M145 284l9 9 18-20" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="204" y="294" font-size="32" font-weight="730" fill="#17213f">Computed on every push</text>
+    <text x="140" y="352" font-size="23" fill="#526078">Contrast for every reviewed pair, in both themes,</text>
+    <text x="140" y="384" font-size="23" fill="#526078">resolved from the stylesheet, not asserted.</text>
+    <text x="140" y="436" font-size="23" fill="#526078">Every built page: a language, one h1, a main</text>
+    <text x="140" y="468" font-size="23" fill="#526078">landmark, labelled controls, named buttons,</text>
+    <text x="140" y="500" font-size="23" fill="#526078">link text, and scoped table headers.</text>
+    <rect x="140" y="546" width="580" height="140" rx="16" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+    <text x="170" y="586" font-size="23" font-weight="700" fill="#14532d">Below threshold means a red build</text>
+    <text x="170" y="620" font-size="21" fill="#166534">The check and this page share one implementation of the</text>
+    <text x="170" y="650" font-size="21" fill="#166534">contrast maths, so the published number and the enforced</text>
+    <text x="170" y="676" font-size="21" fill="#166534">number cannot disagree.</text>
+  </g>
+
+  <!-- Not tested -->
+  <g filter="url(#shadow)"><rect x="840" y="222" width="660" height="500" rx="26" fill="#fff" stroke="#cbd5ff" stroke-width="3"/></g>
+  <g font-family="Inter,Arial,sans-serif">
+    <circle cx="898" cy="284" r="28" fill="#b45309"/><path d="M898 268v22M898 300v2" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <text x="944" y="294" font-size="32" font-weight="730" fill="#17213f">Not established by any of it</text>
+    <text x="880" y="352" font-size="23" fill="#526078">Whether a page actually reads well aloud.</text>
+    <text x="880" y="392" font-size="23" fill="#526078">Focus order and focus visibility, page by page.</text>
+    <text x="880" y="432" font-size="23" fill="#526078">Captions or transcripts for archived recordings.</text>
+    <text x="880" y="472" font-size="23" fill="#526078">Reflow at 400 percent zoom, and text spacing.</text>
+    <text x="880" y="512" font-size="23" fill="#526078">Whether a status is carried by hue alone.</text>
+    <rect x="880" y="546" width="580" height="140" rx="16" fill="#fffbeb" stroke="#fcd34d" stroke-width="2"/>
+    <text x="910" y="586" font-size="23" font-weight="700" fill="#78350f">Correct structure is necessary, not sufficient</text>
+    <text x="910" y="620" font-size="21" fill="#92400e">A heading can be present and unhelpful. Alt text can exist</text>
+    <text x="910" y="650" font-size="21" fill="#92400e">and describe the wrong thing. These need a person, and a</text>
+    <text x="910" y="676" font-size="21" fill="#92400e">report from one is worth more than any number here.</text>
+  </g>
+
+  <text x="800" y="800" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="#17213f">Target: WCAG 2.1 level AA</text>
+  <text x="800" y="838" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="22" fill="#526078">Both columns are generated and published as JSON, including the right-hand one.</text>
+</svg>

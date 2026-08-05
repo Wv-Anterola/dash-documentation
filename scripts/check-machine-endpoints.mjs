@@ -129,7 +129,12 @@ if (manifestText) {
     for (const dataset of manifest.datasets ?? []) {
       if (!files.has(dataset.path)) complain(`the manifest advertises ${dataset.id} at ${dataset.path}, which was not built`);
       if (!routes.has(dataset.page)) complain(`the manifest points ${dataset.id} at ${dataset.page}, which is not a built page`);
-      if (!/^[0-9a-f]{40}$/.test(String(dataset.baseline))) complain(`${dataset.id} is not pinned to an immutable commit`);
+      // A null baseline is the one allowed answer, and it means the dataset
+      // measures this site rather than Dash. Anything else has to name the
+      // exact revision its records describe.
+      if (dataset.baseline !== null && !/^[0-9a-f]{40}$/.test(String(dataset.baseline))) {
+        complain(`${dataset.id} is not pinned to an immutable commit`);
+      }
       if (!Number.isInteger(dataset.records) || dataset.records < 1) complain(`${dataset.id} advertises ${dataset.records} records`);
     }
     const served = [...files].filter((file) => file.startsWith('/assets/data/') && file.endsWith('.json') && file !== '/assets/data/index.json');

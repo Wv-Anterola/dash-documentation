@@ -1,0 +1,65 @@
+---
+title: Accessibility of this site
+description: "What this documentation measures about its own accessibility, the measured values in both themes, and the list of things that are not tested at all."
+sidebar:
+  order: 6
+---
+
+import AccessibilityReport from '../../../components/AccessibilityReport.astro';
+
+<p class="lede">
+  This site aims at WCAG 2.1 level AA. Part of that is measured on every push
+  and part of it is not measured at all, and both halves are published here,
+  because a pass rate without its exclusions is not a useful claim.
+</p>
+
+## How to reach us
+
+If something here is unusable for you, that is a defect, and it is one
+automation is bad at finding. [Open an
+issue](https://github.com/Wv-Anterola/dash-documentation/issues/new/choose)
+saying which page and what happened. A report that says "the reading order on
+this page makes no sense" is worth more than any number below.
+
+## What is enforced
+
+Two things run on every push and fail the build:
+
+- **Contrast.** Every reviewed foreground and background pair is resolved
+  through its `var()` chain in both themes and its ratio computed from the
+  stylesheet with the WCAG 2.1 formula. Nothing here is asserted from memory, so
+  changing a colour changes the verdict.
+- **Page structure.** Every built page must have a language, exactly one `h1`, a
+  main landmark, labelled form controls, named buttons, discernible link text,
+  and scoped table headers.
+
+This exists because the site already shipped one contrast failure. Overriding
+Starlight's greys in a bare `:root` made every light-mode heading white on white
+at 1.00:1, and nothing caught it, because a stylesheet was the one artefact here
+with no test and no parser watching it.
+
+## What was fixed as a result
+
+Setting up the check found real defects rather than confirming a clean state:
+
+- Seventeen `--dash-*` tokens were used across the stylesheet and never defined.
+  A rule reading an undefined custom property does not fail loudly: text falls
+  back to `inherit` and a background falls back to transparent, so cards were
+  rendering without their surface.
+- One token was doing two jobs, as a decorative rule and as the border of a form
+  control. It passed as decoration and failed the 3:1 that a control boundary
+  needs, so it was split in two.
+- Markdown tables were emitting `th` cells with no `scope`, and task-list
+  checkboxes had no accessible name. Both are now added during rendering rather
+  than by remembering.
+
+<AccessibilityReport />
+
+## The measurements are published
+
+Everything on this page is generated from `src/styles/dash.css` by
+`npm run audit:accessibility` and is available as JSON at
+[`/assets/data/accessibility.json`](/assets/data/accessibility.json), including
+the untested list. The enforcing check is `npm run accessibility`, and both read
+the same contrast implementation, so the published number and the enforced
+number cannot disagree.

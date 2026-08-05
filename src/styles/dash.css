@@ -2963,6 +2963,78 @@
 }
 
 /* ------------------------------------------------------------------ *
+ * Accessibility report
+ * ------------------------------------------------------------------ */
+
+.a11y-table-scroll {
+  overflow-x: auto;
+}
+
+.a11y-table {
+  min-width: 36rem;
+  width: 100%;
+}
+
+.sl-markdown-content .a11y-role-note {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+  margin-block: 0 var(--dash-space-2);
+}
+
+/* The ratio is the information. The pass state is carried by the word beside
+   it for screen readers and by weight here, never by hue alone: a contrast
+   table that fails colour-blind readers would be self-refuting. */
+.a11y-ratio {
+  font-variant-numeric: tabular-nums;
+}
+
+.a11y-ratio[data-passes='true']::after {
+  content: ' ✓';
+  color: var(--dash-accent);
+}
+
+.a11y-ratio[data-passes='false'] {
+  font-weight: 700;
+}
+
+.a11y-ratio[data-passes='false']::after {
+  content: ' ✕ below threshold';
+}
+
+.a11y-gap {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-rule);
+  border-radius: var(--dash-radius-md);
+  margin-block: var(--dash-space-3);
+  padding: var(--dash-space-4);
+}
+
+.sl-markdown-content .a11y-gap h4 {
+  margin-block: 0 var(--dash-space-2);
+}
+
+.a11y-gap dl {
+  display: grid;
+  gap: var(--dash-space-2);
+  margin: 0;
+}
+
+.a11y-gap dl > div {
+  display: grid;
+  gap: var(--dash-space-1);
+  grid-template-columns: minmax(6rem, 8rem) 1fr;
+}
+
+.sl-markdown-content .a11y-gap dt {
+  color: var(--dash-ink-soft);
+  font-size: var(--dash-type-sm);
+}
+
+.sl-markdown-content .a11y-gap dd {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ *
  * Build pipeline map
  * ------------------------------------------------------------------ */
 
@@ -3071,6 +3143,10 @@
   }
 
   .pipeline-io > div {
+    grid-template-columns: 1fr;
+  }
+
+  .a11y-gap dl > div {
     grid-template-columns: 1fr;
   }
 }

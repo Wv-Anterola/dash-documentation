@@ -76,6 +76,7 @@ const manual = {
   '/contributing/inapp-links': '/assets/images/diagrams/dash-inapp-doc-link-path.svg',
   '/contributing/pipeline': '/assets/images/diagrams/dash-documentation-pipeline.svg',
   '/reference/documentation-coverage': '/assets/images/diagrams/dash-documentation-coverage.svg',
+  '/reference/accessibility': '/assets/images/diagrams/dash-accessibility-measurement.svg',
   '/reference/keyboard-shortcuts': '/assets/gifs/gettingstarted/dash-highlight-select.gif',
   '/reference/status-taxonomy': '/assets/gifs/gettingstarted/dash-annotation-icon.gif',
   '/research/cohorts': '/assets/gifs/environment/dash-drag-tab-back.gif',
@@ -100,6 +101,8 @@ const manualAlt = {
     'A help control in Dash opening an old permalink, the path being resolved against this site and its redirect table, and the three outcomes: it lands, it lands only if the host adds a trailing slash, or it reaches a fragment that no longer exists.',
   '/contributing/pipeline':
     'A fact travelling from one pinned Dash-Web commit through a generator, into a committed dataset, out to a page and a JSON endpoint, with the checks underneath, and a branch showing where skipping the regeneration step leaves the site quietly describing code that has moved.',
+  '/reference/accessibility':
+    'The measured half beside the unmeasured half: contrast computed from the stylesheet for every reviewed pair in both themes and structural facts checked on every built page, against the things no automated check establishes, such as whether a page reads well aloud, whether focus order makes sense, and whether the archived recordings have any equivalent for a reader who cannot see them.',
   '/reference/documentation-coverage':
     'Parsed claims and written claims side by side: one generated and checked on every build, the other written by a person and checked by nobody, counted separately because a record can be fully traced and still unexplained.',
 };
