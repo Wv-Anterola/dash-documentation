@@ -8,8 +8,12 @@
 name: Verify documentation
 
 on:
+  # Pushes to the published branch, and any branch that has a pull request open.
+  # Listening on every branch as well as on `pull_request` ran the whole gate
+  # twice for the same commit, which doubles the wait and makes the run list
+  # unreadable at exactly the moment somebody is scanning it for a failure.
   push:
-    branches: ['**']
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

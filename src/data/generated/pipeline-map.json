@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-05T03:28:26.275Z",
+  "generatedAt": "2026-08-05T03:42:36.723Z",
   "methodology": {
     "derivedFrom": "The scripts, tests, dataset manifest, and package.json in this repository. Each script contributes its own header comment, its imports and writes, and the npm command that runs it.",
     "driftRule": "Generation fails when a script cannot be run by any npm command, when a script has no header comment, or when a check is reachable from neither `verify` nor the scheduled list.",
